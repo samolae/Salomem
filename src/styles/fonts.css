@@ -1,0 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+/* AURUM Design System Fonts */
+/* BPG LE Studio 02 Caps — Georgian display/heading font */
+/* TBC Contractica — Georgian body font (TBC Bank design system) */
+/* These are custom fonts; using Space Grotesk & Inter as web fallbacks */
+
+@font-face {
+  font-family: 'BPG LE Studio 02 Caps';
+  src: local('BPG LE Studio 02 Caps');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TBC Contractica';
+  src: local('TBC Contractica');
+  font-display: swap;
+}

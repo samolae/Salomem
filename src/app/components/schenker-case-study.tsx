@@ -19,18 +19,18 @@ import schenkerSvgPaths from '../../imports/svg-0abw9z02wj';
 
 // ─── Schenker Screen Imports ───────────────────────────────────
 const screenSettings = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774041604/d4d1e42280872aa3079a1b940b29790994d2b241_jcnrf6.webp';
-import screenFrachtbrief from 'figma:asset/4c3e71c3ee5d64369298bf37fe8d1a23359ec9a9.png';
-import screenHelp from 'figma:asset/7552bf94b525ead0a61516082a72ea06d2be1b15.png';
+const screenFrachtbrief = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1774018732/Sendung_yy4ptf.png';
+const screenHelp = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1774018732/Sendung_yy4ptf.png';
 const screenLabels = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774041563/78c6f45f9246b9cea5c0520f003d32cb8fb21ff1_kmea60.webp';
-import screenLadeliste from 'figma:asset/26533ddf477c1afecf14c94fc10b6c1fae952cc4.png';
+const screenLadeliste = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1774018732/Sendung_yy4ptf.png';
 const screenSendungEmpfanger = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774041645/1afd387db904f4cec4c15bfa6b7966e601ef294b_towksm.webp';
-import screenSendungInfo from 'figma:asset/ff960c50b29a2b6eb488f8c4b5f3ec719539b215.png';
-import screenSendungPakete from 'figma:asset/3ab67d551c9b283bcb635c8ba6f47ecd1f72e41e.png';
-import screenSendungVersender from 'figma:asset/60c5dd1eee2eafa81c9836b3e863a97218dfb5be.png';
-import screenApiSchluessel from 'figma:asset/a30a46962220c8f9852b6b25efd96aed88673395.png';
-import screenApiDoku from 'figma:asset/f8a25db9c4db05626e9edc66f054071a8d67b671.png';
-import screenSendungsdaten from 'figma:asset/662ea38e687b8de3f7b31a65f0601b85db8b7d98.png';
-import screenVersenderForm from 'figma:asset/60c5dd1eee2eafa81c9836b3e863a97218dfb5be.png';
+const screenSendungInfo = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1774018732/Sendung_yy4ptf.png';
+const screenSendungPakete = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1774018732/Sendung_yy4ptf.png';
+const screenSendungVersender = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1774018732/Sendung_yy4ptf.png';
+const screenApiSchluessel = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1774018732/Sendung_yy4ptf.png';
+const screenApiDoku = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1774018732/Sendung_yy4ptf.png';
+const screenSendungsdaten = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1774018732/Sendung_yy4ptf.png';
+const screenVersenderForm = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1774018732/Sendung_yy4ptf.png';
 
 /* ─── Cloudinary Key Screens ─────────────────────────────────────── */
 const cloudSendungEmpfanger = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774017032/Sendung-Empfa%CC%88nger_fuype4.webp';
@@ -82,7 +82,7 @@ const ScreenCard = ({
   <FadeIn delay={delay}>
     <div className="group">
       <div className={`rounded-xl overflow-hidden mb-4 border shadow-lg ${isDark ? 'border-white/[0.06] shadow-black/30' : 'border-zinc-200 shadow-zinc-200/50'}`}>
-        <img src={src} alt={label} className="w-full group-hover:scale-[1.02] transition-transform duration-700" />
+        <img src={src} alt={label} width="1440" height="900" className="w-full group-hover:scale-[1.02] transition-transform duration-700" />
       </div>
       <div className="flex items-start gap-3">
         <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5 ${isDark ? 'bg-[#6B8E23]/10' : 'bg-lime-50'}`}>
@@ -306,7 +306,7 @@ export function SchenkerCaseStudy() {
           <FadeIn delay={0.2}>
             <div className="relative">
               <BrowserMockup url="schenkerclient.cubsten.com" dark={false}>
-                <img src={screenSendungEmpfanger} alt="Schenker — Sendung" className="w-full" />
+                <img src={screenSendungEmpfanger} alt="Schenker — Sendung" width="1440" height="900" className="w-full" />
               </BrowserMockup>
               {/* Floating secondary screens */}
               <motion.div
@@ -315,7 +315,7 @@ export function SchenkerCaseStudy() {
                 transition={{ delay: 0.6, duration: 0.8 }}
                 className="hidden lg:block absolute -right-6 top-20 w-[35%] rounded-xl overflow-hidden shadow-2xl shadow-black/40 border border-white/10"
               >
-                <img src={screenSettings} alt="Settings" className="w-full" />
+                <img src={screenSettings} alt="Settings" width="1440" height="900" className="w-full" />
               </motion.div>
               <motion.div
                 initial={{ opacity: 0, x: -40, y: 20 }}
@@ -323,7 +323,7 @@ export function SchenkerCaseStudy() {
                 transition={{ delay: 0.8, duration: 0.8 }}
                 className="hidden lg:block absolute -left-4 bottom-10 w-[30%] rounded-xl overflow-hidden shadow-2xl shadow-black/40 border border-white/10"
               >
-                <img src={screenLabels} alt="Labels" className="w-full" />
+                <img src={screenLabels} alt="Labels" width="1440" height="900" className="w-full" />
               </motion.div>
             </div>
           </FadeIn>
@@ -601,7 +601,7 @@ export function SchenkerCaseStudy() {
                   <div className={step.reverse ? 'order-2 lg:order-1' : ''}>
                     <ScrollRevealScale scaleFrom={0.92}>
                       <BrowserMockup url={step.url} dark={false}>
-                        <img src={step.src} alt={step.title} className="w-full" />
+                        <img src={step.src} alt={step.title} width="1440" height="900" className="w-full" />
                       </BrowserMockup>
                     </ScrollRevealScale>
                   </div>
@@ -655,7 +655,7 @@ export function SchenkerCaseStudy() {
                   <div className={step.reverse ? 'order-2 lg:order-1' : ''}>
                     <ScrollRevealScale scaleFrom={0.92}>
                       <BrowserMockup url={`schenkerclient/${step.title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}`} dark={false}>
-                        <img src={step.src} alt={step.title} className="w-full block" />
+                        <img src={step.src} alt={step.title} width="1440" height="900" className="w-full block" />
                       </BrowserMockup>
                     </ScrollRevealScale>
                   </div>

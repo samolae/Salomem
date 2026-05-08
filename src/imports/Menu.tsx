@@ -1,11 +1,11 @@
 import svgPaths from "./svg-0abw9z02wj";
-import imgMenu from "figma:asset/e1b1109403390637a0fd5bea7d62c5030d7bd0ce.png";
-import imgMenu1 from "figma:asset/4282df76a7fec639b4705bffba8630bb22bddaa0.png";
-import imgMenu2 from "figma:asset/d13e778633aa8b6d25152f1c2078e22184b37f5f.png";
-import imgMenu3 from "figma:asset/769acf51ddcea6464c28d3acea3e7a9feb4ab992.png";
-import imgMenu4 from "figma:asset/fdf414448196324471294ce50dad0af50c571700.png";
-import imgMenu5 from "figma:asset/07a8ac511a7d540e7fdf31ba75c706ce7f365085.png";
-import imgMenu6 from "figma:asset/cc9c26885e7a4c38196c1390405d85649400efba.png";
+const imgMenu = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339514/code_wp94ox.avif';
+const imgMenu1 = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339514/code_wp94ox.avif';
+const imgMenu2 = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339514/code_wp94ox.avif';
+const imgMenu3 = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339514/code_wp94ox.avif';
+const imgMenu4 = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339514/code_wp94ox.avif';
+const imgMenu5 = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339514/code_wp94ox.avif';
+const imgMenu6 = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339514/code_wp94ox.avif';
 
 export default function Menu() {
   return (

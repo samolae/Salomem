@@ -18,21 +18,21 @@ export const FadeIn = ({
   blur?: boolean;
 }) => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-60px' });
+  const isInView = useInView(ref, { once: true, margin: '0px' });
 
   const dirMap = {
-    up: { x: 0, y: 30 },
-    down: { x: 0, y: -30 },
-    left: { x: 30, y: 0 },
-    right: { x: -30, y: 0 },
+    up: { x: 0, y: 20 },
+    down: { x: 0, y: -20 },
+    left: { x: 20, y: 0 },
+    right: { x: -20, y: 0 },
   };
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, filter: blur ? 'blur(8px)' : 'blur(0px)', ...dirMap[direction] }}
-      animate={isInView ? { opacity: 1, filter: 'blur(0px)', x: 0, y: 0 } : { opacity: 0, filter: blur ? 'blur(8px)' : 'blur(0px)', ...dirMap[direction] }}
-      transition={{ duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] }}
+      initial={{ opacity: 0, filter: blur ? 'blur(4px)' : 'blur(0px)', ...dirMap[direction] }}
+      animate={isInView ? { opacity: 1, filter: 'blur(0px)', x: 0, y: 0 } : { opacity: 0, filter: blur ? 'blur(4px)' : 'blur(0px)', ...dirMap[direction] }}
+      transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
       className={className}
     >
       {children}
@@ -55,7 +55,7 @@ export const StaggerChildren = ({
   style?: React.CSSProperties;
 }) => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-60px' });
+  const isInView = useInView(ref, { once: true, margin: '0px' });
 
   return (
     <motion.div
@@ -208,7 +208,7 @@ export const GlowCard = ({
 /* ════════════════════════════════════════════════════════════════��══ */
 export const TextReveal = ({ children, className = '' }: { children: ReactNode; className?: string }) => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-80px' });
+  const isInView = useInView(ref, { once: true, margin: '0px' });
 
   return (
     <div ref={ref} className={`overflow-hidden ${className}`}>
@@ -318,7 +318,7 @@ export const HorizontalReveal = ({
   className?: string;
 }) => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-40px' });
+  const isInView = useInView(ref, { once: true, margin: '0px' });
 
   return (
     <div ref={ref} className={`overflow-hidden ${className}`}>
@@ -374,7 +374,7 @@ export const SplitText = ({
   delay?: number;
 }) => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-60px' });
+  const isInView = useInView(ref, { once: true, margin: '0px' });
   const words = text.split(' ');
 
   return (
@@ -404,7 +404,7 @@ export const SplitText = ({
 /* ══════════════════════════════════════════════════════════════════ */
 export const AnimatedDivider = ({ color = 'rgba(255,255,255,0.06)', className = '' }: { color?: string; className?: string }) => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-20px' });
+  const isInView = useInView(ref, { once: true, margin: '0px' });
 
   return (
     <div ref={ref} className={`overflow-hidden ${className}`}>
@@ -556,7 +556,7 @@ export const TextScramble = ({
   duration?: number;
 }) => {
   const ref = useRef<HTMLSpanElement>(null);
-  const isInView = useInView(ref, { once: true, margin: '-40px' });
+  const isInView = useInView(ref, { once: true, margin: '0px' });
   const [displayText, setDisplayText] = useState(text);
   const chars = '!<>-_\\/[]{}—=+*^?#________';
 
@@ -761,7 +761,7 @@ export const RevealMask = ({
   direction?: 'up' | 'down' | 'left' | 'right';
 }) => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-40px' });
+  const isInView = useInView(ref, { once: true, margin: '0px' });
 
   const clipPaths: Record<string, { initial: string; animate: string }> = {
     up: { initial: 'inset(100% 0% 0% 0%)', animate: 'inset(0% 0% 0% 0%)' },
@@ -1102,7 +1102,7 @@ export const SpringBadge = ({
   delay?: number;
 }) => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-40px' });
+  const isInView = useInView(ref, { once: true, margin: '0px' });
 
   return (
     <motion.div
@@ -1173,7 +1173,7 @@ export const ScrollRevealScale = ({
   scaleFrom?: number;
 }) => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-50px' });
+  const isInView = useInView(ref, { once: true, margin: '0px' });
 
   return (
     <motion.div

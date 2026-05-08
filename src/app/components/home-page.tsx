@@ -5,7 +5,7 @@ import { Link, useSearchParams, useLocation, useParams, useNavigate } from 'reac
 import { useActiveSection } from './active-section-context';
 import {
   ArrowUpRight, ArrowRight, Sun, Moon,
-  Home, Briefcase, Mail, Image, Video,
+  Home, Mail, Image, Video, Briefcase,
   Instagram, Download, ChevronLeft, ChevronRight,
   Monitor, Layers, Palette, Smartphone, Copy, Send,
   Menu, X, Clock, Phone, Linkedin, ExternalLink,
@@ -15,18 +15,18 @@ import {
 import { useTheme } from './theme-provider';
 import { FadeIn, StaggerChildren, StaggerItem, ScrollProgress, MagneticWrap, AnimatedDivider, SplitText, ScaleOnScroll, CursorGlow, FloatingParticles, TextScramble, MorphingBlob, RevealMask, AnimatedLine, LightBeamCard, BentoTiltCard, LiquidCursor, LiquidMeshBackground, SpringBadge, ParallaxFloat, ScrollRevealScale, MagneticLink, MicroPulse } from './animated-helpers';
 import { ImageWithFallback } from './figma/ImageWithFallback';
-import { HomeSEO } from './seo';
+import { HomeSEO, ServicesSEO, ContactSEO, UxUiSEO, SocialMediaAdsSEO, SocialMediaMotionSEO } from './seo';
 import { scrollContentToTop } from './scroll-to-top';
 
 /* ─── Screen imports for AURUM ─────��─────────────���─────────────────����─ */
 const screenExchange = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1774200199/470258954933ae7f3b3615ad0fe2098ae46160f5_2_wvsmro_plhle1.webp';
 const screenLanding = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774040819/33bde90ba43fe3b089e907b814ef1018193651cd_hptwri.webp';
 const screenProfile = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774040904/259c40c789033b795135eecd13ffa040e408d1d8_g0b0ks.webp';
-import screenTransfer from 'figma:asset/a1323a96dc9bb7cd87928c75c26a81b6d0ce2a1a.png';
-import screenQR from 'figma:asset/b78c3bc48aa79d5e8533d55135b1b1f6f97d4000.png';
-import screenVerify from 'figma:asset/7a5ab65edbb1b3b28c1811299e9b2260abdb0c07.png';
-import portfolioScreenshot from 'figma:asset/d6f82d4ed3e1393d12e1fa8d25b3b9d72477f48d.png';
-import spotlightImage from 'figma:asset/571430953214ce495dc662c9a44fc6b62a72fdf2.png';
+const screenTransfer = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339514/code_wp94ox.avif';
+const screenQR = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339514/code_wp94ox.avif';
+const screenVerify = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339514/code_wp94ox.avif';
+const portfolioScreenshot = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339514/code_wp94ox.avif';
+const spotlightImage = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339514/code_wp94ox.avif';
 
 /* ─── Schenker Screen imports ─────────────────────────────────────── */
 const schenkerSettings = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774041604/d4d1e42280872aa3079a1b940b29790994d2b241_jcnrf6.webp';
@@ -34,37 +34,36 @@ const schenkerSendung = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1774
 const schenkerLabels = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1774199882/1afd387db904f4cec4c15bfa6b7966e601ef294b_towksm_tlzijs.webp';
 
 /* ─── Logo imports ──────────────────────────────────────────────────── */
-import logoCubisten from 'figma:asset/bf9f7288d54df661173113607cc615479c446e18.png';
-import logoScope from 'figma:asset/f21f10a3e079a3afcc32f1c3bf161e7432e2daad.png';
-import logoSpar from 'figma:asset/eb6337b24e75eee3f8c97c5faffbfb96a7395f90.png';
-import logoUnilab from 'figma:asset/f3fdff4d8158dacf0a12b0777c362f22f0cb78c7.png';
+const logoCubisten = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339516/bf9f7288d54df661173113607cc615479c446e18_sgs5u3.jpg';
+const logoScope = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339517/f21f10a3e079a3afcc32f1c3bf161e7432e2daad_1_wilrmf.jpg';
+const logoSpar = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339516/eb6337b24e75eee3f8c97c5faffbfb96a7395f90_fu7cjj.jpg';
+const logoUnilab = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339517/f3fdff4d8158dacf0a12b0777c362f22f0cb78c7_vkww33.jpg';
 import logoUpwork from '../../imports/upwork-1.svg';
-import logoRunwayTeam from 'figma:asset/7cab6531835c509d1293dc3e519cb8808de775ac.png';
+const logoRunwayTeam = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339515/7cab6531835c509d1293dc3e519cb8808de775ac_ebqpyf.jpg';
 
 /* ─── Social Media Ads brand images ────────────────────────────────── */
-import adsTerminal2 from 'figma:asset/646b2cbd1750a68745f4239b582693bed5cb6b0a.png';
-import adsTerminal3 from 'figma:asset/54ba414ef43d9471946833f7cc750e279f84db97.png';
-import adsTerminal4 from 'figma:asset/95b0d375fa7224253428546078e356e49713209d.png';
-import adsTerminal5 from 'figma:asset/89a476ac5a17773249772da85d98aba4eadfc858.png';
-const adsTerminal6 = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1774199396/ae0f296f707bac87ea320800f47aa242e0616131_1_iwntjz_qep2bn.webp';
-import adsMardi1 from 'figma:asset/b62bbc10625805a2bfc4ed4ec0039576272b49ac.png';
-import adsMardi2 from 'figma:asset/0743fa47e5f0c6879ca534305dd5c3d69484955e.png';
-import adsMardi3 from 'figma:asset/52ad53951ffafafdc024cae95470cde6635376e2.png';
-import adsMardi4 from 'figma:asset/bf818d7b8e5508406dc880a4300f58346ad2edbe.png';
-import adsMardi5 from 'figma:asset/22f519bac2554d08e87ae2e50aa5fe6121e4492b.png';
-import adsCrystal1 from 'figma:asset/b458a6b717839cc398f8b2f50064ed40123f5e4d.png';
-import adsCrystal2 from 'figma:asset/7b6a04531412e6b682ff158e70815feb485fafd2.png';
-import adsCrystal3 from 'figma:asset/f58feecc7e898f1a82e525b20bc7d640c1c141a0.png';
-import adsCrystal4 from 'figma:asset/fdb3ca9219148ac4d7ef1c8b8d35fd17399b163f.png';
-import adsGino1 from 'figma:asset/1cb73cf5a5411498981da19ae8e2b885c2a98d01.png';
-import adsGino2 from 'figma:asset/b71aabe04eb978d68a33b691016c4cb2c7c30f63.png';
-import adsGino3 from 'figma:asset/a5b2b7d1cca1e3e78b272724078e77d54dcedc56.png';
-import adsGino4 from 'figma:asset/adea50f483fd41994a8d719b8fbfd5c2c8781aac.png';
-const adsCarmall1 = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1774199761/47ecb13f7ae4f95236a54f6344dbb3e5c98a2f6b_1_onab1t_1_fiyh6z.webp';
-import adsCarmall2 from 'figma:asset/fa1a13c49afca66553e53ff9c8a021afc8e72e04.png';
-import adsCarmall3 from 'figma:asset/ac7ba222fd607dcea69dad174a308efdf426d3e5.png';
-import adsCarmall4 from 'figma:asset/dee169945319d35bd9e8c1c23e7706f16d47a654.png';
-import adsCarmall5 from 'figma:asset/bfde800820519296d3523c1c4ab2d8c948005d20.png';
+const adsTerminal1 = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1774041033/ae0f296f707bac87ea320800f47aa242e0616131_1_iwntjz.webp';
+const adsTerminal2 = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339516/646b2cbd1750a68745f4239b582693bed5cb6b0a_dinhde.jpg';
+const adsTerminal3 = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339516/89a476ac5a17773249772da85d98aba4eadfc858_ckiq2l.jpg';
+const adsTerminal4 = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339516/54ba414ef43d9471946833f7cc750e279f84db97_fzg0k8.jpg';
+const adsTerminal5 = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339516/95b0d375fa7224253428546078e356e49713209d_xwdji2.jpg';
+const adsMardi1 = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339520/b62bbc10625805a2bfc4ed4ec0039576272b49ac_1_gwslya.png';
+const adsMardi2 = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1777838649/0743fa47e5f0c6879ca534305dd5c3d69484955e_wcgakf.webp';
+const adsMardi3 = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773407375/10-marti-2_1_mkkjtu.png';
+const adsMardi4 = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339519/52ad53951ffafafdc024cae95470cde6635376e2_brx0fw.png';
+const adsMardi5 = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1777838699/22f519bac2554d08e87ae2e50aa5fe6121e4492b_eudlkm.avif';
+const adsCrystal1 = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1777838851/fdb3ca9219148ac4d7ef1c8b8d35fd17399b163f_f6d050.avif';
+const adsCrystal2 = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1777838852/7b6a04531412e6b682ff158e70815feb485fafd2_u7cbzp.webp';
+const adsCrystal3 = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1777838851/f58feecc7e898f1a82e525b20bc7d640c1c141a0_dcwoc0.webp';
+const adsCrystal4 = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1777838851/b458a6b717839cc398f8b2f50064ed40123f5e4d_eweuys.webp';
+const adsGino1 = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1777838988/adea50f483fd41994a8d719b8fbfd5c2c8781aac_zwhfcu.webp';
+const adsGino2 = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1777838988/b71aabe04eb978d68a33b691016c4cb2c7c30f63_dzan8l.webp';
+const adsGino3 = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1777838987/1cb73cf5a5411498981da19ae8e2b885c2a98d01_dw6a0y.webp';
+const adsGino4 = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1777838986/a5b2b7d1cca1e3e78b272724078e77d54dcedc56_whpwt4.webp';
+const adsCarmall1 = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774040983/47ecb13f7ae4f95236a54f6344dbb3e5c98a2f6b_1_onab1t.webp';
+const adsCarmall2 = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1777839182/ac7ba222fd607dcea69dad174a308efdf426d3e5_uy6mzb.webp';
+const adsCarmall3 = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1777839180/dee169945319d35bd9e8c1c23e7706f16d47a654_ogilbx.webp';
+const adsCarmall4 = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1777839182/bfde800820519296d3523c1c4ab2d8c948005d20_l9q8nx.webp';
 
 /* ─── Font config ──────────────────────────────────────────────────── */
 const F = {
@@ -91,6 +90,19 @@ const navItems = [
   { id: 'services', label: 'Services', icon: <Briefcase size={15} /> },
   { id: 'contact', label: 'Contact', icon: <Mail size={15} /> },
 ];
+
+const navHref = (id: string): string => {
+  if (id === 'contact') return '/contact';
+  if (id === 'services') return '/services';
+  return '/';
+};
+
+const catHref = (id: string): string => {
+  if (id === 'ux-ui') return '/work/ux-ui';
+  if (id === 'social-media-ads') return '/work/social-media-ads';
+  if (id === 'social-media-motion') return '/work/social-media-motion';
+  return '/';
+};
 
 const projectCategories = [
   { id: 'ux-ui', label: 'UX/UI Design', icon: <Layers size={15} /> },
@@ -135,44 +147,49 @@ const Sidebar = ({
 
   const sidebarContent = (
     <div className="flex flex-col h-full" style={{ fontFamily: F.body }}>
-      {/* Logo / Brand */}
       <div className="px-4 pt-5 pb-5">
         <div className="flex items-center gap-3">
+          <img
+            src="https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1777841338/fav_ggorfv.png"
+            alt="Salome Mosiava"
+            width="64" height="64"
+            className="w-8 h-8 rounded-full object-cover flex-shrink-0 ring-1 ring-white/[0.08]"
+          />
           <div className="min-w-0">
             <h2 className={`text-[13px] truncate ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: F.heading, fontWeight: 600, letterSpacing: '-0.02em' }}>
               Salome Mosiava
             </h2>
-            <p className="text-[10px] text-[#ed592b] uppercase tracking-[0.12em]" style={{ fontFamily: F.body }}>Senior Designer</p>
+            <p className="text-[10px] text-[#ed592b] uppercase tracking-[0.12em]" style={{ fontFamily: F.body }}>Art Director & Senior Product Designer</p>
           </div>
         </div>
       </div>
 
-      {/* Navigation */}
       <nav className="flex-1 px-2.5 space-y-0.5">
         {navItems.map((item) => {
           const active = activeSection === item.id;
           return (
             <MagneticWrap key={item.id} strength={0.15}>
-              <motion.button
-                onClick={() => { onSectionChange(item.id); onMobileClose(); }}
-                whileHover={{ x: 3 }}
-                whileTap={{ scale: 0.97 }}
-                className={`relative w-full flex items-center gap-2.5 px-3 py-2.5 lg:py-[7px] rounded-[10px] text-left text-[13px] whitespace-nowrap transition-all overflow-hidden min-h-[44px] lg:min-h-0 focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
-                  active
-                    ? isDark ? 'bg-white/[0.06] text-white' : 'bg-zinc-200/70 text-zinc-900'
-                    : isDark ? 'text-[#7a7d8a] hover:text-white/80 hover:bg-white/[0.03]' : 'text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100'
-                }`}
-              >
-                {active && (
-                  <motion.div
-                    layoutId="sidebarActiveNav"
-                    className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-4 rounded-r-full bg-[#ed592b]"
-                    transition={{ type: 'spring', stiffness: 500, damping: 35 }}
-                  />
-                )}
-                <span className={active ? 'text-[#ed592b]' : 'opacity-50'}>{item.icon}</span>
-                {item.label}
-              </motion.button>
+              <Link to={navHref(item.id)} onClick={() => { onSectionChange(item.id); onMobileClose(); }} className="block">
+                <motion.div
+                  whileHover={{ x: 3 }}
+                  whileTap={{ scale: 0.97 }}
+                  className={`relative w-full flex items-center gap-2.5 px-3 py-2.5 lg:py-[7px] rounded-[10px] text-[13px] whitespace-nowrap transition-all overflow-hidden min-h-[44px] lg:min-h-0 focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
+                    active
+                      ? isDark ? 'bg-white/[0.06] text-white' : 'bg-zinc-200/70 text-zinc-900'
+                      : isDark ? 'text-[#7a7d8a] hover:text-white/80 hover:bg-white/[0.03]' : 'text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100'
+                  }`}
+                >
+                  {active && (
+                    <motion.div
+                      layoutId="sidebarActiveNav"
+                      className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-4 rounded-r-full bg-[#ed592b]"
+                      transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+                    />
+                  )}
+                  <span className={active ? 'text-[#ed592b]' : 'opacity-50'}>{item.icon}</span>
+                  {item.label}
+                </motion.div>
+              </Link>
             </MagneticWrap>
           );
         })}
@@ -183,32 +200,32 @@ const Sidebar = ({
           const active = activeSection === cat.id;
           return (
             <MagneticWrap key={cat.id} strength={0.15}>
-              <motion.button
-                onClick={() => { onSectionChange(cat.id); onMobileClose(); }}
-                whileHover={{ x: 3 }}
-                whileTap={{ scale: 0.97 }}
-                className={`relative w-full flex items-center gap-2.5 px-3 py-2.5 lg:py-[7px] rounded-[10px] text-left text-[13px] whitespace-nowrap transition-all overflow-hidden min-h-[44px] lg:min-h-0 focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
-                  active
-                    ? isDark ? 'bg-white/[0.06] text-white' : 'bg-zinc-200/70 text-zinc-900'
-                    : isDark ? 'text-[#7a7d8a] hover:text-white/80 hover:bg-white/[0.03]' : 'text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100'
-                }`}
-              >
-                {active && (
-                  <motion.div
-                    layoutId="sidebarActiveCat"
-                    className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-4 rounded-r-full bg-[#ed592b]"
-                    transition={{ type: 'spring', stiffness: 500, damping: 35 }}
-                  />
-                )}
-                <span className={active ? 'text-[#ed592b]' : 'opacity-50'}>{cat.icon}</span>
-                {cat.label}
-              </motion.button>
+              <Link to={catHref(cat.id)} onClick={() => { onSectionChange(cat.id); onMobileClose(); }} className="block">
+                <motion.div
+                  whileHover={{ x: 3 }}
+                  whileTap={{ scale: 0.97 }}
+                  className={`relative w-full flex items-center gap-2.5 px-3 py-2.5 lg:py-[7px] rounded-[10px] text-[13px] whitespace-nowrap transition-all overflow-hidden min-h-[44px] lg:min-h-0 focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
+                    active
+                      ? isDark ? 'bg-white/[0.06] text-white' : 'bg-zinc-200/70 text-zinc-900'
+                      : isDark ? 'text-[#7a7d8a] hover:text-white/80 hover:bg-white/[0.03]' : 'text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100'
+                  }`}
+                >
+                  {active && (
+                    <motion.div
+                      layoutId="sidebarActiveCat"
+                      className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-4 rounded-r-full bg-[#ed592b]"
+                      transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+                    />
+                  )}
+                  <span className={active ? 'text-[#ed592b]' : 'opacity-50'}>{cat.icon}</span>
+                  {cat.label}
+                </motion.div>
+              </Link>
             </MagneticWrap>
           );
         })}
       </nav>
 
-      {/* Bottom */}
       <div className="p-2.5 space-y-[3px] mt-auto">
         {/* Status box */}
         <div className={`px-3 py-2.5 rounded-[10px] border ${border} ${isDark ? 'bg-white/[0.015]' : 'bg-zinc-50'}`}>
@@ -460,33 +477,13 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
 
   return (
     <div>
-      {/* Top bar */}
+      {/* Top bar — Available badge only (name/photo live in the sidebar) */}
       <FadeIn>
-        <div className="flex items-center justify-between mb-10">
-          {/* Mobile: name + title + badge aligned left */}
-          <div className="flex items-center gap-3 lg:hidden">
-            <div className="min-w-0">
-              <h2 className={`text-[13px] truncate ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: F.heading, fontWeight: 600, letterSpacing: '-0.02em' }}>Salome Mosiava</h2>
-              <p className="text-[10px] text-[#ed592b] uppercase tracking-[0.12em]" style={{ fontFamily: F.body }}>Senior Designer</p>
-            </div>
-            <motion.div
-              initial={{ opacity: 0, x: 10 }}
-              animate={{ opacity: 1, x: 0 }}
-              className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-[10px] ${border} ${isDark ? 'text-[#7a7d8a]' : 'text-zinc-400'}`}
-            >
-              <span className="relative flex h-1.5 w-1.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#22c55e] opacity-75" />
-                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#22c55e]" />
-              </span>
-              Available
-            </motion.div>
-          </div>
-          {/* Desktop: badge right-aligned */}
-          <div className="hidden lg:flex items-center gap-3" />
+        <div className="flex items-center justify-end mb-5">
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            className={`hidden lg:inline-flex items-center gap-2.5 px-4 py-2 rounded-full border text-[12px] ${border} ${isDark ? 'text-[#7a7d8a]' : 'text-zinc-400'}`}
+            className={`inline-flex items-center gap-2.5 px-4 py-2 rounded-full border text-[12px] ${border} ${isDark ? 'text-[#7a7d8a]' : 'text-zinc-400'}`}
           >
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#22c55e] opacity-75" />
@@ -529,11 +526,8 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
       <FadeIn delay={0.15}>
         <div className="flex items-center gap-3 mb-14">
           <MagneticWrap strength={0.25}>
-            <div className="relative group/tip">
-              <motion.a
-                href="https://wa.me/995598671416"
-                target="_blank"
-                rel="noopener noreferrer"
+            <Link to="/contact">
+              <motion.div
                 whileHover={{ scale: 1.06, boxShadow: '0 6px 30px rgba(237,89,43,0.3)' }}
                 whileTap={{ scale: 0.93, y: 2 }}
                 transition={{ type: 'spring', stiffness: 500, damping: 15 }}
@@ -546,13 +540,10 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
                   whileHover={{ x: '100%' }}
                   transition={{ duration: 0.6, ease: 'easeInOut' }}
                 />
-                <MessageCircle size={13} className="relative z-10" />
+                <Mail size={13} className="relative z-10" />
                 <span className="relative z-10">Contact me</span>
-              </motion.a>
-              <div className="absolute -bottom-9 left-1/2 -translate-x-1/2 px-2.5 py-1 rounded-md bg-[#0a0a0c] border border-white/[0.08] text-[10px] text-white/70 whitespace-nowrap opacity-0 group-hover/tip:opacity-100 transition-opacity duration-200 pointer-events-none" style={{ fontFamily: F.body }}>
-                Opens WhatsApp chat
-              </div>
-            </div>
+              </motion.div>
+            </Link>
           </MagneticWrap>
           <LiveClock isDark={isDark} />
         </div>
@@ -569,92 +560,92 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
         </div>
       </FadeIn>
 
-      {/* Bento Grid: 3-col on desktop, stacked on mobile */}
+      {/* TRUE BENTO GRID — 3-col asymmetric, dense row spans */}
       <FadeIn delay={0.2}>
-        <div className="grid grid-cols-2 sm:grid-cols-[2fr_1fr] gap-2.5 mb-2.5 items-stretch">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 mb-2.5" style={{ gridTemplateRows: 'auto auto auto' }}>
 
-          {/* AURUM — full left column on desktop, full width on mobile */}
-          <Link to="/projects/aurum" className="col-span-2 sm:col-span-1 h-full">
-            <motion.div whileHover={{ y: -4, scale: 1.005 }} transition={{ type: 'spring', stiffness: 400, damping: 30 }} className="h-full">
-            <BentoTiltCard tiltStrength={5} glareOpacity={0.06} className={`rounded-2xl border overflow-hidden h-full ${border} ${isDark ? 'bg-[#0a0b0f]' : 'bg-white'}`}>
-              <div className="relative h-full min-h-[180px] sm:min-h-0 overflow-hidden bg-gradient-to-br from-[#080B0F] via-[#0d0e14] to-[#0a0c12] img-hover-zoom">
-                <div className="absolute inset-0 opacity-40 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 50% 80%, rgba(213,154,4,0.08) 0%, transparent 60%)' }} />
-                <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/70 via-transparent to-black/10" />
-                <motion.img src={screenLanding} alt="AURUM crypto platform landing page design" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 0.2, y: 0 }} transition={{ duration: 1, delay: 0.2 }} className="absolute top-[8%] left-[3%] w-[42%] rounded-xl shadow-2xl shadow-black/60" />
-                <motion.img src={screenProfile} alt="AURUM user profile dashboard" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 0.3, y: 0 }} transition={{ duration: 1, delay: 0.35 }} className="absolute top-[4%] right-[3%] w-[38%] rounded-xl shadow-2xl shadow-black/60" />
-                <motion.img src={screenExchange} alt="AURUM Crypto Exchange UI/UX Design by Salome Mosiava - კრიპტო ბირჟის დიზაინი, სალომე მოსიავა" initial={{ opacity: 0, y: 50, scale: 0.95 }} whileInView={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 1.2, delay: 0.5, ease: [0.22, 1, 0.36, 1] }} className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[65%] rounded-t-xl shadow-[0_-20px_60px_rgba(0,0,0,0.5)]" />
-                <div className="absolute top-2.5 left-2.5 z-20 flex items-center gap-1.5">
-                  <span className="text-[7px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-full bg-[#D59A04]/10 backdrop-blur-xl text-[#D59A04]/80 border border-[#D59A04]/15">UX/UI</span>
-                  <span className="text-[7px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-full bg-white/[0.03] backdrop-blur-xl text-white/30 border border-white/[0.06]">196 Screens</span>
+          {/* AURUM — spans 2 cols × 2 rows: the hero cell */}
+          <Link to="/projects/aurum" className="sm:col-span-2 sm:row-span-2">
+            <motion.div whileHover={{ y: -3, scale: 1.004 }} transition={{ type: 'spring', stiffness: 400, damping: 30 }} className="h-full">
+              <BentoTiltCard tiltStrength={5} glareOpacity={0.06} className={`rounded-2xl border overflow-hidden h-full ${border} ${isDark ? 'bg-[#0a0b0f]' : 'bg-white'}`}>
+                <div className="relative h-full min-h-[220px] sm:min-h-[320px] overflow-hidden bg-gradient-to-br from-[#080B0F] via-[#0d0e14] to-[#0a0c12] img-hover-zoom">
+                  <div className="absolute inset-0 opacity-40 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 50% 80%, rgba(213,154,4,0.08) 0%, transparent 60%)' }} />
+                  <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/70 via-transparent to-black/10" />
+                  <motion.img src={screenLanding} alt="AURUM crypto platform landing page design" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 0.2, y: 0 }} transition={{ duration: 1, delay: 0.2 }} className="absolute top-[8%] left-[3%] w-[42%] rounded-xl shadow-2xl shadow-black/60" />
+                  <motion.img src={screenProfile} alt="AURUM user profile dashboard" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 0.3, y: 0 }} transition={{ duration: 1, delay: 0.35 }} className="absolute top-[4%] right-[3%] w-[38%] rounded-xl shadow-2xl shadow-black/60" />
+                  <motion.img src={screenExchange} alt="AURUM Crypto Exchange UI/UX Design by Salome Mosiava" initial={{ opacity: 0, y: 50, scale: 0.95 }} whileInView={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 1.2, delay: 0.5, ease: [0.22, 1, 0.36, 1] }} className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[65%] rounded-t-xl shadow-[0_-20px_60px_rgba(0,0,0,0.5)]" />
+                  <div className="absolute top-2.5 left-2.5 z-20 flex items-center gap-1.5">
+                    <span className="text-[7px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-full bg-[#D59A04]/10 backdrop-blur-xl text-[#D59A04]/80 border border-[#D59A04]/15">UX/UI</span>
+                    <span className="text-[7px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-full bg-white/[0.03] backdrop-blur-xl text-white/30 border border-white/[0.06]">196 Screens</span>
+                  </div>
+                  <div className="absolute bottom-0 left-0 right-0 z-20 p-4">
+                    <h3 className="text-lg text-white mb-0.5 tracking-[-0.03em]" style={{ fontFamily: F.heading, fontWeight: 700 }}>AURUM</h3>
+                    <p className="text-white/30 text-[10px] tracking-wide mb-2.5" style={{ fontFamily: F.body }}>Crypto Exchange Platform</p>
+                    <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#D59A04]/15 border border-[#D59A04]/20 text-[10px] text-[#D59A04]/80 transition-all" style={{ fontFamily: F.body, fontWeight: 500 }}>
+                      View Case Study <ArrowRight size={10} />
+                    </span>
+                  </div>
                 </div>
-                <div className="absolute bottom-0 left-0 right-0 z-20 p-3 md:p-4">
-                  <h3 className="text-base md:text-lg text-white mb-0.5 tracking-[-0.03em]" style={{ fontFamily: F.heading, fontWeight: 700 }}>AURUM</h3>
-                  <p className="text-white/30 text-[10px] tracking-wide mb-2" style={{ fontFamily: F.body }}>Crypto Exchange Platform</p>
-                  <span className="inline-flex items-center justify-center gap-2 px-3 py-1.5 rounded-full bg-[#D59A04]/15 border border-[#D59A04]/20 text-[10px] text-[#D59A04]/80 group-hover:text-[#D59A04] group-hover:bg-[#D59A04]/20 group-hover:border-[#D59A04]/30 transition-all w-full sm:w-auto" style={{ fontFamily: F.body, fontWeight: 500 }}>
-                    View Case Study <ArrowRight size={10} />
-                  </span>
-                </div>
-              </div>
-            </BentoTiltCard>
+              </BentoTiltCard>
             </motion.div>
           </Link>
 
-          {/* Right column — two compact tiles stacked & centered */}
-          <div className="col-span-2 sm:col-span-1 flex flex-row sm:flex-col gap-2.5 sm:justify-center">
-            <div className="flex-1 sm:flex-none">
-              <DiscoveryTile image={adsTerminal6} label="Terminal" category="Social Media Ads" categoryColor="#ed592b" isDark={isDark} border={border} link="/work/social-media-ads" alt="Terminal Social Media Ads Design by Salome Mosiava - სოციალური მედიის დიზაინი, სალომე მოსიავა" />
-            </div>
-            <div className="flex-1 sm:flex-none">
-              <DiscoveryTile
-                image={adsCarmall1}
-                label="Carmall"
-                category="Motion Design"
-                categoryColor="#a855f7"
-                isDark={isDark}
-                border={border}
-                videoSrc="https://res.cloudinary.com/dgfn598qb/video/upload/f_auto,q_auto/carmall-ne_1_u5ewuz.mp4"
-                link="/work/social-media-motion"
-                alt="Salome Mosiava Portfolio Art Direction Georgia - სალომე მოსიავა პორტფოლიო"
-              />
-            </div>
+          {/* Terminal — col 3, row 1 */}
+          <div className="sm:col-start-3 sm:row-start-1">
+            <DiscoveryTile image={adsTerminal1} label="Terminal" category="Social Media Ads" categoryColor="#ed592b" isDark={isDark} border={border} link="/work/social-media-ads" alt="Terminal Social Media Ads Design by Salome Mosiava" />
+          </div>
+
+          {/* Carmall — col 3, row 2 */}
+          <div className="sm:col-start-3 sm:row-start-2">
+            <DiscoveryTile
+              image={adsCarmall1}
+              label="Carmall"
+              category="Motion Design"
+              categoryColor="#a855f7"
+              isDark={isDark}
+              border={border}
+              videoSrc="https://res.cloudinary.com/dgfn598qb/video/upload/f_auto,q_auto/carmall-ne_1_u5ewuz.mp4"
+              link="/work/social-media-motion"
+              alt="Salome Mosiava Portfolio Art Direction Georgia"
+            />
+          </div>
+
+          {/* SCHENKER — full-width bottom row, 3 cols */}
+          <div className="sm:col-span-3">
+            <Link to="/projects/schenker">
+              <motion.div whileHover={{ y: -3, scale: 1.004 }} transition={{ type: 'spring', stiffness: 400, damping: 30 }}>
+                <BentoTiltCard tiltStrength={4} glareOpacity={0.05} className={`rounded-2xl border overflow-hidden ${border} ${isDark ? 'bg-[#0a0b0f]' : 'bg-white'}`}>
+                  <div className="grid grid-cols-1 sm:grid-cols-[1fr_1.6fr]">
+                    <div className="p-4 sm:p-5 flex flex-col justify-center order-2 sm:order-1">
+                      <div className="flex items-center gap-1.5 mb-2">
+                        <span className="text-[7px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-full bg-[#6B8E23]/10 text-[#8FBC3B]/80 border border-[#6B8E23]/15">Enterprise · UX/UI</span>
+                        <span className="text-[7px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-full bg-white/[0.03] text-white/60 border border-white/[0.1]">Desktop</span>
+                      </div>
+                      <h3 className="text-base md:text-lg text-white mb-0.5 tracking-[-0.03em]" style={{ fontFamily: F.heading, fontWeight: 700 }}>SCHENKER</h3>
+                      <p className={`text-[10px] ${bt} mb-2.5 leading-relaxed`} style={{ fontFamily: F.body }}>
+                        Enterprise logistics — form systems, label management & shipment tracking.
+                      </p>
+                      <div className="flex flex-wrap gap-1 mb-2.5">
+                        {['UX/UI', 'Enterprise', 'Form Systems'].map((t) => (
+                          <span key={t} className={`text-[8px] uppercase tracking-[0.15em] px-2 py-0.5 rounded-md whitespace-nowrap ${isDark ? 'bg-white/[0.06] text-white/50' : 'bg-zinc-100 text-zinc-400'}`} style={{ fontFamily: F.body }}>{t}</span>
+                        ))}
+                      </div>
+                      <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#6B8E23]/12 border border-[#6B8E23]/20 text-[10px] text-[#8FBC3B]/70 transition-all w-full sm:w-auto justify-center sm:justify-start" style={{ fontFamily: F.body, fontWeight: 500 }}>
+                        View Case Study <ArrowRight size={10} />
+                      </span>
+                    </div>
+                    <div className="relative h-[140px] sm:h-auto min-h-[160px] overflow-hidden bg-gradient-to-br from-[#e8ecd8] via-[#dfe4cc] to-[#d4dab8] order-1 sm:order-2 rounded-t-2xl sm:rounded-t-none sm:rounded-r-2xl img-hover-zoom">
+                      <img src={schenkerLabels} alt="Schenker label management" loading="lazy" decoding="async" width="1440" height="900" className="absolute top-[10%] left-[4%] w-[44%] rounded-lg shadow-xl shadow-black/30 opacity-25" />
+                      <img src={schenkerSettings} alt="Schenker settings dashboard" loading="lazy" decoding="async" width="1440" height="900" className="absolute top-[6%] right-[4%] w-[40%] rounded-lg shadow-xl shadow-black/30 opacity-30" />
+                      <img src={schenkerSendung} alt="Schenker shipment tracking" loading="lazy" decoding="async" width="1440" height="900" className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[68%] rounded-t-lg shadow-xl shadow-black/40" />
+                    </div>
+                  </div>
+                </BentoTiltCard>
+              </motion.div>
+            </Link>
           </div>
 
         </div>
-      </FadeIn>
-
-      {/* SCHENKER — compact horizontal card */}
-      <FadeIn delay={0.25}>
-        <Link to="/projects/schenker">
-          <motion.div whileHover={{ y: -4, scale: 1.005 }} transition={{ type: 'spring', stiffness: 400, damping: 30 }}>
-          <BentoTiltCard tiltStrength={4} glareOpacity={0.05} className={`rounded-2xl border overflow-hidden mb-2.5 ${border} ${isDark ? 'bg-[#0a0b0f]' : 'bg-white'}`}>
-            <div className="grid grid-cols-1 sm:grid-cols-[1fr_1.4fr]">
-              <div className="p-4 sm:p-5 flex flex-col justify-center order-2 sm:order-1">
-                <div className="flex items-center gap-1.5 mb-2">
-                  <span className="text-[7px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-full bg-[#6B8E23]/10 text-[#8FBC3B]/80 border border-[#6B8E23]/15">Enterprise · UX/UI</span>
-                  <span className="text-[7px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-full bg-white/[0.03] text-white/60 border border-white/[0.1]">Desktop</span>
-                </div>
-                <h3 className="text-base md:text-lg text-white mb-0.5 tracking-[-0.03em]" style={{ fontFamily: F.heading, fontWeight: 700 }}>SCHENKER</h3>
-                <p className={`text-[10px] ${bt} mb-2.5 leading-relaxed`} style={{ fontFamily: F.body }}>
-                  Enterprise logistics — form systems, label management & shipment tracking.
-                </p>
-                <div className="flex flex-wrap gap-1 mb-2.5">
-                  {['UX/UI', 'Enterprise', 'Form Systems'].map((t) => (
-                    <span key={t} className={`text-[8px] uppercase tracking-[0.15em] px-2 py-0.5 rounded-md whitespace-nowrap ${isDark ? 'bg-white/[0.06] text-white/50' : 'bg-zinc-100 text-zinc-400'}`} style={{ fontFamily: F.body }}>{t}</span>
-                  ))}
-                </div>
-                <span className="inline-flex items-center justify-center gap-2 px-3 py-1.5 rounded-full bg-[#6B8E23]/12 border border-[#6B8E23]/20 text-[10px] text-[#8FBC3B]/70 group-hover:text-[#8FBC3B] group-hover:bg-[#6B8E23]/20 group-hover:border-[#8FBC3B]/30 transition-all w-full sm:w-auto" style={{ fontFamily: F.body, fontWeight: 500 }}>
-                  View Case Study <ArrowRight size={10} />
-                </span>
-              </div>
-              <div className="relative h-[140px] sm:h-auto min-h-[160px] overflow-hidden bg-gradient-to-br from-[#e8ecd8] via-[#dfe4cc] to-[#d4dab8] order-1 sm:order-2 rounded-t-2xl sm:rounded-t-none sm:rounded-r-2xl img-hover-zoom">
-                <img src={schenkerLabels} alt="Schenker logistics label management interface" loading="lazy" decoding="async" className="absolute top-[10%] left-[4%] w-[44%] rounded-lg shadow-xl shadow-black/30 opacity-25" />
-                <img src={schenkerSettings} alt="Schenker platform settings dashboard" loading="lazy" decoding="async" className="absolute top-[6%] right-[4%] w-[40%] rounded-lg shadow-xl shadow-black/30 opacity-30" />
-                <img src={schenkerSendung} alt="Design Service Icon Salome Mosiava - დიზაინ მომსახურება სალომე მოსიავა" loading="lazy" decoding="async" className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[68%] rounded-t-lg shadow-xl shadow-black/40" />
-              </div>
-            </div>
-          </BentoTiltCard>
-          </motion.div>
-        </Link>
       </FadeIn>
 
       {/* Explore more — inline CTA */}
@@ -728,7 +719,7 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
                     style={{ backgroundColor: `${exp.color}15` }}
                   >
                     {exp.logoImg ? (
-                      <img src={exp.logoImg} alt={`${exp.company} logo`} className="w-full h-full object-cover" />
+                      <img src={exp.logoImg} alt={`${exp.company} logo`} loading="lazy" width="28" height="28" className="w-full h-full object-cover" />
                     ) : (
                       <span className="text-[9px] font-mono text-white/60" style={{ fontWeight: 600 }}>{exp.company.slice(0, 2).toUpperCase()}</span>
                     )}
@@ -958,13 +949,34 @@ const ServicesContent = ({ isDark }: { isDark: boolean }) => {
 /* ════════════════��═════════════════��═══��════════════════════════════ */
 /*                      CONTACT CONTENT                              */
 /* ═══��════════════════════════════════════════════════════���══════════ */
+const ContactSkeleton = ({ isDark }: { isDark: boolean }) => {
+  const pulse = isDark ? 'bg-white/[0.06] animate-pulse' : 'bg-zinc-200 animate-pulse';
+  return (
+    <div className="space-y-6">
+      <div className="space-y-3 mb-6">
+        <div className={`h-2.5 w-24 rounded-full ${pulse}`} />
+        <div className={`h-5 w-56 rounded-lg ${pulse}`} />
+        <div className={`h-3 w-80 rounded-md ${pulse}`} />
+      </div>
+      {[...Array(5)].map((_, i) => (
+        <div key={i} className={`h-[60px] rounded-xl border ${isDark ? 'border-white/[0.06]' : 'border-zinc-200'} ${pulse}`} />
+      ))}
+    </div>
+  );
+};
+
 const ContactContent = ({ isDark }: { isDark: boolean }) => {
   const mt = isDark ? 'text-[#7a7d8a]' : 'text-zinc-400';
   const border = isDark ? 'border-white/[0.06]' : 'border-zinc-200';
   const bg2 = isDark ? 'bg-white/[0.02]' : 'bg-zinc-50';
+  const [ready, setReady] = useState(false);
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  useEffect(() => { const id = requestAnimationFrame(() => setReady(true)); return () => cancelAnimationFrame(id); }, []);
+
+  if (!ready) return <ContactSkeleton isDark={isDark} />;
 
   const contactItems = [
     { icon: <Mail size={18} />, label: 'Email', value: 'mosiavasalome@gmail.com', href: 'mailto:mosiavasalome@gmail.com', color: '#ed592b', copyable: true, external: false },
@@ -1001,11 +1013,10 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
               className="flex items-center gap-2.5 mb-3"
             >
               <motion.span
-                className="inline-block w-6 h-px bg-[#ed592b]"
+                className="inline-block w-6 h-px bg-[#ed592b] origin-left"
                 initial={{ scaleX: 0 }}
                 animate={{ scaleX: 1 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
-                style={{ transformOrigin: 'left' }}
               />
               <span className={`text-[10px] uppercase tracking-[0.2em] ${mt}`} style={{ fontFamily: F.body, fontWeight: 500 }}>
                 Get in touch
@@ -1031,7 +1042,7 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
                 className={`text-[16px] sm:text-[18px] tracking-[-0.02em] leading-[1.2] ${isDark ? 'text-white' : 'text-zinc-900'}`}
                 style={{ fontFamily: F.heading, fontWeight: 600 }}
               >
-                Let's create <span style={{ color: '#ed592b' }}>something amazing.</span>
+                Let's create <span className="text-[#ed592b]">something amazing.</span>
               </motion.h1>
             </div>
 
@@ -1225,18 +1236,18 @@ const adsBrands: { name: string; logoImg?: string; items: AdsMedia[]; aiContent?
     { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773344688/WhatsApp_Image_2026-03-08_at_14.44.08_1_lquzrl.jpg', type: 'image' },
   ]},
   { name: 'Terminal · ტერმინალი', logoImg: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773916799/terminal_hcftru.webp', items: [
-    { src: adsTerminal6, type: 'image' },
+    { src: adsTerminal1, type: 'image' },
     { src: adsTerminal2, type: 'image' },
-    { src: adsTerminal5, type: 'image' },
     { src: adsTerminal3, type: 'image' },
     { src: adsTerminal4, type: 'image' },
+    { src: adsTerminal5, type: 'image' },
   ]},
   { name: 'Mardi Holding', aiContent: true, logoImg: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773916799/mardi_dzhmgm.webp', items: [
     { src: adsMardi1, type: 'image' },
-    { src: adsMardi3, type: 'image' },
     { src: adsMardi2, type: 'image' },
+    { src: adsMardi3, type: 'image' },
+    { src: adsMardi4, type: 'image' },
     { src: adsMardi5, type: 'image' },
-    { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773407375/10-marti-2_1_mkkjtu.png', type: 'image' },
   ]},
   { name: 'Crystal Leasing · კრისტალ ლიზინგი', logoImg: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773916798/%E1%83%99%E1%83%A0%E1%83%98%E1%83%A1%E1%83%A2%E1%83%90%E1%83%9A_%E1%83%9A%E1%83%98%E1%83%96%E1%83%98%E1%83%9C%E1%83%92%E1%83%98_xeyoop.webp', items: [
     { src: adsCrystal4, type: 'image' },
@@ -1254,8 +1265,7 @@ const adsBrands: { name: string; logoImg?: string; items: AdsMedia[]; aiContent?
     { src: adsCarmall1, type: 'image' },
     { src: adsCarmall2, type: 'image' },
     { src: adsCarmall3, type: 'image' },
-    { src: adsCarmall4, type: 'image' },
-    { src: adsCarmall5, type: 'image', fullWidth: true },
+    { src: adsCarmall4, type: 'image', fullWidth: true },
   ]},
   { name: 'Scope', logoImg: logoScope, compactGrid: true, items: [
     { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773268321/image_15_nafa1y.png', type: 'image' },
@@ -1374,6 +1384,9 @@ const ImageLightbox = ({ src, alt, onClose, whiteBg }: { src: string; alt: strin
   );
 };
 
+/* Module-level cache: tracks URLs already loaded so re-visiting a brand is instant */
+const imgLoadCache = new Set<string>();
+
 /* Shimmer loading skeleton for media */
 const MediaShimmer = ({ isDark }: { isDark: boolean }) => (
   <div className={`absolute inset-0 z-10 ${isDark ? 'bg-[#121318]' : 'bg-zinc-100'}`}>
@@ -1410,7 +1423,8 @@ const AdsMediaItem = ({ item, brandName, index, isDark, border, onImageClick, wh
   onImageClick: () => void;
   whiteBg?: boolean;
 }) => {
-  const [loaded, setLoaded] = useState(false);
+  // Start as loaded if this URL was already fetched — instant display on tab revisit
+  const [loaded, setLoaded] = useState(() => item.type === 'image' && imgLoadCache.has(item.src));
 
   return (
     <TiltCard
@@ -1433,10 +1447,10 @@ const AdsMediaItem = ({ item, brandName, index, isDark, border, onImageClick, wh
           <img
             src={item.src}
             alt={`${brandName} social media ad design — ${index + 1}`}
-            loading="lazy"
+            loading={imgLoadCache.has(item.src) ? 'eager' : 'lazy'}
             decoding="async"
             className={`w-full block transition-opacity duration-500 ${loaded ? 'opacity-100' : 'opacity-0'} ${whiteBg ? 'h-full object-cover' : 'h-auto'}`}
-            onLoad={() => setLoaded(true)}
+            onLoad={() => { imgLoadCache.add(item.src); setLoaded(true); }}
           />
         )}
         {/* Reserve space for shimmer when not loaded */}
@@ -1517,6 +1531,17 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
   const goTo = (idx: number) => { setDirection(idx > activeBrand ? 1 : -1); setActiveBrand(idx); pauseForInteraction(); };
   const goPrev = () => { setDirection(-1); setActiveBrand(p => p === 0 ? adsBrands.length - 1 : p - 1); pauseForInteraction(); };
   const goNext = () => { setDirection(1); setActiveBrand(p => (p + 1) % adsBrands.length); pauseForInteraction(); };
+
+  /* Preload a brand's images on tab hover so switching feels instant */
+  const preloadBrand = useCallback((idx: number) => {
+    adsBrands[idx]?.items.forEach(item => {
+      if (item.type === 'image' && !imgLoadCache.has(item.src)) {
+        const img = new window.Image();
+        img.onload = () => imgLoadCache.add(item.src);
+        img.src = item.src;
+      }
+    });
+  }, []);
 
   /* Scroll active tab into view horizontally */
   useEffect(() => {
@@ -1651,7 +1676,7 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
                 <motion.button
                   key={b.name}
                   onClick={() => goTo(i)}
-                  onMouseEnter={() => setHoveredTab(i)}
+                  onMouseEnter={() => { setHoveredTab(i); preloadBrand(i); }}
                   onMouseLeave={() => setHoveredTab(null)}
                   whileTap={{ scale: 0.94 }}
                   animate={{ y: hovered && !active ? -2 : 0 }}
@@ -1762,13 +1787,13 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
                         {v.type === 'video' ? (
                           <video src={v.src} autoPlay loop muted playsInline className="w-full h-auto object-cover block" />
                         ) : (
-                          <img src={v.src} alt={`${v.brandName} social media advertising design`} loading="lazy" decoding="async" className="w-full h-auto object-cover block transition-transform duration-500 group-hover:scale-105" />
+                          <img src={v.src} alt={`${v.brandName} social media advertising design`} loading="lazy" decoding="async" width="800" height="800" className="w-full h-auto object-cover block transition-transform duration-500 group-hover:scale-105" />
                         )}
                       </div>
                       <div className={`absolute inset-0 bg-gradient-to-t ${isDark ? 'from-black/70' : 'from-black/50'} to-transparent flex items-end p-2`}>
                         <div className="flex items-center gap-1.5">
                           <div className={`w-4 h-4 rounded flex items-center justify-center text-[7px] flex-shrink-0 ${isDark ? 'bg-white/15 text-white/70' : 'bg-white/20 text-white/80'}`} style={{ fontFamily: F.heading, fontWeight: 700 }}>
-                            {v.logoImg ? <img src={v.logoImg} alt={`${v.brandName} logo`} className="w-full h-full object-cover rounded" /> : v.brandName.charAt(0)}
+                            {v.logoImg ? <img src={v.logoImg} alt={`${v.brandName} logo`} loading="lazy" width="16" height="16" className="w-full h-full object-cover rounded" /> : v.brandName.charAt(0)}
                           </div>
                           <span className="text-[9px] text-white/90 truncate" style={{ fontFamily: F.body, fontWeight: 500 }}>
                             {v.brandName.split(' · ')[0]}
@@ -1853,7 +1878,7 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
                   style={{ fontFamily: F.heading, fontWeight: 700 }}
                 >
                   {brand.logoImg ? (
-                    <img src={brand.logoImg} alt={`${brand.name} logo`} className="w-full h-full object-cover" />
+                    <img src={brand.logoImg} alt={`${brand.name} logo`} loading="lazy" width="32" height="32" className="w-full h-full object-cover" />
                   ) : (
                     brand.name.charAt(0)
                   )}
@@ -2137,7 +2162,7 @@ const MotionReelCard = ({
           style={{ fontFamily: F.heading, fontWeight: 700 }}
         >
           {reel.logoImg ? (
-            <img src={reel.logoImg} alt={`${reel.brand} logo`} className="w-full h-full object-cover" />
+            <img src={reel.logoImg} alt={`${reel.brand} logo`} loading="lazy" width="40" height="40" className="w-full h-full object-cover" />
           ) : (
             reel.brandInitial
           )}
@@ -2256,9 +2281,9 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
           >
             <div className="relative aspect-[16/9] overflow-hidden bg-[#080B0F] img-hover-zoom">
               <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-              <img src={screenLanding} alt="AURUM crypto landing page UX design" loading="lazy" decoding="async" className="absolute top-4 left-4 w-[50%] rounded-lg shadow-2xl shadow-black/50 opacity-25" />
-              <img src={screenProfile} alt="AURUM user profile UX design" loading="lazy" decoding="async" className="absolute top-8 right-4 w-[45%] rounded-lg shadow-2xl shadow-black/50 opacity-35" />
-              <img src={screenExchange} alt="AURUM exchange dashboard — cryptocurrency trading platform case study" loading="lazy" decoding="async" className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[70%] rounded-t-lg shadow-2xl shadow-black/60 group-hover:-translate-y-2 group-hover:scale-[1.02] transition-all duration-500" />
+              <img src={screenLanding} alt="AURUM crypto landing page UX design" loading="lazy" decoding="async" width="1440" height="900" className="absolute top-4 left-4 w-[50%] rounded-lg shadow-2xl shadow-black/50 opacity-25" />
+              <img src={screenProfile} alt="AURUM user profile UX design" loading="lazy" decoding="async" width="1440" height="900" className="absolute top-8 right-4 w-[45%] rounded-lg shadow-2xl shadow-black/50 opacity-35" />
+              <img src={screenExchange} alt="AURUM exchange dashboard — cryptocurrency trading platform case study" loading="lazy" decoding="async" width="1440" height="900" className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[70%] rounded-t-lg shadow-2xl shadow-black/60 group-hover:-translate-y-2 group-hover:scale-[1.02] transition-all duration-500" />
               <div className="absolute top-4 left-4 z-20 flex items-center gap-2">
                 <span className="text-[9px] uppercase tracking-[0.15em] px-2.5 py-1 rounded-full bg-[#ed592b]/20 backdrop-blur-md text-[#ed592b] border border-[#ed592b]/30">Featured</span>
                 <span className="text-[9px] uppercase tracking-[0.15em] px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-md text-white/50 border border-white/10">2025</span>
@@ -2303,9 +2328,9 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
           >
             <div className="relative aspect-[16/9] overflow-hidden bg-[#e8ecd8] img-hover-zoom">
               <div className="absolute inset-0 z-10 bg-gradient-to-t from-[#2a3a0e]/90 via-[#2a3a0e]/20 to-transparent" />
-              <img src={schenkerLabels} alt="Schenker logistics label tracking interface" loading="lazy" decoding="async" className="absolute top-4 left-4 w-[50%] rounded-lg shadow-2xl shadow-black/50 opacity-30" />
-              <img src={schenkerSettings} alt="Schenker enterprise settings panel" loading="lazy" decoding="async" className="absolute top-8 right-4 w-[45%] rounded-lg shadow-2xl shadow-black/50 opacity-35" />
-              <img src={schenkerSendung} alt="Schenker shipment management — enterprise logistics platform case study" loading="lazy" decoding="async" className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[70%] rounded-t-lg shadow-2xl shadow-black/60 group-hover:-translate-y-2 group-hover:scale-[1.02] transition-all duration-500" />
+              <img src={schenkerLabels} alt="Schenker logistics label tracking interface" loading="lazy" decoding="async" width="1440" height="900" className="absolute top-4 left-4 w-[50%] rounded-lg shadow-2xl shadow-black/50 opacity-30" />
+              <img src={schenkerSettings} alt="Schenker enterprise settings panel" loading="lazy" decoding="async" width="1440" height="900" className="absolute top-8 right-4 w-[45%] rounded-lg shadow-2xl shadow-black/50 opacity-35" />
+              <img src={schenkerSendung} alt="Schenker shipment management — enterprise logistics platform case study" loading="lazy" decoding="async" width="1440" height="900" className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[70%] rounded-t-lg shadow-2xl shadow-black/60 group-hover:-translate-y-2 group-hover:scale-[1.02] transition-all duration-500" />
               <div className="absolute top-4 left-4 z-20 flex items-center gap-2">
                 <span className="text-[9px] uppercase tracking-[0.15em] px-2.5 py-1 rounded-full bg-[#6B8E23]/20 backdrop-blur-md text-[#8FBC3B] border border-[#6B8E23]/30">Enterprise</span>
                 <span className="text-[9px] uppercase tracking-[0.15em] px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-md text-white/70 border border-white/15">Desktop</span>
@@ -2357,10 +2382,12 @@ export function HomePage() {
   const location = useLocation();
 
   const isContactRoute = location.pathname === '/contact';
+  const isServicesRoute = location.pathname === '/services';
 
   /* Derive activeSection: URL route param > query param > 'home' */
   const [localSection, setLocalSection] = useState(() => {
     if (isContactRoute) return 'contact';
+    if (isServicesRoute) return 'services';
     if (category && WORK_CATEGORIES.has(category)) return category;
     const section = searchParams.get('section');
     return section || 'home';
@@ -2370,6 +2397,8 @@ export function HomePage() {
   useEffect(() => {
     if (isContactRoute) {
       setLocalSection('contact');
+    } else if (isServicesRoute) {
+      setLocalSection('services');
     } else if (category && WORK_CATEGORIES.has(category)) {
       setLocalSection(category);
     } else if (!category) {
@@ -2381,7 +2410,7 @@ export function HomePage() {
         setLocalSection('home');
       }
     }
-  }, [category, searchParams, isContactRoute]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [category, searchParams, isContactRoute, isServicesRoute]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const activeSection = (category && WORK_CATEGORIES.has(category)) ? category : localSection;
 
@@ -2395,13 +2424,15 @@ export function HomePage() {
       navigate(`/work/${id}`);
     } else if (id === 'contact') {
       navigate('/contact');
+    } else if (id === 'services') {
+      navigate('/services');
     } else {
-      if (category || isContactRoute) {
+      if (category || isContactRoute || isServicesRoute) {
         navigate('/');
       }
       setLocalSection(id);
     }
-  }, [navigate, category, isContactRoute]);
+  }, [navigate, category, isContactRoute, isServicesRoute]);
 
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const { theme } = useTheme();
@@ -2443,7 +2474,12 @@ export function HomePage() {
 
   return (
     <div className="relative" style={{ fontFamily: F.body }}>
-      <HomeSEO />
+      {activeSection === 'contact' ? <ContactSEO />
+        : activeSection === 'services' ? <ServicesSEO />
+        : activeSection === 'ux-ui' ? <UxUiSEO />
+        : activeSection === 'social-media-ads' ? <SocialMediaAdsSEO />
+        : activeSection === 'social-media-motion' ? <SocialMediaMotionSEO />
+        : <HomeSEO />}
 
       <Sidebar
         activeSection={activeSection}
@@ -2454,20 +2490,14 @@ export function HomePage() {
 
       {/* Main content */}
       <main className="lg:ml-[192px] min-h-screen lg:pt-0">
-        <div className="max-w-3xl mx-auto px-4 sm:px-5 lg:px-10 py-6 sm:py-8 lg:py-12">
+        <div className="max-w-3xl mx-auto px-4 sm:px-5 lg:px-10 py-4 sm:py-5 lg:py-7">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeSection}
-              initial={{ opacity: 0, y: 40, filter: 'blur(16px)', scale: 0.96, rotateX: 3 }}
-              animate={{ opacity: 1, y: 0, filter: 'blur(0px)', scale: 1, rotateX: 0 }}
-              exit={{ opacity: 0, y: -30, filter: 'blur(10px)', scale: 0.98, rotateX: -2 }}
-              transition={{
-                duration: 0.6,
-                ease: [0.22, 1, 0.36, 1],
-                opacity: { duration: 0.4 },
-                filter: { duration: 0.5 },
-              }}
-              style={{ perspective: 1200, transformStyle: 'preserve-3d' }}
+              initial={{ opacity: 0, y: 16, filter: 'blur(4px)' }}
+              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              exit={{ opacity: 0, y: -10, filter: 'blur(4px)' }}
+              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
             >
               {renderContent()}
             </motion.div>

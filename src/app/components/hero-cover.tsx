@@ -7,11 +7,11 @@ import { ShineText } from './animated-helpers';
 /* ─── AURUM Screen Imports ─────────────────────────────────────────── */
 const screenExchange = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774041357/470258954933ae7f3b3615ad0fe2098ae46160f5_2_wvsmro.webp';
 const screenProfile = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774040904/259c40c789033b795135eecd13ffa040e408d1d8_g0b0ks.webp';
-import screenLogin from 'figma:asset/9e873bb0d472e26f1827dcde7f87e247a5b06c01.png';
-import screenQR from 'figma:asset/b78c3bc48aa79d5e8533d55135b1b1f6f97d4000.png';
-import screenTransfer from 'figma:asset/a1323a96dc9bb7cd87928c75c26a81b6d0ce2a1a.png';
+const screenLogin = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339514/code_wp94ox.avif';
+const screenQR = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339514/code_wp94ox.avif';
+const screenTransfer = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339514/code_wp94ox.avif';
 const screenLanding = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774040819/33bde90ba43fe3b089e907b814ef1018193651cd_hptwri.webp';
-import screenVerify from 'figma:asset/7a5ab65edbb1b3b28c1811299e9b2260abdb0c07.png';
+const screenVerify = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339514/code_wp94ox.avif';
 
 const BRAND = {
   headingFont: '"BPG LE Studio 02 Caps", "Space Grotesk", sans-serif',

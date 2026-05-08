@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://samole.ge/sitemap.xml

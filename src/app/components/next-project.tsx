@@ -12,7 +12,7 @@ const schenkerLabels = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto
 
 /* ─── Ads imports for cross-recommendations ──────────────────────── */
 const adsTerminal6 = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774041033/ae0f296f707bac87ea320800f47aa242e0616131_1_iwntjz.webp';
-import adsMardi1 from 'figma:asset/b62bbc10625805a2bfc4ed4ec0039576272b49ac.png';
+const adsMardi1 = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339520/b62bbc10625805a2bfc4ed4ec0039576272b49ac_1_gwslya.png';
 
 const F = {
   heading: '"Syne", "Space Grotesk", sans-serif',

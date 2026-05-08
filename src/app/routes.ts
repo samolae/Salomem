@@ -28,6 +28,10 @@ export const router = createBrowserRouter([
             Component: HomePage,
           },
           {
+            path: '/services',
+            Component: HomePage,
+          },
+          {
             path: '/projects/aurum',
             Component: AurumCaseStudy,
           },

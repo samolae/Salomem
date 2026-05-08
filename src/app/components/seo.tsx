@@ -1,50 +1,60 @@
 import { Helmet } from 'react-helmet-async';
+import { useLocation } from 'react-router';
 
 interface SEOProps {
   title?: string;
+  rawTitle?: string;
   description?: string;
   keywords?: string;
   image?: string;
-  url?: string;
   type?: 'website' | 'article';
   jsonLd?: Record<string, unknown>;
 }
 
 const SITE_NAME = 'Salome Mosiava';
+const BASE_URL = 'https://samole.ge';
+const DEFAULT_IMAGE = `${BASE_URL}/hero-screenshot.jpg`;
 const DEFAULT_DESCRIPTION =
-  'Award-winning product designer specializing in crypto exchange platforms, logistics systems, and enterprise UX. Case studies include AURUM Crypto Exchange and SCHENKER Logistics Platform.';
-const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&h=630&fit=crop';
-const BASE_URL = 'https://portfolio.design'; // replace with your real domain
+  'Salome Mosiava is a Senior Product Designer and Art Director based in Tbilisi, Georgia. Specializing in UX/UI, social media art direction, and motion design. Top-Rated Plus on Upwork.';
 
 export function SEO({
   title,
+  rawTitle,
   description = DEFAULT_DESCRIPTION,
-  keywords = 'product designer, UX design, UI design, crypto exchange, logistics platform, case study, portfolio, AURUM, SCHENKER',
+  keywords = 'Salome Mosiava, product designer, art director, UX design, UI design, social media design, motion design, Tbilisi, Georgia, portfolio',
   image = DEFAULT_IMAGE,
-  url = '',
   type = 'website',
   jsonLd,
 }: SEOProps) {
-  const pageTitle = title ? `${title} — ${SITE_NAME}` : SITE_NAME;
-  const fullUrl = `${BASE_URL}${url}`;
+  const { pathname } = useLocation();
+  const pageTitle = rawTitle ?? (title ? `${title} — ${SITE_NAME}` : SITE_NAME);
+  const fullUrl = `${BASE_URL}${pathname}`;
+  const absoluteImage = image.startsWith('http') ? image : `${BASE_URL}${image}`;
 
   const defaultJsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: SITE_NAME,
-    url: BASE_URL,
-    description: DEFAULT_DESCRIPTION,
-    author: {
+    '@type': 'ProfilePage',
+    url: fullUrl,
+    mainEntity: {
       '@type': 'Person',
-      name: 'Product Designer',
-      jobTitle: 'Senior Product Designer',
+      name: 'Salome Mosiava',
+      jobTitle: 'Art Director & Senior Product Designer',
+      url: BASE_URL,
+      description:
+        'Senior Product Designer and Art Director based in Tbilisi, Georgia. Specializing in UX/UI design, social media art direction, and motion design.',
+      sameAs: [
+        'https://www.instagram.com/areuli.design/',
+        'https://www.behance.net/samole',
+        'https://www.upwork.com/freelancers/~0163986e2d8967d783',
+        'https://www.linkedin.com/in/samole',
+      ],
       knowsAbout: [
         'UX Design',
         'UI Design',
-        'Product Design',
+        'Art Direction',
+        'Motion Design',
         'Design Systems',
-        'Crypto Exchange',
-        'Logistics Platforms',
+        'Social Media Design',
       ],
     },
   };
@@ -55,15 +65,15 @@ export function SEO({
       <title>{pageTitle}</title>
       <meta name="description" content={description} />
       <meta name="keywords" content={keywords} />
-      <meta name="author" content="Product Designer" />
+      <meta name="author" content="Salome Mosiava" />
       <meta name="robots" content="index, follow" />
       <link rel="canonical" href={fullUrl} />
 
-      {/* ─── Open Graph (Facebook, LinkedIn) ───────────────── */}
+      {/* ─── Open Graph ────────────────────────────────────── */}
       <meta property="og:type" content={type} />
       <meta property="og:title" content={pageTitle} />
       <meta property="og:description" content={description} />
-      <meta property="og:image" content={image} />
+      <meta property="og:image" content={absoluteImage} />
       <meta property="og:url" content={fullUrl} />
       <meta property="og:site_name" content={SITE_NAME} />
       <meta property="og:locale" content="en_US" />
@@ -72,18 +82,18 @@ export function SEO({
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={pageTitle} />
       <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={image} />
+      <meta name="twitter:image" content={absoluteImage} />
 
-      {/* ─── Preconnect for performance ─────────────────────── */}
+      {/* ─── Preconnect ─────────────────────────────────────── */}
       <link rel="preconnect" href="https://res.cloudinary.com" />
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
 
-      {/* ─── Theme & Mobile ────────────────────────────────── */}
+      {/* ─── Theme ─────────────────────────────────────────── */}
       <meta name="theme-color" content="#0a0a0c" />
       <meta name="color-scheme" content="dark" />
 
-      {/* ─── JSON-LD Structured Data ───────────────────────── */}
+      {/* ─── JSON-LD ───────────────────────────────────────── */}
       <script type="application/ld+json">
         {JSON.stringify(jsonLd || defaultJsonLd)}
       </script>
@@ -98,20 +108,59 @@ export function SEO({
 export function HomeSEO() {
   return (
     <SEO
-      description="Product designer portfolio showcasing award-winning case studies in crypto exchange, logistics platforms, and enterprise UX design. Featuring AURUM and SCHENKER projects."
-      url="/"
-      jsonLd={{
-        '@context': 'https://schema.org',
-        '@type': 'ProfilePage',
-        mainEntity: {
-          '@type': 'Person',
-          name: 'Product Designer',
-          jobTitle: 'Senior Product Designer',
-          description:
-            'Specializing in crypto exchange platforms, logistics systems, and enterprise UX with Awwwards-level design quality.',
-          knowsAbout: ['UX Design', 'UI Design', 'Design Systems', 'Crypto Exchange', 'Logistics'],
-        },
-      }}
+      rawTitle="Salome Mosiava — Art Director & Senior Product Designer"
+      description="Salome Mosiava is a Senior Product Designer and Art Director based in Tbilisi, Georgia. Specializing in UX/UI, social media art direction, and motion design. Top-Rated Plus on Upwork."
+      keywords="Salome Mosiava, art director, senior product designer, UX/UI design, social media design, motion design, Tbilisi, Georgia, portfolio, Upwork"
+    />
+  );
+}
+
+export function ServicesSEO() {
+  return (
+    <SEO
+      title="Services"
+      description="Design services by Salome Mosiava — UX/UI product design, art direction, social media visual design, motion graphics, and brand identity for startups and enterprises."
+      keywords="design services, UX/UI design services, art direction, social media design, motion graphics, Salome Mosiava"
+    />
+  );
+}
+
+export function ContactSEO() {
+  return (
+    <SEO
+      title="Contact"
+      description="Get in touch with Salome Mosiava for freelance projects, collaborations, and full-time opportunities in design and art direction."
+      keywords="contact Salome Mosiava, hire designer, freelance UX designer, art director for hire"
+    />
+  );
+}
+
+export function UxUiSEO() {
+  return (
+    <SEO
+      title="UX/UI Design"
+      description="UX/UI design case studies by Salome Mosiava — including AURUM crypto exchange platform (196 screens) and SCHENKER enterprise logistics platform."
+      keywords="UX/UI design, product design case studies, AURUM crypto exchange, SCHENKER logistics, Salome Mosiava"
+    />
+  );
+}
+
+export function SocialMediaAdsSEO() {
+  return (
+    <SEO
+      title="Social Media Ads"
+      description="Social media advertising and visual campaigns by Salome Mosiava. Clients include Terminal, Mardi Holding, Crystal Leasing, Gino Aquapark, Carmall, Scope, and more."
+      keywords="social media ads, visual campaigns, art direction, Terminal, Mardi, Crystal Leasing, Carmall, Salome Mosiava"
+    />
+  );
+}
+
+export function SocialMediaMotionSEO() {
+  return (
+    <SEO
+      title="Motion Design"
+      description="Motion design and animated social media content by Salome Mosiava. Logo reveals, social media reels, and brand animation for Carmall, Scope, Saloni Furniture, and more."
+      keywords="motion design, animation, social media motion, logo reveals, brand animation, Salome Mosiava"
     />
   );
 }
@@ -122,7 +171,6 @@ export function AurumSEO() {
       title="AURUM Crypto Exchange — Case Study"
       description="AURUM crypto exchange platform case study: 196 screens, 64+ components, comprehensive design system. Simplifying cryptocurrency trading for the Georgian market with trust-first UX."
       keywords="AURUM, crypto exchange, UX case study, cryptocurrency platform, Georgian fintech, design system, dark UI, product design"
-      url="/projects/aurum"
       type="article"
       jsonLd={{
         '@context': 'https://schema.org',
@@ -130,18 +178,9 @@ export function AurumSEO() {
         headline: 'AURUM — Crypto Exchange Platform Case Study',
         description:
           'Complete UX/UI case study for AURUM cryptocurrency exchange. 196 screens across web and mobile, 64+ reusable components, and a comprehensive design system.',
-        author: {
-          '@type': 'Person',
-          name: 'Product Designer',
-        },
-        publisher: {
-          '@type': 'Organization',
-          name: 'Portfolio',
-        },
-        mainEntityOfPage: {
-          '@type': 'WebPage',
-          '@id': 'https://portfolio.design/projects/aurum',
-        },
+        author: { '@type': 'Person', name: 'Salome Mosiava', url: BASE_URL },
+        publisher: { '@type': 'Organization', name: 'Salome Mosiava Portfolio', url: BASE_URL },
+        mainEntityOfPage: { '@type': 'WebPage', '@id': `${BASE_URL}/projects/aurum` },
         keywords: 'crypto exchange, UX design, fintech, design system, dark UI',
         articleSection: 'Case Study',
         about: {
@@ -161,7 +200,6 @@ export function SchenkerSEO() {
       title="SCHENKER Logistics Platform — Case Study"
       description="SCHENKER logistics platform case study: enterprise-grade shipment management, document workflows, and API integration. Streamlining logistics operations with intuitive UX."
       keywords="SCHENKER, logistics platform, UX case study, shipment management, enterprise design, document workflows, API integration, product design"
-      url="/projects/schenker"
       type="article"
       jsonLd={{
         '@context': 'https://schema.org',
@@ -169,18 +207,9 @@ export function SchenkerSEO() {
         headline: 'SCHENKER — Logistics Platform Case Study',
         description:
           'Complete UX/UI case study for SCHENKER logistics platform. Enterprise shipment management, document workflows, and seamless API integration.',
-        author: {
-          '@type': 'Person',
-          name: 'Product Designer',
-        },
-        publisher: {
-          '@type': 'Organization',
-          name: 'Portfolio',
-        },
-        mainEntityOfPage: {
-          '@type': 'WebPage',
-          '@id': 'https://portfolio.design/projects/schenker',
-        },
+        author: { '@type': 'Person', name: 'Salome Mosiava', url: BASE_URL },
+        publisher: { '@type': 'Organization', name: 'Salome Mosiava Portfolio', url: BASE_URL },
+        mainEntityOfPage: { '@type': 'WebPage', '@id': `${BASE_URL}/projects/schenker` },
         keywords: 'logistics, enterprise UX, shipment management, document workflows',
         articleSection: 'Case Study',
         about: {

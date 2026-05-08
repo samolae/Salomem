@@ -1,4 +1,4 @@
-import { Outlet, useLocation, useNavigate } from 'react-router';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router';
 import { useTheme } from './theme-provider';
 import { useActiveSection } from './active-section-context';
 import { Home, Briefcase, Mail, Layers, Image, Video } from 'lucide-react';
@@ -62,9 +62,9 @@ function MobileBottomBar() {
           const active = getActive(item);
           const Icon = item.icon;
           return (
-            <button
+            <Link
               key={item.id}
-              onClick={() => navigate(item.path)}
+              to={item.path}
               className={`relative flex flex-col items-center justify-center gap-1 py-2.5 px-3 min-w-[60px] transition-colors duration-200 ${
                 active
                   ? 'text-[#ed592b]'
@@ -76,7 +76,7 @@ function MobileBottomBar() {
               )}
               <Icon size={22} strokeWidth={active ? 2.2 : 1.6} />
               <span className={`text-[10px] tracking-[0.02em] ${active ? 'font-semibold' : ''}`}>{item.label}</span>
-            </button>
+            </Link>
           );
         })}
       </div>

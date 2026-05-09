@@ -1348,8 +1348,8 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
             {/* Name + Email */}
             <div className="grid grid-cols-2 gap-3">
               {([
-                { field: 'name' as const, label: 'Your name', placeholder: 'Giorgi Beridze', type: 'text', required: false },
-                { field: 'email' as const, label: 'Email', placeholder: 'you@example.com', type: 'email', required: true },
+                { field: 'name' as const, label: 'Your name', placeholder: 'What should I call you?', type: 'text', required: false },
+                { field: 'email' as const, label: 'Email', placeholder: 'Where can I reach you?', type: 'email', required: true },
               ]).map(({ field, label, placeholder, type, required }) => (
                 <div key={field}>
                   <label className={`text-[10px] uppercase tracking-[0.1em] ${mt} block mb-1.5`} style={{ fontFamily: F.body, fontWeight: 500 }}>

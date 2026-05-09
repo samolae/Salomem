@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef, useLayoutEffect, useMemo, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
+import { motion, AnimatePresence, useScroll, useTransform, useVelocity, useMotionValue, useAnimationFrame, useSpring, useMotionValueEvent, useReducedMotion } from 'motion/react';
+import type { MotionValue } from 'motion/react';
 import { Link, useSearchParams, useLocation, useParams, useNavigate } from 'react-router';
 import { useActiveSection } from './active-section-context';
 import {
@@ -408,94 +409,296 @@ const DiscoveryTile = ({
   return link ? <Link to={link}>{tile}</Link> : tile;
 };
 
-/* ─── Sticky Stacking Spotlight Card ─────────────────────────────── */
+/* ─── Spotlight types ─────────────────────────────────────────────── */
 type SpotlightData = { img: string; tag: string; tagColor: string; title: string; desc: string };
 
-const STACK_OFFSET = 22;
+/* ─── Spotlight Card Inner ────────────────────────────────────────── */
+const SpotlightCardInner = ({
+  sp, index, total, isDark, border,
+}: { sp: SpotlightData; index: number; total: number; isDark: boolean; border: string }) => (
+  <div className={`relative w-full h-full rounded-2xl overflow-hidden border ${border} shadow-2xl shadow-black/60 cursor-pointer`}>
+    <div className="absolute inset-0">
+      <ImageWithFallback src={sp.img} alt={`${sp.title} — ${sp.tag}`} className="w-full h-full object-cover" />
+    </div>
+    <div
+      className="absolute inset-0 pointer-events-none opacity-[0.12]"
+      style={{
+        mixBlendMode: 'overlay',
+        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='5' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E")`,
+        backgroundSize: '256px 256px',
+      }}
+    />
+    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
+    <div className="absolute top-4 right-4 z-10">
+      <span className="text-[10px] font-mono text-white/25 tabular-nums">
+        {String(index + 1).padStart(2, '0')}/{String(total).padStart(2, '0')}
+      </span>
+    </div>
+    <motion.div
+      className="absolute top-4 left-4 z-10"
+      initial={{ scale: 0.7, opacity: 0 }}
+      whileInView={{ scale: 1, opacity: 1 }}
+      viewport={{ once: true }}
+      transition={{ type: 'spring', stiffness: 380, damping: 22, delay: 0.25 }}
+    >
+      <span
+        className="text-[9px] uppercase tracking-wider px-2.5 py-1 rounded-full backdrop-blur-md border"
+        style={{ backgroundColor: `${sp.tagColor}20`, color: sp.tagColor, borderColor: `${sp.tagColor}30` }}
+      >
+        {sp.tag}
+      </span>
+    </motion.div>
+    <div className="absolute bottom-5 left-5 right-5 z-10">
+      <h3 className="text-xl md:text-2xl text-white tracking-[-0.02em] mb-1.5" style={{ fontFamily: F.heading, fontWeight: 700 }}>
+        {sp.title}
+      </h3>
+      <p className="text-white/50 text-[12px] leading-relaxed max-w-md" style={{ fontFamily: F.body }}>
+        {sp.desc}
+      </p>
+    </div>
+  </div>
+);
 
-const StickySpotlightCard = ({ sp, index, total, isDark, border }: { sp: SpotlightData; index: number; total: number; isDark: boolean; border: string }) => {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: cardRef, offset: ['start start', 'end start'] });
+/* ─── Velocity-reactive marquee for spotlight ─────────────────────── */
+const SpotlightMarqueeStrip = ({
+  text, color, velFactor,
+}: { text: string; color: string; velFactor: MotionValue<number> }) => {
+  const baseX = useMotionValue(0);
+  useAnimationFrame((_, delta) => {
+    const vel = velFactor.get();
+    const dir = vel > 0.1 ? 1 : -1;
+    const speed = (0.02 + Math.abs(vel) * 0.016) * delta;
+    let next = baseX.get() + dir * speed;
+    if (next <= -50) next += 50;
+    if (next >= 0) next -= 50;
+    baseX.set(next);
+  });
+  const x = useTransform(baseX, (v) => `${v}%`);
+  const repeated = `${text} · `.repeat(20);
+  return (
+    <div
+      className="overflow-hidden w-full"
+      style={{
+        maskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)',
+        WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)',
+      }}
+    >
+      <motion.div style={{ x }} className="whitespace-nowrap py-1.5">
+        <span className="text-[8px] uppercase tracking-[0.28em]" style={{ fontFamily: 'monospace', color: `${color}55` }}>
+          {repeated}{repeated}
+        </span>
+      </motion.div>
+    </div>
+  );
+};
 
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.84]);
-  const translateY = useTransform(scrollYProgress, [0, 1], [0, -18]);
-  const cardOpacity = useTransform(scrollYProgress, [0, 0.25, 0.82, 1], [1, 1, 0.1, 0]);
-  const br = useTransform(scrollYProgress, [0, 1], [18, 34]);
-  const overlayOpacity = useTransform(scrollYProgress, [0, 0.3, 1], [0, 0, 0.6]);
-  const imgScale = useTransform(scrollYProgress, [0, 1], [1, 1.12]);
+/* ─── Cinematic Spotlight Deck Section ───────────────────────────── */
+const SpotlightDeckSection = ({ isDark, border }: { isDark: boolean; border: string }) => {
+  const reducedMotion = useReducedMotion();
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== 'undefined' ? window.innerWidth < 768 : false
+  );
 
-  const stickyTop = 88 + index * STACK_OFFSET;
-  const isLast = index === total - 1;
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+
+  const spotlights: SpotlightData[] = [
+    {
+      img: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773320797/0101_yqkpg2.webp',
+      tag: 'Business', tagColor: '#ed592b',
+      title: 'Driving Real Impact',
+      desc: 'At Scope, we started from zero and, in less than two years, grew the team, collaborated with 50+ businesses, and delivered measurable results.',
+    },
+    {
+      img: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773320796/0202_niubv1.webp',
+      tag: 'Education', tagColor: '#22c55e',
+      title: 'Completed Certification',
+      desc: 'After Effects certification, expanding skills in motion design and advertising.',
+    },
+    {
+      img: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773320797/0303_fz2hzg.webp',
+      tag: 'Mentoring', tagColor: '#a855f7',
+      title: 'Mentoring',
+      desc: 'Teens, women, and others in design, turning theory into real practice through professional acceleration programs.',
+    },
+  ];
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start start', 'end end'],
+    layoutEffect: false,
+  });
+
+  useMotionValueEvent(scrollYProgress, 'change', (v) => {
+    if (!isMobile && !reducedMotion) {
+      setActiveIndex(Math.min(Math.floor(v * 3), 2));
+    }
+  });
+
+  const rawVelocity = useVelocity(scrollYProgress);
+  const velSmooth = useSpring(rawVelocity, { damping: 50, stiffness: 200 });
+  const velFactor = useTransform(velSmooth, [-3, 0, 3], [5, 1, -3]);
+
+  // Card 0 — active immediately, exits 0→0.33
+  const c0y     = useTransform(scrollYProgress, [0, 0.27, 0.33], [0, 0, -460]);
+  const c0scale = useTransform(scrollYProgress, [0, 0.33], [1, 0.96]);
+  const c0op    = useTransform(scrollYProgress, [0, 0.26, 0.33], [1, 1, 0]);
+
+  // Card 1 — enters 0.25→0.36, exits 0.60→0.66
+  const c1y     = useTransform(scrollYProgress, [0.25, 0.36, 0.60, 0.66], [30, 0, 0, -460]);
+  const c1scale = useTransform(scrollYProgress, [0.25, 0.36, 0.66], [0.97, 1, 0.96]);
+  const c1op    = useTransform(scrollYProgress, [0.22, 0.36, 0.60, 0.66], [0, 1, 1, 0]);
+
+  // Card 2 — enters 0.58→0.70, stays
+  const c2y     = useTransform(scrollYProgress, [0.58, 0.70], [30, 0]);
+  const c2scale = useTransform(scrollYProgress, [0.58, 0.70], [0.97, 1]);
+  const c2op    = useTransform(scrollYProgress, [0.55, 0.70], [0, 1]);
+
+  const cardMV = [
+    { y: c0y, scale: c0scale, opacity: c0op },
+    { y: c1y, scale: c1scale, opacity: c1op },
+    { y: c2y, scale: c2scale, opacity: c2op },
+  ];
+
+  const mt = isDark ? 'text-[#7a7d8a]' : 'text-zinc-400';
+
+  const HeadingRow = () => (
+    <div className="flex items-center gap-3">
+      <div className="w-1.5 h-1.5 rounded-full bg-[#a855f7]" />
+      <div className="relative">
+        <p className={`text-[11px] uppercase tracking-[0.15em] ${mt}`} style={{ fontFamily: F.body, fontWeight: 500 }}>
+          Spotlights of 2025
+        </p>
+        <motion.div
+          className="absolute -bottom-0.5 left-0 h-px bg-[#ed592b]"
+          initial={{ scaleX: 0 }}
+          whileInView={{ scaleX: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.65, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          style={{ originX: 0, width: '100%' }}
+        />
+      </div>
+      <div className={`flex-1 h-px ${isDark ? 'bg-white/[0.04]' : 'bg-zinc-200'}`} />
+    </div>
+  );
+
+  // ── Mobile / reduced-motion: simple vertical stack
+  if (isMobile || reducedMotion) {
+    return (
+      <div>
+        <div className="mb-6"><HeadingRow /></div>
+        <div className="space-y-4">
+          {spotlights.map((sp, i) => (
+            <motion.div
+              key={sp.tag}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+              className="h-[260px]"
+            >
+              <SpotlightCardInner sp={sp} index={i} total={spotlights.length} isDark={isDark} border={border} />
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div ref={cardRef} style={{ height: isLast ? 'auto' : '68vh', zIndex: index + 1 }}>
-      <motion.div
-        style={{
-          scale: isLast ? 1 : scale,
-          y: isLast ? 0 : translateY,
-          opacity: isLast ? 1 : cardOpacity,
-          borderRadius: br,
-          top: stickyTop,
-        }}
-        className={`sticky h-[270px] md:h-[330px] overflow-hidden cursor-pointer border ${border} shadow-2xl shadow-black/50`}
-      >
-        {/* Image with counter-scale parallax */}
-        <div className="absolute inset-0 overflow-hidden">
-          <motion.div style={{ scale: isLast ? 1 : imgScale }} className="w-full h-full">
-            <ImageWithFallback src={sp.img} alt={`${sp.title} — ${sp.tag}`} className="w-full h-full object-cover" />
-          </motion.div>
+    <div ref={sectionRef} style={{ height: '300vh' }}>
+      <div className="sticky top-0 h-screen flex flex-col justify-center gap-4">
+
+        {/* Ambient color bleed per card */}
+        <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 0 }}>
+          {spotlights.map((sp, i) => (
+            <motion.div
+              key={sp.tag}
+              className="absolute inset-0"
+              animate={{ opacity: activeIndex === i ? 1 : 0 }}
+              transition={{ duration: 1, ease: 'easeInOut' }}
+              style={{ background: `radial-gradient(ellipse 80% 55% at 85% 50%, ${sp.tagColor}07 0%, transparent 65%)` }}
+            />
+          ))}
         </div>
 
-        {/* Progressive darkening as card recedes */}
-        {!isLast && (
-          <motion.div className="absolute inset-0 bg-black pointer-events-none" style={{ opacity: overlayOpacity }} />
-        )}
+        {/* Heading */}
+        <div className="relative z-10"><HeadingRow /></div>
 
-        {/* Base film */}
-        <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px]" />
-
-        {/* Grain texture */}
-        <div className="absolute inset-0 pointer-events-none opacity-[0.12]" style={{ mixBlendMode: 'overlay', backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='5' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E")`, backgroundSize: '256px 256px' }} />
-
-        {/* Bottom gradient */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent" />
-
-        {/* Index */}
-        <div className="absolute top-4 right-4 z-10">
-          <span className="text-[10px] font-mono text-white/20 tabular-nums">{String(index + 1).padStart(2, '0')}/{String(total).padStart(2, '0')}</span>
+        {/* Velocity marquee — text updates when active card changes */}
+        <div className="relative z-10">
+          <SpotlightMarqueeStrip
+            text={`${spotlights[activeIndex].tag} · ${spotlights[activeIndex].title}`}
+            color={spotlights[activeIndex].tagColor}
+            velFactor={velFactor}
+          />
         </div>
 
-        {/* Tag */}
-        <div className="absolute top-4 left-4 z-10">
-          <span className="text-[9px] uppercase tracking-wider px-2.5 py-1 rounded-full backdrop-blur-md border" style={{ backgroundColor: `${sp.tagColor}20`, color: sp.tagColor, borderColor: `${sp.tagColor}30` }}>
-            {sp.tag}
-          </span>
+        {/* Card stack */}
+        <div className="relative z-10" style={{ height: 320 }}>
+          {spotlights.map((sp, i) => (
+            <motion.div
+              key={sp.tag}
+              style={{
+                position: 'absolute',
+                top: 0, left: 0, right: 0, bottom: 0,
+                zIndex: spotlights.length - i,
+                y: cardMV[i].y,
+                scale: cardMV[i].scale,
+                opacity: cardMV[i].opacity,
+                willChange: 'transform, opacity',
+              }}
+            >
+              <SpotlightCardInner sp={sp} index={i} total={spotlights.length} isDark={isDark} border={border} />
+            </motion.div>
+          ))}
         </div>
 
-        {/* Content */}
-        <div className="absolute bottom-5 left-5 right-5 z-10">
-          <motion.h3
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            viewport={{ once: true }}
-            className="text-xl md:text-2xl text-white tracking-[-0.02em] mb-1.5"
-            style={{ fontFamily: F.heading, fontWeight: 700 }}
-          >
-            {sp.title}
-          </motion.h3>
-          <motion.p
-            initial={{ opacity: 0, y: 8 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
-            viewport={{ once: true }}
-            className="text-white/45 text-[12px] md:text-[13px] max-w-md leading-relaxed"
-            style={{ fontFamily: F.body }}
-          >
-            {sp.desc}
-          </motion.p>
+        {/* Odometer + progress track */}
+        <div className="relative z-10 flex items-center justify-between">
+          <div className="flex items-center gap-1.5">
+            <div className="overflow-hidden h-5 relative" style={{ width: 22 }}>
+              <AnimatePresence mode="popLayout" initial={false}>
+                <motion.span
+                  key={activeIndex}
+                  initial={{ y: '110%' }}
+                  animate={{ y: 0 }}
+                  exit={{ y: '-110%' }}
+                  transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                  className={`absolute inset-x-0 text-[11px] font-mono tabular-nums text-center ${isDark ? 'text-white/50' : 'text-zinc-400'}`}
+                >
+                  {String(activeIndex + 1).padStart(2, '0')}
+                </motion.span>
+              </AnimatePresence>
+            </div>
+            <span className={`text-[11px] font-mono ${isDark ? 'text-white/20' : 'text-zinc-300'}`}>
+              /{String(spotlights.length).padStart(2, '0')}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-1.5">
+            {spotlights.map((sp, i) => (
+              <motion.div
+                key={sp.tag}
+                className="h-[3px] rounded-full"
+                animate={{
+                  width: activeIndex === i ? 20 : 4,
+                  backgroundColor: activeIndex === i
+                    ? sp.tagColor
+                    : isDark ? 'rgba(255,255,255,0.14)' : 'rgba(0,0,0,0.12)',
+                }}
+                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              />
+            ))}
+          </div>
         </div>
-      </motion.div>
+
+      </div>
     </div>
   );
 };
@@ -850,45 +1053,9 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
         </div>
       </div>
 
-      {/* Spotlights — Sticky Stacking Scroll */}
+      {/* Spotlights — Cinematic Deck */}
       <div className="mb-16">
-        <FadeIn>
-          <div className="flex items-center gap-3 mb-8">
-            <div className="w-1.5 h-1.5 rounded-full bg-[#a855f7]" />
-            <p className={`text-[11px] uppercase tracking-[0.15em] ${isDark ? 'text-white/60' : 'text-zinc-500'}`} style={{ fontFamily: F.body, fontWeight: 500 }}>Spotlights of 2025</p>
-            <div className={`flex-1 h-px ${isDark ? 'bg-white/[0.04]' : 'bg-zinc-200'}`} />
-          </div>
-        </FadeIn>
-
-        {(() => {
-          const spotlights: SpotlightData[] = [
-            {
-              img: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773320797/0101_yqkpg2.webp',
-              tag: 'Business', tagColor: '#ed592b',
-              title: 'Driving Real Impact',
-              desc: 'At Scope, we started from zero and, in less than two years, grew the team, collaborated with 50+ businesses, and delivered measurable results.',
-            },
-            {
-              img: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773320796/0202_niubv1.webp',
-              tag: 'Education', tagColor: '#22c55e',
-              title: 'Completed Certification',
-              desc: 'After Effects certification, expanding skills in motion design and advertising.',
-            },
-            {
-              img: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773320797/0303_fz2hzg.webp',
-              tag: 'Mentoring', tagColor: '#a855f7',
-              title: 'Mentoring',
-              desc: 'Teens, women, and others in design, turning theory into real practice through professional acceleration programs.',
-            },
-          ];
-          return (
-            <div className="relative">
-              {spotlights.map((sp, i) => (
-                <StickySpotlightCard key={sp.tag} sp={sp} index={i} total={spotlights.length} isDark={isDark} border={border} />
-              ))}
-            </div>
-          );
-        })()}
+        <SpotlightDeckSection isDark={isDark} border={border} />
       </div>
 
     </div>

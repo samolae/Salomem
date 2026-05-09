@@ -13,7 +13,7 @@ interface SEOProps {
 
 const SITE_NAME = 'Salome Mosiava';
 const BASE_URL = 'https://samole.ge';
-const DEFAULT_IMAGE = `${BASE_URL}/hero-screenshot.jpg`;
+const DEFAULT_IMAGE = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1778246294/hero_boli7m.jpg';
 const DEFAULT_DESCRIPTION =
   'Salome Mosiava is a Senior Product Designer and Art Director based in Tbilisi, Georgia. Specializing in UX/UI, social media art direction, and motion design. Top-Rated Plus on Upwork.';
 

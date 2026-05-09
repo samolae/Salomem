@@ -459,40 +459,8 @@ const SpotlightCardInner = ({
   </div>
 );
 
-/* ─── Velocity-reactive marquee for spotlight ─────────────────────── */
-const SpotlightMarqueeStrip = ({
-  text, color, velFactor,
-}: { text: string; color: string; velFactor: MotionValue<number> }) => {
-  const baseX = useMotionValue(0);
-  useAnimationFrame((_, delta) => {
-    const vel = velFactor.get();
-    const dir = vel > 0.1 ? 1 : -1;
-    const speed = (0.02 + Math.abs(vel) * 0.016) * delta;
-    let next = baseX.get() + dir * speed;
-    if (next <= -50) next += 50;
-    if (next >= 0) next -= 50;
-    baseX.set(next);
-  });
-  const x = useTransform(baseX, (v) => `${v}%`);
-  const repeated = `${text} · `.repeat(20);
-  return (
-    <div
-      className="overflow-hidden w-full"
-      style={{
-        maskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)',
-        WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)',
-      }}
-    >
-      <motion.div style={{ x }} className="whitespace-nowrap py-1.5">
-        <span className="text-[8px] uppercase tracking-[0.28em]" style={{ fontFamily: 'monospace', color: `${color}55` }}>
-          {repeated}{repeated}
-        </span>
-      </motion.div>
-    </div>
-  );
-};
 
-/* ─── Cinematic Spotlight Deck Section ───────────────────────────── */
+/* ─── Spotlight Deck Section ─────────────────────────────────────── */
 const SpotlightDeckSection = ({ isDark, border }: { isDark: boolean; border: string }) => {
   const reducedMotion = useReducedMotion();
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -528,11 +496,13 @@ const SpotlightDeckSection = ({ isDark, border }: { isDark: boolean; border: str
     },
   ];
 
-  // Card geometry — visible deck with peeking cards
-  const CARD_H = 300;
-  const PEEK_1 = 28;   // card 1 peeks 28px below card 0
-  const PEEK_2 = 52;   // card 2 peeks 52px below card 0
-  const ZONE_H = CARD_H + PEEK_2 + 6; // 358px — contains full deck
+  // Deck geometry — large enough offsets so all 3 cards are clearly visible
+  const CARD_H = 290;
+  const PEEK_1 = 52;  // card 1 peeks 52px below front card
+  const PEEK_2 = 100; // card 2 peeks 100px below front card
+  const X_1    = 6;   // card 1 shifts 6px right — diagonal deck look
+  const X_2    = 12;  // card 2 shifts 12px right
+  const ZONE_H = CARD_H + PEEK_2 + 12; // 402px — contains full visible deck
 
   const { scrollYProgress: p } = useScroll({
     target: sectionRef,
@@ -544,33 +514,31 @@ const SpotlightDeckSection = ({ isDark, border }: { isDark: boolean; border: str
     if (!isMobile && !reducedMotion) setActiveIndex(Math.min(Math.floor(v * 3), 2));
   });
 
-  const rawVelocity = useVelocity(p);
-  const velSmooth = useSpring(rawVelocity, { damping: 50, stiffness: 200 });
-  const velFactor = useTransform(velSmooth, [-3, 0, 3], [5, 1, -3]);
+  // ── Card 0: front, exits upward 0→0.33
+  const c0y     = useTransform(p, [0, 0.27, 0.33], [0,      0,      -(CARD_H * 1.6)]);
+  const c0scale = useTransform(p, [0, 0.33],        [1,      0.95]);
+  const c0op    = useTransform(p, [0, 0.27, 0.33],  [1,      0.9,    0]);
 
-  // ── Card 0: front from start, exits upward during 0→0.33
-  const c0y     = useTransform(p, [0, 0.28, 0.33], [0, 0, -(CARD_H * 1.55)]);
-  const c0scale = useTransform(p, [0, 0.33], [1, 0.95]);
-  const c0op    = useTransform(p, [0, 0.28, 0.33], [1, 0.9, 0]);
+  // ── Card 1: visible at (PEEK_1, X_1), promotes 0→0.33, exits 0.33→0.66
+  const c1y     = useTransform(p, [0, 0.33, 0.62, 0.66], [PEEK_1, 0,      0,      -(CARD_H * 1.6)]);
+  const c1x     = useTransform(p, [0, 0.33],              [X_1,    0]);
+  const c1scale = useTransform(p, [0, 0.33, 0.66],        [0.95,   1,      0.95]);
+  const c1op    = useTransform(p, [0, 0.33, 0.62, 0.66],  [0.85,   1,      1,      0]);
+  const c1rot   = useTransform(p, [0, 0.33],               [-0.7,   0]);
+  const c1depth = useTransform(p, [0, 0.33],               [0.20,   0]);
 
-  // ── Card 1: starts peeking at PEEK_1, promotes 0→0.33, exits 0.33→0.66
-  const c1y     = useTransform(p, [0, 0.33, 0.61, 0.66], [PEEK_1, 0, 0, -(CARD_H * 1.55)]);
-  const c1scale = useTransform(p, [0, 0.33, 0.66], [0.94, 1, 0.95]);
-  const c1op    = useTransform(p, [0, 0.33, 0.61, 0.66], [0.82, 1, 1, 0]);
-  const c1rot   = useTransform(p, [0, 0.33], [-0.6, 0]);
-  const c1depth = useTransform(p, [0, 0.33], [0.22, 0]);   // depth tint fades as it promotes
-
-  // ── Card 2: starts peeking at PEEK_2, promotes twice, stays last
+  // ── Card 2: visible at (PEEK_2, X_2), promotes twice, stays last
   const c2y     = useTransform(p, [0, 0.33, 0.66], [PEEK_2, PEEK_1, 0]);
-  const c2scale = useTransform(p, [0, 0.33, 0.66], [0.88, 0.94, 1]);
-  const c2op    = useTransform(p, [0, 0.33, 0.66], [0.65, 0.82, 1]);
-  const c2rot   = useTransform(p, [0, 0.33, 0.66], [-1.2, -0.6, 0]);
-  const c2depth = useTransform(p, [0, 0.33, 0.66], [0.42, 0.22, 0]);
+  const c2x     = useTransform(p, [0, 0.33, 0.66], [X_2,    X_1,    0]);
+  const c2scale = useTransform(p, [0, 0.33, 0.66], [0.90,   0.95,   1]);
+  const c2op    = useTransform(p, [0, 0.33, 0.66], [0.70,   0.85,   1]);
+  const c2rot   = useTransform(p, [0, 0.33, 0.66], [-1.3,   -0.7,   0]);
+  const c2depth = useTransform(p, [0, 0.33, 0.66], [0.38,   0.20,   0]);
 
   const cardMV = [
-    { y: c0y, scale: c0scale, opacity: c0op, rotate: 0,     depth: null  },
-    { y: c1y, scale: c1scale, opacity: c1op, rotate: c1rot, depth: c1depth },
-    { y: c2y, scale: c2scale, opacity: c2op, rotate: c2rot, depth: c2depth },
+    { y: c0y, x: 0,   scale: c0scale, opacity: c0op, rotate: 0,     depth: null    },
+    { y: c1y, x: c1x, scale: c1scale, opacity: c1op, rotate: c1rot, depth: c1depth },
+    { y: c2y, x: c2x, scale: c2scale, opacity: c2op, rotate: c2rot, depth: c2depth },
   ];
 
   const mt = isDark ? 'text-[#7a7d8a]' : 'text-zinc-400';
@@ -595,7 +563,7 @@ const SpotlightDeckSection = ({ isDark, border }: { isDark: boolean; border: str
     </div>
   );
 
-  // ── Mobile / reduced-motion: three visible cards staggered into view
+  // ── Mobile / reduced-motion: simple vertical stack
   if (isMobile || reducedMotion) {
     return (
       <div>
@@ -619,18 +587,19 @@ const SpotlightDeckSection = ({ isDark, border }: { isDark: boolean; border: str
   }
 
   return (
-    <div ref={sectionRef} style={{ height: '300vh' }}>
-      <div className="sticky top-0 h-screen flex flex-col justify-center gap-4">
+    // 240vh — each card transition = 80vh of scroll, feels snappy not sluggish
+    <div ref={sectionRef} style={{ height: '240vh' }}>
+      <div className="sticky top-0 h-screen flex flex-col justify-center gap-5">
 
-        {/* Ambient hue shift per active card */}
+        {/* Ambient hue per active card */}
         <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 0 }}>
           {spotlights.map((sp, i) => (
             <motion.div
               key={sp.tag}
               className="absolute inset-0"
               animate={{ opacity: activeIndex === i ? 1 : 0 }}
-              transition={{ duration: 1.1, ease: 'easeInOut' }}
-              style={{ background: `radial-gradient(ellipse 80% 55% at 85% 50%, ${sp.tagColor}07 0%, transparent 65%)` }}
+              transition={{ duration: 1, ease: 'easeInOut' }}
+              style={{ background: `radial-gradient(ellipse 80% 55% at 80% 50%, ${sp.tagColor}07 0%, transparent 65%)` }}
             />
           ))}
         </div>
@@ -638,16 +607,7 @@ const SpotlightDeckSection = ({ isDark, border }: { isDark: boolean; border: str
         {/* Heading */}
         <div className="relative z-10"><HeadingRow /></div>
 
-        {/* Velocity marquee */}
-        <div className="relative z-10">
-          <SpotlightMarqueeStrip
-            text={`${spotlights[activeIndex].tag} · ${spotlights[activeIndex].title}`}
-            color={spotlights[activeIndex].tagColor}
-            velFactor={velFactor}
-          />
-        </div>
-
-        {/* Card deck — all 3 cards visible, stacked with depth offsets */}
+        {/* Card deck — all 3 cards visible as a physical stack */}
         <div className="relative z-10" style={{ height: ZONE_H }}>
           {spotlights.map((sp, i) => {
             const mv = cardMV[i];
@@ -660,6 +620,7 @@ const SpotlightDeckSection = ({ isDark, border }: { isDark: boolean; border: str
                   height: CARD_H,
                   zIndex: spotlights.length - i,
                   y: mv.y,
+                  x: mv.x,
                   scale: mv.scale,
                   opacity: mv.opacity,
                   rotate: mv.rotate,
@@ -667,7 +628,6 @@ const SpotlightDeckSection = ({ isDark, border }: { isDark: boolean; border: str
                 }}
               >
                 <SpotlightCardInner sp={sp} index={i} total={spotlights.length} isDark={isDark} border={border} />
-                {/* Depth tint overlay — darkens background cards, fades as they promote */}
                 {mv.depth && (
                   <motion.div
                     className="absolute inset-0 rounded-2xl bg-black pointer-events-none"
@@ -700,7 +660,6 @@ const SpotlightDeckSection = ({ isDark, border }: { isDark: boolean; border: str
               /{String(spotlights.length).padStart(2, '0')}
             </span>
           </div>
-
           <div className="flex items-center gap-1.5">
             {spotlights.map((sp, i) => (
               <motion.div

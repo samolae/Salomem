@@ -626,9 +626,10 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
                   { name: 'The Khachapuri', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773916800/the_khachapuri_fv6s7a.webp' },
                   { name: 'UniLab', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/v1778334357/%E1%83%A3%E1%83%9C%E1%83%98%E1%83%9A%E1%83%90%E1%83%91%E1%83%98_zbfjyi.png' },
                   { name: 'Cubisten', logo: logoCubisten },
-                  { name: 'Georgian Chamber', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/v1778334357/georgian_chamber...._ffm4rm.png' },
+                  { name: 'GCCI', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/v1778334357/georgian_chamber...._ffm4rm.png' },
                   { name: 'Modusi', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/v1778334357/%E1%83%9B%E1%83%9D%E1%83%93%E1%83%A3%E1%83%A1%E1%83%98_zcltlg.png' },
-                  { name: 'Gagua', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/v1778334358/gagua_qwqdja.jpg' },
+                  { name: 'Gagua Clinic', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/v1778334358/gagua_qwqdja.jpg' },
+                  { name: 'NB Dental', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/v1778347254/nb_dental_qiiahr.jpg' },
                   { name: 'Thermocentre', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/v1778334709/%E1%83%97%E1%83%94%E1%83%A0%E1%83%9B%E1%83%9D%E1%83%AA%E1%83%94%E1%83%9C%E1%83%A2%E1%83%A0%E1%83%98_vmkkoc.png' },
                 ];
                 return [...clients, ...clients];

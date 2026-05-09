@@ -148,7 +148,7 @@ const Sidebar = ({
 
   const sidebarContent = (
     <div className="flex flex-col h-full" style={{ fontFamily: F.body }}>
-      <div className="px-4 pt-5 pb-5">
+      <div className="px-3 pt-4 pb-4 lg:px-4 lg:pt-5 lg:pb-5">
         <div className="flex items-center gap-3">
           <img
             src="https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1777841338/fav_ggorfv.png"
@@ -156,11 +156,11 @@ const Sidebar = ({
             width="64" height="64"
             className="w-8 h-8 rounded-full object-cover flex-shrink-0 ring-1 ring-white/[0.08]"
           />
-          <div className="min-w-0">
+          <div className="min-w-0 hidden lg:block">
             <h2 className={`text-[13px] truncate ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: F.heading, fontWeight: 600, letterSpacing: '-0.02em' }}>
               Salome Mosiava
             </h2>
-            <p className="text-[10px] text-[#ed592b] uppercase tracking-[0.12em]" style={{ fontFamily: F.body }}>Art Director & Senior Product Designer</p>
+            <p className="text-[9.5px] text-[#ed592b] uppercase tracking-[0.1em] leading-tight" style={{ fontFamily: F.body }}>Art Director & Senior Product Designer</p>
           </div>
         </div>
       </div>
@@ -174,7 +174,8 @@ const Sidebar = ({
                 <motion.div
                   whileHover={{ x: 3 }}
                   whileTap={{ scale: 0.97 }}
-                  className={`relative w-full flex items-center gap-2.5 px-3 py-2.5 lg:py-[7px] rounded-[10px] text-[13px] whitespace-nowrap transition-all overflow-hidden min-h-[44px] lg:min-h-0 focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
+                  title={item.label}
+                  className={`relative w-full flex items-center md:justify-center lg:justify-start gap-2.5 px-3 py-2 lg:py-[5px] rounded-[10px] text-[13px] whitespace-nowrap transition-all overflow-hidden min-h-[44px] md:min-h-[36px] lg:min-h-0 focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
                     active
                       ? isDark ? 'bg-white/[0.06] text-white' : 'bg-zinc-200/70 text-zinc-900'
                       : isDark ? 'text-[#7a7d8a] hover:text-white/80 hover:bg-white/[0.03]' : 'text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100'
@@ -188,7 +189,7 @@ const Sidebar = ({
                     />
                   )}
                   <span className={active ? 'text-[#ed592b]' : 'opacity-50'}>{item.icon}</span>
-                  {item.label}
+                  <span className="hidden lg:block">{item.label}</span>
                 </motion.div>
               </Link>
             </MagneticWrap>
@@ -197,11 +198,8 @@ const Sidebar = ({
 
         <div className={`h-px mx-2 my-2 ${isDark ? 'bg-white/[0.05]' : 'bg-zinc-200'}`} />
 
-        {/* ── CASE STUDIES subgroup */}
-        <div className="px-3 pt-1 pb-0.5">
-          <span className={`text-[8.5px] uppercase tracking-[0.18em] font-semibold ${isDark ? 'text-[#ed592b]/50' : 'text-[#ed592b]/60'}`} style={{ fontFamily: F.body }}>
-            Case Studies
-          </span>
+        <div className="px-3 pt-1 pb-0.5 hidden lg:block">
+          <span className={`text-[8.5px] uppercase tracking-[0.18em] font-semibold ${isDark ? 'text-[#ed592b]/50' : 'text-[#ed592b]/60'}`} style={{ fontFamily: F.body }}>Case Studies</span>
         </div>
         {projectCategories.filter(c => c.typeLabel === 'Case Study').map((cat) => {
           const active = activeSection === cat.id;
@@ -211,7 +209,8 @@ const Sidebar = ({
                 <motion.div
                   whileHover={{ x: 3 }}
                   whileTap={{ scale: 0.97 }}
-                  className={`relative w-full flex items-center gap-2.5 px-3 py-2.5 lg:py-[7px] rounded-[10px] text-[13px] transition-all overflow-hidden min-h-[44px] lg:min-h-0 focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
+                  title={cat.label}
+                  className={`relative w-full flex items-center md:justify-center lg:justify-start gap-2.5 px-3 py-2 lg:py-[5px] rounded-[10px] text-[13px] transition-all overflow-hidden min-h-[36px] focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
                     active
                       ? isDark ? 'bg-white/[0.06] text-white' : 'bg-zinc-200/70 text-zinc-900'
                       : isDark ? 'text-[#7a7d8a] hover:text-white/80 hover:bg-white/[0.03]' : 'text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100'
@@ -225,19 +224,15 @@ const Sidebar = ({
                     />
                   )}
                   <span className={`flex-shrink-0 ${active ? 'text-[#ed592b]' : 'opacity-50'}`}>{cat.icon}</span>
-                  <span className="truncate flex-1 min-w-0">{cat.label}</span>
-                  <span className={`ml-auto flex-shrink-0 text-[8px] uppercase tracking-[0.12em] ${isDark ? 'text-white/25' : 'text-zinc-300'}`} style={{ fontFamily: F.body }}>{cat.typeLabel}</span>
+                  <span className="hidden lg:block truncate flex-1 min-w-0">{cat.label}</span>
                 </motion.div>
               </Link>
             </MagneticWrap>
           );
         })}
 
-        {/* ── GALLERIES subgroup */}
-        <div className="px-3 pt-2.5 pb-0.5">
-          <span className={`text-[8.5px] uppercase tracking-[0.18em] font-semibold ${isDark ? 'text-white/25' : 'text-zinc-400/60'}`} style={{ fontFamily: F.body }}>
-            Galleries
-          </span>
+        <div className="px-3 pt-2 pb-0.5 hidden lg:block">
+          <span className={`text-[8.5px] uppercase tracking-[0.18em] font-semibold ${isDark ? 'text-white/25' : 'text-zinc-400/60'}`} style={{ fontFamily: F.body }}>Galleries</span>
         </div>
         {projectCategories.filter(c => c.typeLabel === 'Gallery').map((cat) => {
           const active = activeSection === cat.id;
@@ -247,7 +242,8 @@ const Sidebar = ({
                 <motion.div
                   whileHover={{ x: 3 }}
                   whileTap={{ scale: 0.97 }}
-                  className={`relative w-full flex items-center gap-2.5 px-3 py-2.5 lg:py-[7px] rounded-[10px] text-[13px] transition-all overflow-hidden min-h-[44px] lg:min-h-0 focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
+                  title={cat.label}
+                  className={`relative w-full flex items-center md:justify-center lg:justify-start gap-2.5 px-3 py-2 lg:py-[5px] rounded-[10px] text-[13px] transition-all overflow-hidden min-h-[36px] focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
                     active
                       ? isDark ? 'bg-white/[0.06] text-white' : 'bg-zinc-200/70 text-zinc-900'
                       : isDark ? 'text-[#7a7d8a] hover:text-white/80 hover:bg-white/[0.03]' : 'text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100'
@@ -261,8 +257,7 @@ const Sidebar = ({
                     />
                   )}
                   <span className={`flex-shrink-0 ${active ? 'text-[#ed592b]' : 'opacity-40'}`}>{cat.icon}</span>
-                  <span className="truncate flex-1 min-w-0">{cat.label}</span>
-                  <span className={`ml-auto flex-shrink-0 text-[8px] uppercase tracking-[0.12em] ${isDark ? 'text-white/25' : 'text-zinc-300'}`} style={{ fontFamily: F.body }}>{cat.typeLabel}</span>
+                  <span className="hidden lg:block truncate flex-1 min-w-0">{cat.label}</span>
                 </motion.div>
               </Link>
             </MagneticWrap>
@@ -270,7 +265,7 @@ const Sidebar = ({
         })}
       </nav>
 
-      <div className="p-2.5 space-y-[3px] mt-auto">
+      <div className="p-2.5 space-y-[3px] mt-auto hidden lg:block">
         {/* Status box */}
         <div className={`px-3 py-2.5 rounded-[10px] border ${border} ${isDark ? 'bg-white/[0.015]' : 'bg-zinc-50'}`}>
           <div className="flex items-center justify-between">
@@ -314,16 +309,18 @@ const Sidebar = ({
 
   return (
     <>
-      <aside className={`hidden lg:flex flex-col fixed left-0 top-0 bottom-0 w-[220px] z-40 border-r ${isDark ? 'bg-[#0b0b0e] border-white/[0.05]' : 'bg-white border-zinc-200'}`}>
+      {/* Desktop sidebar: full labels ≥1024px; icon-only rail 768–1023px */}
+      <aside className={`hidden md:flex flex-col fixed left-0 top-0 bottom-0 md:w-[64px] lg:w-[240px] z-40 border-r ${isDark ? 'bg-[#0b0b0e] border-white/[0.05]' : 'bg-white border-zinc-200'} overflow-hidden transition-[width] duration-200`}>
         {sidebarContent}
       </aside>
 
+      {/* Mobile drawer */}
       <AnimatePresence>
         {isMobileOpen && (
           <>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 lg:hidden" onClick={onMobileClose} />
-            <motion.aside initial={{ x: -260 }} animate={{ x: 0 }} exit={{ x: -260 }} transition={{ type: 'spring', damping: 30, stiffness: 300 }} className={`fixed left-0 top-0 bottom-16 w-[240px] z-50 lg:hidden border-r rounded-br-2xl ${isDark ? 'bg-[#0b0b0e] border-white/[0.05]' : 'bg-white border-zinc-200'}`}>
-              <button onClick={onMobileClose} className="absolute top-3 right-3 p-2.5 rounded-xl text-[#7a7d8a] hover:text-white hover:bg-white/[0.06] min-w-[44px] min-h-[44px] flex items-center justify-center focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)]"><X size={20} /></button>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 md:hidden" onClick={onMobileClose} />
+            <motion.aside initial={{ x: -300 }} animate={{ x: 0 }} exit={{ x: -300 }} transition={{ type: 'spring', damping: 30, stiffness: 300 }} className={`fixed left-0 top-0 bottom-0 w-[80vw] max-w-[300px] z-50 md:hidden border-r ${isDark ? 'bg-[#0b0b0e] border-white/[0.05]' : 'bg-white border-zinc-200'}`}>
+              <button onClick={onMobileClose} className="absolute top-3 right-3 p-2.5 rounded-xl text-[#7a7d8a] hover:text-white hover:bg-white/[0.06] min-w-[44px] min-h-[44px] flex items-center justify-center focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)]" aria-label="Close menu"><X size={20} /></button>
               {sidebarContent}
             </motion.aside>
           </>
@@ -591,17 +588,22 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
       {/* Top bar — Available badge only (name/photo live in the sidebar) */}
       <FadeIn>
         <div className="flex items-center justify-end mb-5">
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className={`inline-flex items-center gap-2.5 px-4 py-2 rounded-full border text-[12px] ${border} ${isDark ? 'text-[#7a7d8a]' : 'text-zinc-400'}`}
-          >
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#22c55e] opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#22c55e]" />
-            </span>
-            Available for new projects
-          </motion.div>
+          <Link to="/contact" aria-label="Available for new projects — go to contact page">
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              whileHover={{ backgroundColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)' }}
+              transition={{ duration: 0.2 }}
+              className={`group inline-flex items-center gap-2.5 px-4 py-2 rounded-full border text-[12px] cursor-pointer ${border} ${isDark ? 'text-[#7a7d8a] hover:text-white' : 'text-zinc-400 hover:text-zinc-700'} transition-colors`}
+            >
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#22c55e] opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#22c55e]" />
+              </span>
+              Available for new projects
+              <ArrowRight size={10} className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 -ml-1" />
+            </motion.div>
+          </Link>
         </div>
       </FadeIn>
 
@@ -634,8 +636,8 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
       </FadeIn>
 
       {/* CTA buttons */}
-      <FadeIn delay={0.15}>
-        <div className="flex items-center gap-3 mb-14">
+      <FadeIn delay={0.12}>
+        <div className="flex flex-wrap items-center gap-3 mb-14">
           <MagneticWrap strength={0.25}>
             <Link to="/contact">
               <motion.div
@@ -653,6 +655,7 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
                 />
                 <Mail size={13} className="relative z-10" />
                 <span className="relative z-10">Contact me</span>
+                <ArrowRight size={12} className="relative z-10" />
               </motion.div>
             </Link>
           </MagneticWrap>
@@ -690,12 +693,15 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
                   { name: 'Gagua Clinic', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/v1778334358/gagua_qwqdja.jpg' },
                   { name: 'NB Dental', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/v1778347254/nb_dental_qiiahr.jpg' },
                   { name: 'Thermocentre', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/v1778334709/%E1%83%97%E1%83%94%E1%83%A0%E1%83%9B%E1%83%9D%E1%83%AA%E1%83%94%E1%83%9C%E1%83%A2%E1%83%A0%E1%83%98_vmkkoc.png' },
+                  { name: 're:educate', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/v1778354746/re-educate_sioapv.jpg' },
+                  { name: 'Geolab', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/v1778354745/Geolab_ozodmc.png' },
+                  { name: 'BTU', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/v1778354745/BTU_lfezfk.png' },
                 ];
                 return [...clients, ...clients];
               })().map((client, i) => (
                 <div key={i} className="flex items-center gap-2 flex-shrink-0">
                   <div className={`w-5 h-5 rounded overflow-hidden flex-shrink-0 ${isDark ? 'opacity-35' : 'opacity-50'}`}>
-                    <img src={client.logo} alt={client.name} width="20" height="20" className="w-full h-full object-cover" />
+                    <img src={client.logo} alt={client.name} width="20" height="20" className="w-full h-full object-contain" />
                   </div>
                   <span className={`text-[11px] whitespace-nowrap ${isDark ? 'text-white/20' : 'text-zinc-300'}`} style={{ fontFamily: F.body, fontWeight: 500 }}>{client.name}</span>
                 </div>
@@ -1022,7 +1028,7 @@ const ServicesContent = ({ isDark }: { isDark: boolean }) => {
                     </div>
                     <p className={`text-[11px] mt-0.5 ${isDark ? 'text-white/25' : 'text-zinc-400'}`} style={{ fontFamily: F.body }}>{s.tagline}</p>
                   </div>
-                  <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-300 ${isOpen ? 'bg-[#ed592b]/12 text-[#ed592b] rotate-180' : isDark ? 'bg-white/[0.03] text-white/15' : 'bg-zinc-100 text-zinc-300'}`}>
+                  <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-300 ${isOpen ? 'rotate-180' : ''} ${isDark ? 'bg-white/[0.03] text-white/15' : 'bg-zinc-100 text-zinc-300'}`}>
                     <ChevronDown size={12} />
                   </div>
                 </div>
@@ -1060,16 +1066,13 @@ const ServicesContent = ({ isDark }: { isDark: boolean }) => {
         })}
       </div>
 
-      {/* How we'll work together */}
+      {/* How I work with you */}
       <FadeIn delay={0.3}>
         <div className={`rounded-2xl border p-5 mb-4 ${isDark ? 'border-white/[0.05] bg-[#0c0d11]' : `${border} bg-white`}`}>
-          <p className={`text-[10px] uppercase tracking-[0.15em] ${mt} mb-4`} style={{ fontFamily: F.body, fontWeight: 500 }}>How we'll work together</p>
+          <p className={`text-[10px] uppercase tracking-[0.15em] ${mt} mb-4`} style={{ fontFamily: F.body, fontWeight: 500 }}>How I work with you</p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             {process.map((p, i) => (
               <div key={p.step} className="relative">
-                {i < process.length - 1 && (
-                  <div className={`hidden sm:block absolute top-[7px] left-[55%] right-[-45%] h-px ${isDark ? 'bg-white/[0.06]' : 'bg-zinc-100'}`} />
-                )}
                 <div className={`text-[10px] mb-1.5 font-mono ${isDark ? 'text-[#ed592b]/50' : 'text-[#ed592b]/60'}`}>{p.step}</div>
                 <div className={`text-[12px] mb-1 ${isDark ? 'text-white/70' : 'text-zinc-700'}`} style={{ fontFamily: F.heading, fontWeight: 600 }}>{p.title}</div>
                 <p className={`text-[10px] leading-[1.5] ${mt}`} style={{ fontFamily: F.body }}>{p.desc}</p>
@@ -1595,7 +1598,7 @@ const adsBrands: { name: string; logoImg?: string; items: AdsMedia[]; aiContent?
     { src: adsCrystal2, type: 'image' },
     { src: adsCrystal3, type: 'image' },
   ]},
-  { name: 'Gino Aquapark · ჯინო აკვაპარკი', twoCol: true, logoImg: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773916800/%E1%83%AF%E1%83%98%E1%83%9C%E1%83%9D_%E1%83%90%E1%83%99%E1%83%95%E1%83%90%E1%83%9E%E1%83%90%E1%83%A0%E1%83%99%E1%83%98_r3am9r.webp', items: [
+  { name: 'Gino Aquapark · ჯინო აკვაპარკი', squareGrid: true, logoImg: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773916800/%E1%83%AF%E1%83%98%E1%83%9C%E1%83%9D_%E1%83%90%E1%83%99%E1%83%95%E1%83%90%E1%83%9E%E1%83%90%E1%83%A0%E1%83%99%E1%83%98_r3am9r.webp', items: [
     { src: adsGino4, type: 'image' },
     { src: adsGino1, type: 'image' },
     { src: adsGino2, type: 'image' },
@@ -1632,7 +1635,7 @@ const adsBrands: { name: string; logoImg?: string; items: AdsMedia[]; aiContent?
     { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773435381/%E1%83%AA%E1%83%94%E1%83%96%E1%83%90%E1%83%A0%E1%83%98-%E1%83%99%E1%83%A0%E1%83%94%E1%83%95%E1%83%94%E1%83%A2%E1%83%94%E1%83%91%E1%83%98%E1%83%97_rs3227.webp', type: 'image' },
     { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773435380/menuuu_rllapb.webp', type: 'image' },
   ]},
-  { name: 'არენა · Arena Sports Complex', compactGrid: true, logoImg: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773916799/arena_ydenyt.webp', items: [
+  { name: 'Arena Sports Complex', compactGrid: true, logoImg: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773916799/arena_ydenyt.webp', items: [
     { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773435781/oalcrhtxt4flbp1eduth_qllomh.webp', type: 'image' },
     { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773435782/beza4apnp1c4doscnpxd_mtdsqy.webp', type: 'image' },
     { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773435782/iifw1pa01dahbxlrptpt_etp7vp.webp', type: 'image' },
@@ -1871,26 +1874,10 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
       return { ...prev, src: prev.images[newIdx], index: newIdx };
     });
   }, []);
-  const [activeBrand, setActiveBrand] = useState(0);
-  const [direction, setDirection] = useState(0);
-  const [hoveredTab, setHoveredTab] = useState<number | null>(null);
-  const [isPaused, setIsPaused] = useState(false);
-  const [showAll, setShowAll] = useState(false);
+  const [activeBrand, setActiveBrand] = useState(0); // -1 = All
   const [viewAllPage, setViewAllPage] = useState(0);
-  const tabsRef = useRef<HTMLDivElement>(null);
-  const interactionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const brand = adsBrands[activeBrand];
-
-  /* Pause autoplay on user interaction, resume after 10s */
-  const pauseForInteraction = () => {
-    setIsPaused(true);
-    if (interactionTimerRef.current) clearTimeout(interactionTimerRef.current);
-    interactionTimerRef.current = setTimeout(() => setIsPaused(false), 10000);
-  };
-
-  useEffect(() => {
-    return () => { if (interactionTimerRef.current) clearTimeout(interactionTimerRef.current); };
-  }, []);
+  const [showStickyBar, setShowStickyBar] = useState(false);
+  const brand = activeBrand >= 0 ? adsBrands[activeBrand] : null;
 
   const ITEMS_PER_PAGE = 9;
   const allVisuals = useMemo(() =>
@@ -1900,40 +1887,16 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
   const totalPages = Math.ceil(allVisuals.length / ITEMS_PER_PAGE);
   const pagedVisuals = allVisuals.slice(viewAllPage * ITEMS_PER_PAGE, (viewAllPage + 1) * ITEMS_PER_PAGE);
 
-  const goTo = (idx: number) => { setDirection(idx > activeBrand ? 1 : -1); setActiveBrand(idx); pauseForInteraction(); };
-  const goPrev = () => { setDirection(-1); setActiveBrand(p => p === 0 ? adsBrands.length - 1 : p - 1); pauseForInteraction(); };
-  const goNext = () => { setDirection(1); setActiveBrand(p => (p + 1) % adsBrands.length); pauseForInteraction(); };
+  const goTo = (idx: number) => { setActiveBrand(idx); setViewAllPage(0); };
+  const goPrev = () => setActiveBrand(p => p <= 0 ? adsBrands.length - 1 : p - 1);
+  const goNext = () => setActiveBrand(p => (p + 1) % adsBrands.length);
 
-  /* Preload a brand's images on tab hover so switching feels instant */
-  const preloadBrand = useCallback((idx: number) => {
-    adsBrands[idx]?.items.forEach(item => {
-      if (item.type === 'image' && !imgLoadCache.has(item.src)) {
-        const img = new window.Image();
-        img.onload = () => imgLoadCache.add(item.src);
-        img.src = item.src;
-      }
-    });
+  /* Sticky bar — show after 200px scroll */
+  useEffect(() => {
+    const onScroll = () => setShowStickyBar(window.scrollY > 200);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
-
-  /* Scroll active tab into view horizontally */
-  useEffect(() => {
-    const container = tabsRef.current;
-    if (!container) return;
-    const activeBtn = container.children[activeBrand] as HTMLElement;
-    if (!activeBtn) return;
-    const left = activeBtn.offsetLeft - container.offsetWidth / 2 + activeBtn.offsetWidth / 2;
-    container.scrollTo({ left, behavior: 'smooth' });
-  }, [activeBrand]);
-
-  /* Autoplay — uses functional updater so no activeBrand dep needed */
-  useEffect(() => {
-    if (lightbox || isPaused || showAll) return;
-    const timer = setInterval(() => {
-      setDirection(1);
-      setActiveBrand(p => (p + 1) % adsBrands.length);
-    }, 7000);
-    return () => clearInterval(timer);
-  }, [lightbox, isPaused, showAll]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -1941,275 +1904,132 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
         if (e.key === 'Escape') setLightbox(null);
         if (e.key === 'ArrowLeft') navigateLightbox(-1);
         if (e.key === 'ArrowRight') navigateLightbox(+1);
-        return;
       }
-      if (e.key === 'ArrowLeft') goPrev();
-      if (e.key === 'ArrowRight') goNext();
-      if (e.key === 'Escape' && showAll) setShowAll(false);
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [lightbox, navigateLightbox]); // goPrev/goNext use functional updaters
-
-  const slideVariants = {
-    enter: (_d: number) => ({ opacity: 0, scale: 0.97, filter: 'blur(4px)' }),
-    center: { opacity: 1, scale: 1, filter: 'blur(0px)' },
-    exit: (_d: number) => ({ opacity: 0, scale: 0.97, filter: 'blur(3px)' }),
-  };
+  }, [lightbox, navigateLightbox]);
 
   return (
-    <div className="overflow-hidden">
+    <div className="relative">
+      {/* ── Section header + filter chips ── */}
       <FadeIn>
-        {/* ── Desktop: single row (sm+) ── */}
-        <div className="hidden sm:flex items-center justify-between mb-1">
-          <div className="flex items-center gap-2.5">
-            <div className="w-3 h-3 flex-shrink-0 flex items-center justify-center overflow-hidden">
-              <motion.div className="w-1.5 h-1.5 rounded-full bg-[#ed592b]" animate={{ scale: [1, 1.4, 1] }} transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }} />
-            </div>
-            <h1 className="text-[15px] tracking-[-0.02em]" style={{ fontFamily: F.heading, fontWeight: 600 }}>Social Media Ads</h1>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <motion.span key={activeBrand} initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} className={`text-[10px] font-mono ${mt} mr-1`}>
-              {String(activeBrand + 1).padStart(2, '0')}/{String(adsBrands.length).padStart(2, '0')}
-            </motion.span>
-            <motion.button whileHover={{ scale: 1.12 }} whileTap={{ scale: 0.88 }} onClick={goPrev} aria-label="Previous brand"
-              className={`w-6 h-6 rounded-md flex items-center justify-center transition-colors focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${isDark ? 'text-[#5a5d6a] hover:text-white hover:bg-white/[0.06]' : 'text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100'}`}
-            ><ChevronLeft size={13} /></motion.button>
-            <motion.button whileHover={{ scale: 1.12 }} whileTap={{ scale: 0.88 }} onClick={() => setIsPaused(p => !p)} aria-label={isPaused ? 'Resume' : 'Pause'}
-              className={`w-6 h-6 rounded-md flex items-center justify-center transition-colors focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${isPaused ? 'text-[#ed592b]' : isDark ? 'text-[#5a5d6a] hover:text-white hover:bg-white/[0.06]' : 'text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100'}`}
-            >{isPaused ? <Play size={11} className="ml-0.5" /> : <Pause size={11} />}</motion.button>
-            <motion.button whileHover={{ scale: 1.12 }} whileTap={{ scale: 0.88 }} onClick={goNext} aria-label="Next brand"
-              className={`w-6 h-6 rounded-md flex items-center justify-center transition-colors focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${isDark ? 'text-[#5a5d6a] hover:text-white hover:bg-white/[0.06]' : 'text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100'}`}
-            ><ChevronRight size={13} /></motion.button>
-            <div className={`w-px h-3.5 mx-0.5 ${isDark ? 'bg-white/[0.06]' : 'bg-zinc-200'}`} />
-            <motion.button whileHover={{ scale: 1.12 }} whileTap={{ scale: 0.88 }}
-              onClick={() => { setShowAll(p => { if (!p) setViewAllPage(0); return !p; }); setIsPaused(true); }}
-              aria-label={showAll ? 'Close gallery' : 'View all brands'}
-              className={`w-6 h-6 rounded-md flex items-center justify-center transition-colors focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${showAll ? 'text-[#ed592b]' : isDark ? 'text-[#5a5d6a] hover:text-white hover:bg-white/[0.06]' : 'text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100'}`}
-            >{showAll ? <X size={11} /> : <LayoutGrid size={11} />}</motion.button>
-          </div>
+        <div className="flex items-center gap-2.5 mb-5">
+          <motion.div className="w-1.5 h-1.5 rounded-full bg-[#ed592b]" animate={{ scale: [1, 1.4, 1] }} transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }} />
+          <h1 className="text-[15px] tracking-[-0.02em]" style={{ fontFamily: F.heading, fontWeight: 600 }}>Social Media Ads</h1>
         </div>
 
-        {/* ── Mobile: 2 rows ── */}
-        <div className="sm:hidden">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2.5">
-              <div className="w-3 h-3 flex-shrink-0 flex items-center justify-center overflow-hidden">
-                <motion.div className="w-1.5 h-1.5 rounded-full bg-[#ed592b]" animate={{ scale: [1, 1.4, 1] }} transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }} />
-              </div>
-              <h1 className="text-[15px] tracking-[-0.02em]" style={{ fontFamily: F.heading, fontWeight: 600 }}>Social Media Ads</h1>
-            </div>
-            <motion.span key={`m-${activeBrand}`} initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} className={`text-[10px] font-mono ${mt}`}>
-              {String(activeBrand + 1).padStart(2, '0')}/{String(adsBrands.length).padStart(2, '0')}
-            </motion.span>
-          </div>
-          <div className="flex items-center gap-2.5 mb-3">
-            <motion.button whileTap={{ scale: 0.9 }} onClick={goPrev} aria-label="Previous"
-              className={`w-12 h-12 rounded-2xl flex items-center justify-center ${isDark ? 'text-[#8a8d9a] bg-white/[0.05] border border-white/[0.06] active:bg-white/[0.1]' : 'text-zinc-400 bg-zinc-100 border border-zinc-200 active:bg-zinc-200'}`}
-            ><ChevronLeft size={18} /></motion.button>
-            <motion.button whileTap={{ scale: 0.9 }} onClick={() => setIsPaused(p => !p)} aria-label={isPaused ? 'Resume' : 'Pause'}
-              className={`w-12 h-12 rounded-2xl flex items-center justify-center ${isPaused ? 'text-[#ed592b] bg-[#ed592b]/10 border border-[#ed592b]/20' : isDark ? 'text-[#8a8d9a] bg-white/[0.05] border border-white/[0.06] active:bg-white/[0.1]' : 'text-zinc-400 bg-zinc-100 border border-zinc-200 active:bg-zinc-200'}`}
-            >{isPaused ? <Play size={16} className="ml-0.5" /> : <Pause size={16} />}</motion.button>
-            <motion.button whileTap={{ scale: 0.9 }} onClick={goNext} aria-label="Next"
-              className={`w-12 h-12 rounded-2xl flex items-center justify-center ${isDark ? 'text-[#8a8d9a] bg-white/[0.05] border border-white/[0.06] active:bg-white/[0.1]' : 'text-zinc-400 bg-zinc-100 border border-zinc-200 active:bg-zinc-200'}`}
-            ><ChevronRight size={18} /></motion.button>
-            <div className="flex-1" />
-            <motion.button whileTap={{ scale: 0.9 }}
-              onClick={() => { setShowAll(p => { if (!p) setViewAllPage(0); return !p; }); setIsPaused(true); }}
-              aria-label={showAll ? 'Close' : 'View all'}
-              className={`w-12 h-12 rounded-2xl flex items-center justify-center ${showAll ? 'text-[#ed592b] bg-[#ed592b]/10 border border-[#ed592b]/20' : isDark ? 'text-[#8a8d9a] bg-white/[0.05] border border-white/[0.06] active:bg-white/[0.1]' : 'text-zinc-400 bg-zinc-100 border border-zinc-200 active:bg-zinc-200'}`}
-            >{showAll ? <X size={16} /> : <LayoutGrid size={16} />}</motion.button>
-          </div>
-        </div>
-
-        {/* Segmented progress bar — taller on mobile */}
-        <div className="flex gap-[3px] sm:gap-[2px] mb-6 sm:mb-5 ml-0 sm:ml-4">
-          {adsBrands.map((_, i) => (
-            <div key={i} className={`h-1 sm:h-[2px] flex-1 rounded-full overflow-hidden ${isDark ? 'bg-white/[0.04]' : 'bg-zinc-200'}`}>
-              {i < activeBrand ? (
-                <div className="h-full w-full bg-[#ed592b] rounded-full" />
-              ) : i === activeBrand ? (
-                <motion.div
-                  className="h-full bg-[#ed592b] rounded-full"
-                  initial={{ width: '0%' }}
-                  animate={{ width: isPaused ? undefined : '100%' }}
-                  key={`${activeBrand}-${isPaused}`}
-                  transition={isPaused ? { duration: 0 } : { duration: 7, ease: 'linear' }}
-                />
-              ) : null}
-            </div>
-          ))}
-        </div>
-      </FadeIn>
-
-      {/* Company slider tabs with magnetic hover */}
-      <FadeIn delay={0.04}>
-        <div className="relative mb-4">
-          <div ref={tabsRef} className="flex gap-1 pb-1.5 overflow-x-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-            {adsBrands.map((b, i) => {
-              const active = i === activeBrand;
-              const hovered = i === hoveredTab;
-              return (
-                <motion.button
-                  key={b.name}
-                  onClick={() => goTo(i)}
-                  onMouseEnter={() => { setHoveredTab(i); preloadBrand(i); }}
-                  onMouseLeave={() => setHoveredTab(null)}
-                  whileTap={{ scale: 0.94 }}
-                  animate={{ y: hovered && !active ? -2 : 0 }}
-                  className={`relative flex-shrink-0 px-3 py-1.5 rounded-lg text-[11px] whitespace-nowrap transition-colors duration-200 ${
-                    active
-                      ? isDark ? 'text-white' : 'text-zinc-900'
-                      : isDark ? 'text-[#5a5d6a] hover:text-white/60' : 'text-zinc-400 hover:text-zinc-600'
-                  }`}
-                  style={{ fontFamily: F.body, fontWeight: active ? 600 : 400 }}
-                >
-                  {active && (
-                    <motion.div
-                      layoutId="ads-tab-pill"
-                      className={`absolute inset-0 rounded-lg ${isDark ? 'bg-white/[0.07]' : 'bg-zinc-100'} overflow-hidden`}
-                      transition={{ type: 'spring', stiffness: 500, damping: 35 }}
-                    >
-                      <motion.div
-                        className="absolute inset-0"
-                        style={{ background: `linear-gradient(105deg, transparent 40%, ${isDark ? 'rgba(237,89,43,0.08)' : 'rgba(237,89,43,0.05)'} 50%, transparent 60%)`, backgroundSize: '200% 100%' }}
-                        animate={{ backgroundPosition: ['200% 0', '-200% 0'] }}
-                        transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
-                      />
-                    </motion.div>
-                  )}
-                  {hovered && !active && (
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className={`absolute inset-0 rounded-lg ${isDark ? 'bg-white/[0.03]' : 'bg-zinc-50'}`} />
-                  )}
-                  <span className="relative z-10">
-                    {b.name.split(' · ')[0]}
-                  </span>
-                </motion.button>
-              );
-            })}
-          </div>
-          <div className={`absolute top-0 right-0 bottom-1 w-10 pointer-events-none bg-gradient-to-l ${isDark ? 'from-[#0a0a0c]' : 'from-[#f5f5f5]'} to-transparent`} />
-        </div>
-      </FadeIn>
-
-      {/* "View All" gallery grid */}
-      <AnimatePresence>
-        {showAll && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            className="overflow-hidden mb-3"
+        <div className="flex flex-wrap gap-1.5 mb-4">
+          {/* All chip */}
+          <button
+            onClick={() => goTo(-1)}
+            className={`flex items-center gap-1.5 px-2 py-1.5 rounded-lg border text-[10px] transition-all duration-200 focus-visible:shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
+              activeBrand === -1
+                ? 'border-[#ed592b] bg-[#ed592b]/10 text-[#ed592b]'
+                : isDark ? 'border-white/[0.06] bg-white/[0.03] text-[#7a7d8a] hover:border-white/[0.12] hover:text-white/70' : 'border-zinc-200 bg-zinc-50 text-zinc-400 hover:border-zinc-300 hover:text-zinc-600'
+            }`}
+            style={{ fontFamily: F.body, fontWeight: activeBrand === -1 ? 600 : 400 }}
           >
+            <LayoutGrid size={10} className="flex-shrink-0" />
+            <span className="truncate">All</span>
+            <span className={`ml-auto text-[9px] font-mono flex-shrink-0 ${activeBrand === -1 ? 'text-[#ed592b]/70' : mt}`}>{allVisuals.length}</span>
+          </button>
+          {/* Brand chips */}
+          {adsBrands.map((b, i) => {
+            const active = activeBrand === i;
+            return (
+              <button
+                key={b.name}
+                onClick={() => goTo(i)}
+                className={`flex items-center gap-1.5 px-2 py-1.5 rounded-lg border text-[10px] transition-all duration-200 focus-visible:shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
+                  active
+                    ? 'border-[#ed592b] bg-[#ed592b]/10 text-[#ed592b]'
+                    : isDark ? 'border-white/[0.06] bg-white/[0.03] text-[#7a7d8a] hover:border-white/[0.12] hover:text-white/70' : 'border-zinc-200 bg-zinc-50 text-zinc-400 hover:border-zinc-300 hover:text-zinc-600'
+                }`}
+                style={{ fontFamily: F.body, fontWeight: active ? 600 : 400 }}
+              >
+                <span className="truncate">{b.name.split(' · ')[0]}</span>
+                <span className={`ml-auto text-[9px] font-mono flex-shrink-0 ${active ? 'text-[#ed592b]/70' : mt}`}>{b.items.length}</span>
+              </button>
+            );
+          })}
+        </div>
+      </FadeIn>
+
+      {/* ── Content area ── */}
+      <AnimatePresence mode="wait">
+        {activeBrand === -1 ? (
+          /* All visuals — paginated */
+          <motion.div key="all" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }} transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}>
             <div className={`rounded-xl ${bg2} border ${border} p-3`}>
-              {/* Page header */}
               <div className="flex items-center justify-between mb-2.5">
-                <span className={`text-[10px] font-mono ${mt}`}>
-                  {allVisuals.length} visuals · Page {viewAllPage + 1}/{totalPages}
-                </span>
+                <span className={`text-[10px] font-mono ${mt}`}>{allVisuals.length} visuals · Page {viewAllPage + 1}/{totalPages}</span>
                 <div className="flex items-center gap-1">
-                  <motion.button
-                    whileHover={{ scale: 1.12 }}
-                    whileTap={{ scale: 0.88 }}
+                  <motion.button whileHover={{ scale: 1.12 }} whileTap={{ scale: 0.88 }}
                     onClick={() => setViewAllPage(p => Math.max(0, p - 1))}
-                    disabled={viewAllPage === 0}
-                    aria-label="Previous page"
-                    className={`w-6 h-6 rounded-md flex items-center justify-center transition-colors min-h-[44px] min-w-[32px] focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
-                      viewAllPage === 0
-                        ? isDark ? 'text-white/10 cursor-not-allowed' : 'text-zinc-200 cursor-not-allowed'
-                        : isDark ? 'text-[#5a5d6a] hover:text-white hover:bg-white/[0.06]' : 'text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100'
-                    }`}
-                  >
-                    <ChevronLeft size={13} />
-                  </motion.button>
-                  <motion.button
-                    whileHover={{ scale: 1.12 }}
-                    whileTap={{ scale: 0.88 }}
+                    disabled={viewAllPage === 0} aria-label="Previous page"
+                    className={`w-6 h-6 rounded-md flex items-center justify-center transition-colors focus-visible:shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${viewAllPage === 0 ? isDark ? 'text-white/10 cursor-not-allowed' : 'text-zinc-200 cursor-not-allowed' : isDark ? 'text-[#5a5d6a] hover:text-white hover:bg-white/[0.06]' : 'text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100'}`}
+                  ><ChevronLeft size={13} /></motion.button>
+                  <motion.button whileHover={{ scale: 1.12 }} whileTap={{ scale: 0.88 }}
                     onClick={() => setViewAllPage(p => Math.min(totalPages - 1, p + 1))}
-                    disabled={viewAllPage === totalPages - 1}
-                    aria-label="Next page"
-                    className={`w-6 h-6 rounded-md flex items-center justify-center transition-colors min-h-[44px] min-w-[32px] focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
-                      viewAllPage === totalPages - 1
-                        ? isDark ? 'text-white/10 cursor-not-allowed' : 'text-zinc-200 cursor-not-allowed'
-                        : isDark ? 'text-[#5a5d6a] hover:text-white hover:bg-white/[0.06]' : 'text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100'
-                    }`}
-                  >
-                    <ChevronRight size={13} />
-                  </motion.button>
+                    disabled={viewAllPage === totalPages - 1} aria-label="Next page"
+                    className={`w-6 h-6 rounded-md flex items-center justify-center transition-colors focus-visible:shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${viewAllPage === totalPages - 1 ? isDark ? 'text-white/10 cursor-not-allowed' : 'text-zinc-200 cursor-not-allowed' : isDark ? 'text-[#5a5d6a] hover:text-white hover:bg-white/[0.06]' : 'text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100'}`}
+                  ><ChevronRight size={13} /></motion.button>
                 </div>
               </div>
-
-              {/* Paginated visuals grid */}
               <AnimatePresence mode="wait">
-                <motion.div
-                  key={viewAllPage}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
+                <motion.div key={viewAllPage} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}
                   transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                  className="columns-2 md:columns-3"
-                  style={{ columnGap: '0.375rem' }}
+                  className="columns-2 md:columns-3" style={{ columnGap: '0.375rem' }}
                 >
                   {(() => {
                     const pageImgSrcs = pagedVisuals.filter(v => v.type === 'image').map(v => v.src);
                     return pagedVisuals.map((v, i) => (
-                    <motion.button
-                      key={`${v.brandName}-${v.src}`}
-                      onClick={() => v.type === 'image' ? setLightbox({ src: v.src, alt: v.brandName, whiteBg: v.whiteBg, images: pageImgSrcs, index: pageImgSrcs.indexOf(v.src) }) : undefined}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: i * 0.04, ease: [0.22, 1, 0.36, 1] }}
-                      className={`group relative rounded-lg overflow-hidden border ${border} transition-all duration-200 block break-inside-avoid mb-1.5 ${isDark ? 'hover:border-white/[0.12]' : 'hover:border-zinc-300'}`}
-                    >
-                      <div className="overflow-hidden">
-                        {v.type === 'video' ? (
-                          <video src={v.src} autoPlay loop muted playsInline className="w-full h-auto object-cover block" />
-                        ) : (
-                          <img src={v.src} alt={`${v.brandName} social media advertising design`} loading="lazy" decoding="async" width="800" height="800" className="w-full h-auto object-cover block transition-transform duration-500 group-hover:scale-105" />
+                      <motion.button key={`${v.brandName}-${v.src}`}
+                        onClick={() => v.type === 'image' ? setLightbox({ src: v.src, alt: v.brandName, whiteBg: v.whiteBg, images: pageImgSrcs, index: pageImgSrcs.indexOf(v.src) }) : undefined}
+                        initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04, ease: [0.22, 1, 0.36, 1] }}
+                        className={`group relative rounded-lg overflow-hidden border ${border} transition-all duration-200 block break-inside-avoid mb-1.5 ${isDark ? 'hover:border-white/[0.12]' : 'hover:border-zinc-300'}`}
+                      >
+                        <div className="overflow-hidden">
+                          {v.type === 'video' ? (
+                            <video src={v.src} autoPlay loop muted playsInline className="w-full h-auto object-cover block" />
+                          ) : (
+                            <img src={v.src} alt={`${v.brandName} social media advertising design`} loading="lazy" decoding="async" width="800" height="800" className="w-full h-auto object-cover block transition-transform duration-500 group-hover:scale-105" />
+                          )}
+                        </div>
+                        <div className={`absolute inset-0 bg-gradient-to-t ${isDark ? 'from-black/70' : 'from-black/50'} to-transparent flex items-end p-2`}>
+                          <div className="flex items-center gap-1.5">
+                            <div className={`w-4 h-4 rounded flex items-center justify-center text-[7px] flex-shrink-0 ${isDark ? 'bg-white/15 text-white/70' : 'bg-white/20 text-white/80'}`} style={{ fontFamily: F.heading, fontWeight: 700 }}>
+                              {v.logoImg ? <img src={v.logoImg} alt={`${v.brandName} logo`} loading="lazy" width="16" height="16" className="w-full h-full object-cover rounded" /> : v.brandName.charAt(0)}
+                            </div>
+                            <span className="text-[9px] text-white/90 truncate" style={{ fontFamily: F.body, fontWeight: 500 }}>{v.brandName.split(' · ')[0]}</span>
+                          </div>
+                        </div>
+                        {v.type === 'video' && (
+                          <div className="absolute top-1.5 left-1.5">
+                            <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-black/50 backdrop-blur-md border border-white/[0.08]">
+                              <Play size={7} className="text-white/70 fill-white/70" />
+                              <span className="text-[7px] font-mono text-white/60 uppercase tracking-wider">Reel</span>
+                            </div>
+                          </div>
                         )}
-                      </div>
-                      <div className={`absolute inset-0 bg-gradient-to-t ${isDark ? 'from-black/70' : 'from-black/50'} to-transparent flex items-end p-2`}>
-                        <div className="flex items-center gap-1.5">
-                          <div className={`w-4 h-4 rounded flex items-center justify-center text-[7px] flex-shrink-0 ${isDark ? 'bg-white/15 text-white/70' : 'bg-white/20 text-white/80'}`} style={{ fontFamily: F.heading, fontWeight: 700 }}>
-                            {v.logoImg ? <img src={v.logoImg} alt={`${v.brandName} logo`} loading="lazy" width="16" height="16" className="w-full h-full object-cover rounded" /> : v.brandName.charAt(0)}
-                          </div>
-                          <span className="text-[9px] text-white/90 truncate" style={{ fontFamily: F.body, fontWeight: 500 }}>
-                            {v.brandName.split(' · ')[0]}
-                          </span>
-                        </div>
-                      </div>
-                      {v.type === 'video' && (
-                        <div className="absolute top-1.5 left-1.5">
-                          <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-black/50 backdrop-blur-md border border-white/[0.08]">
-                            <Play size={7} className="text-white/70 fill-white/70" />
-                            <span className="text-[7px] font-mono text-white/60 uppercase tracking-wider">Reel</span>
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center pointer-events-none">
+                          <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 scale-75 group-hover:scale-100">
+                            <div className="w-7 h-7 rounded-full bg-white/15 backdrop-blur-xl flex items-center justify-center border border-white/10">
+                              {v.type === 'video' ? <Play size={11} className="text-white ml-0.5" /> : <ArrowUpRight size={11} className="text-white" />}
+                            </div>
                           </div>
                         </div>
-                      )}
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center pointer-events-none">
-                        <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 scale-75 group-hover:scale-100">
-                          <div className="w-7 h-7 rounded-full bg-white/15 backdrop-blur-xl flex items-center justify-center border border-white/10">
-                            {v.type === 'video' ? <Play size={11} className="text-white ml-0.5" /> : <ArrowUpRight size={11} className="text-white" />}
-                          </div>
-                        </div>
-                      </div>
-                    </motion.button>
-                  ));})()}
+                      </motion.button>
+                    ));
+                  })()}
                 </motion.div>
               </AnimatePresence>
-
-              {/* Page dots */}
               <div className="flex items-center justify-center gap-1 mt-3">
                 {Array.from({ length: totalPages }).map((_, i) => (
                   <button key={i} onClick={() => setViewAllPage(i)} className="p-0.5" aria-label={`Page ${i + 1}`}>
                     <motion.div
-                      animate={{
-                        width: i === viewAllPage ? 16 : 4,
-                        height: 4,
-                        backgroundColor: i === viewAllPage ? '#ed592b' : isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
-                        borderRadius: 2,
-                      }}
+                      animate={{ width: i === viewAllPage ? 16 : 4, height: 4, backgroundColor: i === viewAllPage ? '#ed592b' : isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)', borderRadius: 2 }}
                       whileHover={{ backgroundColor: i === viewAllPage ? '#ed592b' : isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)', scale: i === viewAllPage ? 1 : 1.5 }}
                       transition={{ type: 'spring', stiffness: 400, damping: 25 }}
                     />
@@ -2218,248 +2038,185 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
               </div>
             </div>
           </motion.div>
-        )}
-      </AnimatePresence>
+        ) : (
+          /* Selected brand visuals */
+          <motion.div key={activeBrand} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }} transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}>
+            <div className={`rounded-xl ${bg2} border ${border} p-3 relative overflow-hidden`}>
+              <div className="absolute top-0 left-0 w-32 h-32 opacity-[0.04] pointer-events-none" style={{ background: 'radial-gradient(circle, #ed592b 0%, transparent 70%)' }} />
 
-      {/* Active brand — directional slide with blur + swipe */}
-      <AnimatePresence mode="wait" custom={direction}>
-        <motion.div
-          key={activeBrand}
-          custom={direction}
-          variants={slideVariants}
-          initial="enter"
-          animate="center"
-          exit="exit"
-          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          drag="x"
-          dragConstraints={{ left: 0, right: 0 }}
-          dragElastic={0.3}
-          dragTransition={{ bounceStiffness: 300, bounceDamping: 30 }}
-          onDragEnd={(_e, info) => {
-            const swipe = Math.abs(info.offset.x) * info.velocity.x;
-            if (info.offset.x > 40 || swipe > 800) goPrev();
-            else if (info.offset.x < -40 || swipe < -800) goNext();
-          }}
-          style={{ touchAction: 'pan-y' }}
-        >
-          <div className={`rounded-xl ${bg2} border ${border} p-3 relative overflow-hidden`}>
-            <div className="absolute top-0 left-0 w-32 h-32 opacity-[0.04] pointer-events-none" style={{ background: 'radial-gradient(circle, #ed592b 0%, transparent 70%)' }} />
-
-            {/* Brand info + nav arrows */}
-            <div className="flex items-center justify-between mb-3 relative z-10">
-              <div className="flex items-center gap-2.5">
-                <motion.div
-                  key={brand.name}
-                  initial={{ scale: 0, rotate: -90 }}
-                  animate={{ scale: 1, rotate: 0 }}
-                  transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-                  className={`w-7 h-7 rounded-lg flex items-center justify-center overflow-hidden text-[10px] tracking-wider ${isDark ? 'bg-[#ed592b]/15 text-[#ed592b]' : 'bg-[#ed592b]/10 text-[#ed592b]'}`}
-                  style={{ fontFamily: F.heading, fontWeight: 700 }}
-                >
-                  {brand.logoImg ? (
-                    <img src={brand.logoImg} alt={`${brand.name} logo`} loading="lazy" width="32" height="32" className="w-full h-full object-cover" />
-                  ) : (
-                    brand.name.charAt(0)
-                  )}
-                </motion.div>
-                <div>
+              {/* Brand info */}
+              <div className="flex items-center justify-between mb-3 relative z-10">
+                <div className="flex items-center gap-2.5">
+                  <div className={`w-7 h-7 rounded-lg flex items-center justify-center overflow-hidden text-[10px] tracking-wider ${isDark ? 'bg-[#ed592b]/15 text-[#ed592b]' : 'bg-[#ed592b]/10 text-[#ed592b]'}`}
+                    style={{ fontFamily: F.heading, fontWeight: 700 }}
+                  >
+                    {brand!.logoImg ? (
+                      <img src={brand!.logoImg} alt={`${brand!.name} logo`} loading="lazy" width="32" height="32" className="w-full h-full object-cover" />
+                    ) : brand!.name.charAt(0)}
+                  </div>
                   <div className="flex items-center gap-2">
-                    <motion.span key={`n-${activeBrand}`} initial={{ opacity: 0, x: direction * 12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1 }} className={`text-[12px] block ${isDark ? 'text-white/90' : 'text-zinc-800'}`} style={{ fontFamily: F.body, fontWeight: 500 }}>
-                      {brand.name}
-                    </motion.span>
-                    {brand.aiContent && (
-                      <motion.span
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 0.2, type: 'spring', stiffness: 400, damping: 20 }}
-                        className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[8px] uppercase tracking-[0.1em] ${isDark ? 'bg-[#ed592b]/10 text-[#ed592b] border border-[#ed592b]/20' : 'bg-[#ed592b]/8 text-[#ed592b] border border-[#ed592b]/15'}`}
+                    <span className={`text-[12px] ${isDark ? 'text-white/90' : 'text-zinc-800'}`} style={{ fontFamily: F.body, fontWeight: 500 }}>{brand!.name}</span>
+                    {brand!.aiContent && (
+                      <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[8px] uppercase tracking-[0.1em] ${isDark ? 'bg-[#ed592b]/10 text-[#ed592b] border border-[#ed592b]/20' : 'bg-[#ed592b]/8 text-[#ed592b] border border-[#ed592b]/15'}`}
                         style={{ fontFamily: F.body, fontWeight: 600 }}
                       >
                         <svg width="8" height="8" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1l2.2 4.4L15 6.3l-3.5 3.4.8 4.9L8 12.4l-4.3 2.2.8-4.9L1 6.3l4.8-.9L8 1z"/></svg>
                         AI Content
-                      </motion.span>
+                      </span>
                     )}
                   </div>
                 </div>
+                <span className={`text-[9px] font-mono ${mt}`}>{brand!.items.length} {brand!.items.length === 1 ? 'visual' : 'visuals'}</span>
               </div>
-              <div className="flex items-center gap-1.5">
-                {isPaused && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className={`flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[8px] uppercase tracking-[0.08em] ${isDark ? 'bg-white/[0.04] text-[#5a5d6a]' : 'bg-zinc-100 text-zinc-400'}`}
-                    style={{ fontFamily: F.body, fontWeight: 500 }}
-                  >
-                    <Pause size={7} />
-                    Paused
-                  </motion.div>
-                )}
-                <span className={`text-[9px] font-mono ${mt}`}>
-                  {brand.items.length} {brand.items.length === 1 ? 'visual' : 'visuals'}
-                </span>
-              </div>
-            </div>
 
-            {/* Grid layout — splits fullWidth items into their own rows */}
-            {(() => {
-              /* Bento: tall item left (spans full height) + 2 stacked items right */
-              if (brand.bentoGrid) {
-                const tallItem = brand.items.find(it => it.tall);
-                const regularItems = brand.items.filter(it => !it.tall);
-                const imgSrcs = brand.items.filter(it => it.type === 'image').map(it => it.src);
-                const btnCls = `relative rounded-lg overflow-hidden border ${border} group cursor-pointer`;
-                const hoverOverlay = (
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center pointer-events-none">
-                    <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 scale-75 group-hover:scale-100">
-                      <div className="w-7 h-7 rounded-full bg-white/15 backdrop-blur-xl flex items-center justify-center border border-white/10">
-                        <ArrowUpRight size={11} className="text-white" />
+              {/* Grid layout */}
+              {(() => {
+                if (brand!.bentoGrid) {
+                  const tallItem = brand!.items.find(it => it.tall);
+                  const regularItems = brand!.items.filter(it => !it.tall);
+                  const imgSrcs = brand!.items.filter(it => it.type === 'image').map(it => it.src);
+                  const btnCls = `relative rounded-lg overflow-hidden border ${border} group cursor-pointer`;
+                  const hoverOverlay = (
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center pointer-events-none">
+                      <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 scale-75 group-hover:scale-100">
+                        <div className="w-7 h-7 rounded-full bg-white/15 backdrop-blur-xl flex items-center justify-center border border-white/10">
+                          <ArrowUpRight size={11} className="text-white" />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                );
-                return (
-                  <div className="relative z-10 flex gap-2.5 items-stretch">
-                    {tallItem && (
-                      <motion.button
-                        className={`flex-1 ${btnCls}`}
-                        whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                        onClick={() => setLightbox({ src: tallItem.src, alt: brand.name, whiteBg: brand.whiteBg, images: imgSrcs, index: imgSrcs.indexOf(tallItem.src) })}
-                      >
-                        <img src={tallItem.src} alt={`${brand.name} visual`} loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover block" />
-                        {hoverOverlay}
-                      </motion.button>
-                    )}
-                    <div className="flex-1 flex flex-col gap-2.5">
-                      {regularItems.slice(0, 2).map((item, i) => (
-                        <motion.button
-                          key={i}
-                          className={`flex-1 aspect-square ${btnCls}`}
-                          whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                  );
+                  return (
+                    <div className="relative z-10 flex gap-2.5 items-stretch">
+                      {tallItem && (
+                        <motion.button className={`flex-1 ${btnCls}`} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                           transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                          onClick={() => setLightbox({ src: item.src, alt: brand.name, whiteBg: brand.whiteBg, images: imgSrcs, index: imgSrcs.indexOf(item.src) })}
+                          onClick={() => setLightbox({ src: tallItem.src, alt: brand!.name, whiteBg: brand!.whiteBg, images: imgSrcs, index: imgSrcs.indexOf(tallItem.src) })}
                         >
-                          <img src={item.src} alt={`${brand.name} visual ${i + 2}`} loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover block" />
+                          <img src={tallItem.src} alt={`${brand!.name} visual`} loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover block" />
                           {hoverOverlay}
                         </motion.button>
+                      )}
+                      <div className="flex-1 flex flex-col gap-2.5">
+                        {regularItems.slice(0, 2).map((item, i) => (
+                          <motion.button key={i} className={`flex-1 aspect-square ${btnCls}`} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                            onClick={() => setLightbox({ src: item.src, alt: brand!.name, whiteBg: brand!.whiteBg, images: imgSrcs, index: imgSrcs.indexOf(item.src) })}
+                          >
+                            <img src={item.src} alt={`${brand!.name} visual ${i + 2}`} loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover block" />
+                            {hoverOverlay}
+                          </motion.button>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                }
+                if (brand!.squareGrid) {
+                  const cols = brand!.threeCol ? 'grid-cols-3' : 'grid-cols-2';
+                  const imgSrcs = brand!.items.filter(it => it.type === 'image').map(it => it.src);
+                  return (
+                    <div className={`relative z-10 grid ${cols} gap-2`}>
+                      {brand!.items.map((item, i) => (
+                        <div key={`${brand!.name}-${i}`} className="aspect-[4/5]">
+                          <AdsMediaItem item={item} brandName={brand!.name} index={i} isDark={isDark} border={border} whiteBg={brand!.whiteBg} fill
+                            onImageClick={() => setLightbox({ src: item.src, alt: brand!.name, whiteBg: brand!.whiteBg, images: imgSrcs, index: imgSrcs.indexOf(item.src) })} />
+                        </div>
                       ))}
                     </div>
-                  </div>
-                );
-              }
-              /* Square grid: uniform aspect-ratio cells, CSS grid */
-              if (brand.squareGrid) {
-                const cols = brand.threeCol ? 'grid-cols-3' : 'grid-cols-2';
-                const imgSrcs = brand.items.filter(it => it.type === 'image').map(it => it.src);
+                  );
+                }
+                const hasFullWidth = brand!.items.some(it => it.fullWidth);
+                if (!hasFullWidth) {
+                  const colsClass = brand!.whiteBg
+                    ? `grid ${brand!.twoCol ? 'grid-cols-2' : brand!.threeCol ? 'grid-cols-3' : 'grid-cols-2 md:grid-cols-3'} gap-2.5`
+                    : brand!.twoCol ? 'columns-2'
+                    : brand!.threeCol ? 'grid grid-cols-3 gap-2.5'
+                    : brand!.items.length <= 2 ? 'columns-2' : 'columns-2 md:columns-3';
+                  const isGrid = brand!.whiteBg || brand!.threeCol;
+                  return (
+                    <div className={`relative z-10 ${colsClass}`} style={isGrid ? undefined : { columnGap: '0.625rem' }}>
+                      {(() => {
+                        const imgSrcs = brand!.items.filter(it => it.type === 'image').map(it => it.src);
+                        return brand!.items.map((item, i) => (
+                          <AdsMediaItem key={`${brand!.name}-${i}`} item={item} brandName={brand!.name} index={i} isDark={isDark} border={border} whiteBg={brand!.whiteBg}
+                            onImageClick={() => setLightbox({ src: item.src, alt: brand!.name, whiteBg: brand!.whiteBg, images: imgSrcs, index: imgSrcs.indexOf(item.src) })} />
+                        ));
+                      })()}
+                    </div>
+                  );
+                }
+                const groups: { fullWidth: boolean; items: { item: AdsMedia; idx: number }[] }[] = [];
+                brand!.items.forEach((item, i) => {
+                  const fw = !!item.fullWidth;
+                  const last = groups[groups.length - 1];
+                  if (last && last.fullWidth === fw) { last.items.push({ item, idx: i }); }
+                  else { groups.push({ fullWidth: fw, items: [{ item, idx: i }] }); }
+                });
+                const regColsClass = brand!.whiteBg
+                  ? `grid ${brand!.twoCol ? 'grid-cols-2' : brand!.threeCol ? 'grid-cols-3' : 'grid-cols-2 md:grid-cols-3'} gap-2.5`
+                  : brand!.twoCol ? 'columns-2'
+                  : brand!.threeCol ? 'grid grid-cols-3 gap-2.5'
+                  : 'columns-2 md:columns-3';
+                const isRegGrid = brand!.whiteBg || brand!.threeCol;
+                const imgSrcsGroups = brand!.items.filter(it => it.type === 'image').map(it => it.src);
                 return (
-                  <div className={`relative z-10 grid ${cols} gap-2`}>
-                    {brand.items.map((item, i) => (
-                      <div key={`${brand.name}-${i}`} className="aspect-[4/5]">
-                        <AdsMediaItem item={item} brandName={brand.name} index={i} isDark={isDark} border={border} whiteBg={brand.whiteBg} fill
-                          onImageClick={() => setLightbox({ src: item.src, alt: brand.name, whiteBg: brand.whiteBg, images: imgSrcs, index: imgSrcs.indexOf(item.src) })} />
+                  <div className="relative z-10 flex flex-col gap-2.5">
+                    {groups.map((g, gi) => g.fullWidth ? (
+                      g.items.map(({ item, idx }) => (
+                        <AdsMediaItem key={`${brand!.name}-${idx}`} item={item} brandName={brand!.name} index={idx} isDark={isDark} border={border} whiteBg={brand!.whiteBg}
+                          onImageClick={() => setLightbox({ src: item.src, alt: brand!.name, whiteBg: brand!.whiteBg, images: imgSrcsGroups, index: imgSrcsGroups.indexOf(item.src) })} />
+                      ))
+                    ) : (
+                      <div key={`grp-${gi}`} className={regColsClass} style={isRegGrid ? undefined : { columnGap: '0.625rem' }}>
+                        {g.items.map(({ item, idx }) => (
+                          <AdsMediaItem key={`${brand!.name}-${idx}`} item={item} brandName={brand!.name} index={idx} isDark={isDark} border={border} whiteBg={brand!.whiteBg}
+                            onImageClick={() => setLightbox({ src: item.src, alt: brand!.name, whiteBg: brand!.whiteBg, images: imgSrcsGroups, index: imgSrcsGroups.indexOf(item.src) })} />
+                        ))}
                       </div>
                     ))}
                   </div>
                 );
-              }
-              const hasFullWidth = brand.items.some(it => it.fullWidth);
-              if (!hasFullWidth) {
-                const colsClass = brand.whiteBg
-                  ? `grid ${brand.twoCol ? 'grid-cols-2' : brand.threeCol ? 'grid-cols-3' : 'grid-cols-2 md:grid-cols-3'} gap-2.5`
-                  : brand.twoCol ? 'columns-2'
-                  : brand.threeCol ? 'grid grid-cols-3 gap-2.5'
-                  : brand.items.length <= 2 ? 'columns-2' : 'columns-2 md:columns-3';
-                const isGrid = brand.whiteBg || brand.threeCol;
-                return (
-                  <div className={`relative z-10 ${colsClass}`} style={isGrid ? undefined : { columnGap: '0.625rem' }}>
-                    {(() => {
-                      const imgSrcs = brand.items.filter(it => it.type === 'image').map(it => it.src);
-                      return brand.items.map((item, i) => (
-                        <AdsMediaItem key={`${brand.name}-${i}`} item={item} brandName={brand.name} index={i} isDark={isDark} border={border} whiteBg={brand.whiteBg}
-                          onImageClick={() => setLightbox({ src: item.src, alt: brand.name, whiteBg: brand.whiteBg, images: imgSrcs, index: imgSrcs.indexOf(item.src) })} />
-                      ));
-                    })()}
-                  </div>
-                );
-              }
-              /* Group consecutive non-fullWidth items into column groups */
-              const groups: { fullWidth: boolean; items: { item: AdsMedia; idx: number }[] }[] = [];
-              brand.items.forEach((item, i) => {
-                const fw = !!item.fullWidth;
-                const last = groups[groups.length - 1];
-                if (last && last.fullWidth === fw) { last.items.push({ item, idx: i }); }
-                else { groups.push({ fullWidth: fw, items: [{ item, idx: i }] }); }
-              });
-              const regColsClass = brand.whiteBg
-                ? `grid ${brand.twoCol ? 'grid-cols-2' : brand.threeCol ? 'grid-cols-3' : 'grid-cols-2 md:grid-cols-3'} gap-2.5`
-                : brand.twoCol ? 'columns-2'
-                : brand.threeCol ? 'grid grid-cols-3 gap-2.5'
-                : 'columns-2 md:columns-3';
-              const isRegGrid = brand.whiteBg || brand.threeCol;
-              const imgSrcsGroups = brand.items.filter(it => it.type === 'image').map(it => it.src);
-              return (
-                <div className="relative z-10 flex flex-col gap-2.5">
-                  {groups.map((g, gi) => g.fullWidth ? (
-                    g.items.map(({ item, idx }) => (
-                      <AdsMediaItem key={`${brand.name}-${idx}`} item={item} brandName={brand.name} index={idx} isDark={isDark} border={border} whiteBg={brand.whiteBg}
-                        onImageClick={() => setLightbox({ src: item.src, alt: brand.name, whiteBg: brand.whiteBg, images: imgSrcsGroups, index: imgSrcsGroups.indexOf(item.src) })} />
-                    ))
-                  ) : (
-                    <div key={`grp-${gi}`} className={regColsClass} style={isRegGrid ? undefined : { columnGap: '0.625rem' }}>
-                      {g.items.map(({ item, idx }) => (
-                        <AdsMediaItem key={`${brand.name}-${idx}`} item={item} brandName={brand.name} index={idx} isDark={isDark} border={border} whiteBg={brand.whiteBg}
-                          onImageClick={() => setLightbox({ src: item.src, alt: brand.name, whiteBg: brand.whiteBg, images: imgSrcsGroups, index: imgSrcsGroups.indexOf(item.src) })} />
-                      ))}
-                    </div>
-                  ))}
-                </div>
-              );
-            })()}
-
-          </div>
-
-          {/* Swipe hint for mobile */}
-          <div className="flex items-center justify-center gap-1.5 mt-2 sm:hidden">
-            <motion.span
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1.5 }}
-              className={`text-[9px] ${mt} flex items-center gap-1`}
-              style={{ fontFamily: F.body }}
-            >
-              <motion.span animate={{ x: [-3, 3, -3] }} transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}>←</motion.span>
-              Swipe to browse
-              <motion.span animate={{ x: [3, -3, 3] }} transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}>→</motion.span>
-            </motion.span>
-          </div>
-
-          {/* Spring-animated progress dots */}
-          <div className="flex items-center justify-center gap-1 mt-3">
-            {adsBrands.map((_, i) => (
-              <button key={i} onClick={() => goTo(i)} className="p-0.5 group">
-                <motion.div
-                  animate={{ width: i === activeBrand ? 20 : 4, height: 4, backgroundColor: i === activeBrand ? '#ed592b' : isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)', borderRadius: 2 }}
-                  whileHover={{ backgroundColor: i === activeBrand ? '#ed592b' : isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)', scale: i === activeBrand ? 1 : 1.5 }}
-                  transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-                />
-              </button>
-            ))}
-          </div>
-        </motion.div>
+              })()}
+            </div>
+          </motion.div>
+        )}
       </AnimatePresence>
 
-      {/* Fixed mobile nav arrows — always same screen position */}
-      {createPortal(
-        <div className="fixed left-0 right-0 z-[100] pointer-events-none flex items-center justify-between px-0 sm:hidden" style={{ top: '50vh', transform: 'translateY(-50%)' }}>
-          <button onClick={goPrev} className="pointer-events-auto w-9 h-14 rounded-r-xl flex items-center justify-center bg-black/40 backdrop-blur-md text-white/80 active:bg-black/60 transition-colors" aria-label="Previous">
-            <ChevronLeft size={20} />
-          </button>
-          <button onClick={goNext} className="pointer-events-auto w-9 h-14 rounded-l-xl flex items-center justify-center bg-black/40 backdrop-blur-md text-white/80 active:bg-black/60 transition-colors" aria-label="Next">
-            <ChevronRight size={20} />
-          </button>
-        </div>,
-        document.body
-      )}
+      {/* ── Sticky mini-filter bar ── */}
+      <AnimatePresence>
+        {showStickyBar && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            className={`fixed top-0 left-0 right-0 z-50 ${isDark ? 'bg-[#0a0a0c]/90 border-b border-white/[0.06]' : 'bg-white/90 border-b border-zinc-200'} backdrop-blur-xl px-4 py-2`}
+          >
+            <div className="flex items-center gap-2 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
+              <span className={`text-[10px] font-mono ${mt} flex-shrink-0 mr-1`}>
+                {activeBrand === -1 ? `All · ${allVisuals.length}` : `Brand ${activeBrand + 1}/${adsBrands.length}`}
+              </span>
+              <div className={`w-px h-3 flex-shrink-0 ${isDark ? 'bg-white/[0.08]' : 'bg-zinc-200'}`} />
+              <button
+                onClick={() => goTo(-1)}
+                className={`flex-shrink-0 px-2.5 py-1 rounded-lg text-[10px] transition-colors focus-visible:shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${activeBrand === -1 ? 'bg-[#ed592b]/10 text-[#ed592b] border border-[#ed592b]/30' : isDark ? 'text-[#5a5d6a] hover:text-white/60' : 'text-zinc-400 hover:text-zinc-600'}`}
+                style={{ fontFamily: F.body, fontWeight: activeBrand === -1 ? 600 : 400 }}
+              >All</button>
+              {adsBrands.map((b, i) => {
+                const active = activeBrand === i;
+                return (
+                  <button key={b.name} onClick={() => goTo(i)}
+                    className={`flex-shrink-0 flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] transition-colors focus-visible:shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${active ? 'bg-[#ed592b]/10 text-[#ed592b] border border-[#ed592b]/30' : isDark ? 'text-[#5a5d6a] hover:text-white/60' : 'text-zinc-400 hover:text-zinc-600'}`}
+                    style={{ fontFamily: F.body, fontWeight: active ? 600 : 400 }}
+                  >
+                    {b.logoImg && <img src={b.logoImg} alt="" aria-hidden="true" loading="lazy" width="12" height="12" className="w-3 h-3 rounded object-cover flex-shrink-0" />}
+                    <span className="truncate">{b.name.split(' · ')[0]}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Lightbox */}
       <AnimatePresence>
@@ -2938,9 +2695,18 @@ export function HomePage() {
         onMobileClose={() => setIsMobileOpen(false)}
       />
 
+      {/* Mobile hamburger trigger */}
+      <button
+        onClick={() => setIsMobileOpen(true)}
+        className={`fixed top-3 left-3 z-[45] md:hidden w-10 h-10 rounded-xl flex items-center justify-center border shadow-sm transition-colors focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${isDark ? 'bg-[#0b0b0e]/90 border-white/[0.08] text-white/70 hover:text-white' : 'bg-white/90 border-zinc-200 text-zinc-600 hover:text-zinc-900'} backdrop-blur-md`}
+        aria-label="Open navigation"
+      >
+        <Menu size={18} />
+      </button>
+
       {/* Main content */}
-      <main className="lg:ml-[220px] min-h-screen lg:pt-0">
-        <div className="max-w-3xl mx-auto px-4 sm:px-5 lg:px-10 py-4 sm:py-5 lg:py-7">
+      <main className="md:ml-[64px] lg:ml-[240px] min-h-screen lg:pt-0">
+        <div className="max-w-3xl mx-auto px-5 sm:px-8 lg:px-12 py-6 sm:py-8 lg:py-10">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeSection}
@@ -2969,6 +2735,28 @@ export function HomePage() {
           </FadeIn>
         </footer>
       </main>
+
+      {/* Mobile bottom quick-nav tab */}
+      <nav className={`fixed bottom-0 left-0 right-0 z-40 md:hidden flex items-center justify-around border-t py-2 px-4 ${isDark ? 'bg-[#0b0b0e]/95 border-white/[0.06]' : 'bg-white/95 border-zinc-200'} backdrop-blur-md`} aria-label="Quick navigation">
+        {[
+          { icon: <Home size={20} />, label: 'Home', action: () => { handleSectionChange('home'); } },
+          { icon: <Layers size={20} />, label: 'Work', action: () => { handleSectionChange('ux-ui'); } },
+          { icon: <Mail size={20} />, label: 'Contact', action: () => { handleSectionChange('contact'); } },
+        ].map((tab) => {
+          const tabActive = (tab.label === 'Home' && activeSection === 'home') || (tab.label === 'Work' && ['ux-ui','social-media-ads','social-media-motion'].includes(activeSection)) || (tab.label === 'Contact' && activeSection === 'contact');
+          return (
+            <button
+              key={tab.label}
+              onClick={tab.action}
+              className={`flex flex-col items-center gap-0.5 min-w-[60px] py-1 transition-colors focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${tabActive ? 'text-[#ed592b]' : isDark ? 'text-white/40 hover:text-white/70' : 'text-zinc-400 hover:text-zinc-700'}`}
+              aria-label={tab.label}
+            >
+              {tab.icon}
+              <span className="text-[9px] uppercase tracking-[0.1em]" style={{ fontFamily: F.body, fontWeight: 500 }}>{tab.label}</span>
+            </button>
+          );
+        })}
+      </nav>
 
       <style>{`
         @keyframes shimmer { 0% { background-position: 200% 50%; } 100% { background-position: -200% 50%; } }

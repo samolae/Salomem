@@ -141,6 +141,7 @@ export function UxUiSEO() {
       title="UX/UI Design"
       description="UX/UI design case studies by Salome Mosiava — including AURUM crypto exchange platform (196 screens) and SCHENKER enterprise logistics platform."
       keywords="UX/UI design, product design case studies, AURUM crypto exchange, SCHENKER logistics, Salome Mosiava"
+      image="https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773344688/aurum_og_xkrwdx.jpg"
     />
   );
 }
@@ -151,6 +152,7 @@ export function SocialMediaAdsSEO() {
       title="Social Media Ads"
       description="Social media advertising and visual campaigns by Salome Mosiava. Clients include Terminal, Mardi Holding, Crystal Leasing, Gino Aquapark, Carmall, Scope, and more."
       keywords="social media ads, visual campaigns, art direction, Terminal, Mardi, Crystal Leasing, Carmall, Salome Mosiava"
+      image="https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773344688/WhatsApp_Image_2026-03-08_at_14.44.08_xkrwdx.jpg"
     />
   );
 }
@@ -161,6 +163,7 @@ export function SocialMediaMotionSEO() {
       title="Motion Design"
       description="Motion design and animated social media content by Salome Mosiava. Logo reveals, social media reels, and brand animation for Carmall, Scope, Saloni Furniture, and more."
       keywords="motion design, animation, social media motion, logo reveals, brand animation, Salome Mosiava"
+      image="https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773916800/%E1%83%AF%E1%83%98%E1%83%9C%E1%83%9D_%E1%83%90%E1%83%99%E1%83%95%E1%83%90%E1%83%9E%E1%83%90%E1%83%A0%E1%83%99%E1%83%98_r3am9r.webp"
     />
   );
 }

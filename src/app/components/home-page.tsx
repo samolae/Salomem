@@ -2293,7 +2293,7 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
                 return (
                   <div className={`relative z-10 grid ${cols} gap-2`}>
                     {brand.items.map((item, i) => (
-                      <div key={`${brand.name}-${i}`} className="aspect-square">
+                      <div key={`${brand.name}-${i}`} className="aspect-[4/5]">
                         <AdsMediaItem item={item} brandName={brand.name} index={i} isDark={isDark} border={border} whiteBg={brand.whiteBg} fill
                           onImageClick={() => setLightbox({ src: item.src, alt: brand.name, whiteBg: brand.whiteBg, images: imgSrcs, index: imgSrcs.indexOf(item.src) })} />
                       </div>

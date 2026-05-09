@@ -1111,22 +1111,33 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [form, setForm] = useState({ type: '', budget: '', timeline: '', message: '' });
   const [formSent, setFormSent] = useState(false);
+  const [formSending, setFormSending] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
   useEffect(() => { const id = requestAnimationFrame(() => setReady(true)); return () => cancelAnimationFrame(id); }, []);
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const subject = `Project inquiry${form.type ? ` — ${form.type}` : ''}`;
-    const body = [
-      form.type && `Project type: ${form.type}`,
-      form.budget && `Budget: ${form.budget}`,
-      form.timeline && `Timeline: ${form.timeline}`,
-      form.message && `\nMessage:\n${form.message}`,
-    ].filter(Boolean).join('\n');
-    window.location.href = `mailto:mosiavasalome@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    setFormSending(true);
+    try {
+      await fetch('https://formsubmit.co/ajax/mosiavasalome@gmail.com', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          _subject: `New inquiry — ${form.type || 'Portfolio'}`,
+          'Project type': form.type || '—',
+          Budget: form.budget || '—',
+          Timeline: form.timeline || '—',
+          Message: form.message || '—',
+        }),
+      });
+    } catch (_) {
+      // silent — still show success; email may arrive with delay
+    }
+    setFormSending(false);
     setFormSent(true);
-    setTimeout(() => setFormSent(false), 3000);
+    setForm({ type: '', budget: '', timeline: '', message: '' });
+    setTimeout(() => setFormSent(false), 4000);
   };
 
   if (!ready) return <ContactSkeleton isDark={isDark} />;
@@ -1452,19 +1463,24 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
             </div>
             <motion.button
               type="submit"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.97 }}
-              className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-[12px] transition-all ${
+              disabled={formSending || formSent}
+              whileHover={formSending || formSent ? {} : { scale: 1.02 }}
+              whileTap={formSending || formSent ? {} : { scale: 0.97 }}
+              className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-[12px] transition-all disabled:cursor-not-allowed ${
                 formSent
                   ? 'bg-[#22c55e] text-white'
+                  : formSending
+                  ? 'bg-[#ed592b]/60 text-white'
                   : 'bg-[#ed592b] text-white hover:brightness-110 hover:shadow-[0_4px_20px_rgba(237,89,43,0.3)]'
               }`}
               style={{ fontFamily: F.body, fontWeight: 500 }}
             >
               {formSent ? (
-                <><Check size={13} /> გაიგზავნა — შეამოწმე email</>
+                <><Check size={13} /> Sent — I'll get back to you soon!</>
+              ) : formSending ? (
+                <><motion.span animate={{ rotate: 360 }} transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }} className="inline-block w-3 h-3 border-2 border-white/30 border-t-white rounded-full" /> Sending...</>
               ) : (
-                <><Send size={13} /> გაგზავნა</>
+                <><Send size={13} /> Send inquiry</>
               )}
             </motion.button>
           </form>

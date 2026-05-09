@@ -1613,14 +1613,15 @@ const adsBrands: { name: string; logoImg?: string; items: AdsMedia[]; aiContent?
 ];
 
 /* Lightbox for full-size image viewing — rendered via portal to avoid parent transform issues */
-const ImageLightbox = ({ src, alt, onClose, whiteBg }: { src: string; alt: string; onClose: () => void; whiteBg?: boolean }) => {
+const ImageLightbox = ({ src, alt, onClose, whiteBg, onPrev, onNext, hasPrev, hasNext }: {
+  src: string; alt: string; onClose: () => void; whiteBg?: boolean;
+  onPrev: () => void; onNext: () => void; hasPrev: boolean; hasNext: boolean;
+}) => {
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
-    window.addEventListener('keydown', onKey);
     document.body.style.overflow = 'hidden';
-    return () => { window.removeEventListener('keydown', onKey); document.body.style.overflow = ''; };
-  }, [onClose]);
+    return () => { document.body.style.overflow = ''; };
+  }, []);
 
   return createPortal(
     <motion.div
@@ -1639,17 +1640,20 @@ const ImageLightbox = ({ src, alt, onClose, whiteBg }: { src: string; alt: strin
         exit={{ opacity: 0 }}
         transition={{ duration: 0.12 }}
       />
-      <motion.img
-        src={src}
-        alt={alt}
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.9, opacity: 0 }}
-        transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-        className={`relative z-10 max-w-[95vw] max-h-[90vh] sm:max-w-[90vw] sm:max-h-[85vh] rounded-xl shadow-2xl object-contain select-none cursor-default ${whiteBg ? 'bg-white p-4' : ''}`}
-        onClick={(e) => e.stopPropagation()}
-        draggable={false}
-      />
+      <AnimatePresence mode="wait">
+        <motion.img
+          key={src}
+          src={src}
+          alt={alt}
+          initial={{ opacity: 0, scale: 0.97 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.97 }}
+          transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+          className={`relative z-10 max-w-[82vw] max-h-[82vh] rounded-xl shadow-2xl object-contain select-none cursor-default ${whiteBg ? 'bg-white p-4' : ''}`}
+          onClick={(e) => e.stopPropagation()}
+          draggable={false}
+        />
+      </AnimatePresence>
       <button
         onClick={onClose}
         className="absolute top-4 right-4 z-20 w-11 h-11 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white/70 hover:text-white hover:bg-white/20 active:bg-white/30 transition-colors focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.5)]"
@@ -1657,6 +1661,24 @@ const ImageLightbox = ({ src, alt, onClose, whiteBg }: { src: string; alt: strin
       >
         <X size={20} />
       </button>
+      {hasPrev && (
+        <button
+          onClick={(e) => { e.stopPropagation(); onPrev(); }}
+          className="absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white/70 hover:text-white hover:bg-white/20 active:bg-white/30 transition-colors"
+          aria-label="Previous image"
+        >
+          <ChevronLeft size={22} />
+        </button>
+      )}
+      {hasNext && (
+        <button
+          onClick={(e) => { e.stopPropagation(); onNext(); }}
+          className="absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white/70 hover:text-white hover:bg-white/20 active:bg-white/30 transition-colors"
+          aria-label="Next image"
+        >
+          <ChevronRight size={22} />
+        </button>
+      )}
     </motion.div>,
     document.body
   );
@@ -1776,7 +1798,16 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
   const mt = isDark ? 'text-[#7a7d8a]' : 'text-zinc-400';
   const border = isDark ? 'border-white/[0.06]' : 'border-zinc-200';
   const bg2 = isDark ? 'bg-white/[0.03]' : 'bg-zinc-50';
-  const [lightbox, setLightbox] = useState<{ src: string; alt: string; whiteBg?: boolean } | null>(null);
+  const [lightbox, setLightbox] = useState<{ src: string; alt: string; whiteBg?: boolean; images: string[]; index: number } | null>(null);
+
+  const navigateLightbox = useCallback((delta: number) => {
+    setLightbox(prev => {
+      if (!prev) return null;
+      const newIdx = prev.index + delta;
+      if (newIdx < 0 || newIdx >= prev.images.length) return prev;
+      return { ...prev, src: prev.images[newIdx], index: newIdx };
+    });
+  }, []);
   const [activeBrand, setActiveBrand] = useState(0);
   const [direction, setDirection] = useState(0);
   const [hoveredTab, setHoveredTab] = useState<number | null>(null);
@@ -1843,14 +1874,19 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
+      if (lightbox) {
+        if (e.key === 'Escape') setLightbox(null);
+        if (e.key === 'ArrowLeft') navigateLightbox(-1);
+        if (e.key === 'ArrowRight') navigateLightbox(+1);
+        return;
+      }
       if (e.key === 'ArrowLeft') goPrev();
       if (e.key === 'ArrowRight') goNext();
-      if (e.key === 'Escape' && lightbox) setLightbox(null);
       if (e.key === 'Escape' && showAll) setShowAll(false);
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [lightbox]); // goPrev/goNext use functional updaters
+  }, [lightbox, navigateLightbox]); // goPrev/goNext use functional updaters
 
   const slideVariants = {
     enter: (_d: number) => ({ opacity: 0, scale: 0.97, filter: 'blur(4px)' }),
@@ -2052,10 +2088,12 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
                   className="columns-2 md:columns-3"
                   style={{ columnGap: '0.375rem' }}
                 >
-                  {pagedVisuals.map((v, i) => (
+                  {(() => {
+                    const pageImgSrcs = pagedVisuals.filter(v => v.type === 'image').map(v => v.src);
+                    return pagedVisuals.map((v, i) => (
                     <motion.button
                       key={`${v.brandName}-${v.src}`}
-                      onClick={() => v.type === 'image' ? setLightbox({ src: v.src, alt: v.brandName, whiteBg: v.whiteBg }) : undefined}
+                      onClick={() => v.type === 'image' ? setLightbox({ src: v.src, alt: v.brandName, whiteBg: v.whiteBg, images: pageImgSrcs, index: pageImgSrcs.indexOf(v.src) }) : undefined}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.04, ease: [0.22, 1, 0.36, 1] }}
@@ -2094,7 +2132,7 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
                         </div>
                       </div>
                     </motion.button>
-                  ))}
+                  ));})()}
                 </motion.div>
               </AnimatePresence>
 
@@ -2211,10 +2249,13 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
                 const isGrid = brand.whiteBg || brand.threeCol;
                 return (
                   <div className={`relative z-10 ${colsClass}`} style={isGrid ? undefined : { columnGap: '0.625rem' }}>
-                    {brand.items.map((item, i) => (
-                      <AdsMediaItem key={`${brand.name}-${i}`} item={item} brandName={brand.name} index={i} isDark={isDark} border={border} whiteBg={brand.whiteBg}
-                        onImageClick={() => setLightbox({ src: item.src, alt: `${brand.name} — ${i + 1}`, whiteBg: brand.whiteBg })} />
-                    ))}
+                    {(() => {
+                      const imgSrcs = brand.items.filter(it => it.type === 'image').map(it => it.src);
+                      return brand.items.map((item, i) => (
+                        <AdsMediaItem key={`${brand.name}-${i}`} item={item} brandName={brand.name} index={i} isDark={isDark} border={border} whiteBg={brand.whiteBg}
+                          onImageClick={() => setLightbox({ src: item.src, alt: brand.name, whiteBg: brand.whiteBg, images: imgSrcs, index: imgSrcs.indexOf(item.src) })} />
+                      ));
+                    })()}
                   </div>
                 );
               }
@@ -2232,18 +2273,19 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
                 : brand.threeCol ? 'grid grid-cols-3 gap-2.5'
                 : 'columns-2 md:columns-3';
               const isRegGrid = brand.whiteBg || brand.threeCol;
+              const imgSrcsGroups = brand.items.filter(it => it.type === 'image').map(it => it.src);
               return (
                 <div className="relative z-10 flex flex-col gap-2.5">
                   {groups.map((g, gi) => g.fullWidth ? (
                     g.items.map(({ item, idx }) => (
                       <AdsMediaItem key={`${brand.name}-${idx}`} item={item} brandName={brand.name} index={idx} isDark={isDark} border={border} whiteBg={brand.whiteBg}
-                        onImageClick={() => setLightbox({ src: item.src, alt: `${brand.name} — ${idx + 1}`, whiteBg: brand.whiteBg })} />
+                        onImageClick={() => setLightbox({ src: item.src, alt: brand.name, whiteBg: brand.whiteBg, images: imgSrcsGroups, index: imgSrcsGroups.indexOf(item.src) })} />
                     ))
                   ) : (
                     <div key={`grp-${gi}`} className={regColsClass} style={isRegGrid ? undefined : { columnGap: '0.625rem' }}>
                       {g.items.map(({ item, idx }) => (
                         <AdsMediaItem key={`${brand.name}-${idx}`} item={item} brandName={brand.name} index={idx} isDark={isDark} border={border} whiteBg={brand.whiteBg}
-                          onImageClick={() => setLightbox({ src: item.src, alt: `${brand.name} — ${idx + 1}`, whiteBg: brand.whiteBg })} />
+                          onImageClick={() => setLightbox({ src: item.src, alt: brand.name, whiteBg: brand.whiteBg, images: imgSrcsGroups, index: imgSrcsGroups.indexOf(item.src) })} />
                       ))}
                     </div>
                   ))}
@@ -2298,7 +2340,9 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
 
       {/* Lightbox */}
       <AnimatePresence>
-        {lightbox && <ImageLightbox src={lightbox.src} alt={lightbox.alt} whiteBg={lightbox.whiteBg} onClose={() => setLightbox(null)} />}
+        {lightbox && <ImageLightbox src={lightbox.src} alt={lightbox.alt} whiteBg={lightbox.whiteBg} onClose={() => setLightbox(null)}
+          onPrev={() => navigateLightbox(-1)} onNext={() => navigateLightbox(+1)}
+          hasPrev={lightbox.index > 0} hasNext={lightbox.index < lightbox.images.length - 1} />}
       </AnimatePresence>
     </div>
   );

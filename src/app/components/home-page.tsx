@@ -1506,13 +1506,13 @@ type AdsMedia = {
 };
 
 const adsBrands: { name: string; logoImg?: string; items: AdsMedia[]; aiContent?: boolean; compactGrid?: boolean; darkPhotoBg?: boolean; twoCol?: boolean; threeCol?: boolean; bentoGrid?: boolean; whiteBg?: boolean }[] = [
-  { name: 'FitMeal', aiContent: true, bentoGrid: true, logoImg: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773917409/fitmeal_bowpri.webp', items: [
-    { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1778350259/fitmeal03_eslqq8.jpg', type: 'image', tall: true },
-    { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1778350260/fitmeal1_pjqki6.jpg', type: 'image' },
-    { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1778350260/fitmeal04_siknqu.jpg', type: 'image' },
+  { name: 'FitMeal', aiContent: true, threeCol: true, logoImg: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773917409/fitmeal_bowpri.webp', items: [
     { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773344688/WhatsApp_Image_2026-03-08_at_14.44.08_xkrwdx.jpg', type: 'image' },
     { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773344688/WhatsApp_Image_2026-03-08_at_14.44.08_1_lquzrl.jpg', type: 'image' },
     { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1778350259/fitmeal2_nr1rbc.jpg', type: 'image' },
+    { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1778350259/fitmeal03_eslqq8.jpg', type: 'image' },
+    { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1778350260/fitmeal1_pjqki6.jpg', type: 'image' },
+    { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1778350260/fitmeal04_siknqu.jpg', type: 'image' },
   ]},
   { name: 'Terminal · ტერმინალი', logoImg: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773916799/terminal_hcftru.webp', items: [
     { src: adsTerminal1, type: 'image' },
@@ -1528,7 +1528,7 @@ const adsBrands: { name: string; logoImg?: string; items: AdsMedia[]; aiContent?
     { src: adsMardi4, type: 'image' },
     { src: adsMardi5, type: 'image' },
   ]},
-  { name: 'Crystal Leasing · კრისტალ ლიზინგი', logoImg: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773916798/%E1%83%99%E1%83%A0%E1%83%98%E1%83%A1%E1%83%A2%E1%83%90%E1%83%9A_%E1%83%9A%E1%83%98%E1%83%96%E1%83%98%E1%83%9C%E1%83%92%E1%83%98_xeyoop.webp', items: [
+  { name: 'Crystal Leasing · კრისტალ ლიზინგი', twoCol: true, logoImg: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773916798/%E1%83%99%E1%83%A0%E1%83%98%E1%83%A1%E1%83%A2%E1%83%90%E1%83%9A_%E1%83%9A%E1%83%98%E1%83%96%E1%83%98%E1%83%9C%E1%83%92%E1%83%98_xeyoop.webp', items: [
     { src: adsCrystal4, type: 'image' },
     { src: adsCrystal1, type: 'image' },
     { src: adsCrystal2, type: 'image' },

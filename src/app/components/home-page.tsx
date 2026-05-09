@@ -271,7 +271,7 @@ const Sidebar = ({
 
   return (
     <>
-      <aside className={`hidden lg:flex flex-col fixed left-0 top-0 bottom-0 w-[192px] z-40 border-r ${isDark ? 'bg-[#0b0b0e] border-white/[0.05]' : 'bg-white border-zinc-200'}`}>
+      <aside className={`hidden lg:flex flex-col fixed left-0 top-0 bottom-0 w-[160px] z-40 border-r ${isDark ? 'bg-[#0b0b0e] border-white/[0.05]' : 'bg-white border-zinc-200'}`}>
         {sidebarContent}
       </aside>
 
@@ -2762,7 +2762,7 @@ export function HomePage() {
       />
 
       {/* Main content */}
-      <main className="lg:ml-[192px] min-h-screen lg:pt-0">
+      <main className="lg:ml-[160px] min-h-screen lg:pt-0">
         <div className="max-w-3xl mx-auto px-4 sm:px-5 lg:px-10 py-4 sm:py-5 lg:py-7">
           <AnimatePresence mode="wait">
             <motion.div

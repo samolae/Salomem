@@ -421,7 +421,7 @@ const SpotlightCardInner = ({
       <ImageWithFallback src={sp.img} alt={`${sp.title} — ${sp.tag}`} className="w-full h-full object-cover" style={{ filter: 'blur(1.5px)', transform: 'scale(1.04)' }} />
     </div>
     {/* Dark overlay — tones down brightness */}
-    <div className="absolute inset-0 bg-black/45" />
+    <div className="absolute inset-0 bg-black/65" />
     <div
       className="absolute inset-0 pointer-events-none opacity-[0.12]"
       style={{

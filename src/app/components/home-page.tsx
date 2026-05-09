@@ -465,15 +465,7 @@ const SpotlightDeckSection = ({ isDark, border }: { isDark: boolean; border: str
   const reducedMotion = useReducedMotion();
   const sectionRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isMobile, setIsMobile] = useState(() =>
-    typeof window !== 'undefined' ? window.innerWidth < 768 : false
-  );
-
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener('resize', check);
-    return () => window.removeEventListener('resize', check);
-  }, []);
+  const [isMobile] = useState(false);
 
   const spotlights: SpotlightData[] = [
     {
@@ -496,187 +488,21 @@ const SpotlightDeckSection = ({ isDark, border }: { isDark: boolean; border: str
     },
   ];
 
-  // Deck geometry — large enough offsets so all 3 cards are clearly visible
-  const CARD_H = 290;
-  const PEEK_1 = 52;  // card 1 peeks 52px below front card
-  const PEEK_2 = 100; // card 2 peeks 100px below front card
-  const X_1    = 6;   // card 1 shifts 6px right — diagonal deck look
-  const X_2    = 12;  // card 2 shifts 12px right
-  const ZONE_H = CARD_H + PEEK_2 + 12; // 402px — contains full visible deck
-
-  const { scrollYProgress: p } = useScroll({
-    target: sectionRef,
-    offset: ['start start', 'end end'],
-    layoutEffect: false,
-  });
-
-  useMotionValueEvent(p, 'change', (v) => {
-    if (!isMobile && !reducedMotion) setActiveIndex(Math.min(Math.floor(v * 3), 2));
-  });
-
-  // ── Card 0: front, exits upward 0→0.33
-  const c0y     = useTransform(p, [0, 0.27, 0.33], [0,      0,      -(CARD_H * 1.6)]);
-  const c0scale = useTransform(p, [0, 0.33],        [1,      0.95]);
-  const c0op    = useTransform(p, [0, 0.27, 0.33],  [1,      0.9,    0]);
-
-  // ── Card 1: visible at (PEEK_1, X_1), promotes 0→0.33, exits 0.33→0.66
-  const c1y     = useTransform(p, [0, 0.33, 0.62, 0.66], [PEEK_1, 0,      0,      -(CARD_H * 1.6)]);
-  const c1x     = useTransform(p, [0, 0.33],              [X_1,    0]);
-  const c1scale = useTransform(p, [0, 0.33, 0.66],        [0.95,   1,      0.95]);
-  const c1op    = useTransform(p, [0, 0.33, 0.62, 0.66],  [0.85,   1,      1,      0]);
-  const c1rot   = useTransform(p, [0, 0.33],               [-0.7,   0]);
-  const c1depth = useTransform(p, [0, 0.33],               [0.20,   0]);
-
-  // ── Card 2: visible at (PEEK_2, X_2), promotes twice, stays last
-  const c2y     = useTransform(p, [0, 0.33, 0.66], [PEEK_2, PEEK_1, 0]);
-  const c2x     = useTransform(p, [0, 0.33, 0.66], [X_2,    X_1,    0]);
-  const c2scale = useTransform(p, [0, 0.33, 0.66], [0.90,   0.95,   1]);
-  const c2op    = useTransform(p, [0, 0.33, 0.66], [0.70,   0.85,   1]);
-  const c2rot   = useTransform(p, [0, 0.33, 0.66], [-1.3,   -0.7,   0]);
-  const c2depth = useTransform(p, [0, 0.33, 0.66], [0.38,   0.20,   0]);
-
-  const cardMV = [
-    { y: c0y, x: 0,   scale: c0scale, opacity: c0op, rotate: 0,     depth: null    },
-    { y: c1y, x: c1x, scale: c1scale, opacity: c1op, rotate: c1rot, depth: c1depth },
-    { y: c2y, x: c2x, scale: c2scale, opacity: c2op, rotate: c2rot, depth: c2depth },
-  ];
-
   const mt = isDark ? 'text-[#7a7d8a]' : 'text-zinc-400';
 
-  const HeadingRow = () => (
-    <div className="flex items-center gap-3">
-      <div className="w-1.5 h-1.5 rounded-full bg-[#a855f7]" />
-      <div className="relative">
-        <p className={`text-[11px] uppercase tracking-[0.15em] ${mt}`} style={{ fontFamily: F.body, fontWeight: 500 }}>
-          Spotlights of 2025
-        </p>
-        <motion.div
-          className="absolute -bottom-0.5 left-0 h-px bg-[#ed592b]"
-          initial={{ scaleX: 0 }}
-          whileInView={{ scaleX: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.65, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-          style={{ originX: 0, width: '100%' }}
-        />
-      </div>
-      <div className={`flex-1 h-px ${isDark ? 'bg-white/[0.04]' : 'bg-zinc-200'}`} />
-    </div>
-  );
-
-  // ── Mobile / reduced-motion: simple vertical stack
-  if (isMobile || reducedMotion) {
-    return (
-      <div>
-        <div className="mb-6"><HeadingRow /></div>
-        <div className="space-y-4">
-          {spotlights.map((sp, i) => (
-            <motion.div
-              key={sp.tag}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-              className="h-[240px]"
-            >
-              <SpotlightCardInner sp={sp} index={i} total={spotlights.length} isDark={isDark} border={border} />
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
   return (
-    // 240vh — each card transition = 80vh of scroll, feels snappy not sluggish
-    <div ref={sectionRef} style={{ height: '240vh' }}>
-      <div className="sticky top-0 h-screen flex flex-col justify-center gap-5">
-
-        {/* Ambient hue per active card */}
-        <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 0 }}>
-          {spotlights.map((sp, i) => (
-            <motion.div
-              key={sp.tag}
-              className="absolute inset-0"
-              animate={{ opacity: activeIndex === i ? 1 : 0 }}
-              transition={{ duration: 1, ease: 'easeInOut' }}
-              style={{ background: `radial-gradient(ellipse 80% 55% at 80% 50%, ${sp.tagColor}07 0%, transparent 65%)` }}
-            />
-          ))}
-        </div>
-
-        {/* Heading */}
-        <div className="relative z-10"><HeadingRow /></div>
-
-        {/* Card deck — all 3 cards visible as a physical stack */}
-        <div className="relative z-10" style={{ height: ZONE_H }}>
-          {spotlights.map((sp, i) => {
-            const mv = cardMV[i];
-            return (
-              <motion.div
-                key={sp.tag}
-                style={{
-                  position: 'absolute',
-                  top: 0, left: 0, right: 0,
-                  height: CARD_H,
-                  zIndex: spotlights.length - i,
-                  y: mv.y,
-                  x: mv.x,
-                  scale: mv.scale,
-                  opacity: mv.opacity,
-                  rotate: mv.rotate,
-                  willChange: 'transform, opacity',
-                }}
-              >
-                <SpotlightCardInner sp={sp} index={i} total={spotlights.length} isDark={isDark} border={border} />
-                {mv.depth && (
-                  <motion.div
-                    className="absolute inset-0 rounded-2xl bg-black pointer-events-none"
-                    style={{ opacity: mv.depth }}
-                  />
-                )}
-              </motion.div>
-            );
-          })}
-        </div>
-
-        {/* Odometer + progress dots */}
-        <div className="relative z-10 flex items-center justify-between">
-          <div className="flex items-center gap-1.5">
-            <div className="overflow-hidden h-5 relative" style={{ width: 22 }}>
-              <AnimatePresence mode="popLayout" initial={false}>
-                <motion.span
-                  key={activeIndex}
-                  initial={{ y: '110%' }}
-                  animate={{ y: 0 }}
-                  exit={{ y: '-110%' }}
-                  transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-                  className={`absolute inset-x-0 text-[11px] font-mono tabular-nums text-center ${isDark ? 'text-white/50' : 'text-zinc-400'}`}
-                >
-                  {String(activeIndex + 1).padStart(2, '0')}
-                </motion.span>
-              </AnimatePresence>
-            </div>
-            <span className={`text-[11px] font-mono ${isDark ? 'text-white/20' : 'text-zinc-300'}`}>
-              /{String(spotlights.length).padStart(2, '0')}
-            </span>
+    <div ref={sectionRef}>
+      <div className="flex items-center gap-3 mb-6">
+        <div className="w-1.5 h-1.5 rounded-full bg-[#a855f7]" />
+        <p className={`text-[11px] uppercase tracking-[0.15em] ${mt}`} style={{ fontFamily: F.body, fontWeight: 500 }}>Spotlights of 2025</p>
+        <div className={`flex-1 h-px ${isDark ? 'bg-white/[0.04]' : 'bg-zinc-200'}`} />
+      </div>
+      <div className="space-y-4">
+        {spotlights.map((sp, i) => (
+          <div key={sp.tag} className="h-[260px]">
+            <SpotlightCardInner sp={sp} index={i} total={spotlights.length} isDark={isDark} border={border} />
           </div>
-          <div className="flex items-center gap-1.5">
-            {spotlights.map((sp, i) => (
-              <motion.div
-                key={sp.tag}
-                className="h-[3px] rounded-full"
-                animate={{
-                  width: activeIndex === i ? 20 : 4,
-                  backgroundColor: activeIndex === i
-                    ? sp.tagColor
-                    : isDark ? 'rgba(255,255,255,0.14)' : 'rgba(0,0,0,0.12)',
-                }}
-                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-              />
-            ))}
-          </div>
-        </div>
-
+        ))}
       </div>
     </div>
   );

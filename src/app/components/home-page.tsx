@@ -1502,16 +1502,17 @@ type AdsMedia = {
   src: string;
   type: 'image' | 'video';
   fullWidth?: boolean;
+  tall?: boolean;
 };
 
-const adsBrands: { name: string; logoImg?: string; items: AdsMedia[]; aiContent?: boolean; compactGrid?: boolean; darkPhotoBg?: boolean; twoCol?: boolean; threeCol?: boolean; whiteBg?: boolean }[] = [
-  { name: 'FitMeal', aiContent: true, threeCol: true, logoImg: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773917409/fitmeal_bowpri.webp', items: [
+const adsBrands: { name: string; logoImg?: string; items: AdsMedia[]; aiContent?: boolean; compactGrid?: boolean; darkPhotoBg?: boolean; twoCol?: boolean; threeCol?: boolean; bentoGrid?: boolean; whiteBg?: boolean }[] = [
+  { name: 'FitMeal', aiContent: true, bentoGrid: true, logoImg: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773917409/fitmeal_bowpri.webp', items: [
+    { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1778350259/fitmeal03_eslqq8.jpg', type: 'image', tall: true },
+    { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1778350260/fitmeal1_pjqki6.jpg', type: 'image' },
+    { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1778350260/fitmeal04_siknqu.jpg', type: 'image' },
     { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773344688/WhatsApp_Image_2026-03-08_at_14.44.08_xkrwdx.jpg', type: 'image' },
     { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773344688/WhatsApp_Image_2026-03-08_at_14.44.08_1_lquzrl.jpg', type: 'image' },
     { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1778350259/fitmeal2_nr1rbc.jpg', type: 'image' },
-    { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1778350259/fitmeal03_eslqq8.jpg', type: 'image' },
-    { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1778350260/fitmeal1_pjqki6.jpg', type: 'image' },
-    { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1778350260/fitmeal04_siknqu.jpg', type: 'image' },
   ]},
   { name: 'Terminal · ტერმინალი', logoImg: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773916799/terminal_hcftru.webp', items: [
     { src: adsTerminal1, type: 'image' },
@@ -2239,6 +2240,51 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
 
             {/* Grid layout — splits fullWidth items into their own rows */}
             {(() => {
+              /* Bento: tall item left (spans full height) + 2 stacked items right */
+              if (brand.bentoGrid) {
+                const tallItem = brand.items.find(it => it.tall);
+                const regularItems = brand.items.filter(it => !it.tall);
+                const imgSrcs = brand.items.filter(it => it.type === 'image').map(it => it.src);
+                const btnCls = `relative rounded-lg overflow-hidden border ${border} group cursor-pointer`;
+                const hoverOverlay = (
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center pointer-events-none">
+                    <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 scale-75 group-hover:scale-100">
+                      <div className="w-7 h-7 rounded-full bg-white/15 backdrop-blur-xl flex items-center justify-center border border-white/10">
+                        <ArrowUpRight size={11} className="text-white" />
+                      </div>
+                    </div>
+                  </div>
+                );
+                return (
+                  <div className="relative z-10 flex gap-2.5 items-stretch">
+                    {tallItem && (
+                      <motion.button
+                        className={`flex-1 ${btnCls}`}
+                        whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                        onClick={() => setLightbox({ src: tallItem.src, alt: brand.name, whiteBg: brand.whiteBg, images: imgSrcs, index: imgSrcs.indexOf(tallItem.src) })}
+                      >
+                        <img src={tallItem.src} alt={`${brand.name} visual`} loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover block" />
+                        {hoverOverlay}
+                      </motion.button>
+                    )}
+                    <div className="flex-1 flex flex-col gap-2.5">
+                      {regularItems.slice(0, 2).map((item, i) => (
+                        <motion.button
+                          key={i}
+                          className={`flex-1 aspect-square ${btnCls}`}
+                          whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                          onClick={() => setLightbox({ src: item.src, alt: brand.name, whiteBg: brand.whiteBg, images: imgSrcs, index: imgSrcs.indexOf(item.src) })}
+                        >
+                          <img src={item.src} alt={`${brand.name} visual ${i + 2}`} loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover block" />
+                          {hoverOverlay}
+                        </motion.button>
+                      ))}
+                    </div>
+                  </div>
+                );
+              }
               const hasFullWidth = brand.items.some(it => it.fullWidth);
               if (!hasFullWidth) {
                 const colsClass = brand.whiteBg

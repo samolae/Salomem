@@ -1504,10 +1504,14 @@ type AdsMedia = {
   fullWidth?: boolean;
 };
 
-const adsBrands: { name: string; logoImg?: string; items: AdsMedia[]; aiContent?: boolean; compactGrid?: boolean; darkPhotoBg?: boolean; twoCol?: boolean; whiteBg?: boolean }[] = [
-  { name: 'FitMeal', aiContent: true, logoImg: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773917409/fitmeal_bowpri.webp', items: [
+const adsBrands: { name: string; logoImg?: string; items: AdsMedia[]; aiContent?: boolean; compactGrid?: boolean; darkPhotoBg?: boolean; twoCol?: boolean; threeCol?: boolean; whiteBg?: boolean }[] = [
+  { name: 'FitMeal', aiContent: true, threeCol: true, logoImg: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773917409/fitmeal_bowpri.webp', items: [
     { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773344688/WhatsApp_Image_2026-03-08_at_14.44.08_xkrwdx.jpg', type: 'image' },
     { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773344688/WhatsApp_Image_2026-03-08_at_14.44.08_1_lquzrl.jpg', type: 'image' },
+    { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1778350259/fitmeal2_nr1rbc.jpg', type: 'image' },
+    { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1778350259/fitmeal03_eslqq8.jpg', type: 'image' },
+    { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1778350260/fitmeal1_pjqki6.jpg', type: 'image' },
+    { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1778350260/fitmeal04_siknqu.jpg', type: 'image' },
   ]},
   { name: 'Terminal · ტერმინალი', logoImg: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773916799/terminal_hcftru.webp', items: [
     { src: adsTerminal1, type: 'image' },
@@ -2200,11 +2204,13 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
               const hasFullWidth = brand.items.some(it => it.fullWidth);
               if (!hasFullWidth) {
                 const colsClass = brand.whiteBg
-                  ? `grid ${brand.twoCol ? 'grid-cols-2' : 'grid-cols-2 md:grid-cols-3'} gap-2.5`
+                  ? `grid ${brand.twoCol ? 'grid-cols-2' : brand.threeCol ? 'grid-cols-3' : 'grid-cols-2 md:grid-cols-3'} gap-2.5`
                   : brand.twoCol ? 'columns-2'
+                  : brand.threeCol ? 'grid grid-cols-3 gap-2.5'
                   : brand.items.length <= 2 ? 'columns-2' : 'columns-2 md:columns-3';
+                const isGrid = brand.whiteBg || brand.threeCol;
                 return (
-                  <div className={`relative z-10 ${colsClass}`} style={brand.whiteBg ? undefined : { columnGap: '0.625rem' }}>
+                  <div className={`relative z-10 ${colsClass}`} style={isGrid ? undefined : { columnGap: '0.625rem' }}>
                     {brand.items.map((item, i) => (
                       <AdsMediaItem key={`${brand.name}-${i}`} item={item} brandName={brand.name} index={i} isDark={isDark} border={border} whiteBg={brand.whiteBg}
                         onImageClick={() => setLightbox({ src: item.src, alt: `${brand.name} — ${i + 1}`, whiteBg: brand.whiteBg })} />
@@ -2221,8 +2227,11 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
                 else { groups.push({ fullWidth: fw, items: [{ item, idx: i }] }); }
               });
               const regColsClass = brand.whiteBg
-                ? `grid ${brand.twoCol ? 'grid-cols-2' : 'grid-cols-2 md:grid-cols-3'} gap-2.5`
-                : brand.twoCol ? 'columns-2' : 'columns-2 md:columns-3';
+                ? `grid ${brand.twoCol ? 'grid-cols-2' : brand.threeCol ? 'grid-cols-3' : 'grid-cols-2 md:grid-cols-3'} gap-2.5`
+                : brand.twoCol ? 'columns-2'
+                : brand.threeCol ? 'grid grid-cols-3 gap-2.5'
+                : 'columns-2 md:columns-3';
+              const isRegGrid = brand.whiteBg || brand.threeCol;
               return (
                 <div className="relative z-10 flex flex-col gap-2.5">
                   {groups.map((g, gi) => g.fullWidth ? (
@@ -2231,7 +2240,7 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
                         onImageClick={() => setLightbox({ src: item.src, alt: `${brand.name} — ${idx + 1}`, whiteBg: brand.whiteBg })} />
                     ))
                   ) : (
-                    <div key={`grp-${gi}`} className={regColsClass} style={brand.whiteBg ? undefined : { columnGap: '0.625rem' }}>
+                    <div key={`grp-${gi}`} className={regColsClass} style={isRegGrid ? undefined : { columnGap: '0.625rem' }}>
                       {g.items.map(({ item, idx }) => (
                         <AdsMediaItem key={`${brand.name}-${idx}`} item={item} brandName={brand.name} index={idx} isDark={isDark} border={border} whiteBg={brand.whiteBg}
                           onImageClick={() => setLightbox({ src: item.src, alt: `${brand.name} — ${idx + 1}`, whiteBg: brand.whiteBg })} />

@@ -418,8 +418,10 @@ const SpotlightCardInner = ({
 }: { sp: SpotlightData; index: number; total: number; isDark: boolean; border: string }) => (
   <div className={`relative w-full h-full rounded-2xl overflow-hidden border ${border} shadow-2xl shadow-black/60 cursor-pointer`}>
     <div className="absolute inset-0">
-      <ImageWithFallback src={sp.img} alt={`${sp.title} — ${sp.tag}`} className="w-full h-full object-cover" />
+      <ImageWithFallback src={sp.img} alt={`${sp.title} — ${sp.tag}`} className="w-full h-full object-cover" style={{ filter: 'blur(1.5px)', transform: 'scale(1.04)' }} />
     </div>
+    {/* Dark overlay — tones down brightness */}
+    <div className="absolute inset-0 bg-black/45" />
     <div
       className="absolute inset-0 pointer-events-none opacity-[0.12]"
       style={{
@@ -428,7 +430,7 @@ const SpotlightCardInner = ({
         backgroundSize: '256px 256px',
       }}
     />
-    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
+    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
     <div className="absolute top-4 right-4 z-10">
       <span className="text-[10px] font-mono text-white/25 tabular-nums">
         {String(index + 1).padStart(2, '0')}/{String(total).padStart(2, '0')}

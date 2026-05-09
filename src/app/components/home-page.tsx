@@ -619,6 +619,7 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
                   { name: 'Georgian Chamber', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/v1778334357/georgian_chamber...._ffm4rm.png' },
                   { name: 'Modusi', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/v1778334357/%E1%83%9B%E1%83%9D%E1%83%93%E1%83%A3%E1%83%A1%E1%83%98_zcltlg.png' },
                   { name: 'Gagua', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/v1778334358/gagua_qwqdja.jpg' },
+                  { name: 'Thermocentre', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/v1778334709/%E1%83%97%E1%83%94%E1%83%A0%E1%83%9B%E1%83%9D%E1%83%AA%E1%83%94%E1%83%9C%E1%83%A2%E1%83%A0%E1%83%98_vmkkoc.png' },
                 ];
                 return [...clients, ...clients];
               })().map((client, i) => (
@@ -1110,6 +1111,7 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [form, setForm] = useState({ type: '', budget: '', timeline: '', message: '' });
   const [formSent, setFormSent] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
   useEffect(() => { const id = requestAnimationFrame(() => setReady(true)); return () => cancelAnimationFrame(id); }, []);
 
@@ -1324,57 +1326,119 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
       <FadeIn delay={0.55}>
         <div className={`rounded-2xl border p-5 ${isDark ? 'border-white/[0.06] bg-[#0c0d11]' : `${border} bg-white`}`}>
           <p className={`text-[10px] uppercase tracking-[0.15em] ${mt} mb-4`} style={{ fontFamily: F.body, fontWeight: 500 }}>Quick inquiry</p>
+          {/* Close dropdown when clicking outside */}
+          {openDropdown && (
+            <div className="fixed inset-0 z-40" onClick={() => setOpenDropdown(null)} />
+          )}
+
           <form onSubmit={handleFormSubmit} className="space-y-3">
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className={`text-[10px] uppercase tracking-[0.1em] ${mt} block mb-1.5`} style={{ fontFamily: F.body, fontWeight: 500 }}>Project type</label>
-                <select
-                  value={form.type}
-                  onChange={(e) => setForm({ ...form, type: e.target.value })}
-                  className={`w-full text-[12px] px-3 py-2 rounded-lg border appearance-none cursor-pointer ${isDark ? 'bg-[#0a0b0f] border-white/[0.08] text-white/60' : 'bg-zinc-50 border-zinc-200 text-zinc-600'}`}
-                  style={{ fontFamily: F.body }}
-                >
-                  <option value="">Select...</option>
-                  <option value="UX/UI Design">UX/UI Design</option>
-                  <option value="Art Direction">Art Direction</option>
-                  <option value="Social Media">Social Media</option>
-                  <option value="Motion Design">Motion Design</option>
-                  <option value="Other">Other</option>
-                </select>
+            {/* Inline dropdown renderer — no hooks, uses parent state */}
+            {([
+              {
+                cols: 2,
+                fields: [
+                  { field: 'type' as const, label: 'Project type', placeholder: 'Select...', options: [
+                    { value: 'UX/UI Design', label: 'UX/UI Design' },
+                    { value: 'Art Direction', label: 'Art Direction' },
+                    { value: 'Social Media', label: 'Social Media' },
+                    { value: 'Motion Design', label: 'Motion Design' },
+                    { value: 'Other', label: 'Other' },
+                  ]},
+                  { field: 'budget' as const, label: 'Budget', placeholder: 'Select...', options: [
+                    { value: 'Under ₾500', label: 'Under ₾500' },
+                    { value: '₾500–₾2,000', label: '₾500–₾2,000' },
+                    { value: '₾2,000–₾6,000', label: '₾2,000–₾6,000' },
+                    { value: '₾6,000–₾15,000', label: '₾6,000–₾15,000' },
+                    { value: '₾15,000+', label: '₾15,000+' },
+                    { value: "Let's discuss", label: "Let's discuss" },
+                  ]},
+                ],
+              },
+              {
+                cols: 1,
+                fields: [
+                  { field: 'timeline' as const, label: 'Timeline', placeholder: 'Select...', options: [
+                    { value: 'ASAP', label: 'ASAP' },
+                    { value: 'Within 1 month', label: 'Within 1 month' },
+                    { value: '1–3 months', label: '1–3 months' },
+                    { value: '3+ months', label: '3+ months' },
+                    { value: 'Flexible', label: 'Flexible' },
+                  ]},
+                ],
+              },
+            ] as { cols: number; fields: { field: keyof typeof form; label: string; placeholder: string; options: { value: string; label: string }[] }[] }[]).map((row, ri) => (
+              <div key={ri} className={row.cols === 2 ? 'grid grid-cols-2 gap-3' : ''}>
+                {row.fields.map(({ field, label, placeholder, options }) => {
+                  const isOpen = openDropdown === field;
+                  const selected = options.find((o) => o.value === form[field]);
+                  return (
+                    <div key={field}>
+                      <label className={`text-[10px] uppercase tracking-[0.1em] ${mt} block mb-1.5`} style={{ fontFamily: F.body, fontWeight: 500 }}>{label}</label>
+                      <div className="relative" style={{ zIndex: isOpen ? 50 : 'auto' }}>
+                        <button
+                          type="button"
+                          onClick={() => setOpenDropdown(isOpen ? null : field)}
+                          className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl border text-[12px] transition-all duration-200 cursor-pointer ${
+                            isOpen
+                              ? isDark ? 'border-[#ed592b]/35 bg-[#0a0b0f] shadow-[0_0_0_3px_rgba(237,89,43,0.07)]' : 'border-[#ed592b]/35 bg-white shadow-[0_0_0_3px_rgba(237,89,43,0.07)]'
+                              : isDark ? 'border-white/[0.08] bg-[#0a0b0f] hover:border-white/[0.16]' : 'border-zinc-200 bg-zinc-50 hover:border-zinc-300'
+                          }`}
+                          style={{ fontFamily: F.body }}
+                        >
+                          <span className={selected ? (isDark ? 'text-white/80' : 'text-zinc-800') : (isDark ? 'text-white/20' : 'text-zinc-300')}>
+                            {selected?.label ?? placeholder}
+                          </span>
+                          <motion.span animate={{ rotate: isOpen ? 180 : 0 }} transition={{ duration: 0.2 }} className="flex-shrink-0 ml-2">
+                            <ChevronDown size={13} className={isOpen ? 'text-[#ed592b]' : isDark ? 'text-white/20' : 'text-zinc-300'} />
+                          </motion.span>
+                        </button>
+
+                        <AnimatePresence>
+                          {isOpen && (
+                            <motion.div
+                              initial={{ opacity: 0, y: -6, scaleY: 0.9 }}
+                              animate={{ opacity: 1, y: 0, scaleY: 1 }}
+                              exit={{ opacity: 0, y: -4, scaleY: 0.94 }}
+                              transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
+                              style={{ transformOrigin: 'top', zIndex: 51 }}
+                              className={`absolute top-full left-0 right-0 mt-1.5 rounded-xl border py-1 overflow-hidden ${
+                                isDark ? 'bg-[#0e0f15] border-white/[0.1] shadow-2xl shadow-black/70' : 'bg-white border-zinc-200 shadow-xl shadow-black/[0.08]'
+                              }`}
+                            >
+                              {options.map((opt, oi) => {
+                                const isSel = form[field] === opt.value;
+                                return (
+                                  <motion.button
+                                    key={opt.value}
+                                    type="button"
+                                    initial={{ opacity: 0, x: -4 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ duration: 0.12, delay: oi * 0.025 }}
+                                    onClick={() => { setForm((f) => ({ ...f, [field]: opt.value })); setOpenDropdown(null); }}
+                                    className={`w-full flex items-center gap-2.5 px-3.5 py-2 text-[12px] transition-colors duration-100 ${
+                                      isSel
+                                        ? isDark ? 'text-[#ed592b] bg-[#ed592b]/[0.08]' : 'text-[#ed592b] bg-[#ed592b]/[0.05]'
+                                        : isDark ? 'text-white/50 hover:text-white/90 hover:bg-white/[0.04]' : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50'
+                                    }`}
+                                    style={{ fontFamily: F.body }}
+                                  >
+                                    <span className={`w-3.5 h-3.5 rounded-full border flex-shrink-0 flex items-center justify-center ${isSel ? 'bg-[#ed592b] border-[#ed592b]' : isDark ? 'border-white/[0.15]' : 'border-zinc-300'}`}>
+                                      {isSel && <span className="w-1.5 h-1.5 rounded-full bg-white block" />}
+                                    </span>
+                                    {opt.label}
+                                  </motion.button>
+                                );
+                              })}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
-              <div>
-                <label className={`text-[10px] uppercase tracking-[0.1em] ${mt} block mb-1.5`} style={{ fontFamily: F.body, fontWeight: 500 }}>Budget</label>
-                <select
-                  value={form.budget}
-                  onChange={(e) => setForm({ ...form, budget: e.target.value })}
-                  className={`w-full text-[12px] px-3 py-2 rounded-lg border appearance-none cursor-pointer ${isDark ? 'bg-[#0a0b0f] border-white/[0.08] text-white/60' : 'bg-zinc-50 border-zinc-200 text-zinc-600'}`}
-                  style={{ fontFamily: F.body }}
-                >
-                  <option value="">Select...</option>
-                  <option value="Under $1,000">Under $1,000</option>
-                  <option value="$1,000–$3,000">$1,000–$3,000</option>
-                  <option value="$3,000–$10,000">$3,000–$10,000</option>
-                  <option value="$10,000+">$10,000+</option>
-                  <option value="Let's discuss">Let's discuss</option>
-                </select>
-              </div>
-            </div>
-            <div>
-              <label className={`text-[10px] uppercase tracking-[0.1em] ${mt} block mb-1.5`} style={{ fontFamily: F.body, fontWeight: 500 }}>Timeline</label>
-              <select
-                value={form.timeline}
-                onChange={(e) => setForm({ ...form, timeline: e.target.value })}
-                className={`w-full text-[12px] px-3 py-2 rounded-lg border appearance-none cursor-pointer ${isDark ? 'bg-[#0a0b0f] border-white/[0.08] text-white/60' : 'bg-zinc-50 border-zinc-200 text-zinc-600'}`}
-                style={{ fontFamily: F.body }}
-              >
-                <option value="">Select...</option>
-                <option value="ASAP">ASAP</option>
-                <option value="Within 1 month">Within 1 month</option>
-                <option value="1–3 months">1–3 months</option>
-                <option value="3+ months">3+ months</option>
-                <option value="Flexible">Flexible</option>
-              </select>
-            </div>
+            ))}
+
             <div>
               <label className={`text-[10px] uppercase tracking-[0.1em] ${mt} block mb-1.5`} style={{ fontFamily: F.body, fontWeight: 500 }}>Message</label>
               <textarea
@@ -1382,7 +1446,7 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
                 onChange={(e) => setForm({ ...form, message: e.target.value })}
                 placeholder="Tell me about your project..."
                 rows={3}
-                className={`w-full text-[12px] px-3 py-2.5 rounded-lg border resize-none ${isDark ? 'bg-[#0a0b0f] border-white/[0.08] text-white/60 placeholder-white/15' : 'bg-zinc-50 border-zinc-200 text-zinc-600 placeholder-zinc-300'}`}
+                className={`w-full text-[12px] px-3 py-2.5 rounded-xl border resize-none transition-all duration-200 ${isDark ? 'bg-[#0a0b0f] border-white/[0.08] text-white/70 placeholder-white/15 focus:border-[#ed592b]/30 focus:shadow-[0_0_0_3px_rgba(237,89,43,0.06)]' : 'bg-zinc-50 border-zinc-200 text-zinc-700 placeholder-zinc-300 focus:border-[#ed592b]/30 focus:shadow-[0_0_0_3px_rgba(237,89,43,0.06)]'} outline-none`}
                 style={{ fontFamily: F.body }}
               />
             </div>
@@ -1390,17 +1454,17 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
               type="submit"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.97 }}
-              className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-lg text-[12px] transition-all ${
+              className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-[12px] transition-all ${
                 formSent
                   ? 'bg-[#22c55e] text-white'
-                  : 'bg-[#ed592b] text-white hover:brightness-110'
+                  : 'bg-[#ed592b] text-white hover:brightness-110 hover:shadow-[0_4px_20px_rgba(237,89,43,0.3)]'
               }`}
               style={{ fontFamily: F.body, fontWeight: 500 }}
             >
               {formSent ? (
-                <><Check size={13} /> Sent — check your email app</>
+                <><Check size={13} /> გაიგზავნა — შეამოწმე email</>
               ) : (
-                <><Send size={13} /> Send inquiry</>
+                <><Send size={13} /> გაგზავნა</>
               )}
             </motion.button>
           </form>

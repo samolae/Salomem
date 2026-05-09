@@ -106,9 +106,9 @@ const catHref = (id: string): string => {
 };
 
 const projectCategories = [
-  { id: 'ux-ui', label: 'UX/UI Design', icon: <Layers size={15} /> },
-  { id: 'social-media-ads', label: 'Social Media Ads', icon: <Image size={15} /> },
-  { id: 'social-media-motion', label: 'Social Media Motion', icon: <Video size={15} /> },
+  { id: 'ux-ui', label: 'UX/UI Design', icon: <Layers size={15} />, typeLabel: 'Case Study' },
+  { id: 'social-media-ads', label: 'Social Media Ads', icon: <LayoutGrid size={15} />, typeLabel: 'Gallery' },
+  { id: 'social-media-motion', label: 'Social Media Motion', icon: <Video size={15} />, typeLabel: 'Gallery' },
 ];
 
 /* ═════════════════════��═════════════════════���═══════════════════════ */
@@ -197,7 +197,13 @@ const Sidebar = ({
 
         <div className={`h-px mx-2 my-2 ${isDark ? 'bg-white/[0.05]' : 'bg-zinc-200'}`} />
 
-        {projectCategories.map((cat) => {
+        {/* ── CASE STUDIES subgroup */}
+        <div className="px-3 pt-1 pb-0.5">
+          <span className={`text-[8.5px] uppercase tracking-[0.18em] font-semibold ${isDark ? 'text-[#ed592b]/50' : 'text-[#ed592b]/60'}`} style={{ fontFamily: F.body }}>
+            Case Studies
+          </span>
+        </div>
+        {projectCategories.filter(c => c.typeLabel === 'Case Study').map((cat) => {
           const active = activeSection === cat.id;
           return (
             <MagneticWrap key={cat.id} strength={0.15}>
@@ -205,7 +211,7 @@ const Sidebar = ({
                 <motion.div
                   whileHover={{ x: 3 }}
                   whileTap={{ scale: 0.97 }}
-                  className={`relative w-full flex items-center gap-2.5 px-3 py-2.5 lg:py-[7px] rounded-[10px] text-[13px] whitespace-nowrap transition-all overflow-hidden min-h-[44px] lg:min-h-0 focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
+                  className={`relative w-full flex items-center gap-2.5 px-3 py-2.5 lg:py-[7px] rounded-[10px] text-[13px] transition-all overflow-hidden min-h-[44px] lg:min-h-0 focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
                     active
                       ? isDark ? 'bg-white/[0.06] text-white' : 'bg-zinc-200/70 text-zinc-900'
                       : isDark ? 'text-[#7a7d8a] hover:text-white/80 hover:bg-white/[0.03]' : 'text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100'
@@ -218,8 +224,45 @@ const Sidebar = ({
                       transition={{ type: 'spring', stiffness: 500, damping: 35 }}
                     />
                   )}
-                  <span className={active ? 'text-[#ed592b]' : 'opacity-50'}>{cat.icon}</span>
-                  {cat.label}
+                  <span className={`flex-shrink-0 ${active ? 'text-[#ed592b]' : 'opacity-50'}`}>{cat.icon}</span>
+                  <span className="truncate flex-1 min-w-0">{cat.label}</span>
+                  <span className={`ml-auto flex-shrink-0 text-[8px] uppercase tracking-[0.12em] ${isDark ? 'text-white/25' : 'text-zinc-300'}`} style={{ fontFamily: F.body }}>{cat.typeLabel}</span>
+                </motion.div>
+              </Link>
+            </MagneticWrap>
+          );
+        })}
+
+        {/* ── GALLERIES subgroup */}
+        <div className="px-3 pt-2.5 pb-0.5">
+          <span className={`text-[8.5px] uppercase tracking-[0.18em] font-semibold ${isDark ? 'text-white/25' : 'text-zinc-400/60'}`} style={{ fontFamily: F.body }}>
+            Galleries
+          </span>
+        </div>
+        {projectCategories.filter(c => c.typeLabel === 'Gallery').map((cat) => {
+          const active = activeSection === cat.id;
+          return (
+            <MagneticWrap key={cat.id} strength={0.15}>
+              <Link to={catHref(cat.id)} onClick={() => { onSectionChange(cat.id); onMobileClose(); }} className="block">
+                <motion.div
+                  whileHover={{ x: 3 }}
+                  whileTap={{ scale: 0.97 }}
+                  className={`relative w-full flex items-center gap-2.5 px-3 py-2.5 lg:py-[7px] rounded-[10px] text-[13px] transition-all overflow-hidden min-h-[44px] lg:min-h-0 focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
+                    active
+                      ? isDark ? 'bg-white/[0.06] text-white' : 'bg-zinc-200/70 text-zinc-900'
+                      : isDark ? 'text-[#7a7d8a] hover:text-white/80 hover:bg-white/[0.03]' : 'text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100'
+                  }`}
+                >
+                  {active && (
+                    <motion.div
+                      layoutId="sidebarActiveCat"
+                      className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-4 rounded-r-full bg-[#ed592b]"
+                      transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+                    />
+                  )}
+                  <span className={`flex-shrink-0 ${active ? 'text-[#ed592b]' : 'opacity-40'}`}>{cat.icon}</span>
+                  <span className="truncate flex-1 min-w-0">{cat.label}</span>
+                  <span className={`ml-auto flex-shrink-0 text-[8px] uppercase tracking-[0.12em] ${isDark ? 'text-white/25' : 'text-zinc-300'}`} style={{ fontFamily: F.body }}>{cat.typeLabel}</span>
                 </motion.div>
               </Link>
             </MagneticWrap>
@@ -303,6 +346,8 @@ const DiscoveryTile = ({
   videoSrc,
   link,
   alt,
+  typeBadge,
+  ctaLabel,
 }: {
   image: string;
   label: string;
@@ -313,6 +358,8 @@ const DiscoveryTile = ({
   videoSrc?: string;
   link?: string;
   alt?: string;
+  typeBadge?: string;
+  ctaLabel?: string;
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -370,7 +417,7 @@ const DiscoveryTile = ({
             />
           )}
           <div className={`absolute inset-0 transition-all duration-300 ${isHovered ? 'bg-black/20' : 'bg-black/0'}`} />
-          <div className="absolute top-2 left-2 z-10">
+          <div className="absolute top-2 left-2 z-10 flex flex-col gap-1">
             <SpringBadge delay={0.1}>
               <span
                 className="text-[7px] uppercase tracking-[0.15em] px-2 py-0.5 rounded-full backdrop-blur-xl border"
@@ -383,6 +430,13 @@ const DiscoveryTile = ({
                 {category}
               </span>
             </SpringBadge>
+            {typeBadge && (
+              <SpringBadge delay={0.18}>
+                <span className="text-[7px] uppercase tracking-[0.12em] px-2 py-0.5 rounded-full backdrop-blur-xl border border-white/[0.08] bg-black/30 text-white/50">
+                  {typeBadge}
+                </span>
+              </SpringBadge>
+            )}
           </div>
           {videoSrc && (
             <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 ${isHovered ? 'opacity-0' : 'opacity-100'}`}>
@@ -397,10 +451,15 @@ const DiscoveryTile = ({
             </div>
           </div>
         </div>
-        <div className="px-2 py-1.5">
+        <div className="px-2 py-1.5 flex items-center justify-between gap-1">
           <span className={`text-[9px] ${isDark ? 'text-white/60' : 'text-zinc-500'}`} style={{ fontFamily: F.heading, fontWeight: 500 }}>
             {label}
           </span>
+          {ctaLabel && (
+            <span className={`text-[8px] flex-shrink-0 flex items-center gap-0.5 ${isDark ? 'text-white/35' : 'text-zinc-400'}`} style={{ fontFamily: F.body, fontWeight: 500 }}>
+              {ctaLabel} <ArrowRight size={7} />
+            </span>
+          )}
         </div>
       </div>
     </BentoTiltCard>
@@ -672,7 +731,7 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
                   <motion.img src={screenProfile} alt="AURUM user profile dashboard" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 0.3, y: 0 }} transition={{ duration: 1, delay: 0.35 }} className="absolute top-[4%] right-[3%] w-[38%] rounded-xl shadow-2xl shadow-black/60" />
                   <motion.img src={screenExchange} alt="AURUM Crypto Exchange UI/UX Design by Salome Mosiava" initial={{ opacity: 0, y: 50, scale: 0.95 }} whileInView={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 1.2, delay: 0.5, ease: [0.22, 1, 0.36, 1] }} className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[65%] rounded-t-xl shadow-[0_-20px_60px_rgba(0,0,0,0.5)]" />
                   <div className="absolute top-2.5 left-2.5 z-20 flex items-center gap-1.5">
-                    <span className="text-[7px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-full bg-[#D59A04]/10 backdrop-blur-xl text-[#D59A04]/80 border border-[#D59A04]/15">UX/UI</span>
+                    <span className="text-[7px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-full bg-[#D59A04]/10 backdrop-blur-xl text-[#D59A04]/80 border border-[#D59A04]/15">Case Study</span>
                     <span className="text-[7px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-full bg-white/[0.03] backdrop-blur-xl text-white/30 border border-white/[0.06]">196 Screens</span>
                   </div>
                   <div className="absolute bottom-0 left-0 right-0 z-20 p-4">
@@ -689,7 +748,7 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
 
           {/* Terminal — col 3, row 1 */}
           <div className="sm:col-start-3 sm:row-start-1">
-            <DiscoveryTile image={adsTerminal1} label="Terminal" category="Social Media Ads" categoryColor="#ed592b" isDark={isDark} border={border} link="/work/social-media-ads" alt="Terminal Social Media Ads Design by Salome Mosiava" />
+            <DiscoveryTile image={adsTerminal1} label="Terminal" category="Social Media Ads" categoryColor="#ed592b" isDark={isDark} border={border} link="/work/social-media-ads" alt="Terminal Social Media Ads Design by Salome Mosiava" typeBadge="Gallery · 16 Brands" ctaLabel="View Gallery" />
           </div>
 
           {/* Carmall — col 3, row 2 */}
@@ -704,6 +763,8 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
               videoSrc="https://res.cloudinary.com/dgfn598qb/video/upload/f_auto,q_auto/carmall-ne_1_u5ewuz.mp4"
               link="/work/social-media-motion"
               alt="Salome Mosiava Portfolio Art Direction Georgia"
+              typeBadge="Gallery · Motion Reel"
+              ctaLabel="View Gallery"
             />
           </div>
 
@@ -715,8 +776,8 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
                   <div className="grid grid-cols-1 sm:grid-cols-[1fr_1.6fr]">
                     <div className="p-4 sm:p-5 flex flex-col justify-center order-2 sm:order-1">
                       <div className="flex items-center gap-1.5 mb-2">
+                        <span className="text-[7px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-full bg-[#D59A04]/10 text-[#D59A04]/80 border border-[#D59A04]/15">Case Study</span>
                         <span className="text-[7px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-full bg-[#6B8E23]/10 text-[#8FBC3B]/80 border border-[#6B8E23]/15">Enterprise · UX/UI</span>
-                        <span className="text-[7px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-full bg-white/[0.03] text-white/60 border border-white/[0.1]">Desktop</span>
                       </div>
                       <h3 className="text-base md:text-lg text-white mb-0.5 tracking-[-0.03em]" style={{ fontFamily: F.heading, fontWeight: 700 }}>SCHENKER</h3>
                       <p className={`text-[10px] ${bt} mb-2.5 leading-relaxed`} style={{ fontFamily: F.body }}>

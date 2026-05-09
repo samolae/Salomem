@@ -408,50 +408,92 @@ const DiscoveryTile = ({
   return link ? <Link to={link}>{tile}</Link> : tile;
 };
 
-/* ─── Sticky Stacking Spotlight Card ──��───────────────────────────── */
+/* ─── Sticky Stacking Spotlight Card ─────────────────────────────── */
 type SpotlightData = { img: string; tag: string; tagColor: string; title: string; desc: string };
 
-const STACK_OFFSET = 30;
+const STACK_OFFSET = 22;
 
 const StickySpotlightCard = ({ sp, index, total, isDark, border }: { sp: SpotlightData; index: number; total: number; isDark: boolean; border: string }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: cardRef, offset: ['start start', 'end start'] });
 
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.94]);
-  const cardOpacity = useTransform(scrollYProgress, [0, 0.6, 1], [1, 1, 0.4]);
-  const br = useTransform(scrollYProgress, [0, 1], [16, 24]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.84]);
+  const translateY = useTransform(scrollYProgress, [0, 1], [0, -18]);
+  const cardOpacity = useTransform(scrollYProgress, [0, 0.25, 0.82, 1], [1, 1, 0.1, 0]);
+  const br = useTransform(scrollYProgress, [0, 1], [18, 34]);
+  const overlayOpacity = useTransform(scrollYProgress, [0, 0.3, 1], [0, 0, 0.6]);
+  const imgScale = useTransform(scrollYProgress, [0, 1], [1, 1.12]);
 
-  const stickyTop = 100 + index * STACK_OFFSET;
+  const stickyTop = 88 + index * STACK_OFFSET;
   const isLast = index === total - 1;
 
   return (
-    <div
-      ref={cardRef}
-      style={{ height: isLast ? 'auto' : '60vh', zIndex: index + 1 }}
-    >
+    <div ref={cardRef} style={{ height: isLast ? 'auto' : '68vh', zIndex: index + 1 }}>
       <motion.div
-        style={{ scale: isLast ? 1 : scale, opacity: isLast ? 1 : cardOpacity, borderRadius: br, top: stickyTop }}
-        className={`sticky h-[260px] md:h-[320px] overflow-hidden group cursor-pointer border ${border} shadow-2xl shadow-black/40`}
+        style={{
+          scale: isLast ? 1 : scale,
+          y: isLast ? 0 : translateY,
+          opacity: isLast ? 1 : cardOpacity,
+          borderRadius: br,
+          top: stickyTop,
+        }}
+        className={`sticky h-[270px] md:h-[330px] overflow-hidden cursor-pointer border ${border} shadow-2xl shadow-black/50`}
       >
+        {/* Image with counter-scale parallax */}
         <div className="absolute inset-0 overflow-hidden">
-          <ImageWithFallback src={sp.img} alt={`${sp.title} — ${sp.tag} spotlight`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+          <motion.div style={{ scale: isLast ? 1 : imgScale }} className="w-full h-full">
+            <ImageWithFallback src={sp.img} alt={`${sp.title} — ${sp.tag}`} className="w-full h-full object-cover" />
+          </motion.div>
         </div>
-        <div className="absolute inset-0 bg-black/55 backdrop-blur-[3px]" />
-        <div className="absolute inset-0 pointer-events-none" style={{ mixBlendMode: 'overlay' }}>
-          <div className="absolute inset-0 opacity-[0.15]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='5' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E")`, backgroundSize: '256px 256px' }} />
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/10" />
+
+        {/* Progressive darkening as card recedes */}
+        {!isLast && (
+          <motion.div className="absolute inset-0 bg-black pointer-events-none" style={{ opacity: overlayOpacity }} />
+        )}
+
+        {/* Base film */}
+        <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px]" />
+
+        {/* Grain texture */}
+        <div className="absolute inset-0 pointer-events-none opacity-[0.12]" style={{ mixBlendMode: 'overlay', backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='5' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E")`, backgroundSize: '256px 256px' }} />
+
+        {/* Bottom gradient */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent" />
+
+        {/* Index */}
         <div className="absolute top-4 right-4 z-10">
-          <span className="text-[10px] font-mono text-white/20">{String(index + 1).padStart(2, '0')}/{String(total).padStart(2, '0')}</span>
+          <span className="text-[10px] font-mono text-white/20 tabular-nums">{String(index + 1).padStart(2, '0')}/{String(total).padStart(2, '0')}</span>
         </div>
+
+        {/* Tag */}
         <div className="absolute top-4 left-4 z-10">
           <span className="text-[9px] uppercase tracking-wider px-2.5 py-1 rounded-full backdrop-blur-md border" style={{ backgroundColor: `${sp.tagColor}20`, color: sp.tagColor, borderColor: `${sp.tagColor}30` }}>
             {sp.tag}
           </span>
         </div>
+
+        {/* Content */}
         <div className="absolute bottom-5 left-5 right-5 z-10">
-          <h3 className="text-xl md:text-2xl text-white tracking-[-0.02em] mb-1.5" style={{ fontFamily: F.heading, fontWeight: 700 }}>{sp.title}</h3>
-          <p className="text-white/45 text-[12px] md:text-[13px] max-w-md leading-relaxed" style={{ fontFamily: F.body }}>{sp.desc}</p>
+          <motion.h3
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            viewport={{ once: true }}
+            className="text-xl md:text-2xl text-white tracking-[-0.02em] mb-1.5"
+            style={{ fontFamily: F.heading, fontWeight: 700 }}
+          >
+            {sp.title}
+          </motion.h3>
+          <motion.p
+            initial={{ opacity: 0, y: 8 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+            viewport={{ once: true }}
+            className="text-white/45 text-[12px] md:text-[13px] max-w-md leading-relaxed"
+            style={{ fontFamily: F.body }}
+          >
+            {sp.desc}
+          </motion.p>
         </div>
       </motion.div>
     </div>
@@ -548,6 +590,49 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
           <LiveClock isDark={isDark} />
         </div>
       </FadeIn>
+
+      {/* Selected clients — scrolling logo strip */}
+      <div className="mb-10">
+        <FadeIn delay={0.15}>
+          <div className="relative overflow-hidden">
+            <div className={`absolute left-0 top-0 bottom-0 w-10 z-10 pointer-events-none ${isDark ? 'bg-gradient-to-r from-[#0b0b0e] to-transparent' : 'bg-gradient-to-r from-[#f5f5f5] to-transparent'}`} />
+            <div className={`absolute right-0 top-0 bottom-0 w-10 z-10 pointer-events-none ${isDark ? 'bg-gradient-to-l from-[#0b0b0e] to-transparent' : 'bg-gradient-to-l from-[#f5f5f5] to-transparent'}`} />
+            <motion.div
+              animate={{ x: ['0%', '-50%'] }}
+              transition={{ duration: 28, repeat: Infinity, ease: 'linear' }}
+              className="flex items-center gap-7 w-max py-1"
+            >
+              {(() => {
+                const clients = [
+                  { name: 'Terminal', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773916799/terminal_hcftru.webp' },
+                  { name: 'Mardi Holding', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773916799/mardi_dzhmgm.webp' },
+                  { name: 'Crystal Leasing', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773916798/%E1%83%99%E1%83%A0%E1%83%98%E1%83%A1%E1%83%A2%E1%83%90%E1%83%9A_%E1%83%9A%E1%83%98%E1%83%96%E1%83%98%E1%83%9C%E1%83%92%E1%83%98_xeyoop.webp' },
+                  { name: 'Gino Aquapark', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773916800/%E1%83%AF%E1%83%98%E1%83%9C%E1%83%9D_%E1%83%90%E1%83%99%E1%83%95%E1%83%90%E1%83%9E%E1%83%90%E1%83%A0%E1%83%99%E1%83%98_r3am9r.webp' },
+                  { name: 'Carmall', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773917412/carmall_m1az2j.webp' },
+                  { name: 'Scope', logo: logoScope },
+                  { name: 'Regus', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773917415/regus_nv1pte.webp' },
+                  { name: 'GTCC', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773916799/gtcc_sk1wrg.webp' },
+                  { name: 'FitMeal', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773917409/fitmeal_bowpri.webp' },
+                  { name: 'The Khachapuri', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773916800/the_khachapuri_fv6s7a.webp' },
+                  { name: 'UniLab', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/v1778334357/%E1%83%A3%E1%83%9C%E1%83%98%E1%83%9A%E1%83%90%E1%83%91%E1%83%98_zbfjyi.png' },
+                  { name: 'Cubisten', logo: logoCubisten },
+                  { name: 'Georgian Chamber', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/v1778334357/georgian_chamber...._ffm4rm.png' },
+                  { name: 'Modusi', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/v1778334357/%E1%83%9B%E1%83%9D%E1%83%93%E1%83%A3%E1%83%A1%E1%83%98_zcltlg.png' },
+                  { name: 'Gagua', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/v1778334358/gagua_qwqdja.jpg' },
+                ];
+                return [...clients, ...clients];
+              })().map((client, i) => (
+                <div key={i} className="flex items-center gap-2 flex-shrink-0">
+                  <div className={`w-5 h-5 rounded overflow-hidden flex-shrink-0 ${isDark ? 'opacity-35' : 'opacity-50'}`}>
+                    <img src={client.logo} alt={client.name} width="20" height="20" className="w-full h-full object-cover" />
+                  </div>
+                  <span className={`text-[11px] whitespace-nowrap ${isDark ? 'text-white/20' : 'text-zinc-300'}`} style={{ fontFamily: F.body, fontWeight: 500 }}>{client.name}</span>
+                </div>
+              ))}
+            </motion.div>
+          </div>
+        </FadeIn>
+      </div>
 
       {/* ═══ FEATURED WORK — Compact Bento Grid ═══ */}
       <FadeIn delay={0.2}>
@@ -670,54 +755,6 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
           ))}
         </div>
       </FadeIn>
-
-      {/* Selected clients — scrolling logo strip */}
-      <div className="mb-16">
-        <FadeIn delay={0.05}>
-          <div className="flex items-center gap-3 mb-5">
-            <div className="w-1.5 h-1.5 rounded-full bg-[#ed592b]/50" />
-            <p className={`text-[11px] uppercase tracking-[0.15em] ${mt}`} style={{ fontFamily: F.body, fontWeight: 500 }}>Selected clients</p>
-            <div className={`flex-1 h-px ${isDark ? 'bg-white/[0.04]' : 'bg-zinc-200'}`} />
-          </div>
-          <div className="relative overflow-hidden">
-            <div className={`absolute left-0 top-0 bottom-0 w-10 z-10 pointer-events-none ${isDark ? 'bg-gradient-to-r from-[#0b0b0e] to-transparent' : 'bg-gradient-to-r from-[#f5f5f5] to-transparent'}`} />
-            <div className={`absolute right-0 top-0 bottom-0 w-10 z-10 pointer-events-none ${isDark ? 'bg-gradient-to-l from-[#0b0b0e] to-transparent' : 'bg-gradient-to-l from-[#f5f5f5] to-transparent'}`} />
-            <motion.div
-              animate={{ x: ['0%', '-50%'] }}
-              transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
-              className="flex items-center gap-6 w-max"
-            >
-              {(() => {
-                const clients = [
-                  { name: 'Terminal', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773916799/terminal_hcftru.webp' },
-                  { name: 'Mardi Holding', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773916799/mardi_dzhmgm.webp' },
-                  { name: 'Crystal Leasing', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773916798/%E1%83%99%E1%83%A0%E1%83%98%E1%83%A1%E1%83%A2%E1%83%90%E1%83%9A_%E1%83%9A%E1%83%98%E1%83%96%E1%83%98%E1%83%9C%E1%83%92%E1%83%98_xeyoop.webp' },
-                  { name: 'Gino Aquapark', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773916800/%E1%83%AF%E1%83%98%E1%83%9C%E1%83%9D_%E1%83%90%E1%83%99%E1%83%95%E1%83%90%E1%83%9E%E1%83%90%E1%83%A0%E1%83%99%E1%83%98_r3am9r.webp' },
-                  { name: 'Carmall', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773917412/carmall_m1az2j.webp' },
-                  { name: 'Scope', logo: logoScope },
-                  { name: 'Regus', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773917415/regus_nv1pte.webp' },
-                  { name: 'GTCC', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773916799/gtcc_sk1wrg.webp' },
-                  { name: 'FitMeal', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773917409/fitmeal_bowpri.webp' },
-                  { name: 'The Khachapuri', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773916800/the_khachapuri_fv6s7a.webp' },
-                  { name: 'UniLab', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/v1778334357/%E1%83%A3%E1%83%9C%E1%83%98%E1%83%9A%E1%83%90%E1%83%91%E1%83%98_zbfjyi.png' },
-                  { name: 'Cubisten', logo: logoCubisten },
-                  { name: 'Georgian Chamber', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/v1778334357/georgian_chamber...._ffm4rm.png' },
-                  { name: 'Modusi', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/v1778334357/%E1%83%9B%E1%83%9D%E1%83%93%E1%83%A3%E1%83%A1%E1%83%98_zcltlg.png' },
-                  { name: 'Gagua', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/v1778334358/gagua_qwqdja.jpg' },
-                ];
-                return [...clients, ...clients];
-              })().map((client, i) => (
-                <div key={i} className="flex items-center gap-2 flex-shrink-0">
-                  <div className={`w-5 h-5 rounded overflow-hidden flex-shrink-0 ${isDark ? 'opacity-35' : 'opacity-50'}`}>
-                    <img src={client.logo} alt={client.name} width="20" height="20" className="w-full h-full object-cover" />
-                  </div>
-                  <span className={`text-[11px] whitespace-nowrap ${isDark ? 'text-white/20' : 'text-zinc-300'}`} style={{ fontFamily: F.body, fontWeight: 500 }}>{client.name}</span>
-                </div>
-              ))}
-            </motion.div>
-          </div>
-        </FadeIn>
-      </div>
 
       {/* Who I am — experience table */}
       <div className="mb-20">

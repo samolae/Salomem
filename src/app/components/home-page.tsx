@@ -6,10 +6,10 @@ import { useActiveSection } from './active-section-context';
 import {
   ArrowUpRight, ArrowRight, Sun, Moon,
   Home, Mail, Image, Video, Briefcase,
-  Instagram, Download, ChevronLeft, ChevronRight,
+  Instagram, Download, ChevronLeft, ChevronRight, ChevronDown,
   Monitor, Layers, Palette, Smartphone, Copy, Send,
   Menu, X, Clock, Phone, Linkedin, ExternalLink,
-  Play, Pen, Globe, MessageCircle,
+  Play, Pen, Globe, MessageCircle, Check,
   Volume2, VolumeX, Code2, Pause, LayoutGrid,
 } from 'lucide-react';
 import { useTheme } from './theme-provider';
@@ -671,6 +671,48 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
         </div>
       </FadeIn>
 
+      {/* Selected clients — scrolling logo strip */}
+      <div className="mb-16">
+        <FadeIn delay={0.05}>
+          <div className="flex items-center gap-3 mb-5">
+            <div className="w-1.5 h-1.5 rounded-full bg-[#ed592b]/50" />
+            <p className={`text-[11px] uppercase tracking-[0.15em] ${mt}`} style={{ fontFamily: F.body, fontWeight: 500 }}>Selected clients</p>
+            <div className={`flex-1 h-px ${isDark ? 'bg-white/[0.04]' : 'bg-zinc-200'}`} />
+          </div>
+          <div className="relative overflow-hidden">
+            <div className={`absolute left-0 top-0 bottom-0 w-10 z-10 pointer-events-none ${isDark ? 'bg-gradient-to-r from-[#0b0b0e] to-transparent' : 'bg-gradient-to-r from-[#f5f5f5] to-transparent'}`} />
+            <div className={`absolute right-0 top-0 bottom-0 w-10 z-10 pointer-events-none ${isDark ? 'bg-gradient-to-l from-[#0b0b0e] to-transparent' : 'bg-gradient-to-l from-[#f5f5f5] to-transparent'}`} />
+            <motion.div
+              animate={{ x: ['0%', '-50%'] }}
+              transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
+              className="flex items-center gap-6 w-max"
+            >
+              {[
+                { name: 'Terminal', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773916799/terminal_hcftru.webp' },
+                { name: 'Mardi Holding', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773916799/mardi_dzhmgm.webp' },
+                { name: 'Crystal Leasing', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773916798/%E1%83%99%E1%83%A0%E1%83%98%E1%83%A1%E1%83%A2%E1%83%90%E1%83%9A_%E1%83%9A%E1%83%98%E1%83%96%E1%83%98%E1%83%9C%E1%83%92%E1%83%98_xeyoop.webp' },
+                { name: 'Gino Aquapark', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773916800/%E1%83%AF%E1%83%98%E1%83%9C%E1%83%9D_%E1%83%90%E1%83%99%E1%83%95%E1%83%90%E1%83%9E%E1%83%90%E1%83%A0%E1%83%99%E1%83%98_r3am9r.webp' },
+                { name: 'Carmall', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773917412/carmall_m1az2j.webp' },
+                { name: 'Scope', logo: logoScope },
+                { name: 'Regus', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773917415/regus_nv1pte.webp' },
+                { name: 'GTCC', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773916799/gtcc_sk1wrg.webp' },
+                { name: 'FitMeal', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773917409/fitmeal_bowpri.webp' },
+                { name: 'The Khachapuri', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773916800/the_khachapuri_fv6s7a.webp' },
+                { name: 'UniLab', logo: logoUnilab },
+                { name: 'Cubisten', logo: logoCubisten },
+              ].flatMap((c) => [c, c]).map((client, i) => (
+                <div key={i} className="flex items-center gap-2 flex-shrink-0">
+                  <div className={`w-5 h-5 rounded overflow-hidden flex-shrink-0 ${isDark ? 'opacity-35' : 'opacity-50'}`}>
+                    <img src={client.logo} alt={client.name} width="20" height="20" className="w-full h-full object-cover" />
+                  </div>
+                  <span className={`text-[11px] whitespace-nowrap ${isDark ? 'text-white/20' : 'text-zinc-300'}`} style={{ fontFamily: F.body, fontWeight: 500 }}>{client.name}</span>
+                </div>
+              ))}
+            </motion.div>
+          </div>
+        </FadeIn>
+      </div>
+
       {/* Who I am — experience table */}
       <div className="mb-20">
         <FadeIn delay={0.05}>
@@ -819,17 +861,52 @@ const ServicesContent = ({ isDark }: { isDark: boolean }) => {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   const services = [
-    { title: 'Graphic Design', desc: 'Striking visual identities that resonate and engage.', icon: <Pen size={16} />, items: ['Branding and identity design', 'Social media visuals', 'Marketing materials', 'Print and digital assets'] },
-    { title: 'Web Design', desc: 'Tailored website solutions that elevate your presence.', icon: <Globe size={16} />, items: ['Responsive website design', 'UI/UX optimization', 'Landing page creation', 'Website maintenance and updates'] },
-    { title: 'Motion Design', desc: 'Dynamic animated content that brings brands to life.', icon: <Video size={16} />, items: ['Social media animations', 'Motion graphics', 'Animated ads', 'Short videos'] },
-    { title: 'Custom Inquire', desc: 'Tailored solutions for your unique needs.', icon: <MessageCircle size={16} />, items: [], isLight: true },
+    {
+      icon: <Monitor size={16} />,
+      title: 'UX/UI Product Design',
+      tagline: 'End-to-end product design from research to pixel-perfect delivery.',
+      timeline: '4–12 weeks',
+      deliverables: ['User research & interviews', 'Information architecture', 'User flows & wireframes', 'High-fidelity UI design', 'Design system & components', 'Interactive prototypes', 'Developer handoff (Figma)'],
+      outcome: 'AURUM — 196 screens, 64+ components shipped',
+    },
+    {
+      icon: <Palette size={16} />,
+      title: 'Art Direction',
+      tagline: 'Visual strategy and creative direction for brands and campaigns.',
+      timeline: '2–6 weeks',
+      deliverables: ['Brand visual identity', 'Campaign concept & moodboard', 'Creative direction', 'Visual guidelines', 'Key visual production', 'Art supervision'],
+      outcome: 'Scope, Terminal, Carmall — multi-campaign direction',
+    },
+    {
+      icon: <Image size={16} />,
+      title: 'Social Media Design',
+      tagline: 'High-impact visuals and campaign assets for social platforms.',
+      timeline: 'Ongoing or 1–4 weeks',
+      deliverables: ['Static post designs', 'Carousel & story templates', 'Ad creatives (Meta, TikTok)', 'Brand-consistent visual system', 'Copy direction & layouts', 'Monthly content packages'],
+      outcome: '10+ brands — Terminal, Mardi, Crystal Leasing, GTCC',
+    },
+    {
+      icon: <Video size={16} />,
+      title: 'Motion Design',
+      tagline: 'Animated content that brings brands to life across every platform.',
+      timeline: '1–3 weeks',
+      deliverables: ['Logo reveals & brand animations', 'Social media reels & stories', 'Animated ad creatives', 'UI micro-interactions', 'Motion style guide'],
+      outcome: 'Carmall, Scope, Saloni — reels & brand animations',
+    },
+  ];
+
+  const process = [
+    { step: '01', title: 'Discovery', desc: 'Align on goals, constraints, and success metrics.' },
+    { step: '02', title: 'Design', desc: 'Iterative rounds with regular feedback check-ins.' },
+    { step: '03', title: 'Handoff', desc: 'Clean specs, assets, and documentation for devs.' },
+    { step: '04', title: 'Support', desc: 'Post-launch refinements and system maintenance.' },
   ];
 
   return (
     <div>
       {/* Heading */}
       <FadeIn>
-        <div className="mb-10">
+        <div className="mb-8">
           <p className={`text-[10px] uppercase tracking-[0.2em] ${mt} mb-4 flex items-center gap-2`} style={{ fontFamily: F.body, fontWeight: 500 }}>
             <span className="inline-block w-6 h-px bg-[#ed592b]" />
             What I do
@@ -840,65 +917,38 @@ const ServicesContent = ({ isDark }: { isDark: boolean }) => {
         </div>
       </FadeIn>
 
-      {/* Accordion cards — CSS transitions only, no layout animations */}
-      <div className="space-y-2">
+      {/* Service cards */}
+      <div className="space-y-2 mb-7">
         {services.map((s, i) => {
           const isOpen = openIndex === i;
-
-          if (s.isLight) {
-            return (
-              <FadeIn key={s.title} delay={i * 0.06}>
-                <a
-                  href="mailto:mosiavasalome@gmail.com"
-                  className="block rounded-2xl overflow-hidden cursor-pointer group bg-[#ed592b] hover:brightness-110 active:scale-[0.99] transition-all"
-                >
-                  <div className="px-5 sm:px-6 py-5 flex items-center gap-3 sm:gap-4">
-                    <div className="flex items-center gap-2.5 flex-1 min-w-0">
-                      <div className="w-7 h-7 rounded-lg flex items-center justify-center bg-white/15 text-white flex-shrink-0">{s.icon}</div>
-                      <div className="min-w-0">
-                        <h3 className="text-[14px] sm:text-[16px] text-white tracking-[-0.02em]" style={{ fontFamily: F.heading, fontWeight: 600 }}>{s.title}</h3>
-                        <p className="text-white/50 text-[11px] mt-0.5 truncate" style={{ fontFamily: F.body }}>{s.desc}</p>
-                      </div>
-                    </div>
-                    <div className="w-7 h-7 rounded-full bg-white/15 flex items-center justify-center flex-shrink-0 group-hover:bg-white/25 transition-colors">
-                      <Mail size={13} className="text-white" />
-                    </div>
-                  </div>
-                </a>
-              </FadeIn>
-            );
-          }
-
           return (
             <FadeIn key={s.title} delay={i * 0.06}>
               <div
                 onClick={() => setOpenIndex(isOpen ? null : i)}
-                className={`rounded-2xl overflow-hidden cursor-pointer group border transition-colors duration-300 ${
+                className={`rounded-2xl overflow-hidden cursor-pointer border transition-colors duration-300 ${
                   isOpen
                     ? isDark ? 'border-[#ed592b]/15 bg-[#0d0e13]' : 'border-[#ed592b]/15 bg-white'
                     : isDark ? 'border-white/[0.05] bg-[#0c0d11] hover:border-white/[0.08]' : `${border} bg-white hover:border-zinc-300`
                 }`}
               >
-                {/* Top accent */}
                 <div className={`h-[2px] transition-all duration-500 ${isOpen ? 'bg-gradient-to-r from-[#ed592b] to-transparent' : 'bg-transparent'}`} />
 
-                {/* Row */}
-                <div className="px-5 sm:px-6 py-4 flex items-center gap-3 sm:gap-4">
+                <div className="px-5 py-4 flex items-center gap-3">
+                  <div className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors duration-300 ${isOpen ? 'bg-[#ed592b]/12 text-[#ed592b]' : isDark ? 'bg-white/[0.04] text-white/30' : 'bg-zinc-100 text-zinc-400'}`}>{s.icon}</div>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2.5">
-                      <div className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors duration-300 ${isOpen ? 'bg-[#ed592b]/12 text-[#ed592b]' : isDark ? 'bg-white/[0.04] text-white/30' : 'bg-zinc-100 text-zinc-400'}`}>{s.icon}</div>
-                      <h3 className={`text-[14px] sm:text-[16px] tracking-[-0.02em] transition-colors duration-300 ${isOpen ? (isDark ? 'text-white' : 'text-zinc-900') : isDark ? 'text-white/60 group-hover:text-white/80' : 'text-zinc-500 group-hover:text-zinc-800'}`} style={{ fontFamily: F.heading, fontWeight: 600 }}>{s.title}</h3>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h3 className={`text-[14px] tracking-[-0.02em] transition-colors duration-300 ${isOpen ? (isDark ? 'text-white' : 'text-zinc-900') : isDark ? 'text-white/60' : 'text-zinc-500'}`} style={{ fontFamily: F.heading, fontWeight: 600 }}>{s.title}</h3>
+                      <span className={`text-[9px] px-2 py-0.5 rounded-full flex-shrink-0 ${isDark ? 'bg-white/[0.05] text-white/25' : 'bg-zinc-100 text-zinc-400'}`} style={{ fontFamily: F.body }}>{s.timeline}</span>
                     </div>
-                    <p className={`text-[11px] mt-1 ml-[36px] ${isDark ? 'text-white/25' : 'text-zinc-400'}`} style={{ fontFamily: F.body }}>{s.desc}</p>
+                    <p className={`text-[11px] mt-0.5 ${isDark ? 'text-white/25' : 'text-zinc-400'}`} style={{ fontFamily: F.body }}>{s.tagline}</p>
                   </div>
-                  <div className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-300 ${isOpen ? 'bg-[#ed592b]/12 text-[#ed592b] rotate-45' : isDark ? 'bg-white/[0.03] text-white/15' : 'bg-zinc-100 text-zinc-300'}`}>
-                    <ArrowUpRight size={13} />
+                  <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-300 ${isOpen ? 'bg-[#ed592b]/12 text-[#ed592b] rotate-180' : isDark ? 'bg-white/[0.03] text-white/15' : 'bg-zinc-100 text-zinc-300'}`}>
+                    <ChevronDown size={12} />
                   </div>
                 </div>
 
-                {/* Expandable items */}
                 <AnimatePresence initial={false}>
-                  {isOpen && s.items.length > 0 && (
+                  {isOpen && (
                     <motion.div
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: 'auto', opacity: 1 }}
@@ -906,15 +956,19 @@ const ServicesContent = ({ isDark }: { isDark: boolean }) => {
                       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1], opacity: { duration: 0.25, delay: 0.1 } }}
                       className="overflow-hidden"
                     >
-                      <div className="px-5 sm:px-6 pb-5 pt-0 ml-[36px]">
-                        <div className={`h-px mb-3.5 ${isDark ? 'bg-white/[0.05]' : 'bg-zinc-100'}`} />
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2">
-                          {s.items.map((item) => (
-                            <div key={item} className="flex items-center gap-2.5">
-                              <div className="w-1 h-1 rounded-full bg-[#ed592b]/30 flex-shrink-0" />
-                              <span className={`text-[12px] ${isDark ? 'text-white/35' : 'text-zinc-400'}`} style={{ fontFamily: F.body }}>{item}</span>
+                      <div className="px-5 pb-5 pt-0">
+                        <div className={`h-px mb-4 ${isDark ? 'bg-white/[0.05]' : 'bg-zinc-100'}`} />
+                        <div className="grid grid-cols-2 gap-x-4 gap-y-2 mb-4">
+                          {s.deliverables.map((d) => (
+                            <div key={d} className="flex items-start gap-2">
+                              <Check size={11} className="text-[#ed592b]/60 flex-shrink-0 mt-[2px]" />
+                              <span className={`text-[11px] leading-[1.4] ${isDark ? 'text-white/40' : 'text-zinc-500'}`} style={{ fontFamily: F.body }}>{d}</span>
                             </div>
                           ))}
+                        </div>
+                        <div className={`flex items-center gap-2 px-3 py-2 rounded-lg ${isDark ? 'bg-[#ed592b]/[0.06]' : 'bg-[#ed592b]/[0.04]'}`}>
+                          <div className="w-1.5 h-1.5 rounded-full bg-[#ed592b]/50 flex-shrink-0" />
+                          <span className={`text-[10px] ${isDark ? 'text-white/35' : 'text-zinc-400'}`} style={{ fontFamily: F.body }}>{s.outcome}</span>
                         </div>
                       </div>
                     </motion.div>
@@ -926,9 +980,28 @@ const ServicesContent = ({ isDark }: { isDark: boolean }) => {
         })}
       </div>
 
-      {/* Stats */}
+      {/* How we'll work together */}
       <FadeIn delay={0.3}>
-        <div className={`mt-8 flex items-center justify-between px-4 py-3.5 rounded-xl border ${isDark ? 'border-white/[0.04] bg-white/[0.015]' : 'border-zinc-100 bg-zinc-50'}`}>
+        <div className={`rounded-2xl border p-5 mb-4 ${isDark ? 'border-white/[0.05] bg-[#0c0d11]' : `${border} bg-white`}`}>
+          <p className={`text-[10px] uppercase tracking-[0.15em] ${mt} mb-4`} style={{ fontFamily: F.body, fontWeight: 500 }}>How we'll work together</p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            {process.map((p, i) => (
+              <div key={p.step} className="relative">
+                {i < process.length - 1 && (
+                  <div className={`hidden sm:block absolute top-[7px] left-[55%] right-[-45%] h-px ${isDark ? 'bg-white/[0.06]' : 'bg-zinc-100'}`} />
+                )}
+                <div className={`text-[10px] mb-1.5 font-mono ${isDark ? 'text-[#ed592b]/50' : 'text-[#ed592b]/60'}`}>{p.step}</div>
+                <div className={`text-[12px] mb-1 ${isDark ? 'text-white/70' : 'text-zinc-700'}`} style={{ fontFamily: F.heading, fontWeight: 600 }}>{p.title}</div>
+                <p className={`text-[10px] leading-[1.5] ${mt}`} style={{ fontFamily: F.body }}>{p.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </FadeIn>
+
+      {/* Stats */}
+      <FadeIn delay={0.35}>
+        <div className={`flex items-center justify-between px-4 py-3.5 rounded-xl border mb-4 ${isDark ? 'border-white/[0.04] bg-white/[0.015]' : 'border-zinc-100 bg-zinc-50'}`}>
           {[
             { num: '80+', label: 'Projects' },
             { num: '50+', label: 'Clients' },
@@ -941,6 +1014,25 @@ const ServicesContent = ({ isDark }: { isDark: boolean }) => {
             </div>
           ))}
         </div>
+      </FadeIn>
+
+      {/* Start a project CTA */}
+      <FadeIn delay={0.4}>
+        <Link to="/contact">
+          <motion.div
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.99 }}
+            className="flex items-center justify-between px-5 py-4 rounded-2xl bg-[#ed592b] cursor-pointer group"
+          >
+            <div>
+              <div className="text-white text-[14px] tracking-[-0.02em]" style={{ fontFamily: F.heading, fontWeight: 600 }}>Start a project</div>
+              <div className="text-white/60 text-[11px] mt-0.5" style={{ fontFamily: F.body }}>Tell me about your goals — I'll get back within 24h</div>
+            </div>
+            <div className="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center group-hover:bg-white/25 transition-colors flex-shrink-0">
+              <ArrowUpRight size={15} className="text-white" />
+            </div>
+          </motion.div>
+        </Link>
       </FadeIn>
     </div>
   );
@@ -973,8 +1065,24 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [form, setForm] = useState({ type: '', budget: '', timeline: '', message: '' });
+  const [formSent, setFormSent] = useState(false);
 
   useEffect(() => { const id = requestAnimationFrame(() => setReady(true)); return () => cancelAnimationFrame(id); }, []);
+
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const subject = `Project inquiry${form.type ? ` — ${form.type}` : ''}`;
+    const body = [
+      form.type && `Project type: ${form.type}`,
+      form.budget && `Budget: ${form.budget}`,
+      form.timeline && `Timeline: ${form.timeline}`,
+      form.message && `\nMessage:\n${form.message}`,
+    ].filter(Boolean).join('\n');
+    window.location.href = `mailto:mosiavasalome@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    setFormSent(true);
+    setTimeout(() => setFormSent(false), 3000);
+  };
 
   if (!ready) return <ContactSkeleton isDark={isDark} />;
 
@@ -1169,51 +1277,90 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
         ))}
       </div>
 
-      {/* CTA section — compact */}
-      <FadeIn delay={0.5}>
-        <div className={`relative rounded-xl border overflow-hidden ${border} ${bg2} p-4 sm:p-5`}>
-          <div className="absolute inset-0 pointer-events-none" style={{ background: `linear-gradient(135deg, ${isDark ? 'rgba(237,89,43,0.04)' : 'rgba(237,89,43,0.03)'} 0%, transparent 60%)` }} />
-
-          <div className="relative z-10">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-              <div className="flex items-center gap-2.5 min-w-0">
-                <motion.div
-                  animate={{ rotate: [0, 10, -10, 0] }}
-                  transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                  className="text-[16px] flex-shrink-0"
+      {/* Intake form */}
+      <FadeIn delay={0.55}>
+        <div className={`rounded-2xl border p-5 ${isDark ? 'border-white/[0.06] bg-[#0c0d11]' : `${border} bg-white`}`}>
+          <p className={`text-[10px] uppercase tracking-[0.15em] ${mt} mb-4`} style={{ fontFamily: F.body, fontWeight: 500 }}>Quick inquiry</p>
+          <form onSubmit={handleFormSubmit} className="space-y-3">
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className={`text-[10px] uppercase tracking-[0.1em] ${mt} block mb-1.5`} style={{ fontFamily: F.body, fontWeight: 500 }}>Project type</label>
+                <select
+                  value={form.type}
+                  onChange={(e) => setForm({ ...form, type: e.target.value })}
+                  className={`w-full text-[12px] px-3 py-2 rounded-lg border appearance-none cursor-pointer ${isDark ? 'bg-[#0a0b0f] border-white/[0.08] text-white/60' : 'bg-zinc-50 border-zinc-200 text-zinc-600'}`}
+                  style={{ fontFamily: F.body }}
                 >
-                  ✦
-                </motion.div>
-                <div className="min-w-0">
-                  <h3
-                    className={`text-[14px] ${isDark ? 'text-white/90' : 'text-zinc-800'}`}
-                    style={{ fontFamily: F.heading, fontWeight: 600, letterSpacing: '-0.02em' }}
-                  >
-                    Let's work together
-                  </h3>
-                  <p className={`text-[11px] leading-[1.5] ${mt} hidden sm:block`} style={{ fontFamily: F.body }}>
-                    Brand identity, product design, or creative campaigns.
-                  </p>
-                </div>
+                  <option value="">Select...</option>
+                  <option value="UX/UI Design">UX/UI Design</option>
+                  <option value="Art Direction">Art Direction</option>
+                  <option value="Social Media">Social Media</option>
+                  <option value="Motion Design">Motion Design</option>
+                  <option value="Other">Other</option>
+                </select>
               </div>
-
-              <div className="flex gap-2 flex-shrink-0 w-full sm:w-auto">
-              <MagneticWrap strength={0.2} className="w-full sm:w-auto">
-                <motion.a
-                  href="mailto:mosiavasalome@gmail.com"
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.96 }}
-                  className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-[11px] bg-[#ed592b] text-white transition-all hover:shadow-[0_4px_20px_rgba(237,89,43,0.3)] w-full sm:w-auto"
-                  style={{ fontFamily: F.body, fontWeight: 500 }}
+              <div>
+                <label className={`text-[10px] uppercase tracking-[0.1em] ${mt} block mb-1.5`} style={{ fontFamily: F.body, fontWeight: 500 }}>Budget</label>
+                <select
+                  value={form.budget}
+                  onChange={(e) => setForm({ ...form, budget: e.target.value })}
+                  className={`w-full text-[12px] px-3 py-2 rounded-lg border appearance-none cursor-pointer ${isDark ? 'bg-[#0a0b0f] border-white/[0.08] text-white/60' : 'bg-zinc-50 border-zinc-200 text-zinc-600'}`}
+                  style={{ fontFamily: F.body }}
                 >
-                  <Mail size={13} />
-                  Send a message
-                </motion.a>
-              </MagneticWrap>
-              {/* CV download — hidden for now */}
+                  <option value="">Select...</option>
+                  <option value="Under $1,000">Under $1,000</option>
+                  <option value="$1,000–$3,000">$1,000–$3,000</option>
+                  <option value="$3,000–$10,000">$3,000–$10,000</option>
+                  <option value="$10,000+">$10,000+</option>
+                  <option value="Let's discuss">Let's discuss</option>
+                </select>
               </div>
             </div>
-          </div>
+            <div>
+              <label className={`text-[10px] uppercase tracking-[0.1em] ${mt} block mb-1.5`} style={{ fontFamily: F.body, fontWeight: 500 }}>Timeline</label>
+              <select
+                value={form.timeline}
+                onChange={(e) => setForm({ ...form, timeline: e.target.value })}
+                className={`w-full text-[12px] px-3 py-2 rounded-lg border appearance-none cursor-pointer ${isDark ? 'bg-[#0a0b0f] border-white/[0.08] text-white/60' : 'bg-zinc-50 border-zinc-200 text-zinc-600'}`}
+                style={{ fontFamily: F.body }}
+              >
+                <option value="">Select...</option>
+                <option value="ASAP">ASAP</option>
+                <option value="Within 1 month">Within 1 month</option>
+                <option value="1–3 months">1–3 months</option>
+                <option value="3+ months">3+ months</option>
+                <option value="Flexible">Flexible</option>
+              </select>
+            </div>
+            <div>
+              <label className={`text-[10px] uppercase tracking-[0.1em] ${mt} block mb-1.5`} style={{ fontFamily: F.body, fontWeight: 500 }}>Message</label>
+              <textarea
+                value={form.message}
+                onChange={(e) => setForm({ ...form, message: e.target.value })}
+                placeholder="Tell me about your project..."
+                rows={3}
+                className={`w-full text-[12px] px-3 py-2.5 rounded-lg border resize-none ${isDark ? 'bg-[#0a0b0f] border-white/[0.08] text-white/60 placeholder-white/15' : 'bg-zinc-50 border-zinc-200 text-zinc-600 placeholder-zinc-300'}`}
+                style={{ fontFamily: F.body }}
+              />
+            </div>
+            <motion.button
+              type="submit"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.97 }}
+              className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-lg text-[12px] transition-all ${
+                formSent
+                  ? 'bg-[#22c55e] text-white'
+                  : 'bg-[#ed592b] text-white hover:brightness-110'
+              }`}
+              style={{ fontFamily: F.body, fontWeight: 500 }}
+            >
+              {formSent ? (
+                <><Check size={13} /> Sent — check your email app</>
+              ) : (
+                <><Send size={13} /> Send inquiry</>
+              )}
+            </motion.button>
+          </form>
         </div>
       </FadeIn>
 

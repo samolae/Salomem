@@ -1109,7 +1109,7 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const [form, setForm] = useState({ type: '', budget: '', timeline: '', message: '' });
+  const [form, setForm] = useState({ name: '', email: '', type: '', budget: '', timeline: '', message: '' });
   const [formSent, setFormSent] = useState(false);
   const [formSending, setFormSending] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
@@ -1124,7 +1124,9 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({
-          _subject: `New inquiry — ${form.type || 'Portfolio'}`,
+          _subject: `New inquiry from ${form.name || 'someone'} — ${form.type || 'Portfolio'}`,
+          Name: form.name || '—',
+          Email: form.email || '—',
           'Project type': form.type || '—',
           Budget: form.budget || '—',
           Timeline: form.timeline || '—',
@@ -1136,7 +1138,7 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
     }
     setFormSending(false);
     setFormSent(true);
-    setForm({ type: '', budget: '', timeline: '', message: '' });
+    setForm({ name: '', email: '', type: '', budget: '', timeline: '', message: '' });
     setTimeout(() => setFormSent(false), 4000);
   };
 
@@ -1343,6 +1345,33 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
           )}
 
           <form onSubmit={handleFormSubmit} className="space-y-3">
+            {/* Name + Email */}
+            <div className="grid grid-cols-2 gap-3">
+              {([
+                { field: 'name' as const, label: 'Your name', placeholder: 'Giorgi Beridze', type: 'text', required: false },
+                { field: 'email' as const, label: 'Email', placeholder: 'you@example.com', type: 'email', required: true },
+              ]).map(({ field, label, placeholder, type, required }) => (
+                <div key={field}>
+                  <label className={`text-[10px] uppercase tracking-[0.1em] ${mt} block mb-1.5`} style={{ fontFamily: F.body, fontWeight: 500 }}>
+                    {label}{required && <span className="text-[#ed592b] ml-0.5">*</span>}
+                  </label>
+                  <input
+                    type={type}
+                    required={required}
+                    value={form[field]}
+                    onChange={(e) => setForm((f) => ({ ...f, [field]: e.target.value }))}
+                    placeholder={placeholder}
+                    className={`w-full text-[12px] px-3 py-2.5 rounded-xl border transition-all duration-200 ${
+                      isDark
+                        ? 'bg-[#0a0b0f] border-white/[0.08] text-white/70 placeholder-white/15 focus:border-[#ed592b]/30 focus:shadow-[0_0_0_3px_rgba(237,89,43,0.06)]'
+                        : 'bg-zinc-50 border-zinc-200 text-zinc-700 placeholder-zinc-300 focus:border-[#ed592b]/30 focus:shadow-[0_0_0_3px_rgba(237,89,43,0.06)]'
+                    } outline-none`}
+                    style={{ fontFamily: F.body }}
+                  />
+                </div>
+              ))}
+            </div>
+
             {/* Inline dropdown renderer — no hooks, uses parent state */}
             {([
               {

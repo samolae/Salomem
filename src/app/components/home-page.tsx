@@ -1505,8 +1505,8 @@ type AdsMedia = {
   tall?: boolean;
 };
 
-const adsBrands: { name: string; logoImg?: string; items: AdsMedia[]; aiContent?: boolean; compactGrid?: boolean; darkPhotoBg?: boolean; twoCol?: boolean; threeCol?: boolean; bentoGrid?: boolean; whiteBg?: boolean }[] = [
-  { name: 'FitMeal', aiContent: true, threeCol: true, logoImg: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773917409/fitmeal_bowpri.webp', items: [
+const adsBrands: { name: string; logoImg?: string; items: AdsMedia[]; aiContent?: boolean; compactGrid?: boolean; darkPhotoBg?: boolean; twoCol?: boolean; threeCol?: boolean; bentoGrid?: boolean; squareGrid?: boolean; whiteBg?: boolean }[] = [
+  { name: 'FitMeal', aiContent: true, threeCol: true, squareGrid: true, logoImg: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773917409/fitmeal_bowpri.webp', items: [
     { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773344688/WhatsApp_Image_2026-03-08_at_14.44.08_xkrwdx.jpg', type: 'image' },
     { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773344688/WhatsApp_Image_2026-03-08_at_14.44.08_1_lquzrl.jpg', type: 'image' },
     { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1778350259/fitmeal2_nr1rbc.jpg', type: 'image' },
@@ -1528,7 +1528,7 @@ const adsBrands: { name: string; logoImg?: string; items: AdsMedia[]; aiContent?
     { src: adsMardi4, type: 'image' },
     { src: adsMardi5, type: 'image' },
   ]},
-  { name: 'Crystal Leasing · კრისტალ ლიზინგი', twoCol: true, logoImg: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773916798/%E1%83%99%E1%83%A0%E1%83%98%E1%83%A1%E1%83%A2%E1%83%90%E1%83%9A_%E1%83%9A%E1%83%98%E1%83%96%E1%83%98%E1%83%9C%E1%83%92%E1%83%98_xeyoop.webp', items: [
+  { name: 'Crystal Leasing · კრისტალ ლიზინგი', squareGrid: true, logoImg: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773916798/%E1%83%99%E1%83%A0%E1%83%98%E1%83%A1%E1%83%A2%E1%83%90%E1%83%9A_%E1%83%9A%E1%83%98%E1%83%96%E1%83%98%E1%83%9C%E1%83%92%E1%83%98_xeyoop.webp', items: [
     { src: adsCrystal4, type: 'image' },
     { src: adsCrystal1, type: 'image' },
     { src: adsCrystal2, type: 'image' },
@@ -1715,7 +1715,7 @@ const MediaShimmer = ({ isDark }: { isDark: boolean }) => (
 );
 
 /* Media with loading state */
-const AdsMediaItem = ({ item, brandName, index, isDark, border, onImageClick, whiteBg }: {
+const AdsMediaItem = ({ item, brandName, index, isDark, border, onImageClick, whiteBg, fill }: {
   item: { src: string; type: 'image' | 'video'; fullWidth?: boolean };
   brandName: string;
   index: number;
@@ -1723,6 +1723,7 @@ const AdsMediaItem = ({ item, brandName, index, isDark, border, onImageClick, wh
   border: string;
   onImageClick: () => void;
   whiteBg?: boolean;
+  fill?: boolean;
 }) => {
   // Start as loaded if this URL was already fetched — instant display on tab revisit
   const [loaded, setLoaded] = useState(() => item.type === 'image' && imgLoadCache.has(item.src));
@@ -1730,9 +1731,9 @@ const AdsMediaItem = ({ item, brandName, index, isDark, border, onImageClick, wh
   return (
     <TiltCard
       onClick={() => item.type === 'image' ? onImageClick() : undefined}
-      className={`relative rounded-lg overflow-hidden border ${border} group cursor-pointer break-inside-avoid mb-2.5 ${whiteBg ? 'bg-white' : ''}`}
+      className={`relative rounded-lg overflow-hidden border ${border} group cursor-pointer ${fill ? 'h-full' : 'break-inside-avoid mb-2.5'} ${whiteBg ? 'bg-white' : ''}`}
     >
-      <div className="relative">
+      <div className={`relative ${fill ? 'h-full' : ''}`}>
         {!loaded && <MediaShimmer isDark={isDark} />}
         {item.type === 'video' ? (
           <video
@@ -1741,7 +1742,7 @@ const AdsMediaItem = ({ item, brandName, index, isDark, border, onImageClick, wh
             loop
             muted
             playsInline
-            className={`w-full h-auto block transition-opacity duration-500 ${loaded ? 'opacity-100' : 'opacity-0'}`}
+            className={`${fill ? 'absolute inset-0 w-full h-full object-cover' : 'w-full h-auto'} block transition-opacity duration-500 ${loaded ? 'opacity-100' : 'opacity-0'}`}
             onLoadedData={() => setLoaded(true)}
           />
         ) : (
@@ -1750,12 +1751,12 @@ const AdsMediaItem = ({ item, brandName, index, isDark, border, onImageClick, wh
             alt={`${brandName} social media ad design — ${index + 1}`}
             loading={imgLoadCache.has(item.src) ? 'eager' : 'lazy'}
             decoding="async"
-            className={`w-full block transition-opacity duration-500 ${loaded ? 'opacity-100' : 'opacity-0'} ${whiteBg ? 'h-full object-cover' : 'h-auto'}`}
+            className={`${fill ? 'absolute inset-0 w-full h-full object-cover' : 'w-full h-auto'} block transition-opacity duration-500 ${loaded ? 'opacity-100' : 'opacity-0'} ${!fill && whiteBg ? 'h-full object-cover' : ''}`}
             onLoad={() => { imgLoadCache.add(item.src); setLoaded(true); }}
           />
         )}
-        {/* Reserve space for shimmer when not loaded */}
-        {!loaded && <div className="w-full" style={{ paddingBottom: '100%' }} />}
+        {/* Reserve space for shimmer when not loaded — skip in fill mode (parent defines height) */}
+        {!loaded && !fill && <div className="w-full" style={{ paddingBottom: '100%' }} />}
       </div>
       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-400 flex items-center justify-center">
         <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 scale-75 group-hover:scale-100">
@@ -2282,6 +2283,21 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
                         </motion.button>
                       ))}
                     </div>
+                  </div>
+                );
+              }
+              /* Square grid: uniform aspect-ratio cells, CSS grid */
+              if (brand.squareGrid) {
+                const cols = brand.threeCol ? 'grid-cols-3' : 'grid-cols-2';
+                const imgSrcs = brand.items.filter(it => it.type === 'image').map(it => it.src);
+                return (
+                  <div className={`relative z-10 grid ${cols} gap-2`}>
+                    {brand.items.map((item, i) => (
+                      <div key={`${brand.name}-${i}`} className="aspect-square">
+                        <AdsMediaItem item={item} brandName={brand.name} index={i} isDark={isDark} border={border} whiteBg={brand.whiteBg} fill
+                          onImageClick={() => setLightbox({ src: item.src, alt: brand.name, whiteBg: brand.whiteBg, images: imgSrcs, index: imgSrcs.indexOf(item.src) })} />
+                      </div>
+                    ))}
                   </div>
                 );
               }

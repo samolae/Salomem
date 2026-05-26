@@ -95,9 +95,9 @@ function MobileBottomBar() {
 }
 
 /**
- * GlobalLayout — wraps ALL routes with shared ambient assets:
- * scroll progress, mesh background, cursor glow, particles,
- * morphing blobs, film grain, and liquid cursor.
+ * GlobalLayout — wraps ALL routes with shared ambient assets.
+ * Heavy desktop-only effects (cursor, particles, mesh) are skipped on mobile
+ * to improve INP and LCP on small devices.
  */
 export function GlobalLayout() {
   const { theme } = useTheme();
@@ -105,37 +105,45 @@ export function GlobalLayout() {
   const location = useLocation();
   const isContactPage = location.pathname === '/contact' || location.search.includes('section=contact');
 
+  // Detect mobile at render time — avoids mounting expensive listeners on phones
+  const isMobile = typeof window !== 'undefined' && window.matchMedia('(max-width: 1023px)').matches;
+
   return (
     <div className={`${isDark ? 'bg-[#0a0a0c] text-white' : 'bg-[#f5f5f5] text-zinc-900'} min-h-screen transition-colors duration-500 relative ${isContactPage ? '' : 'select-none'}`}>
       {/* Scroll progress */}
       <ScrollProgress color="#ed592b" />
 
-      {/* Liquid Design System — Reactive mesh background */}
-      <LiquidMeshBackground />
+      {/* Desktop-only heavy effects — skip on mobile to protect INP / LCP */}
+      {!isMobile && (
+        <>
+          {/* Liquid Design System — Reactive mesh background */}
+          <LiquidMeshBackground />
 
-      {/* Cursor reactive ambient glow */}
-      <CursorGlow color="rgba(237,89,43,0.04)" size={700} />
+          {/* Cursor reactive ambient glow */}
+          <CursorGlow color="rgba(237,89,43,0.04)" size={700} />
 
-      {/* Floating particles */}
-      <FloatingParticles count={15} color="rgba(237,89,43,0.06)" />
+          {/* Floating particles */}
+          <FloatingParticles count={15} color="rgba(237,89,43,0.06)" />
 
-      {/* Morphing background blobs */}
-      <MorphingBlob color="rgba(237,89,43,0.02)" className="-top-40 -right-40 z-[0]" />
-      <MorphingBlob color="rgba(99,102,241,0.015)" className="top-[60%] -left-60 z-[0]" />
+          {/* Morphing background blobs */}
+          <MorphingBlob color="rgba(237,89,43,0.02)" className="-top-40 -right-40 z-[0]" />
+          <MorphingBlob color="rgba(99,102,241,0.015)" className="top-[60%] -left-60 z-[0]" />
 
-      {/* Film grain overlay */}
+          {/* Liquid Design System — Organic Cursor with velocity squash/stretch */}
+          <LiquidCursor color="#ed592b" size={28} dotSize={4} />
+        </>
+      )}
+
+      {/* Film grain overlay — lightweight, keep on all devices */}
       <div
         className="fixed inset-0 pointer-events-none z-[55] opacity-[0.025] mix-blend-overlay"
         style={{
           backgroundImage:
-            'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E")',
+            'url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")',
           backgroundRepeat: 'repeat',
           backgroundSize: '128px 128px',
         }}
       />
-
-      {/* Liquid Design System — Organic Cursor with velocity squash/stretch */}
-      <LiquidCursor color="#ed592b" size={28} dotSize={4} />
 
       {/* Page content — add bottom padding for mobile nav (only on mobile, hidden at md+) */}
       <div className="pb-16 md:pb-0">

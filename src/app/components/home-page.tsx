@@ -154,6 +154,8 @@ const Sidebar = ({
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const border = isDark ? 'border-white/[0.06]' : 'border-zinc-200';
+  const { pathname } = useLocation();
+  const isHome = pathname === '/';
 
   const sidebarContent = (inDrawer = false) => (
     <motion.div className="flex flex-col h-full" style={{ fontFamily: F.body }} initial="hidden" animate="visible" variants={SIDEBAR_MOUNT}>
@@ -339,45 +341,48 @@ const Sidebar = ({
       </motion.nav>
 
       <motion.div variants={SIDEBAR_ITEM} className={`p-2.5 mt-auto space-y-[6px] ${inDrawer ? 'block' : 'hidden lg:block'}`}>
-        {/* Available pill — clickable, matches home page treatment */}
-        <Link
-          to="/contact"
-          aria-label="Available for new projects — go to contact page"
-          className={`group flex items-center gap-2 px-3.5 py-2 ${inDrawer ? 'min-h-[44px]' : ''} rounded-full border text-[11px] no-underline cursor-pointer ${border} ${isDark ? 'text-[#7a7d8a] hover:text-white hover:bg-white/[0.04] hover:border-white/[0.12]' : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 hover:border-zinc-300'} transition-[background-color,border-color,color,transform] duration-200 hover:translate-x-[1px] focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)]`}
-          style={{ fontFamily: F.body }}
-        >
-          <span className="relative flex h-2 w-2 flex-shrink-0">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#22c55e]/25" style={{ animationDuration: '2.4s' }} />
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#22c55e]/50" style={{ animationDuration: '1.6s', animationDelay: '0.4s' }} />
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#22c55e]/70" style={{ animationDuration: '1s', animationDelay: '0.2s' }} />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#22c55e] shadow-[0_0_10px_rgba(34,197,94,0.7)]" />
-          </span>
-          <span className="flex-1">Available for new projects</span>
-          <ArrowRight size={10} className="flex-shrink-0 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200" />
-        </Link>
-
-        {/* LinkedIn + Instagram */}
-        {[
-          { icon: <Linkedin size={12} />, label: 'LinkedIn', href: 'https://www.linkedin.com/in/samole/' },
-          { icon: <Instagram size={12} />, label: 'Instagram', href: 'https://www.instagram.com/areuli.design/' },
-        ].map((item) => (
-          <a
-            key={item.label}
-            href={item.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`group flex items-center gap-2 px-3 ${inDrawer ? 'min-h-[44px]' : 'py-[7px]'} rounded-[8px] text-[11px] whitespace-nowrap border no-underline transition-[background-color,border-color,color,transform] duration-200 hover:translate-x-[1px] focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
-              isDark
-                ? `${border} text-[#7a7d8a] hover:text-white hover:bg-white/[0.04] hover:border-white/[0.12]`
-                : `${border} text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 hover:border-zinc-300`
-            }`}
+        {/* Available pill — hidden on home page */}
+        {!isHome && (
+          <Link
+            to="/contact"
+            aria-label="Available for new projects — go to contact page"
+            className={`group flex items-center gap-2 px-3.5 py-2 ${inDrawer ? 'min-h-[44px]' : ''} rounded-full border text-[11px] no-underline cursor-pointer ${border} ${isDark ? 'text-[#7a7d8a] hover:text-white hover:bg-white/[0.04] hover:border-white/[0.12]' : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 hover:border-zinc-300'} transition-[background-color,border-color,color,transform] duration-200 hover:translate-x-[1px] focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)]`}
             style={{ fontFamily: F.body }}
           >
-            {item.icon}
-            <span className="flex-1">{item.label}</span>
-            <ArrowUpRight size={10} className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-          </a>
-        ))}
+            <span className="relative flex h-2 w-2 flex-shrink-0">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#22c55e]/25" style={{ animationDuration: '2.4s' }} />
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#22c55e]/50" style={{ animationDuration: '1.6s', animationDelay: '0.4s' }} />
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#22c55e]/70" style={{ animationDuration: '1s', animationDelay: '0.2s' }} />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#22c55e] shadow-[0_0_10px_rgba(34,197,94,0.7)]" />
+            </span>
+            <span className="flex-1">Available for new projects</span>
+            <ArrowRight size={10} className="flex-shrink-0 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200" />
+          </Link>
+        )}
+
+        {/* LinkedIn + Instagram — centered icon buttons */}
+        <div className={`flex items-center justify-center gap-2 ${inDrawer ? 'justify-start' : ''}`}>
+          {[
+            { icon: <Linkedin size={13} />, label: 'LinkedIn', href: 'https://www.linkedin.com/in/samole/' },
+            { icon: <Instagram size={13} />, label: 'Instagram', href: 'https://www.instagram.com/areuli.design/' },
+          ].map((item) => (
+            <a
+              key={item.label}
+              href={item.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`group flex items-center justify-center gap-1.5 px-3 ${inDrawer ? 'min-h-[44px] flex-1' : 'py-[7px] flex-1'} rounded-[10px] text-[11px] whitespace-nowrap border no-underline transition-[background-color,border-color,color,transform] duration-200 hover:-translate-y-[1px] focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
+                isDark
+                  ? `${border} text-[#7a7d8a] hover:text-white hover:bg-white/[0.04] hover:border-white/[0.12]`
+                  : `${border} text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 hover:border-zinc-300`
+              }`}
+              style={{ fontFamily: F.body }}
+            >
+              {item.icon}
+              <span>{item.label}</span>
+            </a>
+          ))}
+        </div>
       </motion.div>
     </motion.div>
   );
@@ -702,11 +707,11 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
       <FadeIn delay={0.1}>
         <div className={`max-w-2xl mb-8 space-y-4 text-[14px] leading-[1.75] ${bt}`} style={{ fontFamily: F.body, fontWeight: 400 }}>
           <p>
-            I'm <span className={`${isDark ? 'text-white/90' : 'text-zinc-800'}`} style={{ fontWeight: 500 }}>Salome</span> — a Senior Product Designer architecting interfaces for high-density enterprise systems. I translate complex behavioral patterns into production-ready design systems, engineered to scale across web, mobile, and B2B platforms.
+            I'm <span className={`${isDark ? 'text-white/90' : 'text-zinc-800'}`} style={{ fontWeight: 500 }}>Salome</span>, senior designer & art director. I work across design, direction, and digital culture, turning the small signals and habits we often miss into ideas that create real business impact.
           </p>
           <p>
-            Available for senior UX/UI and Product roles where
-            <span className={isDark ? 'text-white/80' : 'text-zinc-700'} style={{ fontWeight: 500 }}> craft, systems, and engineering precision converge.</span>
+            If you want to spark ideas that transform into business value,
+            <span className={isDark ? 'text-white/80' : 'text-zinc-700'} style={{ fontWeight: 500 }}> let's do it together.</span>
           </p>
         </div>
       </FadeIn>

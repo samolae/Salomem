@@ -339,45 +339,44 @@ const Sidebar = ({
       </motion.nav>
 
       <motion.div variants={SIDEBAR_ITEM} className={`p-2.5 mt-auto space-y-[6px] ${inDrawer ? 'block' : 'hidden lg:block'}`}>
-        {/* Available pill — matches home page style */}
-        <Link to="/contact" aria-label="Available for new projects — go to contact page" className="block">
-          <motion.div
-            whileHover={{ x: 1 }}
-            transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-            className={`group flex items-center gap-2 px-3.5 py-2 ${inDrawer ? 'min-h-[44px]' : ''} rounded-full border text-[11px] cursor-pointer ${border} ${isDark ? 'text-[#7a7d8a] hover:text-white hover:bg-white/[0.03]' : 'text-zinc-400 hover:text-zinc-700 hover:bg-zinc-50'} transition-colors focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)]`}
-            style={{ fontFamily: F.body }}
-          >
-            <span className="relative flex h-2 w-2 flex-shrink-0">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#22c55e]/25" style={{ animationDuration: '2.4s' }} />
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#22c55e]/50" style={{ animationDuration: '1.6s', animationDelay: '0.4s' }} />
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#22c55e]/70" style={{ animationDuration: '1s', animationDelay: '0.2s' }} />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#22c55e] shadow-[0_0_10px_rgba(34,197,94,0.7)]" />
-            </span>
-            Available for new projects
-          </motion.div>
+        {/* Available pill — clickable, matches home page treatment */}
+        <Link
+          to="/contact"
+          aria-label="Available for new projects — go to contact page"
+          className={`group flex items-center gap-2 px-3.5 py-2 ${inDrawer ? 'min-h-[44px]' : ''} rounded-full border text-[11px] no-underline cursor-pointer ${border} ${isDark ? 'text-[#7a7d8a] hover:text-white hover:bg-white/[0.04] hover:border-white/[0.12]' : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 hover:border-zinc-300'} transition-[background-color,border-color,color,transform] duration-200 hover:translate-x-[1px] focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)]`}
+          style={{ fontFamily: F.body }}
+        >
+          <span className="relative flex h-2 w-2 flex-shrink-0">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#22c55e]/25" style={{ animationDuration: '2.4s' }} />
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#22c55e]/50" style={{ animationDuration: '1.6s', animationDelay: '0.4s' }} />
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#22c55e]/70" style={{ animationDuration: '1s', animationDelay: '0.2s' }} />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#22c55e] shadow-[0_0_10px_rgba(34,197,94,0.7)]" />
+          </span>
+          <span className="flex-1">Available for new projects</span>
+          <ArrowRight size={10} className="flex-shrink-0 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200" />
         </Link>
 
         {/* LinkedIn + Instagram */}
         {[
-          { icon: <Linkedin size={12} />, label: 'LinkedIn', href: 'https://www.linkedin.com/in/salome-mosiava' },
+          { icon: <Linkedin size={12} />, label: 'LinkedIn', href: 'https://www.linkedin.com/in/samole/' },
           { icon: <Instagram size={12} />, label: 'Instagram', href: 'https://www.instagram.com/areuli.design/' },
         ].map((item) => (
-          <motion.a
+          <a
             key={item.label}
             href={item.href}
             target="_blank"
             rel="noopener noreferrer"
-            whileHover={{ x: 1 }}
-            className={`flex items-center gap-2 px-3 ${inDrawer ? 'min-h-[44px]' : 'py-[7px]'} rounded-[8px] text-[11px] whitespace-nowrap border transition-all focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
+            className={`group flex items-center gap-2 px-3 ${inDrawer ? 'min-h-[44px]' : 'py-[7px]'} rounded-[8px] text-[11px] whitespace-nowrap border no-underline transition-[background-color,border-color,color,transform] duration-200 hover:translate-x-[1px] focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
               isDark
-                ? `${border} text-[#7a7d8a] hover:text-white/80 hover:bg-white/[0.03]`
-                : `${border} text-zinc-400 hover:text-zinc-700 hover:bg-zinc-50`
+                ? `${border} text-[#7a7d8a] hover:text-white hover:bg-white/[0.04] hover:border-white/[0.12]`
+                : `${border} text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 hover:border-zinc-300`
             }`}
             style={{ fontFamily: F.body }}
           >
             {item.icon}
-            {item.label}
-          </motion.a>
+            <span className="flex-1">{item.label}</span>
+            <ArrowUpRight size={10} className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+          </a>
         ))}
       </motion.div>
     </motion.div>
@@ -818,7 +817,7 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
                     <span className="text-[7px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-full bg-white/[0.03] backdrop-blur-xl text-white/30 border border-white/[0.06]">196 Screens</span>
                   </div>
                   <div className="absolute bottom-0 left-0 right-0 z-20 p-4">
-                    <h3 className="text-[18px] text-white mb-1 tracking-[0.1em] leading-none" style={{ fontFamily: F.heading, fontWeight: 600 }}>AURUM</h3>
+                    <h3 className="text-[18px] text-white mb-1 tracking-[0] leading-none" style={{ fontFamily: F.heading, fontWeight: 600, letterSpacing: 0 }}>AURUM</h3>
                     <p className="text-white/35 text-[9.5px] uppercase tracking-[0.18em] mb-2.5" style={{ fontFamily: F.body, fontWeight: 500 }}>Crypto Exchange · Fintech</p>
                     <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#D59A04]/15 border border-[#D59A04]/20 text-[10px] text-[#D59A04]/80 transition-all" style={{ fontFamily: F.body, fontWeight: 500 }}>
                       View Case Study <ArrowRight size={10} />
@@ -862,7 +861,7 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
                         <span className="text-[7px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-full bg-[#D59A04]/10 text-[#D59A04]/80 border border-[#D59A04]/15">Case Study</span>
                         <span className="text-[7px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-full bg-[#6B8E23]/10 text-[#8FBC3B]/80 border border-[#6B8E23]/15">Enterprise · UX/UI</span>
                       </div>
-                      <h3 className="text-[16px] md:text-[18px] text-white mb-1 tracking-[0.1em] leading-none" style={{ fontFamily: F.heading, fontWeight: 600 }}>SCHENKER</h3>
+                      <h3 className="text-[16px] md:text-[18px] text-white mb-1 tracking-[0] leading-none" style={{ fontFamily: F.heading, fontWeight: 600, letterSpacing: 0 }}>SCHENKER</h3>
                       <p className={`text-[10px] ${bt} mb-2.5 leading-relaxed`} style={{ fontFamily: F.body }}>
                         Enterprise logistics — form systems, label management & shipment tracking.
                       </p>
@@ -2580,7 +2579,7 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
               <div className="absolute bottom-0 left-0 right-0 z-20 p-6">
                 <div className="flex items-end justify-between">
                   <div>
-                    <h3 className="text-[22px] md:text-[28px] text-white mb-1.5 tracking-[0.1em] leading-none" style={{ fontFamily: F.heading, fontWeight: 600 }}>AURUM</h3>
+                    <h3 className="text-[22px] md:text-[28px] text-white mb-1.5 tracking-[0] leading-none" style={{ fontFamily: F.heading, fontWeight: 600, letterSpacing: 0 }}>AURUM</h3>
                     <p className="text-white/45 text-[11.5px] uppercase tracking-[0.18em]" style={{ fontFamily: F.body, fontWeight: 500 }}>Crypto Exchange · B2C Fintech</p>
                   </div>
                   <div className="w-10 h-10 rounded-full bg-[#ed592b] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all group-hover:shadow-[0_0_30px_rgba(237,89,43,0.3)]">
@@ -2627,7 +2626,7 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
               <div className="absolute bottom-0 left-0 right-0 z-20 p-6">
                 <div className="flex items-end justify-between">
                   <div>
-                    <h3 className="text-[22px] md:text-[28px] text-white mb-1.5 tracking-[0.1em] leading-none" style={{ fontFamily: F.heading, fontWeight: 600 }}>SCHENKER</h3>
+                    <h3 className="text-[22px] md:text-[28px] text-white mb-1.5 tracking-[0] leading-none" style={{ fontFamily: F.heading, fontWeight: 600, letterSpacing: 0 }}>SCHENKER</h3>
                     <p className="text-white/55 text-[11.5px] uppercase tracking-[0.18em]" style={{ fontFamily: F.body, fontWeight: 500 }}>Logistics Platform · Enterprise UX</p>
                   </div>
                   <div className="w-10 h-10 rounded-full bg-[#6B8E23] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all group-hover:shadow-[0_0_30px_rgba(107,142,35,0.3)]">

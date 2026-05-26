@@ -134,6 +134,15 @@ const LiveClock = ({ isDark }: { isDark: boolean }) => {
   );
 };
 
+const SIDEBAR_MOUNT = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.07, delayChildren: 0.05 } },
+};
+const SIDEBAR_ITEM = {
+  hidden: { opacity: 0, x: -10, filter: 'blur(4px)' },
+  visible: { opacity: 1, x: 0, filter: 'blur(0px)', transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
+};
+
 /* ═══════════════��══════════════════�����═�����════════════════════��═════════ */
 /*                          SIDEBAR                                  */
 /* ═══════════════���════════════��══════════════════════════════════════ */
@@ -146,9 +155,9 @@ const Sidebar = ({
   const isDark = theme === 'dark';
   const border = isDark ? 'border-white/[0.06]' : 'border-zinc-200';
 
-  const sidebarContent = (
-    <div className="flex flex-col h-full" style={{ fontFamily: F.body }}>
-      <div className="px-3 pt-4 pb-4 lg:px-4 lg:pt-5 lg:pb-5">
+  const sidebarContent = (inDrawer = false) => (
+    <motion.div className="flex flex-col h-full" style={{ fontFamily: F.body }} initial="hidden" animate="visible" variants={SIDEBAR_MOUNT}>
+      <motion.div variants={SIDEBAR_ITEM} className="px-3 pt-4 pb-4 lg:px-4 lg:pt-5 lg:pb-5">
         <div className="flex items-center gap-3">
           <img
             src="https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1777841338/fav_ggorfv.png"
@@ -156,29 +165,31 @@ const Sidebar = ({
             width="64" height="64"
             className="w-8 h-8 rounded-full object-cover flex-shrink-0 ring-1 ring-white/[0.08]"
           />
-          <div className="min-w-0 hidden lg:block">
-            <h2 className={`text-[13px] truncate ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: F.heading, fontWeight: 600, letterSpacing: '-0.02em' }}>
+          <div className={`min-w-0 ${inDrawer ? 'block' : 'hidden lg:block'}`}>
+            <h2 className={`text-[13px] font-semibold truncate leading-snug ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: F.heading, letterSpacing: '-0.02em' }}>
               Salome Mosiava
             </h2>
-            <p className="text-[9.5px] text-[#ed592b] uppercase tracking-[0.1em] leading-tight" style={{ fontFamily: F.body }}>Art Director & Senior Product Designer</p>
+            <p className="text-[10px] leading-snug mt-[3px]" style={{ fontFamily: F.body, fontWeight: 500, color: '#ed592b' }}>Senior Product Designer</p>
+            <p className="text-[9.5px] leading-snug" style={{ fontFamily: F.body, fontWeight: 400, color: isDark ? 'rgba(255,255,255,0.28)' : '#aaa' }}>& Art Direction</p>
           </div>
         </div>
-      </div>
+      </motion.div>
 
-      <nav className="flex-1 px-2.5 space-y-0.5">
+      <motion.nav variants={SIDEBAR_ITEM} className="flex-1 px-2.5 space-y-0.5">
         {navItems.map((item) => {
           const active = activeSection === item.id;
           return (
             <MagneticWrap key={item.id} strength={0.15}>
               <Link to={navHref(item.id)} onClick={() => { onSectionChange(item.id); onMobileClose(); }} className="block">
                 <motion.div
-                  whileHover={{ x: 3 }}
+                  whileHover="hover"
+                  initial="rest"
                   whileTap={{ scale: 0.97 }}
                   title={item.label}
-                  className={`relative w-full flex items-center md:justify-center lg:justify-start gap-2.5 px-3 py-2 lg:py-[5px] rounded-[10px] text-[13px] whitespace-nowrap transition-all overflow-hidden min-h-[44px] md:min-h-[36px] lg:min-h-0 focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
+                  className={`group relative w-full flex items-center ${inDrawer ? 'justify-start' : 'md:justify-center lg:justify-start'} gap-2.5 px-3 py-2 lg:py-[5px] rounded-[10px] text-[13px] whitespace-nowrap transition-colors overflow-hidden min-h-[44px] md:min-h-[36px] lg:min-h-0 focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
                     active
                       ? isDark ? 'bg-white/[0.06] text-white' : 'bg-zinc-200/70 text-zinc-900'
-                      : isDark ? 'text-[#7a7d8a] hover:text-white/80 hover:bg-white/[0.03]' : 'text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100'
+                      : isDark ? 'text-[#7a7d8a]' : 'text-zinc-400'
                   }`}
                 >
                   {active && (
@@ -188,8 +199,28 @@ const Sidebar = ({
                       transition={{ type: 'spring', stiffness: 500, damping: 35 }}
                     />
                   )}
-                  <span className={active ? 'text-[#ed592b]' : 'opacity-50'}>{item.icon}</span>
-                  <span className="hidden lg:block">{item.label}</span>
+                  {!active && (
+                    <motion.div
+                      variants={{ rest: { scaleX: 0 }, hover: { scaleX: 1 } }}
+                      transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+                      className={`absolute inset-0 rounded-[10px] ${isDark ? 'bg-white/[0.04]' : 'bg-black/[0.04]'}`}
+                      style={{ originX: 0 }}
+                    />
+                  )}
+                  <motion.span
+                    variants={{ rest: { x: 0 }, hover: { x: 2 } }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 35 }}
+                    className={`relative z-10 flex-shrink-0 transition-opacity duration-150 ${active ? 'text-[#ed592b]' : 'opacity-50 group-hover:opacity-100'}`}
+                  >
+                    {item.icon}
+                  </motion.span>
+                  <motion.span
+                    variants={{ rest: { x: 0 }, hover: { x: 2 } }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 35 }}
+                    className={`${inDrawer ? 'block' : 'hidden lg:block'} relative z-10 transition-colors duration-150 ${!active && (isDark ? 'group-hover:text-white/85' : 'group-hover:text-zinc-800')}`}
+                  >
+                    {item.label}
+                  </motion.span>
                 </motion.div>
               </Link>
             </MagneticWrap>
@@ -198,8 +229,8 @@ const Sidebar = ({
 
         <div className={`h-px mx-2 my-2 ${isDark ? 'bg-white/[0.05]' : 'bg-zinc-200'}`} />
 
-        <div className="px-3 pt-1 pb-0.5 hidden lg:block">
-          <span className={`text-[8.5px] uppercase tracking-[0.18em] font-semibold ${isDark ? 'text-[#ed592b]/50' : 'text-[#ed592b]/60'}`} style={{ fontFamily: F.body }}>Case Studies</span>
+        <div className={`px-3 pt-1 pb-0.5 ${inDrawer ? 'block' : 'hidden lg:block'}`}>
+          <span className={`text-[8.5px] uppercase tracking-[0.15em] font-medium ${isDark ? 'text-white/25' : 'text-zinc-400/70'}`} style={{ fontFamily: F.body }}>Case Studies</span>
         </div>
         {projectCategories.filter(c => c.typeLabel === 'Case Study').map((cat) => {
           const active = activeSection === cat.id;
@@ -207,13 +238,14 @@ const Sidebar = ({
             <MagneticWrap key={cat.id} strength={0.15}>
               <Link to={catHref(cat.id)} onClick={() => { onSectionChange(cat.id); onMobileClose(); }} className="block">
                 <motion.div
-                  whileHover={{ x: 3 }}
+                  whileHover="hover"
+                  initial="rest"
                   whileTap={{ scale: 0.97 }}
                   title={cat.label}
-                  className={`relative w-full flex items-center md:justify-center lg:justify-start gap-2.5 px-3 py-2 lg:py-[5px] rounded-[10px] text-[13px] transition-all overflow-hidden min-h-[36px] focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
+                  className={`group relative w-full flex items-center ${inDrawer ? 'justify-start' : 'md:justify-center lg:justify-start'} gap-2.5 px-3 py-2 lg:py-[5px] rounded-[10px] text-[13px] transition-colors overflow-hidden min-h-[36px] focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
                     active
                       ? isDark ? 'bg-white/[0.06] text-white' : 'bg-zinc-200/70 text-zinc-900'
-                      : isDark ? 'text-[#7a7d8a] hover:text-white/80 hover:bg-white/[0.03]' : 'text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100'
+                      : isDark ? 'text-[#7a7d8a]' : 'text-zinc-400'
                   }`}
                 >
                   {active && (
@@ -223,16 +255,36 @@ const Sidebar = ({
                       transition={{ type: 'spring', stiffness: 500, damping: 35 }}
                     />
                   )}
-                  <span className={`flex-shrink-0 ${active ? 'text-[#ed592b]' : 'opacity-50'}`}>{cat.icon}</span>
-                  <span className="hidden lg:block truncate flex-1 min-w-0">{cat.label}</span>
+                  {!active && (
+                    <motion.div
+                      variants={{ rest: { scaleX: 0 }, hover: { scaleX: 1 } }}
+                      transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+                      className={`absolute inset-0 rounded-[10px] ${isDark ? 'bg-white/[0.04]' : 'bg-black/[0.04]'}`}
+                      style={{ originX: 0 }}
+                    />
+                  )}
+                  <motion.span
+                    variants={{ rest: { x: 0 }, hover: { x: 2 } }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 35 }}
+                    className={`flex-shrink-0 relative z-10 transition-opacity duration-150 ${active ? 'text-[#ed592b]' : 'opacity-50 group-hover:opacity-100'}`}
+                  >
+                    {cat.icon}
+                  </motion.span>
+                  <motion.span
+                    variants={{ rest: { x: 0 }, hover: { x: 2 } }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 35 }}
+                    className={`${inDrawer ? 'block' : 'hidden lg:block'} truncate flex-1 min-w-0 relative z-10 transition-colors duration-150 ${!active && (isDark ? 'group-hover:text-white/85' : 'group-hover:text-zinc-800')}`}
+                  >
+                    {cat.label}
+                  </motion.span>
                 </motion.div>
               </Link>
             </MagneticWrap>
           );
         })}
 
-        <div className="px-3 pt-2 pb-0.5 hidden lg:block">
-          <span className={`text-[8.5px] uppercase tracking-[0.18em] font-semibold ${isDark ? 'text-white/25' : 'text-zinc-400/60'}`} style={{ fontFamily: F.body }}>Galleries</span>
+        <div className={`px-3 pt-2 pb-0.5 ${inDrawer ? 'block' : 'hidden lg:block'}`}>
+          <span className={`text-[8.5px] uppercase tracking-[0.15em] font-medium ${isDark ? 'text-white/20' : 'text-zinc-400/50'}`} style={{ fontFamily: F.body }}>Galleries</span>
         </div>
         {projectCategories.filter(c => c.typeLabel === 'Gallery').map((cat) => {
           const active = activeSection === cat.id;
@@ -240,13 +292,14 @@ const Sidebar = ({
             <MagneticWrap key={cat.id} strength={0.15}>
               <Link to={catHref(cat.id)} onClick={() => { onSectionChange(cat.id); onMobileClose(); }} className="block">
                 <motion.div
-                  whileHover={{ x: 3 }}
+                  whileHover="hover"
+                  initial="rest"
                   whileTap={{ scale: 0.97 }}
                   title={cat.label}
-                  className={`relative w-full flex items-center md:justify-center lg:justify-start gap-2.5 px-3 py-2 lg:py-[5px] rounded-[10px] text-[13px] transition-all overflow-hidden min-h-[36px] focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
+                  className={`group relative w-full flex items-center ${inDrawer ? 'justify-start' : 'md:justify-center lg:justify-start'} gap-2.5 px-3 py-2 lg:py-[5px] rounded-[10px] text-[13px] transition-colors overflow-hidden min-h-[36px] focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
                     active
                       ? isDark ? 'bg-white/[0.06] text-white' : 'bg-zinc-200/70 text-zinc-900'
-                      : isDark ? 'text-[#7a7d8a] hover:text-white/80 hover:bg-white/[0.03]' : 'text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100'
+                      : isDark ? 'text-[#7a7d8a]' : 'text-zinc-400'
                   }`}
                 >
                   {active && (
@@ -256,46 +309,69 @@ const Sidebar = ({
                       transition={{ type: 'spring', stiffness: 500, damping: 35 }}
                     />
                   )}
-                  <span className={`flex-shrink-0 ${active ? 'text-[#ed592b]' : 'opacity-40'}`}>{cat.icon}</span>
-                  <span className="hidden lg:block truncate flex-1 min-w-0">{cat.label}</span>
+                  {!active && (
+                    <motion.div
+                      variants={{ rest: { scaleX: 0 }, hover: { scaleX: 1 } }}
+                      transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+                      className={`absolute inset-0 rounded-[10px] ${isDark ? 'bg-white/[0.04]' : 'bg-black/[0.04]'}`}
+                      style={{ originX: 0 }}
+                    />
+                  )}
+                  <motion.span
+                    variants={{ rest: { x: 0 }, hover: { x: 2 } }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 35 }}
+                    className={`flex-shrink-0 relative z-10 transition-opacity duration-150 ${active ? 'text-[#ed592b]' : 'opacity-40 group-hover:opacity-100'}`}
+                  >
+                    {cat.icon}
+                  </motion.span>
+                  <motion.span
+                    variants={{ rest: { x: 0 }, hover: { x: 2 } }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 35 }}
+                    className={`${inDrawer ? 'block' : 'hidden lg:block'} truncate flex-1 min-w-0 relative z-10 transition-colors duration-150 ${!active && (isDark ? 'group-hover:text-white/85' : 'group-hover:text-zinc-800')}`}
+                  >
+                    {cat.label}
+                  </motion.span>
                 </motion.div>
               </Link>
             </MagneticWrap>
           );
         })}
-      </nav>
+      </motion.nav>
 
-      <div className="p-2.5 space-y-[3px] mt-auto hidden lg:block">
-        {/* Status box */}
-        <div className={`px-3 py-2.5 rounded-[10px] border ${border} ${isDark ? 'bg-white/[0.015]' : 'bg-zinc-50'}`}>
-          <div className="flex items-center justify-between">
-            <div className={`text-[11px] ${isDark ? 'text-white/50' : 'text-zinc-500'}`} style={{ fontFamily: F.body }}>
-              {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="relative flex h-[5px] w-[5px]">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#22c55e] opacity-60" />
-                <span className="relative inline-flex rounded-full h-[5px] w-[5px] bg-[#22c55e]" />
-              </span>
-            </div>
-          </div>
+      <motion.div variants={SIDEBAR_ITEM} className={`p-2.5 mt-auto space-y-[6px] ${inDrawer ? 'block' : 'hidden lg:block'}`}>
+        {/* Available pill — matches home page style */}
+        <Link to="/contact" aria-label="Available for new projects — go to contact page" className="block">
+          <motion.div
+            whileHover={{ x: 1 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+            className={`group flex items-center gap-2 px-3.5 py-2 ${inDrawer ? 'min-h-[44px]' : ''} rounded-full border text-[11px] cursor-pointer ${border} ${isDark ? 'text-[#7a7d8a] hover:text-white hover:bg-white/[0.03]' : 'text-zinc-400 hover:text-zinc-700 hover:bg-zinc-50'} transition-colors focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)]`}
+            style={{ fontFamily: F.body }}
+          >
+            <span className="relative flex h-2 w-2 flex-shrink-0">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#22c55e]/25" style={{ animationDuration: '2.4s' }} />
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#22c55e]/50" style={{ animationDuration: '1.6s', animationDelay: '0.4s' }} />
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#22c55e]/70" style={{ animationDuration: '1s', animationDelay: '0.2s' }} />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#22c55e] shadow-[0_0_10px_rgba(34,197,94,0.7)]" />
+            </span>
+            Available for new projects
+          </motion.div>
+        </Link>
 
-        </div>
-
+        {/* LinkedIn + Instagram */}
         {[
-          { icon: <Instagram size={12} />, label: 'Instagram', accent: false, href: 'https://www.instagram.com/areuli.design/' },
-          { icon: <BehanceIcon size={12} />, label: 'Behance', accent: false, href: 'https://www.behance.net/samole' },
+          { icon: <Linkedin size={12} />, label: 'LinkedIn', href: 'https://www.linkedin.com/in/salome-mosiava' },
+          { icon: <Instagram size={12} />, label: 'Instagram', href: 'https://www.instagram.com/areuli.design/' },
         ].map((item) => (
           <motion.a
             key={item.label}
             href={item.href}
-            target={item.href !== '#' ? '_blank' : undefined}
-            rel={item.href !== '#' ? 'noopener noreferrer' : undefined}
-            whileHover={{ scale: 1.01, x: 1 }}
-            className={`flex items-center justify-center gap-2 px-3 py-2.5 lg:py-[7px] rounded-[10px] text-[11px] whitespace-nowrap border transition-all min-h-[44px] lg:min-h-0 focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
-              item.accent
-                ? 'border-[#ed592b]/20 text-[#ed592b]/70 hover:text-[#ed592b] hover:bg-[#ed592b]/[0.05] hover:border-[#ed592b]/30'
-                : isDark ? `${border} text-[#7a7d8a] hover:text-white/80 hover:bg-white/[0.03]` : `${border} text-zinc-400 hover:text-zinc-700 hover:bg-zinc-50`
+            target="_blank"
+            rel="noopener noreferrer"
+            whileHover={{ x: 1 }}
+            className={`flex items-center gap-2 px-3 ${inDrawer ? 'min-h-[44px]' : 'py-[7px]'} rounded-[8px] text-[11px] whitespace-nowrap border transition-all focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
+              isDark
+                ? `${border} text-[#7a7d8a] hover:text-white/80 hover:bg-white/[0.03]`
+                : `${border} text-zinc-400 hover:text-zinc-700 hover:bg-zinc-50`
             }`}
             style={{ fontFamily: F.body }}
           >
@@ -303,15 +379,15 @@ const Sidebar = ({
             {item.label}
           </motion.a>
         ))}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 
   return (
     <>
       {/* Desktop sidebar: full labels ≥1024px; icon-only rail 768–1023px */}
       <aside className={`hidden md:flex flex-col fixed left-0 top-0 bottom-0 md:w-[64px] lg:w-[240px] z-40 border-r ${isDark ? 'bg-[#0b0b0e] border-white/[0.05]' : 'bg-white border-zinc-200'} overflow-hidden transition-[width] duration-200`}>
-        {sidebarContent}
+        {sidebarContent()}
       </aside>
 
       {/* Mobile drawer */}
@@ -320,8 +396,8 @@ const Sidebar = ({
           <>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 md:hidden" onClick={onMobileClose} />
             <motion.aside initial={{ x: -300 }} animate={{ x: 0 }} exit={{ x: -300 }} transition={{ type: 'spring', damping: 30, stiffness: 300 }} className={`fixed left-0 top-0 bottom-0 w-[80vw] max-w-[300px] z-50 md:hidden border-r ${isDark ? 'bg-[#0b0b0e] border-white/[0.05]' : 'bg-white border-zinc-200'}`}>
-              <button onClick={onMobileClose} className="absolute top-3 right-3 p-2.5 rounded-xl text-[#7a7d8a] hover:text-white hover:bg-white/[0.06] min-w-[44px] min-h-[44px] flex items-center justify-center focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)]" aria-label="Close menu"><X size={20} /></button>
-              {sidebarContent}
+              <button onClick={onMobileClose} className="absolute top-3 right-3 p-2.5 rounded-xl text-[#7a7d8a] hover:text-white hover:bg-white/[0.06] min-w-[44px] min-h-[44px] flex items-center justify-center focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] z-10" aria-label="Close menu"><X size={20} /></button>
+              {sidebarContent(true)}
             </motion.aside>
           </>
         )}
@@ -597,8 +673,10 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
               className={`group inline-flex items-center gap-2.5 px-4 py-2 rounded-full border text-[12px] cursor-pointer ${border} ${isDark ? 'text-[#7a7d8a] hover:text-white' : 'text-zinc-400 hover:text-zinc-700'} transition-colors`}
             >
               <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#22c55e] opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#22c55e]" />
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#22c55e]/25" style={{ animationDuration: '2.4s' }} />
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#22c55e]/50" style={{ animationDuration: '1.6s', animationDelay: '0.4s' }} />
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#22c55e]/70" style={{ animationDuration: '1s', animationDelay: '0.2s' }} />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#22c55e] shadow-[0_0_10px_rgba(34,197,94,0.7)]" />
               </span>
               Available for new projects
               <ArrowRight size={10} className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 -ml-1" />
@@ -623,14 +701,13 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
       </FadeIn>
 
       <FadeIn delay={0.1}>
-        <div className={`max-w-2xl mb-8 space-y-4 text-[14px] leading-[1.8] ${bt}`} style={{ fontFamily: F.body, fontWeight: 400 }}>
+        <div className={`max-w-2xl mb-8 space-y-4 text-[14px] leading-[1.75] ${bt}`} style={{ fontFamily: F.body, fontWeight: 400 }}>
           <p>
-            I'm <span className={`${isDark ? 'text-white/90' : 'text-zinc-800'}`} style={{ fontWeight: 500 }}>Salome</span>, senior designer & art director.
-            I work across design, direction, and digital culture, turning the small signals and habits we often miss into ideas that create real business impact.
+            I'm <span className={`${isDark ? 'text-white/90' : 'text-zinc-800'}`} style={{ fontWeight: 500 }}>Salome</span> — a Senior Product Designer architecting interfaces for high-density enterprise systems. I translate complex behavioral patterns into production-ready design systems, engineered to scale across web, mobile, and B2B platforms.
           </p>
           <p>
-            If you want to spark ideas that transform into business value,
-            <span className={isDark ? 'text-white/80' : 'text-zinc-700'} style={{ fontWeight: 500 }}> let's do it together.</span>
+            Available for senior UX/UI and Product roles where
+            <span className={isDark ? 'text-white/80' : 'text-zinc-700'} style={{ fontWeight: 500 }}> craft, systems, and engineering precision converge.</span>
           </p>
         </div>
       </FadeIn>
@@ -741,8 +818,8 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
                     <span className="text-[7px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-full bg-white/[0.03] backdrop-blur-xl text-white/30 border border-white/[0.06]">196 Screens</span>
                   </div>
                   <div className="absolute bottom-0 left-0 right-0 z-20 p-4">
-                    <h3 className="text-lg text-white mb-0.5 tracking-[-0.03em]" style={{ fontFamily: F.heading, fontWeight: 700 }}>AURUM</h3>
-                    <p className="text-white/30 text-[10px] tracking-wide mb-2.5" style={{ fontFamily: F.body }}>Crypto Exchange Platform</p>
+                    <h3 className="text-[18px] text-white mb-1 tracking-[0.1em] leading-none" style={{ fontFamily: F.heading, fontWeight: 600 }}>AURUM</h3>
+                    <p className="text-white/35 text-[9.5px] uppercase tracking-[0.18em] mb-2.5" style={{ fontFamily: F.body, fontWeight: 500 }}>Crypto Exchange · Fintech</p>
                     <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#D59A04]/15 border border-[#D59A04]/20 text-[10px] text-[#D59A04]/80 transition-all" style={{ fontFamily: F.body, fontWeight: 500 }}>
                       View Case Study <ArrowRight size={10} />
                     </span>
@@ -785,13 +862,13 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
                         <span className="text-[7px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-full bg-[#D59A04]/10 text-[#D59A04]/80 border border-[#D59A04]/15">Case Study</span>
                         <span className="text-[7px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-full bg-[#6B8E23]/10 text-[#8FBC3B]/80 border border-[#6B8E23]/15">Enterprise · UX/UI</span>
                       </div>
-                      <h3 className="text-base md:text-lg text-white mb-0.5 tracking-[-0.03em]" style={{ fontFamily: F.heading, fontWeight: 700 }}>SCHENKER</h3>
+                      <h3 className="text-[16px] md:text-[18px] text-white mb-1 tracking-[0.1em] leading-none" style={{ fontFamily: F.heading, fontWeight: 600 }}>SCHENKER</h3>
                       <p className={`text-[10px] ${bt} mb-2.5 leading-relaxed`} style={{ fontFamily: F.body }}>
                         Enterprise logistics — form systems, label management & shipment tracking.
                       </p>
                       <div className="flex flex-wrap gap-1 mb-2.5">
-                        {['UX/UI', 'Enterprise', 'Form Systems'].map((t) => (
-                          <span key={t} className={`text-[8px] uppercase tracking-[0.15em] px-2 py-0.5 rounded-md whitespace-nowrap ${isDark ? 'bg-white/[0.06] text-white/50' : 'bg-zinc-100 text-zinc-400'}`} style={{ fontFamily: F.body }}>{t}</span>
+                        {['Enterprise UX', 'Form Architecture', 'B2B Desktop'].map((t) => (
+                          <span key={t} className={`text-[8px] uppercase tracking-[0.14em] px-2 py-0.5 rounded-md whitespace-nowrap border ${isDark ? 'bg-white/[0.025] text-white/55 border-white/[0.06]' : 'bg-zinc-50 text-zinc-500 border-zinc-200'}`} style={{ fontFamily: F.body, fontWeight: 500 }}>{t}</span>
                         ))}
                       </div>
                       <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#6B8E23]/12 border border-[#6B8E23]/20 text-[10px] text-[#8FBC3B]/70 transition-all w-full sm:w-auto justify-center sm:justify-start" style={{ fontFamily: F.body, fontWeight: 500 }}>
@@ -1385,7 +1462,7 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
 
           <form onSubmit={handleFormSubmit} className="space-y-3">
             {/* Name + Email */}
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {([
                 { field: 'name' as const, label: 'Your name', placeholder: 'What should I call you?', type: 'text', required: false },
                 { field: 'email' as const, label: 'Email', placeholder: 'Where can I reach you?', type: 'email', required: true },
@@ -1446,7 +1523,7 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
                 ],
               },
             ] as { cols: number; fields: { field: keyof typeof form; label: string; placeholder: string; options: { value: string; label: string }[] }[] }[]).map((row, ri) => (
-              <div key={ri} className={row.cols === 2 ? 'grid grid-cols-2 gap-3' : ''}>
+              <div key={ri} className={row.cols === 2 ? 'grid grid-cols-1 sm:grid-cols-2 gap-3' : ''}>
                 {row.fields.map(({ field, label, placeholder, options }) => {
                   const isOpen = openDropdown === field;
                   const selected = options.find((o) => o.value === form[field]);
@@ -1923,7 +2000,7 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
           {/* All chip */}
           <button
             onClick={() => goTo(-1)}
-            className={`flex items-center gap-1.5 px-2 py-1.5 rounded-lg border text-[10px] transition-all duration-200 focus-visible:shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
+            className={`flex items-center gap-1.5 px-2 py-1.5 min-h-[40px] md:min-h-0 rounded-lg border text-[10px] transition-all duration-200 focus-visible:shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
               activeBrand === -1
                 ? 'border-[#ed592b] bg-[#ed592b]/10 text-[#ed592b]'
                 : isDark ? 'border-white/[0.06] bg-white/[0.03] text-[#7a7d8a] hover:border-white/[0.12] hover:text-white/70' : 'border-zinc-200 bg-zinc-50 text-zinc-400 hover:border-zinc-300 hover:text-zinc-600'
@@ -1941,7 +2018,7 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
               <button
                 key={b.name}
                 onClick={() => goTo(i)}
-                className={`flex items-center gap-1.5 px-2 py-1.5 rounded-lg border text-[10px] transition-all duration-200 focus-visible:shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
+                className={`flex items-center gap-1.5 px-2 py-1.5 min-h-[40px] md:min-h-0 rounded-lg border text-[10px] transition-all duration-200 focus-visible:shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
                   active
                     ? 'border-[#ed592b] bg-[#ed592b]/10 text-[#ed592b]'
                     : isDark ? 'border-white/[0.06] bg-white/[0.03] text-[#7a7d8a] hover:border-white/[0.12] hover:text-white/70' : 'border-zinc-200 bg-zinc-50 text-zinc-400 hover:border-zinc-300 hover:text-zinc-600'
@@ -1968,12 +2045,12 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
                   <motion.button whileHover={{ scale: 1.12 }} whileTap={{ scale: 0.88 }}
                     onClick={() => setViewAllPage(p => Math.max(0, p - 1))}
                     disabled={viewAllPage === 0} aria-label="Previous page"
-                    className={`w-6 h-6 rounded-md flex items-center justify-center transition-colors focus-visible:shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${viewAllPage === 0 ? isDark ? 'text-white/10 cursor-not-allowed' : 'text-zinc-200 cursor-not-allowed' : isDark ? 'text-[#5a5d6a] hover:text-white hover:bg-white/[0.06]' : 'text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100'}`}
+                    className={`min-w-[40px] min-h-[40px] md:min-w-0 md:min-h-0 md:w-6 md:h-6 rounded-md flex items-center justify-center transition-colors focus-visible:shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${viewAllPage === 0 ? isDark ? 'text-white/10 cursor-not-allowed' : 'text-zinc-200 cursor-not-allowed' : isDark ? 'text-[#5a5d6a] hover:text-white hover:bg-white/[0.06]' : 'text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100'}`}
                   ><ChevronLeft size={13} /></motion.button>
                   <motion.button whileHover={{ scale: 1.12 }} whileTap={{ scale: 0.88 }}
                     onClick={() => setViewAllPage(p => Math.min(totalPages - 1, p + 1))}
                     disabled={viewAllPage === totalPages - 1} aria-label="Next page"
-                    className={`w-6 h-6 rounded-md flex items-center justify-center transition-colors focus-visible:shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${viewAllPage === totalPages - 1 ? isDark ? 'text-white/10 cursor-not-allowed' : 'text-zinc-200 cursor-not-allowed' : isDark ? 'text-[#5a5d6a] hover:text-white hover:bg-white/[0.06]' : 'text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100'}`}
+                    className={`min-w-[40px] min-h-[40px] md:min-w-0 md:min-h-0 md:w-6 md:h-6 rounded-md flex items-center justify-center transition-colors focus-visible:shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${viewAllPage === totalPages - 1 ? isDark ? 'text-white/10 cursor-not-allowed' : 'text-zinc-200 cursor-not-allowed' : isDark ? 'text-[#5a5d6a] hover:text-white hover:bg-white/[0.06]' : 'text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100'}`}
                   ><ChevronRight size={13} /></motion.button>
                 </div>
               </div>
@@ -2027,7 +2104,7 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
               </AnimatePresence>
               <div className="flex items-center justify-center gap-1 mt-3">
                 {Array.from({ length: totalPages }).map((_, i) => (
-                  <button key={i} onClick={() => setViewAllPage(i)} className="p-0.5" aria-label={`Page ${i + 1}`}>
+                  <button key={i} onClick={() => setViewAllPage(i)} className="min-w-[40px] min-h-[40px] md:min-w-0 md:min-h-0 md:p-0.5 flex items-center justify-center" aria-label={`Page ${i + 1}`}>
                     <motion.div
                       animate={{ width: i === viewAllPage ? 16 : 4, height: 4, backgroundColor: i === viewAllPage ? '#ed592b' : isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)', borderRadius: 2 }}
                       whileHover={{ backgroundColor: i === viewAllPage ? '#ed592b' : isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)', scale: i === viewAllPage ? 1 : 1.5 }}
@@ -2409,7 +2486,7 @@ const MotionReelCard = ({
           animate={{ opacity: 1 }}
           whileHover={{ scale: 1.15 }}
           whileTap={{ scale: 0.9 }}
-          className="absolute bottom-2 right-2 z-20 w-7 h-7 rounded-full flex items-center justify-center backdrop-blur-md bg-black/50 border border-white/10 text-white/70 hover:text-white hover:bg-black/70 transition-colors cursor-pointer focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.5)]"
+          className="absolute bottom-2 right-2 z-20 w-10 h-10 md:w-7 md:h-7 rounded-full flex items-center justify-center backdrop-blur-md bg-black/50 border border-white/10 text-white/70 hover:text-white hover:bg-black/70 transition-colors cursor-pointer focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.5)]"
           aria-label={isMuted ? 'Unmute' : 'Mute'}
         >
           <AnimatePresence mode="wait">
@@ -2472,8 +2549,8 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
   return (
     <div>
       <FadeIn>
-        <h1 className="text-3xl lg:text-4xl mb-3 tracking-[-0.03em]" style={{ fontFamily: F.heading, fontWeight: 700 }}>
-          <TextScramble text="UX/UI Design" delay={0.2} duration={1} style={{ fontFamily: F.heading, fontWeight: 700 }} />
+        <h1 className="text-3xl lg:text-4xl mb-3 tracking-[0]" style={{ fontFamily: F.heading, fontWeight: 700, letterSpacing: 0 }}>
+          <TextScramble text="UX/UI Design" delay={0.2} duration={1} style={{ fontFamily: F.heading, fontWeight: 700, letterSpacing: 0 }} />
         </h1>
         <p className={`${mt} max-w-xl leading-relaxed mb-12 text-[14px]`} style={{ fontFamily: F.body }}>
           End-to-end product design — from user research to polished interfaces and scalable design systems.
@@ -2503,8 +2580,8 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
               <div className="absolute bottom-0 left-0 right-0 z-20 p-6">
                 <div className="flex items-end justify-between">
                   <div>
-                    <h3 className="text-2xl md:text-3xl text-white mb-1 tracking-[-0.02em]" style={{ fontFamily: F.heading, fontWeight: 700 }}>AURUM</h3>
-                    <p className="text-white/40 text-[13px]" style={{ fontFamily: F.body }}>Crypto Exchange Platform</p>
+                    <h3 className="text-[22px] md:text-[28px] text-white mb-1.5 tracking-[0.1em] leading-none" style={{ fontFamily: F.heading, fontWeight: 600 }}>AURUM</h3>
+                    <p className="text-white/45 text-[11.5px] uppercase tracking-[0.18em]" style={{ fontFamily: F.body, fontWeight: 500 }}>Crypto Exchange · B2C Fintech</p>
                   </div>
                   <div className="w-10 h-10 rounded-full bg-[#ed592b] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all group-hover:shadow-[0_0_30px_rgba(237,89,43,0.3)]">
                     <ArrowUpRight size={18} className="text-black" />
@@ -2514,8 +2591,8 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
             </div>
             <div className="px-4 sm:p-5 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
               <div className="flex flex-wrap gap-1.5">
-                {['UX/UI', 'Design System', 'Web & Mobile'].map((t) => (
-                  <span key={t} className={`text-[9px] uppercase tracking-[0.12em] px-2.5 py-1 rounded-md whitespace-nowrap ${isDark ? 'bg-white/[0.04] text-[#7a7d8a]' : 'bg-zinc-100 text-zinc-400'}`}>{t}</span>
+                {['Design System', '196 Screens', '64+ Components', 'Web · iOS · Android'].map((t) => (
+                  <span key={t} className={`text-[9px] uppercase tracking-[0.14em] px-2.5 py-1 rounded-md whitespace-nowrap border ${isDark ? 'bg-white/[0.025] text-[#9094a3] border-white/[0.05]' : 'bg-zinc-50 text-zinc-500 border-zinc-200'}`} style={{ fontFamily: F.body, fontWeight: 500 }}>{t}</span>
                 ))}
               </div>
               <span className="text-[12px] whitespace-nowrap text-[#ed592b]/70 flex items-center justify-center gap-2 px-3 py-1.5 rounded-full border border-[#ed592b]/15 group-hover:border-[#ed592b]/30 group-hover:bg-[#ed592b]/5 group-hover:text-[#ed592b] transition-all duration-300 w-full sm:w-auto" style={{ fontFamily: F.body, fontWeight: 500 }}>
@@ -2550,8 +2627,8 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
               <div className="absolute bottom-0 left-0 right-0 z-20 p-6">
                 <div className="flex items-end justify-between">
                   <div>
-                    <h3 className="text-2xl md:text-3xl text-white mb-1 tracking-[-0.02em]" style={{ fontFamily: F.heading, fontWeight: 700 }}>SCHENKER</h3>
-                    <p className="text-white/50 text-[13px]" style={{ fontFamily: F.body }}>Logistics Platform · Enterprise UX</p>
+                    <h3 className="text-[22px] md:text-[28px] text-white mb-1.5 tracking-[0.1em] leading-none" style={{ fontFamily: F.heading, fontWeight: 600 }}>SCHENKER</h3>
+                    <p className="text-white/55 text-[11.5px] uppercase tracking-[0.18em]" style={{ fontFamily: F.body, fontWeight: 500 }}>Logistics Platform · Enterprise UX</p>
                   </div>
                   <div className="w-10 h-10 rounded-full bg-[#6B8E23] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all group-hover:shadow-[0_0_30px_rgba(107,142,35,0.3)]">
                     <ArrowUpRight size={18} className="text-white" />
@@ -2561,8 +2638,8 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
             </div>
             <div className="px-4 sm:p-5 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
               <div className="flex flex-wrap gap-1.5">
-                {['UX/UI', 'Enterprise', 'Form Systems'].map((t) => (
-                  <span key={t} className={`text-[9px] uppercase tracking-[0.12em] px-2.5 py-1 rounded-md whitespace-nowrap ${isDark ? 'bg-white/[0.04] text-[#7a7d8a]' : 'bg-zinc-100 text-zinc-400'}`}>{t}</span>
+                {['Enterprise UX', 'Form Architecture', 'B2B · Desktop', 'Dev-Ready Spec'].map((t) => (
+                  <span key={t} className={`text-[9px] uppercase tracking-[0.14em] px-2.5 py-1 rounded-md whitespace-nowrap border ${isDark ? 'bg-white/[0.025] text-[#9094a3] border-white/[0.05]' : 'bg-zinc-50 text-zinc-500 border-zinc-200'}`} style={{ fontFamily: F.body, fontWeight: 500 }}>{t}</span>
                 ))}
               </div>
               <span className="text-[12px] whitespace-nowrap text-[#6B8E23]/70 flex items-center justify-center gap-2 px-3 py-1.5 rounded-full border border-[#6B8E23]/15 group-hover:border-[#6B8E23]/30 group-hover:bg-[#6B8E23]/5 group-hover:text-[#8FBC3B] transition-all duration-300 w-full sm:w-auto" style={{ fontFamily: F.body, fontWeight: 500 }}>
@@ -2622,8 +2699,9 @@ export function HomePage() {
   const activeSection = (category && WORK_CATEGORIES.has(category)) ? category : localSection;
 
   // Sync active section to global context for bottom bar
-  const { setActiveSection: setGlobalSection } = useActiveSection();
+  const { setActiveSection: setGlobalSection, mobileDrawerOpen: isMobileOpen, setMobileDrawerOpen: setIsMobileOpen } = useActiveSection();
   useEffect(() => { setGlobalSection(activeSection); }, [activeSection, setGlobalSection]);
+  useEffect(() => { setIsMobileOpen(false); }, [location.pathname, setIsMobileOpen]);
 
   /* Smart navigation — work categories use URL, others use state */
   const handleSectionChange = useCallback((id: string) => {
@@ -2641,7 +2719,6 @@ export function HomePage() {
     }
   }, [navigate, category, isContactRoute, isServicesRoute]);
 
-  const [isMobileOpen, setIsMobileOpen] = useState(false);
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
@@ -2706,14 +2783,14 @@ export function HomePage() {
 
       {/* Main content */}
       <main className="md:ml-[64px] lg:ml-[240px] min-h-screen lg:pt-0">
-        <div className="max-w-3xl mx-auto px-5 sm:px-8 lg:px-12 py-6 sm:py-8 lg:py-10">
+        <div className="max-w-3xl mx-auto px-5 sm:px-8 lg:px-12 pt-16 pb-6 md:py-8 lg:py-10">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeSection}
-              initial={{ opacity: 0, y: 16, filter: 'blur(4px)' }}
-              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-              exit={{ opacity: 0, y: -10, filter: 'blur(4px)' }}
-              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+              initial={{ opacity: 0, y: 18, filter: 'blur(8px)', scale: 0.99 }}
+              animate={{ opacity: 1, y: 0, filter: 'blur(0px)', scale: 1 }}
+              exit={{ opacity: 0, y: -10, filter: 'blur(6px)', scale: 0.99 }}
+              transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
             >
               {renderContent()}
             </motion.div>

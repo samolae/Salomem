@@ -1,4 +1,5 @@
 import { Link, Outlet, useLocation, useNavigate } from 'react-router';
+import { motion, AnimatePresence } from 'motion/react';
 import { useTheme } from './theme-provider';
 import { useActiveSection } from './active-section-context';
 import { Home, Briefcase, Mail, Layers, Image, Video } from 'lucide-react';
@@ -28,14 +29,13 @@ function MobileBottomBar() {
   const isDark = theme === 'dark';
   const location = useLocation();
   const navigate = useNavigate();
-  const { activeSection } = useActiveSection();
+  const { activeSection, mobileDrawerOpen } = useActiveSection();
 
   const isHomePage = location.pathname === '/' || location.pathname.startsWith('/work/') || location.pathname === '/contact';
 
   const getActive = (item: typeof bottomNavItems[0]) => {
     if (item.id === 'contact' && location.pathname === '/contact') return true;
     if (isHomePage) {
-      // On home page, use context-based activeSection
       if (item.id === 'home') return activeSection === 'home' || activeSection === 'services';
       if (item.id === 'contact') return activeSection === 'contact';
       if (item.id === 'ux-ui') return activeSection === 'ux-ui';
@@ -43,44 +43,54 @@ function MobileBottomBar() {
       if (item.id === 'motion') return activeSection === 'social-media-motion';
       return false;
     }
-    // On other pages (case studies etc), nothing is active except home loosely
     return false;
   };
 
   return (
-    <nav
-      className="fixed bottom-0 left-0 right-0 z-[999] lg:hidden"
-      style={{ fontFamily: F.body }}
-    >
-      {/* Blur backdrop */}
-      <div className={`absolute inset-0 ${isDark ? 'bg-[#0b0b0e]/90' : 'bg-white/90'} backdrop-blur-xl`} />
-      {/* Top border */}
-      <div className={`absolute top-0 left-0 right-0 h-px ${isDark ? 'bg-white/[0.06]' : 'bg-zinc-200'}`} />
+    <AnimatePresence>
+      {!mobileDrawerOpen && (
+        <motion.nav
+          key="bottom-bar"
+          initial={{ y: '100%', opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: '100%', opacity: 0 }}
+          transition={{ type: 'spring', stiffness: 320, damping: 32, mass: 0.6 }}
+          className="fixed bottom-0 left-0 right-0 z-[60] md:hidden"
+          style={{ fontFamily: F.body }}
+        >
+          <div className={`absolute inset-0 ${isDark ? 'bg-[#0b0b0e]/90' : 'bg-white/90'} backdrop-blur-xl`} />
+          <div className={`absolute top-0 left-0 right-0 h-px ${isDark ? 'bg-white/[0.06]' : 'bg-zinc-200'}`} />
 
-      <div className="relative flex items-stretch justify-around px-2" style={{ paddingBottom: 'env(safe-area-inset-bottom, 10px)' }}>
-        {bottomNavItems.map((item) => {
-          const active = getActive(item);
-          const Icon = item.icon;
-          return (
-            <Link
-              key={item.id}
-              to={item.path}
-              className={`relative flex flex-col items-center justify-center gap-1 py-2.5 px-3 min-w-[60px] transition-colors duration-200 ${
-                active
-                  ? 'text-[#ed592b]'
-                  : isDark ? 'text-[#5a5d6a] active:text-white/60' : 'text-zinc-400 active:text-zinc-600'
-              }`}
-            >
-              {active && (
-                <span className="absolute top-0 left-1/2 -translate-x-1/2 w-5 h-[2px] rounded-b-full bg-[#ed592b]" />
-              )}
-              <Icon size={22} strokeWidth={active ? 2.2 : 1.6} />
-              <span className={`text-[10px] tracking-[0.02em] ${active ? 'font-semibold' : ''}`}>{item.label}</span>
-            </Link>
-          );
-        })}
-      </div>
-    </nav>
+          <div className="relative flex items-stretch justify-around px-2" style={{ paddingBottom: 'env(safe-area-inset-bottom, 10px)' }}>
+            {bottomNavItems.map((item) => {
+              const active = getActive(item);
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.id}
+                  to={item.path}
+                  className={`relative flex flex-col items-center justify-center gap-1 py-2.5 px-3 min-w-[60px] transition-colors duration-200 ${
+                    active
+                      ? 'text-[#ed592b]'
+                      : isDark ? 'text-[#5a5d6a] active:text-white/60' : 'text-zinc-400 active:text-zinc-600'
+                  }`}
+                >
+                  {active && (
+                    <motion.span
+                      layoutId="bottomBarActive"
+                      className="absolute top-0 left-1/2 -translate-x-1/2 w-5 h-[2px] rounded-b-full bg-[#ed592b]"
+                      transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+                    />
+                  )}
+                  <Icon size={22} strokeWidth={active ? 2.2 : 1.6} />
+                  <span className={`text-[10px] tracking-[0.02em] ${active ? 'font-semibold' : ''}`}>{item.label}</span>
+                </Link>
+              );
+            })}
+          </div>
+        </motion.nav>
+      )}
+    </AnimatePresence>
   );
 }
 
@@ -127,8 +137,8 @@ export function GlobalLayout() {
       {/* Liquid Design System — Organic Cursor with velocity squash/stretch */}
       <LiquidCursor color="#ed592b" size={28} dotSize={4} />
 
-      {/* Page content — add bottom padding for mobile nav */}
-      <div className="pb-16 lg:pb-0">
+      {/* Page content — add bottom padding for mobile nav (only on mobile, hidden at md+) */}
+      <div className="pb-16 md:pb-0">
         <Outlet />
       </div>
 

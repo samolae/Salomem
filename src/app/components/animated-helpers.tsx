@@ -974,6 +974,10 @@ export const LiquidCursor = ({
   const scaleY = useMotionValue(1);
   const springScaleX = useSpring(scaleX, { stiffness: 200, damping: 20 });
   const springScaleY = useSpring(scaleY, { stiffness: 200, damping: 20 });
+  const hoverScale = useMotionValue(1);
+  const springHoverScale = useSpring(hoverScale, { stiffness: 350, damping: 26, mass: 0.4 });
+  const dotOpacity = useMotionValue(1);
+  const springDotOpacity = useSpring(dotOpacity, { stiffness: 350, damping: 26, mass: 0.4 });
   const prevPos = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
@@ -995,8 +999,24 @@ export const LiquidCursor = ({
       prevPos.current = { x: e.clientX, y: e.clientY };
     };
     const resetScale = () => { scaleX.set(1); scaleY.set(1); };
+
+    const onInteractiveEnter = (e: MouseEvent) => {
+      if ((e.target as HTMLElement).closest('a, button, [role="button"], [data-cursor]')) {
+        hoverScale.set(2.5);
+        dotOpacity.set(0);
+      }
+    };
+    const onInteractiveLeave = (e: MouseEvent) => {
+      if ((e.target as HTMLElement).closest('a, button, [role="button"], [data-cursor]')) {
+        hoverScale.set(1);
+        dotOpacity.set(1);
+      }
+    };
+
     window.addEventListener('mousemove', handler);
     window.addEventListener('mouseup', resetScale);
+    window.addEventListener('mouseover', onInteractiveEnter);
+    window.addEventListener('mouseout', onInteractiveLeave);
 
     // Hide native cursor on desktop
     const mq = window.matchMedia('(min-width: 1024px)');
@@ -1009,10 +1029,12 @@ export const LiquidCursor = ({
     return () => {
       window.removeEventListener('mousemove', handler);
       window.removeEventListener('mouseup', resetScale);
+      window.removeEventListener('mouseover', onInteractiveEnter);
+      window.removeEventListener('mouseout', onInteractiveLeave);
       document.body.style.cursor = '';
       mq.removeEventListener('change', applyCursor);
     };
-  }, [x, y, dotX, dotY, scaleX, scaleY]);
+  }, [x, y, dotX, dotY, scaleX, scaleY, hoverScale, dotOpacity]);
 
   return (
     <>
@@ -1027,6 +1049,7 @@ export const LiquidCursor = ({
           borderColor: `${color}60`,
           scaleX: springScaleX,
           scaleY: springScaleY,
+          scale: springHoverScale,
         }}
       />
       {/* Inner dot */}
@@ -1038,6 +1061,7 @@ export const LiquidCursor = ({
           x: useTransform(springDotX, (v) => v - dotSize / 2),
           y: useTransform(springDotY, (v) => v - dotSize / 2),
           backgroundColor: color,
+          opacity: springDotOpacity,
         }}
       />
     </>

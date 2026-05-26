@@ -7,7 +7,7 @@ import { ShineText } from './animated-helpers';
 /* ─── AURUM Screen Imports ─────────────────────────────────────────── */
 const screenExchange = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774041357/470258954933ae7f3b3615ad0fe2098ae46160f5_2_wvsmro.webp';
 const screenProfile = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774040904/259c40c789033b795135eecd13ffa040e408d1d8_g0b0ks.webp';
-const screenLogin = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339514/code_wp94ox.avif';
+const screenLogin = 'https://res.cloudnary.com/dgfn598qb/image/upload/v1776339514/code_wp94ox.avif';
 const screenQR = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339514/code_wp94ox.avif';
 const screenTransfer = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339514/code_wp94ox.avif';
 const screenLanding = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774040819/33bde90ba43fe3b089e907b814ef1018193651cd_hptwri.webp';
@@ -114,7 +114,7 @@ const PerspectiveCard = ({
       className={className}
     >
       <div className="rounded-2xl overflow-hidden shadow-2xl shadow-black/40 border border-white/[0.08] bg-[#080B0F]">
-        <img src={src} alt={alt} className="w-full block" />
+        <img src={src} alt={alt} className="w-full block" loading="eager" fetchpriority="high" />
       </div>
     </motion.div>
   );
@@ -341,8 +341,8 @@ export function HeroCover() {
           <div className="relative" style={{ perspective: '1200px', transformStyle: 'preserve-3d' }}>
             {/* Single Hero Screen — 3D perspective with glow */}
             <motion.div
-              initial={{ opacity: 0, y: 80, rotateX: 12, filter: 'blur(16px)' }}
-              animate={{ opacity: 1, y: 0, rotateX: 4, filter: 'blur(0px)' }}
+              initial={{ opacity: 0, y: 80, rotateX: 12 }}
+              animate={{ opacity: 1, y: 0, rotateX: 4 }}
               transition={{ delay: 0.6, duration: 1.6, ease: [0.22, 1, 0.36, 1] }}
               className="relative z-10 mx-auto"
             >

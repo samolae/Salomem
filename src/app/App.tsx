@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { RouterProvider } from 'react-router';
 import { HelmetProvider } from 'react-helmet-async';
 import { SpeedInsights } from '@vercel/speed-insights/react';
@@ -10,7 +11,9 @@ function App() {
     <HelmetProvider>
       <ThemeProvider>
         <ActiveSectionProvider>
-          <RouterProvider router={router} />
+          <Suspense fallback={null}>
+            <RouterProvider router={router} />
+          </Suspense>
         </ActiveSectionProvider>
       </ThemeProvider>
       <SpeedInsights />

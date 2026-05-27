@@ -9,6 +9,9 @@ const screenExchange = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto
 const screenLanding = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774040819/33bde90ba43fe3b089e907b814ef1018193651cd_hptwri.webp';
 const schenkerSendung = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774041645/1afd387db904f4cec4c15bfa6b7966e601ef294b_towksm.webp';
 const schenkerLabels = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774041563/78c6f45f9246b9cea5c0520f003d32cb8fb21ff1_kmea60.webp';
+// Unispace — replace with real screenshots when available
+const unispaceScreen = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339514/code_wp94ox.avif';
+const unispaceBg     = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339514/code_wp94ox.avif';
 
 /* ─── Ads imports for cross-recommendations ──────────────────────── */
 const adsTerminal6 = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774041033/ae0f296f707bac87ea320800f47aa242e0616131_1_iwntjz.webp';
@@ -44,6 +47,17 @@ const projects = {
     bgTo: '#d4dab8',
     images: { main: schenkerSendung, bg: schenkerLabels },
   },
+  unispace: {
+    title: 'UNISPACE',
+    subtitle: 'Student Management Platform · EdTech',
+    path: '/projects/unispace',
+    color: '#3D82F6',
+    tags: ['UX/UI', 'Multi-role', 'EdTech'],
+    screens: '42+ screens',
+    bgFrom: '#07090f',
+    bgTo: '#0d1220',
+    images: { main: unispaceScreen, bg: unispaceBg },
+  },
 };
 
 type ProjectKey = keyof typeof projects;
@@ -71,14 +85,15 @@ const crossRecommendations = [
 /* ═══════════════════════════════════════════════════════════════════ */
 /* ─── NEXT PROJECT SECTION ───────────────────────────────────────── */
 /* ═══════════════════════════════════════════════════════════════════ */
-export function NextProjectRecommendation({ currentProject }: { currentProject: 'aurum' | 'schenker' }) {
+export function NextProjectRecommendation({ currentProject }: { currentProject: 'aurum' | 'schenker' | 'unispace' }) {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const mt = isDark ? 'text-[#9295A6]' : 'text-zinc-400';
   const cb = isDark ? 'border-white/[0.06]' : 'border-zinc-200';
 
-  // Get next case study
-  const nextKey: ProjectKey = currentProject === 'aurum' ? 'schenker' : 'aurum';
+  // Rotation: aurum → schenker → unispace → aurum
+  const nextMap: Record<string, ProjectKey> = { aurum: 'schenker', schenker: 'unispace', unispace: 'aurum' };
+  const nextKey: ProjectKey = nextMap[currentProject] ?? 'aurum';
   const next = projects[nextKey];
 
   return (

@@ -4,63 +4,42 @@ import { ScrollToTopLayout } from './components/scroll-to-top';
 import { GlobalLayout } from './components/global-layout';
 
 const HomePage = lazy(() =>
-    import('./components/home-page').then((m) => ({ default: m.HomePage }))
-                      );
+  import('./components/home-page').then((m) => ({ default: m.HomePage }))
+);
 const AurumCaseStudy = lazy(() =>
-    import('./components/aurum-case-study').then((m) => ({ default: m.AurumCaseStudy }))
-                            );
+  import('./components/aurum-case-study').then((m) => ({ default: m.AurumCaseStudy }))
+);
 const SchenkerCaseStudy = lazy(() =>
-    import('./components/schenker-case-study').then((m) => ({ default: m.SchenkerCaseStudy }))
-                               );
+  import('./components/schenker-case-study').then((m) => ({ default: m.SchenkerCaseStudy }))
+);
+const UnispaceCaseStudy = lazy(() =>
+  import('./components/unispace-case-study').then((m) => ({ default: m.UnispaceCaseStudy }))
+);
 const PixelManager = lazy(() =>
-    import('./components/pixel-manager').then((m) => ({ default: m.PixelManager }))
-                          );
+  import('./components/pixel-manager').then((m) => ({ default: m.PixelManager }))
+);
 const NotFound = lazy(() =>
-    import('./components/not-found').then((m) => ({ default: m.NotFound }))
-                      );
+  import('./components/not-found').then((m) => ({ default: m.NotFound }))
+);
 
 export const router = createBrowserRouter([
   {
-        Component: ScrollToTopLayout,
+    Component: ScrollToTopLayout,
+    children: [
+      {
+        Component: GlobalLayout,
         children: [
-          {
-                    /* GlobalLayout wraps ALL pages with shared ambient assets */
-                  Component: GlobalLayout,
-                    children: [
-                      {
-                                    path: '/',
-                                    Component: HomePage,
-                      },
-                      {
-                                    path: '/work/:category',
-                                    Component: HomePage,
-                      },
-                      {
-                                    path: '/contact',
-                                    Component: HomePage,
-                      },
-                      {
-                                    path: '/services',
-                                    Component: HomePage,
-                      },
-                      {
-                                    path: '/projects/aurum',
-                                    Component: AurumCaseStudy,
-                      },
-                      {
-                                    path: '/projects/schenker',
-                                    Component: SchenkerCaseStudy,
-                      },
-                      {
-                                    path: '/tools/pixel',
-                                    Component: PixelManager,
-                      },
-                      {
-                                    path: '*',
-                                    Component: NotFound,
-                      },
-                              ],
-          },
-              ],
+          { path: '/',                         Component: HomePage },
+          { path: '/work/:category',           Component: HomePage },
+          { path: '/contact',                  Component: HomePage },
+          { path: '/services',                 Component: HomePage },
+          { path: '/projects/aurum',           Component: AurumCaseStudy },
+          { path: '/projects/schenker',        Component: SchenkerCaseStudy },
+          { path: '/projects/unispace',        Component: UnispaceCaseStudy },
+          { path: '/tools/pixel',              Component: PixelManager },
+          { path: '*',                         Component: NotFound },
+        ],
+      },
+    ],
   },
-  ]);
+]);

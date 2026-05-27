@@ -225,3 +225,32 @@ export function SchenkerSEO() {
     />
   );
 }
+
+export function UnispaceSEO() {
+  return (
+    <SEO
+      title="Unispace — Student Management Platform Case Study"
+      description="Unispace case study: multi-role EdTech platform for Unilab / Ilia State University. 42+ screens, 38+ components, conditional form system, three user roles — student, lecturer, admin."
+      keywords="Unispace, EdTech, student management, UX case study, multi-role platform, Unilab, Ilia State University, internal SaaS, Figma, product design"
+      type="article"
+      jsonLd={{
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        headline: 'Unispace — Student Management Platform Case Study',
+        description:
+          'Complete UX/UI case study for Unispace, an internal platform for Unilab at Ilia State University. 42+ screens across 3 user roles, 38+ components, conditional form logic, and full developer handoff.',
+        author: { '@type': 'Person', name: 'Salome Mosiava', url: BASE_URL },
+        publisher: { '@type': 'Organization', name: 'Salome Mosiava Portfolio', url: BASE_URL },
+        mainEntityOfPage: { '@type': 'WebPage', '@id': `${BASE_URL}/projects/unispace` },
+        keywords: 'EdTech, multi-role UX, student management, design system, internal SaaS',
+        articleSection: 'Case Study',
+        about: {
+          '@type': 'SoftwareApplication',
+          name: 'Unispace',
+          applicationCategory: 'EducationApplication',
+          operatingSystem: 'Web',
+        },
+      }}
+    />
+  );
+}

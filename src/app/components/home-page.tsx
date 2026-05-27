@@ -22,6 +22,8 @@ import { scrollContentToTop } from './scroll-to-top';
 /* ─── Screen imports for AURUM ─────��─────────────���─────────────────����─ */
 const screenExchange = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1774200199/470258954933ae7f3b3615ad0fe2098ae46160f5_2_wvsmro_plhle1.webp';
 const screenLanding = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774040819/33bde90ba43fe3b089e907b814ef1018193651cd_hptwri.webp';
+// Hi-res main foreground image for /work/ux-ui Aurum cover
+const screenAurumMainHQ = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774048886/470258954933ae7f3b3615ad0fe2098ae46160f5_2_wvsmro.webp';
 const screenProfile = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774040904/259c40c789033b795135eecd13ffa040e408d1d8_g0b0ks.webp';
 const screenTransfer = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339514/code_wp94ox.avif';
 const screenQR = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339514/code_wp94ox.avif';
@@ -33,6 +35,13 @@ const spotlightImage = 'https://res.cloudinary.com/dgfn598qb/image/upload/v17763
 const schenkerSettings = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774041604/d4d1e42280872aa3079a1b940b29790994d2b241_jcnrf6.webp';
 const schenkerSendung = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1774200130/1afd387db904f4cec4c15bfa6b7966e601ef294b_towksm_1_sritlp.webp';
 const schenkerLabels = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1774199882/1afd387db904f4cec4c15bfa6b7966e601ef294b_towksm_tlzijs.webp';
+// Hi-res main foreground image for /work/ux-ui Schenker cover
+const schenkerMainHQ = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774018719/Sendung-Empfa%CC%88nger_rkbeci.png';
+
+/* ─── Unispace Screen imports ─────────────────────────────────────── */
+const unispaceLogin     = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1779875718/%E1%83%9E%E1%83%98%E1%83%A0%E1%83%95%E1%83%94%E1%83%9A%E1%83%98_%E1%83%92%E1%83%95%E1%83%94%E1%83%A0%E1%83%93%E1%83%98_%E1%83%9B%E1%83%9D%E1%83%9B%E1%83%AE%E1%83%9B%E1%83%90%E1%83%A0%E1%83%94%E1%83%91%E1%83%9A%E1%83%98%E1%83%A1_%E1%83%A8%E1%83%94%E1%83%A1%E1%83%95%E1%83%9A%E1%83%98%E1%83%A1%E1%83%90%E1%83%A1_uaosn1.png';
+const unispaceTable     = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1779875712/%E1%83%A8%E1%83%94%E1%83%95%E1%83%A1%E1%83%94%E1%83%91%E1%83%A3%E1%83%9A%E1%83%98_%E1%83%A4%E1%83%9D%E1%83%A0%E1%83%9B%E1%83%94%E1%83%91%E1%83%98%E1%83%A1_%E1%83%AA%E1%83%AE%E1%83%A0%E1%83%98%E1%83%9A%E1%83%98_jtudqc.png';
+const unispaceRegister  = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1779875712/%E1%83%90%E1%83%AE%E1%83%90%E1%83%9A%E1%83%98_%E1%83%9B%E1%83%9D%E1%83%9B%E1%83%AE%E1%83%9B%E1%83%90%E1%83%A0%E1%83%94%E1%83%91%E1%83%9A%E1%83%98%E1%83%A1_%E1%83%A0%E1%83%94%E1%83%92%E1%83%98%E1%83%A1%E1%83%A2%E1%83%A0%E1%83%90%E1%83%AA%E1%83%98%E1%83%90-%E1%83%A1%E1%83%A2%E1%83%A3%E1%83%93%E1%83%94%E1%83%9C%E1%83%A2%E1%83%98_error_vhhyi0.png';
 
 /* ─── Logo imports ──────────────────────────────────────────────────── */
 const logoCubisten = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339516/bf9f7288d54df661173113607cc615479c446e18_sgs5u3.jpg';
@@ -818,8 +827,7 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
                   <motion.img src={screenProfile} alt="AURUM user profile dashboard" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 0.3, y: 0 }} transition={{ duration: 1, delay: 0.35 }} className="absolute top-[4%] right-[3%] w-[38%] rounded-xl shadow-2xl shadow-black/60" />
                   <motion.img src={screenExchange} alt="AURUM Crypto Exchange UI/UX Design by Salome Mosiava" initial={{ opacity: 0, y: 50, scale: 0.95 }} whileInView={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 1.2, delay: 0.5, ease: [0.22, 1, 0.36, 1] }} className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[65%] rounded-t-xl shadow-[0_-20px_60px_rgba(0,0,0,0.5)]" />
                   <div className="absolute top-2.5 left-2.5 z-20 flex items-center gap-1.5">
-                    <span className="text-[7px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-full bg-[#D59A04]/10 backdrop-blur-xl text-[#D59A04]/80 border border-[#D59A04]/15">Case Study</span>
-                    <span className="text-[7px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-full bg-white/[0.03] backdrop-blur-xl text-white/30 border border-white/[0.06]">196 Screens</span>
+                    <span className="text-[7px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-full bg-[#D59A04]/10 backdrop-blur-xl text-[#D59A04]/80 border border-[#D59A04]/15">Crypto · Fintech</span>
                   </div>
                   <div className="absolute bottom-0 left-0 right-0 z-20 p-4">
                     <h3 className="text-[18px] text-white mb-1 tracking-[0] leading-none" style={{ fontFamily: F.heading, fontWeight: 600, letterSpacing: 0 }}>AURUM</h3>
@@ -863,18 +871,12 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
                   <div className="grid grid-cols-1 sm:grid-cols-[1fr_1.6fr]">
                     <div className="p-4 sm:p-5 flex flex-col justify-center order-2 sm:order-1">
                       <div className="flex items-center gap-1.5 mb-2">
-                        <span className="text-[7px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-full bg-[#D59A04]/10 text-[#D59A04]/80 border border-[#D59A04]/15">Case Study</span>
                         <span className="text-[7px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-full bg-[#6B8E23]/10 text-[#8FBC3B]/80 border border-[#6B8E23]/15">Enterprise · UX/UI</span>
                       </div>
                       <h3 className="text-[16px] md:text-[18px] text-white mb-1 tracking-[0] leading-none" style={{ fontFamily: F.heading, fontWeight: 600, letterSpacing: 0 }}>SCHENKER</h3>
-                      <p className={`text-[10px] ${bt} mb-2.5 leading-relaxed`} style={{ fontFamily: F.body }}>
-                        Enterprise logistics — form systems, label management & shipment tracking.
+                      <p className={`text-[10px] ${bt} mb-3 leading-relaxed`} style={{ fontFamily: F.body }}>
+                        Enterprise logistics — form systems & shipment tracking.
                       </p>
-                      <div className="flex flex-wrap gap-1 mb-2.5">
-                        {['Enterprise UX', 'Form Architecture', 'B2B Desktop'].map((t) => (
-                          <span key={t} className={`text-[8px] uppercase tracking-[0.14em] px-2 py-0.5 rounded-md whitespace-nowrap border ${isDark ? 'bg-white/[0.025] text-white/55 border-white/[0.06]' : 'bg-zinc-50 text-zinc-500 border-zinc-200'}`} style={{ fontFamily: F.body, fontWeight: 500 }}>{t}</span>
-                        ))}
-                      </div>
                       <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#6B8E23]/12 border border-[#6B8E23]/20 text-[10px] text-[#8FBC3B]/70 transition-all w-full sm:w-auto justify-center sm:justify-start" style={{ fontFamily: F.body, fontWeight: 500 }}>
                         View Case Study <ArrowRight size={10} />
                       </span>
@@ -1481,10 +1483,10 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
                     value={form[field]}
                     onChange={(e) => setForm((f) => ({ ...f, [field]: e.target.value }))}
                     placeholder={placeholder}
-                    className={`w-full text-[12px] px-3 py-2.5 rounded-xl border transition-all duration-200 ${
+                    className={`w-full text-[12px] px-4 py-2.5 rounded-full border transition-colors duration-200 ${
                       isDark
-                        ? 'bg-[#0a0b0f] border-white/[0.08] text-white/70 placeholder-white/15 focus:border-[#ed592b]/30 focus:shadow-[0_0_0_3px_rgba(237,89,43,0.06)]'
-                        : 'bg-zinc-50 border-zinc-200 text-zinc-700 placeholder-zinc-300 focus:border-[#ed592b]/30 focus:shadow-[0_0_0_3px_rgba(237,89,43,0.06)]'
+                        ? 'bg-[#0a0b0f] border-white/[0.10] text-white/80 placeholder-white/15 hover:border-white/[0.22] focus:border-white/45 focus:shadow-[0_0_0_2px_rgba(255,255,255,0.06)]'
+                        : 'bg-zinc-50 border-zinc-300 text-zinc-800 placeholder-zinc-300 hover:border-zinc-400 focus:border-zinc-900/50 focus:shadow-[0_0_0_2px_rgba(0,0,0,0.04)]'
                     } outline-none`}
                     style={{ fontFamily: F.body }}
                   />
@@ -1538,10 +1540,10 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
                         <button
                           type="button"
                           onClick={() => setOpenDropdown(isOpen ? null : field)}
-                          className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl border text-[12px] transition-all duration-200 cursor-pointer ${
+                          className={`w-full flex items-center justify-between px-4 py-2.5 rounded-full border text-[12px] transition-colors duration-200 cursor-pointer ${
                             isOpen
-                              ? isDark ? 'border-[#ed592b]/35 bg-[#0a0b0f] shadow-[0_0_0_3px_rgba(237,89,43,0.07)]' : 'border-[#ed592b]/35 bg-white shadow-[0_0_0_3px_rgba(237,89,43,0.07)]'
-                              : isDark ? 'border-white/[0.08] bg-[#0a0b0f] hover:border-white/[0.16]' : 'border-zinc-200 bg-zinc-50 hover:border-zinc-300'
+                              ? isDark ? 'border-white/45 bg-[#0a0b0f] shadow-[0_0_0_2px_rgba(255,255,255,0.06)]' : 'border-zinc-900/50 bg-white shadow-[0_0_0_2px_rgba(0,0,0,0.04)]'
+                              : isDark ? 'border-white/[0.10] bg-[#0a0b0f] hover:border-white/[0.22]' : 'border-zinc-300 bg-zinc-50 hover:border-zinc-400'
                           }`}
                           style={{ fontFamily: F.body }}
                         >
@@ -1561,8 +1563,8 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
                               exit={{ opacity: 0, y: -4, scaleY: 0.94 }}
                               transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
                               style={{ transformOrigin: 'top', zIndex: 51 }}
-                              className={`absolute top-full left-0 right-0 mt-1.5 rounded-xl border py-1 overflow-hidden ${
-                                isDark ? 'bg-[#0e0f15] border-white/[0.1] shadow-2xl shadow-black/70' : 'bg-white border-zinc-200 shadow-xl shadow-black/[0.08]'
+                              className={`absolute top-full left-0 right-0 mt-1.5 rounded-2xl border py-2 overflow-hidden ${
+                                isDark ? 'bg-[#0e0f15] border-white/[0.16] shadow-2xl shadow-black/70' : 'bg-white border-zinc-300 shadow-xl shadow-black/[0.08]'
                               }`}
                             >
                               {options.map((opt, oi) => {
@@ -1606,7 +1608,7 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
                 onChange={(e) => setForm({ ...form, message: e.target.value })}
                 placeholder="Tell me about your project..."
                 rows={3}
-                className={`w-full text-[12px] px-3 py-2.5 rounded-xl border resize-none transition-all duration-200 ${isDark ? 'bg-[#0a0b0f] border-white/[0.08] text-white/70 placeholder-white/15 focus:border-[#ed592b]/30 focus:shadow-[0_0_0_3px_rgba(237,89,43,0.06)]' : 'bg-zinc-50 border-zinc-200 text-zinc-700 placeholder-zinc-300 focus:border-[#ed592b]/30 focus:shadow-[0_0_0_3px_rgba(237,89,43,0.06)]'} outline-none`}
+                className={`w-full text-[12px] px-4 py-3 rounded-3xl border resize-none transition-colors duration-200 ${isDark ? 'bg-[#0a0b0f] border-white/[0.10] text-white/80 placeholder-white/15 hover:border-white/[0.22] focus:border-white/45 focus:shadow-[0_0_0_2px_rgba(255,255,255,0.06)]' : 'bg-zinc-50 border-zinc-300 text-zinc-800 placeholder-zinc-300 hover:border-zinc-400 focus:border-zinc-900/50 focus:shadow-[0_0_0_2px_rgba(0,0,0,0.04)]'} outline-none`}
                 style={{ fontFamily: F.body }}
               />
             </div>
@@ -2000,20 +2002,19 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
           <h1 className="text-[15px] tracking-[-0.02em]" style={{ fontFamily: F.heading, fontWeight: 600 }}>Social Media Ads</h1>
         </div>
 
-        <div className="flex flex-wrap gap-1.5 mb-4">
+        <div className="flex flex-wrap gap-2 mb-6">
           {/* All chip */}
           <button
             onClick={() => goTo(-1)}
-            className={`flex items-center gap-1.5 px-2 py-1.5 min-h-[40px] md:min-h-0 rounded-lg border text-[10px] transition-all duration-200 focus-visible:shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
+            className={`flex items-center gap-1.5 px-3.5 py-2 min-h-[40px] md:min-h-0 rounded-full border text-[10px] tracking-[0.04em] transition-colors duration-200 focus-visible:shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
               activeBrand === -1
                 ? 'border-[#ed592b] bg-[#ed592b]/10 text-[#ed592b]'
-                : isDark ? 'border-white/[0.06] bg-white/[0.03] text-[#7a7d8a] hover:border-white/[0.12] hover:text-white/70' : 'border-zinc-200 bg-zinc-50 text-zinc-400 hover:border-zinc-300 hover:text-zinc-600'
+                : isDark ? 'border-white/[0.06] bg-white/[0.03] text-[#7a7d8a] hover:border-white/[0.12] hover:text-white/80' : 'border-zinc-200 bg-zinc-50 text-zinc-500 hover:border-zinc-300 hover:text-zinc-700'
             }`}
-            style={{ fontFamily: F.body, fontWeight: activeBrand === -1 ? 600 : 400 }}
+            style={{ fontFamily: F.body, fontWeight: 500 }}
           >
             <LayoutGrid size={10} className="flex-shrink-0" />
-            <span className="truncate">All</span>
-            <span className={`ml-auto text-[9px] font-mono flex-shrink-0 ${activeBrand === -1 ? 'text-[#ed592b]/70' : mt}`}>{allVisuals.length}</span>
+            <span>All</span>
           </button>
           {/* Brand chips */}
           {adsBrands.map((b, i) => {
@@ -2022,15 +2023,14 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
               <button
                 key={b.name}
                 onClick={() => goTo(i)}
-                className={`flex items-center gap-1.5 px-2 py-1.5 min-h-[40px] md:min-h-0 rounded-lg border text-[10px] transition-all duration-200 focus-visible:shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
+                className={`flex items-center px-3.5 py-2 min-h-[40px] md:min-h-0 rounded-full border text-[10px] tracking-[0.04em] transition-colors duration-200 focus-visible:shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
                   active
                     ? 'border-[#ed592b] bg-[#ed592b]/10 text-[#ed592b]'
-                    : isDark ? 'border-white/[0.06] bg-white/[0.03] text-[#7a7d8a] hover:border-white/[0.12] hover:text-white/70' : 'border-zinc-200 bg-zinc-50 text-zinc-400 hover:border-zinc-300 hover:text-zinc-600'
+                    : isDark ? 'border-white/[0.06] bg-white/[0.03] text-[#7a7d8a] hover:border-white/[0.12] hover:text-white/80' : 'border-zinc-200 bg-zinc-50 text-zinc-500 hover:border-zinc-300 hover:text-zinc-700'
                 }`}
-                style={{ fontFamily: F.body, fontWeight: active ? 600 : 400 }}
+                style={{ fontFamily: F.body, fontWeight: 500 }}
               >
-                <span className="truncate">{b.name.split(' · ')[0]}</span>
-                <span className={`ml-auto text-[9px] font-mono flex-shrink-0 ${active ? 'text-[#ed592b]/70' : mt}`}>{b.items.length}</span>
+                <span>{b.name.split(' · ')[0]}</span>
               </button>
             );
           })}
@@ -2273,24 +2273,20 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
             className={`fixed top-0 left-0 right-0 z-50 ${isDark ? 'bg-[#0a0a0c]/90 border-b border-white/[0.06]' : 'bg-white/90 border-b border-zinc-200'} backdrop-blur-xl px-4 py-2`}
           >
             <div className="flex items-center gap-2 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
-              <span className={`text-[10px] font-mono ${mt} flex-shrink-0 mr-1`}>
-                {activeBrand === -1 ? `All · ${allVisuals.length}` : `Brand ${activeBrand + 1}/${adsBrands.length}`}
-              </span>
-              <div className={`w-px h-3 flex-shrink-0 ${isDark ? 'bg-white/[0.08]' : 'bg-zinc-200'}`} />
               <button
                 onClick={() => goTo(-1)}
-                className={`flex-shrink-0 px-2.5 py-1 rounded-lg text-[10px] transition-colors focus-visible:shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${activeBrand === -1 ? 'bg-[#ed592b]/10 text-[#ed592b] border border-[#ed592b]/30' : isDark ? 'text-[#5a5d6a] hover:text-white/60' : 'text-zinc-400 hover:text-zinc-600'}`}
-                style={{ fontFamily: F.body, fontWeight: activeBrand === -1 ? 600 : 400 }}
+                className={`flex-shrink-0 px-3 py-1.5 rounded-full text-[10px] tracking-[0.04em] transition-colors focus-visible:shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${activeBrand === -1 ? 'bg-[#ed592b]/10 text-[#ed592b] border border-[#ed592b]/30' : isDark ? 'text-[#5a5d6a] border border-transparent hover:text-white/70' : 'text-zinc-500 border border-transparent hover:text-zinc-700'}`}
+                style={{ fontFamily: F.body, fontWeight: 500 }}
               >All</button>
               {adsBrands.map((b, i) => {
                 const active = activeBrand === i;
                 return (
                   <button key={b.name} onClick={() => goTo(i)}
-                    className={`flex-shrink-0 flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] transition-colors focus-visible:shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${active ? 'bg-[#ed592b]/10 text-[#ed592b] border border-[#ed592b]/30' : isDark ? 'text-[#5a5d6a] hover:text-white/60' : 'text-zinc-400 hover:text-zinc-600'}`}
-                    style={{ fontFamily: F.body, fontWeight: active ? 600 : 400 }}
+                    className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] tracking-[0.04em] transition-colors focus-visible:shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${active ? 'bg-[#ed592b]/10 text-[#ed592b] border border-[#ed592b]/30' : isDark ? 'text-[#5a5d6a] border border-transparent hover:text-white/70' : 'text-zinc-500 border border-transparent hover:text-zinc-700'}`}
+                    style={{ fontFamily: F.body, fontWeight: 500 }}
                   >
                     {b.logoImg && <img src={b.logoImg} alt="" aria-hidden="true" loading="lazy" width="12" height="12" className="w-3 h-3 rounded object-cover flex-shrink-0" />}
-                    <span className="truncate">{b.name.split(' · ')[0]}</span>
+                    <span>{b.name.split(' · ')[0]}</span>
                   </button>
                 );
               })}
@@ -2571,7 +2567,7 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
               <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
               <img src={screenLanding} alt="AURUM crypto landing page UX design" loading="lazy" decoding="async" width="1440" height="900" className="absolute top-4 left-4 w-[50%] rounded-lg shadow-2xl shadow-black/50 opacity-25" />
               <img src={screenProfile} alt="AURUM user profile UX design" loading="lazy" decoding="async" width="1440" height="900" className="absolute top-8 right-4 w-[45%] rounded-lg shadow-2xl shadow-black/50 opacity-35" />
-              <img src={screenExchange} alt="AURUM exchange dashboard — cryptocurrency trading platform case study" loading="lazy" decoding="async" width="1440" height="900" className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[70%] rounded-t-lg shadow-2xl shadow-black/60 group-hover:-translate-y-2 group-hover:scale-[1.02] transition-all duration-500" />
+              <img src={screenAurumMainHQ} alt="AURUM exchange dashboard — cryptocurrency trading platform case study" loading="lazy" decoding="async" width="1440" height="900" className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[70%] rounded-t-lg shadow-2xl shadow-black/60 group-hover:-translate-y-2 group-hover:scale-[1.02] transition-all duration-500" />
               <div className="absolute top-4 left-4 z-20 flex items-center gap-2">
                 <span className="text-[9px] uppercase tracking-[0.15em] px-2.5 py-1 rounded-full bg-[#ed592b]/20 backdrop-blur-md text-[#ed592b] border border-[#ed592b]/30">Featured</span>
                 <span className="text-[9px] uppercase tracking-[0.15em] px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-md text-white/50 border border-white/10">2025</span>
@@ -2618,7 +2614,7 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
               <div className="absolute inset-0 z-10 bg-gradient-to-t from-[#2a3a0e]/90 via-[#2a3a0e]/20 to-transparent" />
               <img src={schenkerLabels} alt="Schenker logistics label tracking interface" loading="lazy" decoding="async" width="1440" height="900" className="absolute top-4 left-4 w-[50%] rounded-lg shadow-2xl shadow-black/50 opacity-30" />
               <img src={schenkerSettings} alt="Schenker enterprise settings panel" loading="lazy" decoding="async" width="1440" height="900" className="absolute top-8 right-4 w-[45%] rounded-lg shadow-2xl shadow-black/50 opacity-35" />
-              <img src={schenkerSendung} alt="Schenker shipment management — enterprise logistics platform case study" loading="lazy" decoding="async" width="1440" height="900" className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[70%] rounded-t-lg shadow-2xl shadow-black/60 group-hover:-translate-y-2 group-hover:scale-[1.02] transition-all duration-500" />
+              <img src={schenkerMainHQ} alt="Schenker Sendung Empfänger — sender & recipient form, enterprise logistics platform case study" loading="lazy" decoding="async" width="1440" height="900" className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[70%] rounded-t-lg shadow-2xl shadow-black/60 group-hover:-translate-y-2 group-hover:scale-[1.02] transition-all duration-500" />
               <div className="absolute top-4 left-4 z-20 flex items-center gap-2">
                 <span className="text-[9px] uppercase tracking-[0.15em] px-2.5 py-1 rounded-full bg-[#6B8E23]/20 backdrop-blur-md text-[#8FBC3B] border border-[#6B8E23]/30">Enterprise</span>
                 <span className="text-[9px] uppercase tracking-[0.15em] px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-md text-white/70 border border-white/15">Desktop</span>
@@ -2647,6 +2643,53 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
                 ))}
               </div>
               <span className="text-[12px] whitespace-nowrap text-[#6B8E23]/70 flex items-center justify-center gap-2 px-3 py-1.5 rounded-full border border-[#6B8E23]/15 group-hover:border-[#6B8E23]/30 group-hover:bg-[#6B8E23]/5 group-hover:text-[#8FBC3B] transition-all duration-300 w-full sm:w-auto" style={{ fontFamily: F.body, fontWeight: 500 }}>
+                View Case Study <ArrowRight size={12} />
+              </span>
+            </div>
+          </motion.div>
+        </Link>
+      </FadeIn>
+
+      {/* UNISPACE Card — 3rd position */}
+      <FadeIn delay={0.3}>
+        <Link to="/projects/unispace">
+          <motion.div
+            whileHover={{ y: -6 }}
+            className={`group rounded-2xl border overflow-hidden ${border} ${isDark ? 'bg-[#0e0f13]' : 'bg-white'} mb-6`}
+          >
+            <div className="relative aspect-[16/9] overflow-hidden bg-[#090707] img-hover-zoom">
+              <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
+              <img src={unispaceRegister} alt="Unispace registration form — multi-role student platform" loading="lazy" decoding="async" width="1440" height="900" className="absolute top-4 left-4 w-[50%] rounded-lg shadow-2xl shadow-black/50 opacity-30" />
+              <img src={unispaceTable} alt="Unispace submitted forms table — dashboard view" loading="lazy" decoding="async" width="1440" height="900" className="absolute top-8 right-4 w-[45%] rounded-lg shadow-2xl shadow-black/50 opacity-40" />
+              <img src={unispaceLogin} alt="Unispace student management platform — Unilab / Ilia State University case study" loading="lazy" decoding="async" width="1440" height="900" className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[70%] rounded-t-lg shadow-2xl shadow-black/60 group-hover:-translate-y-2 group-hover:scale-[1.02] transition-all duration-500" />
+              <div className="absolute top-4 left-4 z-20 flex items-center gap-2">
+                <span className="text-[9px] uppercase tracking-[0.15em] px-2.5 py-1 rounded-full bg-[#3D82F6]/20 backdrop-blur-md text-[#6BA4FF] border border-[#3D82F6]/30">EdTech</span>
+                <span className="text-[9px] uppercase tracking-[0.15em] px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-md text-white/70 border border-white/15">Web · Responsive</span>
+              </div>
+              <div className="absolute top-4 right-4 z-20">
+                <span className="text-[9px] uppercase tracking-[0.15em] px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-md text-white/40 border border-white/10 flex items-center gap-1.5">
+                  <Monitor size={10} /> 42+ screens
+                </span>
+              </div>
+              <div className="absolute bottom-0 left-0 right-0 z-20 p-6">
+                <div className="flex items-end justify-between">
+                  <div>
+                    <h3 className="text-[22px] md:text-[28px] text-white mb-1.5 tracking-[0] leading-none" style={{ fontFamily: F.heading, fontWeight: 600, letterSpacing: 0 }}>UNISPACE</h3>
+                    <p className="text-white/55 text-[11.5px] uppercase tracking-[0.18em]" style={{ fontFamily: F.body, fontWeight: 500 }}>Student Management · Multi-role EdTech</p>
+                  </div>
+                  <div className="w-10 h-10 rounded-full bg-[#3D82F6] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all group-hover:shadow-[0_0_30px_rgba(61,130,246,0.4)]">
+                    <ArrowUpRight size={18} className="text-white" />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="px-4 sm:p-5 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
+              <div className="flex flex-wrap gap-1.5">
+                {['Multi-role Platform', 'Student Portal', '42+ Screens', '38+ Components'].map((t) => (
+                  <span key={t} className={`text-[9px] uppercase tracking-[0.14em] px-2.5 py-1 rounded-md whitespace-nowrap border ${isDark ? 'bg-white/[0.025] text-[#9094a3] border-white/[0.05]' : 'bg-zinc-50 text-zinc-500 border-zinc-200'}`} style={{ fontFamily: F.body, fontWeight: 500 }}>{t}</span>
+                ))}
+              </div>
+              <span className="text-[12px] whitespace-nowrap text-[#3D82F6]/70 flex items-center justify-center gap-2 px-3 py-1.5 rounded-full border border-[#3D82F6]/15 group-hover:border-[#3D82F6]/30 group-hover:bg-[#3D82F6]/5 group-hover:text-[#6BA4FF] transition-all duration-300 w-full sm:w-auto" style={{ fontFamily: F.body, fontWeight: 500 }}>
                 View Case Study <ArrowRight size={12} />
               </span>
             </div>

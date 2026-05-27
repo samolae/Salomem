@@ -26,10 +26,13 @@ html, body {
 }
 
 /* ─── Focus-visible — accessible, elegant ring ────────────────── */
+/* NOTE: do NOT set border-radius here — it would override the
+   element's own radius (e.g. rounded-full pills) and force a
+   rectangular ring. The box-shadow naturally follows the
+   element's existing border-radius. */
 :focus-visible {
   outline: none;
   box-shadow: 0 0 0 2px rgba(237, 89, 43, 0.40);
-  border-radius: inherit;
 }
 
 /* Remove focus ring from mouse clicks */

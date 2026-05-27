@@ -9,9 +9,9 @@ const screenExchange = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto
 const screenLanding = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774040819/33bde90ba43fe3b089e907b814ef1018193651cd_hptwri.webp';
 const schenkerSendung = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774041645/1afd387db904f4cec4c15bfa6b7966e601ef294b_towksm.webp';
 const schenkerLabels = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774041563/78c6f45f9246b9cea5c0520f003d32cb8fb21ff1_kmea60.webp';
-// Unispace — replace with real screenshots when available
-const unispaceScreen = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339514/code_wp94ox.avif';
-const unispaceBg     = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339514/code_wp94ox.avif';
+// Unispace — real product screenshots
+const unispaceScreen = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1779875718/%E1%83%9E%E1%83%98%E1%83%A0%E1%83%95%E1%83%94%E1%83%9A%E1%83%98_%E1%83%92%E1%83%95%E1%83%94%E1%83%A0%E1%83%93%E1%83%98_%E1%83%9B%E1%83%9D%E1%83%9B%E1%83%AE%E1%83%9B%E1%83%90%E1%83%A0%E1%83%94%E1%83%91%E1%83%9A%E1%83%98%E1%83%A1_%E1%83%A8%E1%83%94%E1%83%A1%E1%83%95%E1%83%9A%E1%83%98%E1%83%A1%E1%83%90%E1%83%A1_uaosn1.png';
+const unispaceBg     = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1779875712/%E1%83%A8%E1%83%94%E1%83%95%E1%83%A1%E1%83%94%E1%83%91%E1%83%A3%E1%83%9A%E1%83%98_%E1%83%A4%E1%83%9D%E1%83%A0%E1%83%9B%E1%83%94%E1%83%91%E1%83%98%E1%83%A1_%E1%83%AA%E1%83%AE%E1%83%A0%E1%83%98%E1%83%9A%E1%83%98_jtudqc.png';
 
 /* ─── Ads imports for cross-recommendations ──────────────────────── */
 const adsTerminal6 = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774041033/ae0f296f707bac87ea320800f47aa242e0616131_1_iwntjz.webp';
@@ -91,10 +91,14 @@ export function NextProjectRecommendation({ currentProject }: { currentProject: 
   const mt = isDark ? 'text-[#9295A6]' : 'text-zinc-400';
   const cb = isDark ? 'border-white/[0.06]' : 'border-zinc-200';
 
-  // Rotation: aurum → schenker → unispace → aurum
-  const nextMap: Record<string, ProjectKey> = { aurum: 'schenker', schenker: 'unispace', unispace: 'aurum' };
-  const nextKey: ProjectKey = nextMap[currentProject] ?? 'aurum';
-  const next = projects[nextKey];
+  // Show the two OTHER projects (rotated for natural sequence)
+  const rotation: Record<ProjectKey, [ProjectKey, ProjectKey]> = {
+    aurum:    ['schenker', 'unispace'],
+    schenker: ['unispace', 'aurum'],
+    unispace: ['aurum', 'schenker'],
+  };
+  const others = rotation[currentProject];
+  const accent = projects[others[0]].color;
 
   return (
     <section className="relative py-20 lg:py-28 px-6 lg:px-12">
@@ -119,106 +123,118 @@ export function NextProjectRecommendation({ currentProject }: { currentProject: 
 
           <FadeIn delay={0.05}>
             <h2 className={`text-2xl lg:text-4xl tracking-[-0.03em] mb-10 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: F.heading, fontWeight: 700 }}>
-              Next <span style={{ color: next.color }}>Project</span>
+              More <span style={{ color: accent }}>Case Studies</span>
             </h2>
           </FadeIn>
 
-          {/* Next Case Study — Large Card */}
-          <FadeIn delay={0.1}>
-            <Link to={next.path}>
-              <motion.div
-                whileHover={{ y: -6 }}
-                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                className={`group relative rounded-2xl border overflow-hidden ${cb} ${isDark ? 'bg-[#0a0b0f]' : 'bg-white'}`}
-              >
-                <div
-                  className="relative aspect-[2.2/1] sm:aspect-[2.5/1] overflow-hidden img-hover-zoom"
-                  style={{ background: `linear-gradient(135deg, ${next.bgFrom}, ${next.bgTo})` }}
-                >
-                  {/* Overlay */}
-                  <div className={`absolute inset-0 z-10 ${nextKey === 'schenker' ? 'bg-gradient-to-t from-[#1a2a06]/80 via-transparent to-[#1a2a06]/5' : 'bg-gradient-to-t from-black/70 via-transparent to-black/10'}`} />
-
-                  {/* Background screen */}
-                  <motion.img
-                    src={next.images.bg}
-                    alt=""
-                    className="absolute top-[6%] left-[4%] w-[40%] rounded-xl shadow-2xl shadow-black/50 opacity-20 group-hover:translate-y-[-4px] transition-transform duration-700"
-                  />
-
-                  {/* Main screen */}
-                  <motion.img
-                    src={next.images.main}
-                    alt={next.title}
-                    className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[60%] rounded-t-xl shadow-[0_-20px_60px_rgba(0,0,0,0.5)] group-hover:-translate-y-3 group-hover:scale-[1.01] transition-all duration-700"
-                  />
-
-                  {/* Labels */}
-                  <div className="absolute top-4 left-4 z-20 flex items-center gap-2">
-                    <span
-                      className="text-[8px] uppercase tracking-[0.2em] px-2.5 py-1 rounded-full backdrop-blur-xl border"
-                      style={{
-                        backgroundColor: `${next.color}15`,
-                        color: `${next.color}cc`,
-                        borderColor: `${next.color}25`,
-                      }}
+          {/* Two adjacent case-study cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
+            {others.map((key, idx) => {
+              const p = projects[key];
+              const isSchenker = key === 'schenker';
+              return (
+                <FadeIn key={key} delay={0.1 + idx * 0.08}>
+                  <Link to={p.path}>
+                    <motion.div
+                      whileHover={{ y: -6 }}
+                      transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                      className={`group relative rounded-2xl border overflow-hidden h-full ${cb} ${isDark ? 'bg-[#0a0b0f]' : 'bg-white'}`}
                     >
-                      Next Project
-                    </span>
-                  </div>
+                      <div
+                        className="relative aspect-[16/10] overflow-hidden img-hover-zoom"
+                        style={{ background: `linear-gradient(135deg, ${p.bgFrom}, ${p.bgTo})` }}
+                      >
+                        {/* Overlay — green-tinted for Schenker, dark for others */}
+                        <div className={`absolute inset-0 z-10 ${isSchenker ? 'bg-gradient-to-t from-[#1a2a06]/80 via-transparent to-[#1a2a06]/5' : 'bg-gradient-to-t from-black/75 via-transparent to-black/10'}`} />
 
-                  {/* Bottom info */}
-                  <div className="absolute bottom-0 left-0 right-0 z-20 p-5 md:p-6">
-                    <div className="flex items-end justify-between">
-                      <div>
-                        <h3 className="text-xl md:text-3xl text-white mb-0.5 tracking-[-0.03em]" style={{ fontFamily: F.heading, fontWeight: 700 }}>
-                          {next.title}
-                        </h3>
-                        <p className="text-white/30 text-[11px] tracking-wide" style={{ fontFamily: F.body }}>
-                          {next.subtitle}
-                        </p>
+                        {/* Background screen */}
+                        <motion.img
+                          src={p.images.bg}
+                          alt=""
+                          loading="lazy"
+                          decoding="async"
+                          className="absolute top-[6%] left-[4%] w-[42%] rounded-lg shadow-2xl shadow-black/50 opacity-25 group-hover:translate-y-[-4px] transition-transform duration-700"
+                        />
+
+                        {/* Main screen */}
+                        <motion.img
+                          src={p.images.main}
+                          alt={p.title}
+                          loading="lazy"
+                          decoding="async"
+                          className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[65%] rounded-t-lg shadow-[0_-20px_60px_rgba(0,0,0,0.5)] group-hover:-translate-y-3 group-hover:scale-[1.01] transition-all duration-700"
+                        />
+
+                        {/* Top-left badges */}
+                        <div className="absolute top-3 left-3 z-20 flex items-center gap-1.5">
+                          <span
+                            className="text-[8px] uppercase tracking-[0.2em] px-2.5 py-1 rounded-full backdrop-blur-xl border"
+                            style={{
+                              backgroundColor: `${p.color}18`,
+                              color: `${p.color}dd`,
+                              borderColor: `${p.color}30`,
+                            }}
+                          >
+                            {p.screens}
+                          </span>
+                        </div>
+
+                        {/* Bottom info */}
+                        <div className="absolute bottom-0 left-0 right-0 z-20 p-4 md:p-5">
+                          <div className="flex items-end justify-between gap-3">
+                            <div className="min-w-0">
+                              <h3 className="text-lg md:text-2xl text-white mb-0.5 tracking-[-0.03em] truncate" style={{ fontFamily: F.heading, fontWeight: 700 }}>
+                                {p.title}
+                              </h3>
+                              <p className="text-white/40 text-[10px] tracking-wide truncate" style={{ fontFamily: F.body }}>
+                                {p.subtitle}
+                              </p>
+                            </div>
+                            <motion.div
+                              whileHover={{ scale: 1.1 }}
+                              className="w-9 h-9 rounded-full backdrop-blur-md border flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 flex-shrink-0"
+                              style={{
+                                backgroundColor: `${p.color}22`,
+                                borderColor: `${p.color}35`,
+                              }}
+                            >
+                              <ArrowUpRight size={14} style={{ color: p.color }} />
+                            </motion.div>
+                          </div>
+                        </div>
                       </div>
-                      <motion.div
-                        whileHover={{ scale: 1.1 }}
-                        className="w-10 h-10 rounded-full backdrop-blur-md border flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500"
-                        style={{
-                          backgroundColor: `${next.color}20`,
-                          borderColor: `${next.color}30`,
-                        }}
-                      >
-                        <ArrowUpRight size={16} style={{ color: next.color }} />
-                      </motion.div>
-                    </div>
-                  </div>
-                </div>
 
-                {/* Bottom bar */}
-                <div className="px-4 sm:px-5 py-3 sm:py-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
-                  <div className="flex flex-wrap gap-1">
-                    {next.tags.map((t) => (
-                      <span
-                        key={t}
-                        className={`text-[8px] uppercase tracking-[0.15em] px-2 py-0.5 rounded-md whitespace-nowrap ${isDark ? 'bg-white/[0.03] text-white/20' : 'bg-zinc-100 text-zinc-400'}`}
-                        style={{ fontFamily: F.body }}
-                      >
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-                  <span
-                    className="text-[12px] whitespace-nowrap flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all duration-300"
-                    style={{
-                      color: `${next.color}99`,
-                      borderColor: `${next.color}20`,
-                      fontFamily: F.body,
-                      fontWeight: 500,
-                    }}
-                  >
-                    View Case Study <ArrowRight size={12} />
-                  </span>
-                </div>
-              </motion.div>
-            </Link>
-          </FadeIn>
+                      {/* Bottom bar */}
+                      <div className="px-4 py-3 flex items-center justify-between gap-2">
+                        <div className="flex flex-wrap gap-1 min-w-0">
+                          {p.tags.slice(0, 2).map((t) => (
+                            <span
+                              key={t}
+                              className={`text-[8px] uppercase tracking-[0.15em] px-2 py-0.5 rounded-md whitespace-nowrap ${isDark ? 'bg-white/[0.03] text-white/30' : 'bg-zinc-100 text-zinc-500'}`}
+                              style={{ fontFamily: F.body }}
+                            >
+                              {t}
+                            </span>
+                          ))}
+                        </div>
+                        <span
+                          className="text-[11px] whitespace-nowrap flex items-center gap-1.5 px-2.5 py-1 rounded-full border transition-all duration-300 group-hover:translate-x-0.5 flex-shrink-0"
+                          style={{
+                            color: `${p.color}b3`,
+                            borderColor: `${p.color}25`,
+                            fontFamily: F.body,
+                            fontWeight: 500,
+                          }}
+                        >
+                          View <ArrowRight size={11} />
+                        </span>
+                      </div>
+                    </motion.div>
+                  </Link>
+                </FadeIn>
+              );
+            })}
+          </div>
 
           {/* Cross-category recommendations — "Infinite Loop" */}
           <FadeIn delay={0.2}>

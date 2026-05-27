@@ -511,6 +511,55 @@ export function SchenkerCaseStudy() {
               </GlowCard>
             </FadeIn>
           </div>
+
+          {/* ── Friction → Flow · Show-Don't-Tell visual ── */}
+          <FadeIn delay={0.2}>
+            <div className={`mt-14 lg:mt-16 rounded-2xl border overflow-hidden transition-all duration-500 hover:border-[#6B8E23]/25 hover:shadow-2xl hover:shadow-[#6B8E23]/10 ${isDark ? 'bg-[#121318]/60 border-white/[0.06]' : 'bg-white border-zinc-200'}`}>
+              {/* Header */}
+              <div className={`px-7 lg:px-10 pt-7 pb-5 border-b ${isDark ? 'border-white/[0.06]' : 'border-zinc-100'}`}>
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-7 h-7 rounded-md bg-[#6B8E23]/15 flex items-center justify-center">
+                    <Layers size={14} className="text-[#6B8E23]" />
+                  </div>
+                  <span className="text-[10px] uppercase tracking-[0.25em] text-[#6B8E23] font-medium">Friction → Flow</span>
+                </div>
+                <h3 className={`text-2xl lg:text-3xl tracking-[-0.02em] ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 700 }}>
+                  Four principles · applied to enterprise complexity
+                </h3>
+              </div>
+
+              {/* 4 principles */}
+              <div className={`grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x ${isDark ? 'divide-white/[0.06]' : 'divide-zinc-100'}`}>
+                {[
+                  { icon: <Layers size={18} />,        name: 'Step',     practice: 'Break long flows into stages',         outcome: 'Cognitive load down ~60%' },
+                  { icon: <Package size={18} />,       name: 'Group',    practice: 'Cluster fields by semantic intent',    outcome: 'Scannable forms · fewer errors' },
+                  { icon: <ClipboardList size={18} />, name: 'Table',    practice: 'Document workflows in dense tables',   outcome: 'Bulk operations enabled' },
+                  { icon: <Settings size={18} />,      name: 'Separate', practice: 'Operational vs technical zones',       outcome: 'Right user · right tools' },
+                ].map((p) => (
+                  <div key={p.name} className={`group/p p-6 lg:p-7 cursor-default transition-colors duration-300 ${isDark ? 'hover:bg-white/[0.02]' : 'hover:bg-zinc-50'}`}>
+                    <div className="w-9 h-9 rounded-lg bg-[#6B8E23]/10 flex items-center justify-center mb-4 text-[#6B8E23] transition-transform duration-300 group-hover/p:scale-110 group-hover/p:rotate-3">
+                      {p.icon}
+                    </div>
+                    <div className={`text-[14px] mb-2 transition-colors duration-300 group-hover/p:text-[#6B8E23] ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 700 }}>{p.name}</div>
+                    <div className={`text-[12px] leading-relaxed mb-3 ${bt}`}>{p.practice}</div>
+                    <div className="text-[10px] uppercase tracking-[0.15em] text-[#6B8E23]/70">{p.outcome}</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Footer stats */}
+              <div className={`px-7 lg:px-10 py-4 border-t bg-[#6B8E23]/[0.03] ${isDark ? 'border-white/[0.06]' : 'border-zinc-100'}`}>
+                <div className="flex items-center justify-between gap-4 flex-wrap">
+                  <span className={`text-[12px] ${bt}`} style={{ fontFamily: BRAND.bodyFont }}>Complexity controlled across</span>
+                  <div className="flex items-center gap-5 text-[12px]">
+                    <span className="group/n cursor-default"><span className="text-[#6B8E23] font-mono transition-transform inline-block group-hover/n:scale-110" style={{ fontWeight: 700 }}>9+</span> <span className={mt}>screens</span></span>
+                    <span className="group/n cursor-default"><span className="text-[#6B8E23] font-mono transition-transform inline-block group-hover/n:scale-110" style={{ fontWeight: 700 }}>47</span> <span className={mt}>fields</span></span>
+                    <span className="group/n cursor-default"><span className="text-[#6B8E23] font-mono transition-transform inline-block group-hover/n:scale-110" style={{ fontWeight: 700 }}>7</span> <span className={mt}>modules</span></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </FadeIn>
         </div>
       </section>
 

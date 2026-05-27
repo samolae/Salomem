@@ -15,18 +15,23 @@ import { NextProjectRecommendation } from './next-project';
 import { CaseStudySectionNav } from './case-study-nav';
 import { UnispaceSEO } from './seo';
 
-/* ─── Image constants — replace with real screenshots when available ── */
-// TODO: Add actual Unispace screenshots to src/imports/ and update these paths
-const IMG_PLACEHOLDER = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339514/code_wp94ox.avif';
-const imgScreen       = IMG_PLACEHOLDER;
-const imgLayoutGrid   = IMG_PLACEHOLDER;
-const imgUpload       = IMG_PLACEHOLDER;
-const imgSeparator    = IMG_PLACEHOLDER;
-const imgButton       = IMG_PLACEHOLDER;
-const imgCheckbox     = IMG_PLACEHOLDER;
-const imgDropdown     = IMG_PLACEHOLDER;
-const imgFilter       = IMG_PLACEHOLDER;
-const imgIcons        = IMG_PLACEHOLDER;
+/* ─── Real Unispace product screenshots (Cloudinary) ──────────── */
+const imgLogin        = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1779875718/%E1%83%9E%E1%83%98%E1%83%A0%E1%83%95%E1%83%94%E1%83%9A%E1%83%98_%E1%83%92%E1%83%95%E1%83%94%E1%83%A0%E1%83%93%E1%83%98_%E1%83%9B%E1%83%9D%E1%83%9B%E1%83%AE%E1%83%9B%E1%83%90%E1%83%A0%E1%83%94%E1%83%91%E1%83%9A%E1%83%98%E1%83%A1_%E1%83%A8%E1%83%94%E1%83%A1%E1%83%95%E1%83%9A%E1%83%98%E1%83%A1%E1%83%90%E1%83%A1_uaosn1.png';
+const imgFormsTable   = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1779875712/%E1%83%A8%E1%83%94%E1%83%95%E1%83%A1%E1%83%94%E1%83%91%E1%83%A3%E1%83%9A%E1%83%98_%E1%83%A4%E1%83%9D%E1%83%A0%E1%83%9B%E1%83%94%E1%83%91%E1%83%98%E1%83%A1_%E1%83%AA%E1%83%AE%E1%83%A0%E1%83%98%E1%83%9A%E1%83%98_jtudqc.png';
+const imgRegister     = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1779875712/%E1%83%90%E1%83%AE%E1%83%90%E1%83%9A%E1%83%98_%E1%83%9B%E1%83%9D%E1%83%9B%E1%83%AE%E1%83%9B%E1%83%90%E1%83%A0%E1%83%94%E1%83%91%E1%83%9A%E1%83%98%E1%83%A1_%E1%83%A0%E1%83%94%E1%83%92%E1%83%98%E1%83%A1%E1%83%A2%E1%83%A0%E1%83%90%E1%83%AA%E1%83%98%E1%83%90-%E1%83%A1%E1%83%A2%E1%83%A3%E1%83%93%E1%83%94%E1%83%9C%E1%83%A2%E1%83%98_error_vhhyi0.png';
+const imgUploadFlow   = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1779875711/%E1%83%9E%E1%83%A0%E1%83%9D%E1%83%94%E1%83%A5%E1%83%A2%E1%83%98%E1%83%A1_%E1%83%90%E1%83%A2%E1%83%95%E1%83%98%E1%83%A0%E1%83%97%E1%83%95%E1%83%90_3_ewqkdw.png';
+
+const imgScreen       = imgLogin;
+const imgLayoutGrid   = imgFormsTable;
+const imgUpload       = imgUploadFlow;
+const imgSeparator    = imgRegister;
+
+/* ─── Project typography — single typeface ──────────────────────
+ * Unispace's actual product typography is Noto Sans Georgian
+ * (covers Georgian + Latin glyphs). Syne / Manrope are the
+ * portfolio's typefaces, not the product's.
+ * ────────────────────────────────────────────────────────────── */
+const F_GE = '"Noto Sans Georgian", "Inter", sans-serif';
 
 /* ─── Brand Tokens ─────────────────────────────────────────────── */
 const BRAND = {
@@ -67,15 +72,17 @@ const ScreenCard = ({
 }) => (
   <FadeIn delay={delay}>
     <div className="group">
-      <div className={`rounded-xl overflow-hidden mb-4 border shadow-lg ${isDark ? 'border-white/[0.06] shadow-black/30' : 'border-zinc-200 shadow-zinc-200/50'}`}>
-        <img src={src} alt={label} className="w-full block group-hover:scale-[1.02] transition-transform duration-700" />
+      <div className={`rounded-xl overflow-hidden mb-4 border shadow-lg transition-all duration-500 ease-out group-hover:-translate-y-1 group-hover:shadow-2xl ${isDark ? 'border-white/[0.06] shadow-black/30 group-hover:border-[#3D82F6]/30 group-hover:shadow-[#3D82F6]/20' : 'border-zinc-200 shadow-zinc-200/50 group-hover:border-[#3D82F6]/40'}`}>
+        <div className="aspect-[16/10] overflow-hidden">
+          <img src={src} alt={label} className="w-full h-full block object-cover object-top group-hover:scale-[1.04] transition-transform duration-700" />
+        </div>
       </div>
       <div className="flex items-start gap-3">
-        <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5 ${isDark ? 'bg-[#3D82F6]/10' : 'bg-blue-50'}`}>
+        <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5 transition-all duration-300 group-hover:scale-110 ${isDark ? 'bg-[#3D82F6]/10 group-hover:bg-[#3D82F6]/20' : 'bg-blue-50 group-hover:bg-blue-100'}`}>
           <span className="text-[#3D82F6]">{icon}</span>
         </div>
         <div>
-          <h4 className={`text-sm mb-1 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont }}>{label}</h4>
+          <h4 className={`text-sm mb-1 transition-colors duration-300 group-hover:text-[#3D82F6] ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont }}>{label}</h4>
           <p className={`text-[12px] leading-relaxed ${isDark ? 'text-[#9295A6]' : 'text-zinc-400'}`}>{description}</p>
         </div>
       </div>
@@ -143,6 +150,19 @@ const ChallengeRow = ({
 /* ═══════════════════════════════════════════════════════════════ */
 /* ─── UNISPACE CASE STUDY PAGE ─────────────────────────────── */
 /* ═══════════════════════════════════════════════════════════════ */
+
+const SECTIONS = [
+  { id: 'story',      label: 'Story' },
+  { id: 'overview',   label: 'Overview' },
+  { id: 'challenge',  label: 'Challenge' },
+  { id: 'process',    label: 'Process' },
+  { id: 'screens',    label: 'Screens' },
+  { id: 'decisions',  label: 'Decisions' },
+  { id: 'design',     label: 'Design System' },
+  { id: 'outcome',    label: 'Outcome' },
+  { id: 'reflection', label: 'Reflection' },
+];
+
 export function UnispaceCaseStudy() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const { theme } = useTheme();
@@ -164,20 +184,7 @@ export function UnispaceCaseStudy() {
     <div className={`${bg} min-h-screen transition-colors duration-500 relative`} style={{ fontFamily: BRAND.bodyFont }}>
       <UnispaceSEO />
       <ScrollToTopButton />
-      <CaseStudySectionNav
-        accentColor="#3D82F6"
-        sections={[
-          { id: 'story',      label: 'Story' },
-          { id: 'overview',   label: 'Overview' },
-          { id: 'challenge',  label: 'Challenge' },
-          { id: 'process',    label: 'Process' },
-          { id: 'screens',    label: 'Screens' },
-          { id: 'decisions',  label: 'Decisions' },
-          { id: 'design',     label: 'Design System' },
-          { id: 'outcome',    label: 'Outcome' },
-          { id: 'reflection', label: 'Reflection' },
-        ]}
-      />
+      <CaseStudySectionNav accentColor="#3D82F6" sections={SECTIONS} />
 
       {/* Custom blue cursor (desktop only) */}
       <motion.div
@@ -210,16 +217,29 @@ export function UnispaceCaseStudy() {
               <span className="text-[12px] tracking-wide">Back to Portfolio</span>
             </motion.button>
             <div className={`w-px h-5 ${isDark ? 'bg-white/10' : 'bg-zinc-200'}`} />
-            <div className="flex items-center gap-2.5">
-              <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-                <polygon points="14,2 25,8 25,20 14,26 3,20 3,8" fill="#3D82F6" opacity="0.15" stroke="#3D82F6" strokeWidth="1.5" />
-                <polygon points="14,5 22,9.5 22,18.5 14,23 6,18.5 6,9.5" fill="#3D82F6" opacity="0.08" />
-                <text x="14" y="17.5" textAnchor="middle" fontSize="9" fontWeight="700" fill="#3D82F6" fontFamily="Syne, sans-serif">U</text>
-              </svg>
-              <span className={`text-[13px] tracking-wide font-semibold ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont }}>
-                Unispace
-              </span>
-            </div>
+            {/* Unilab brand mark + Unispace project tag */}
+            <motion.div
+              className="flex items-center gap-3"
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+            >
+              <img
+                src="https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1779887428/241852566_416907023197215_4126473183608966576_n_ecyuw4.png"
+                alt="Unilab"
+                width={32}
+                height={32}
+                className={`w-8 h-8 object-contain rounded-md ${isDark ? '' : 'invert'}`}
+                loading="lazy"
+              />
+              <div className="flex flex-col leading-none gap-1">
+                <span className={`text-[12px] tracking-wide font-semibold ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont }}>
+                  Unilab
+                </span>
+                <span className="text-[9px] uppercase tracking-[0.2em] text-[#6BA4FF]" style={{ fontFamily: BRAND.bodyFont, fontWeight: 600 }}>
+                  Unispace
+                </span>
+              </div>
+            </motion.div>
           </div>
           <div className="hidden md:flex items-center gap-5">
             {[
@@ -249,7 +269,7 @@ export function UnispaceCaseStudy() {
               { label: 'Role',     value: 'Lead UX/UI Designer' },
               { label: 'Platform', value: 'Web (Responsive)' },
               { label: 'Industry', value: 'EdTech / Internal SaaS' },
-              { label: 'Tools',    value: 'Figma · ProtoPie' },
+              { label: 'Tools',    value: 'Figma · Prototyping' },
             ].map((item, i) => (
               <motion.div
                 key={item.label}
@@ -300,26 +320,35 @@ export function UnispaceCaseStudy() {
 
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.65, duration: 0.6 }} className="grid grid-cols-3 gap-6">
                 {[
-                  { value: 3,  label: 'User Roles',  suffix: '' },
+                  { value: 3,  label: 'User Roles',  suffix: '+' },
                   { value: 42, label: 'Screens',     suffix: '+' },
                   { value: 38, label: 'Components',  suffix: '+' },
                 ].map((stat) => (
-                  <div key={stat.label}>
-                    <div className={`text-3xl lg:text-4xl tracking-[-0.04em] mb-1 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 800 }}>
+                  <div key={stat.label} className="group cursor-default">
+                    <div
+                      className={`text-3xl lg:text-4xl tracking-[-0.04em] mb-1 transition-colors duration-300 group-hover:text-[#3D82F6] ${isDark ? 'text-white' : 'text-zinc-900'}`}
+                      style={{ fontFamily: BRAND.headingFont, fontWeight: 800 }}
+                    >
                       <CountUp end={stat.value} />{stat.suffix}
                     </div>
-                    <div className={`text-[11px] uppercase tracking-[0.15em] ${mt}`}>{stat.label}</div>
+                    <div className={`text-[11px] uppercase tracking-[0.15em] transition-colors duration-300 ${isDark ? `${mt} group-hover:text-white` : `${mt} group-hover:text-zinc-900`}`}>{stat.label}</div>
                   </div>
                 ))}
               </motion.div>
             </div>
 
             {/* Hero visual */}
-            <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.9, ease: [0.22, 1, 0.36, 1] }} className="relative">
-              <div className={`relative rounded-2xl overflow-hidden border shadow-2xl ${isDark ? 'border-white/[0.06] shadow-black/60' : 'border-zinc-200 shadow-zinc-300/40'}`}>
-                <img src={imgScreen} alt="Unispace platform screenshot" className="w-full block" />
+            <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.9, ease: [0.22, 1, 0.36, 1] }} className="relative max-w-md mx-auto lg:max-w-none">
+              <motion.div
+                whileHover={{ y: -4 }}
+                transition={{ type: 'spring', stiffness: 280, damping: 25 }}
+                className={`relative rounded-2xl overflow-hidden border shadow-2xl ${isDark ? 'border-white/[0.06] shadow-black/60' : 'border-zinc-200 shadow-zinc-300/40'}`}
+              >
+                <div className="aspect-[4/3] overflow-hidden">
+                  <img src={imgScreen} alt="Unispace platform screenshot" className="w-full h-full block object-cover object-top" />
+                </div>
                 <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, transparent 60%, rgba(61,130,246,0.08) 100%)' }} />
-              </div>
+              </motion.div>
               <motion.div animate={{ y: [-4, 4, -4] }} transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }} className={`absolute -bottom-4 -left-4 rounded-xl p-3.5 border shadow-xl backdrop-blur-xl ${isDark ? 'bg-[#141212]/90 border-white/[0.08]' : 'bg-white/90 border-zinc-200'}`}>
                 <div className="flex items-center gap-2.5">
                   <div className="w-7 h-7 rounded-lg bg-[#3D82F6]/15 flex items-center justify-center">
@@ -344,6 +373,70 @@ export function UnispaceCaseStudy() {
               </motion.div>
             </motion.div>
           </div>
+        </div>
+      </section>
+
+      {/* ─── TLDR · 30-SECOND SNAPSHOT ─────────────────────────── */}
+      <section className="relative px-6 lg:px-12 -mt-6 lg:-mt-10 mb-12 lg:mb-16 z-20">
+        <div className="max-w-4xl mx-auto">
+          <FadeIn delay={0.1}>
+            <motion.div
+              whileHover={{ y: -2 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+              className={`relative rounded-2xl border overflow-hidden backdrop-blur-xl shadow-2xl ${
+                isDark
+                  ? 'bg-[#0a0a0d]/85 border-[#3D82F6]/20 shadow-[#3D82F6]/10'
+                  : 'bg-white/95 border-blue-200 shadow-blue-200/40'
+              }`}
+            >
+              {/* Header band */}
+              <div className={`flex items-center justify-between px-6 lg:px-8 pt-4 pb-3.5 border-b ${isDark ? 'border-white/[0.06]' : 'border-zinc-100'}`}>
+                <div className="flex items-center gap-3">
+                  <span className="relative flex h-2 w-2 flex-shrink-0">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#3D82F6]/60" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-[#3D82F6]" />
+                  </span>
+                  <span className="text-[10px] uppercase tracking-[0.25em] text-[#3D82F6]" style={{ fontWeight: 600 }}>
+                    Quick Read · 30s
+                  </span>
+                </div>
+                <span className={`text-[10px] uppercase tracking-[0.15em] ${mt}`}>~9 min full read</span>
+              </div>
+
+              {/* Body rows */}
+              <div className={`divide-y ${isDark ? 'divide-white/[0.04]' : 'divide-zinc-100'}`}>
+                {[
+                  { label: 'Challenge', value: 'Three roles, one system, zero compromises',                                              icon: <Zap size={14} /> },
+                  { label: 'Role',      value: 'Lead UX/UI · 12 weeks · 42+ screens · 38+ components',                                   icon: <PenTool size={14} /> },
+                  { label: 'Impact',    value: '~60% fewer handoff tickets · 0 design-QA issues on form components post-launch',         icon: <CheckCircle size={14} /> },
+                ].map((row) => (
+                  <div key={row.label} className="grid grid-cols-[100px_1fr] sm:grid-cols-[140px_1fr] gap-3 sm:gap-5 px-6 lg:px-8 py-4 items-start sm:items-center">
+                    <div className="flex items-center gap-2.5">
+                      <span className="text-[#3D82F6] flex-shrink-0">{row.icon}</span>
+                      <span className={`text-[10px] uppercase tracking-[0.2em] ${mt}`}>{row.label}</span>
+                    </div>
+                    <div className={`text-[14px] leading-snug ${isDark ? 'text-white/95' : 'text-zinc-800'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 500 }}>
+                      {row.value}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* CTA footer */}
+              <a
+                href="#story"
+                className={`group flex items-center justify-between px-6 lg:px-8 py-3.5 border-t transition-colors duration-200 ${isDark ? 'border-white/[0.06] hover:bg-white/[0.03]' : 'border-zinc-100 hover:bg-zinc-50'}`}
+              >
+                <span className={`text-[12px] transition-colors ${isDark ? 'text-white/70 group-hover:text-white' : 'text-zinc-600 group-hover:text-zinc-900'}`} style={{ fontFamily: BRAND.bodyFont }}>
+                  Read full case study
+                </span>
+                <span className="flex items-center gap-2 text-[#3D82F6] text-[12px]">
+                  <span className="font-mono text-[10px] opacity-60">9 sections</span>
+                  <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                </span>
+              </a>
+            </motion.div>
+          </FadeIn>
         </div>
       </section>
 
@@ -432,7 +525,7 @@ export function UnispaceCaseStudy() {
                     { label: 'Client',       value: 'Unilab / Ilia State Uni.', icon: <BookOpen size={16} /> },
                     { label: 'My Role',      value: 'Lead UX/UI Designer',      icon: <PenTool size={16} /> },
                     { label: 'Platform',     value: 'Web (Responsive)',          icon: <Monitor size={16} /> },
-                    { label: 'Tools',        value: 'Figma · ProtoPie',          icon: <Component size={16} /> },
+                    { label: 'Tools',        value: 'Figma · Prototyping',          icon: <Component size={16} /> },
                     { label: 'Target Users', value: 'Students, Lecturers, Admins', icon: <Users size={16} /> },
                     { label: 'Duration',     value: '12 Weeks',                 icon: <Search size={16} /> },
                   ].map((item) => (
@@ -476,10 +569,152 @@ export function UnispaceCaseStudy() {
             <h2 className={`text-4xl lg:text-5xl tracking-[-0.03em] mb-4 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 800 }}>
               Three users, one system,<br /><span style={{ color: BRAND.blue }}>zero compromises</span>
             </h2>
-            <p className={`text-base leading-relaxed max-w-2xl mb-14 ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>
+            <p className={`text-base leading-relaxed max-w-2xl mb-12 ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>
               The core complexity of Unispace: three completely different user journeys — student, lecturer, admin — sharing a single design language. Every screen had to serve its user without bleeding into another role's context.
             </p>
           </FadeIn>
+
+          {/* ── Three Roles → One System · visual diagram ── */}
+          <FadeIn delay={0.05}>
+            <div className={`relative mb-10 rounded-2xl border p-8 lg:p-10 overflow-hidden ${isDark ? `${cardBg} border-white/[0.06]` : 'bg-white border-zinc-200'}`}>
+              {/* Ambient glow */}
+              <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(circle at 75% 50%, rgba(61,130,246,0.06), transparent 60%)' }} />
+
+              <div className="relative grid lg:grid-cols-[1fr_180px_1fr] gap-6 lg:gap-8 items-center">
+                {/* Left: Three user roles */}
+                <div className="space-y-3">
+                  {[
+                    { label: 'Student',  sub: 'Self-registers · tracks projects',         color: '#22C55E' },
+                    { label: 'Lecturer', sub: 'Manages courses · reviews submissions',    color: '#F59E0B' },
+                    { label: 'Admin',    sub: 'Oversees roles · uploads certificates',    color: '#F87171' },
+                  ].map((u) => (
+                    <motion.div
+                      key={u.label}
+                      whileHover={{ x: 3 }}
+                      transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+                      className={`group/role flex items-center gap-3 p-3 rounded-xl border cursor-default transition-colors duration-300 ${isDark ? 'border-white/[0.05] bg-white/[0.02] hover:bg-white/[0.04]' : 'border-zinc-200 bg-zinc-50 hover:bg-zinc-100'}`}
+                    >
+                      <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover/role:scale-110" style={{ background: `${u.color}1A`, color: u.color, border: `1.5px solid ${u.color}40` }}>
+                        <Users size={15} />
+                      </div>
+                      <div className="min-w-0">
+                        <div className={`text-[13px] font-semibold ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont }}>{u.label}</div>
+                        <div className={`text-[10px] leading-relaxed ${mt}`}>{u.sub}</div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Middle: convergence lines */}
+                <div className="relative h-32 lg:h-44 flex items-center justify-center">
+                  <svg viewBox="0 0 180 160" className="w-full h-full" fill="none" preserveAspectRatio="none" aria-hidden>
+                    <defs>
+                      <linearGradient id="convergeBlue" x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0%" stopColor="rgba(255,255,255,0.04)" />
+                        <stop offset="60%" stopColor="#3D82F6" stopOpacity="0.45" />
+                        <stop offset="100%" stopColor="#6BA4FF" stopOpacity="0.9" />
+                      </linearGradient>
+                    </defs>
+                    {/* Top user line */}
+                    <motion.path
+                      d="M0 24 Q 90 24, 170 80"
+                      stroke="url(#convergeBlue)"
+                      strokeWidth="1.5"
+                      strokeDasharray="3 4"
+                      strokeLinecap="round"
+                      fill="none"
+                      initial={{ pathLength: 0 }}
+                      whileInView={{ pathLength: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 1, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                    />
+                    {/* Middle line */}
+                    <motion.path
+                      d="M0 80 L 170 80"
+                      stroke="url(#convergeBlue)"
+                      strokeWidth="1.5"
+                      strokeDasharray="3 4"
+                      strokeLinecap="round"
+                      fill="none"
+                      initial={{ pathLength: 0 }}
+                      whileInView={{ pathLength: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 1, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                    />
+                    {/* Bottom user line */}
+                    <motion.path
+                      d="M0 136 Q 90 136, 170 80"
+                      stroke="url(#convergeBlue)"
+                      strokeWidth="1.5"
+                      strokeDasharray="3 4"
+                      strokeLinecap="round"
+                      fill="none"
+                      initial={{ pathLength: 0 }}
+                      whileInView={{ pathLength: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 1, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                    />
+                    {/* Pulse dots traveling along lines */}
+                    {[24, 80, 136].map((y, i) => (
+                      <motion.circle
+                        key={y}
+                        r="2.5"
+                        fill="#6BA4FF"
+                        initial={{ cx: 0, cy: y }}
+                        animate={{ cx: 170, cy: 80 }}
+                        transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.6, ease: [0.4, 0, 0.2, 1] }}
+                      />
+                    ))}
+                  </svg>
+                </div>
+
+                {/* Right: Unispace platform mark */}
+                <motion.div
+                  whileHover={{ scale: 1.03 }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                  className="flex justify-center lg:justify-start"
+                >
+                  <div
+                    className="relative inline-flex flex-col items-center gap-3 p-6 rounded-2xl border overflow-hidden"
+                    style={{
+                      borderColor: 'rgba(61,130,246,0.35)',
+                      background: isDark ? 'linear-gradient(135deg, rgba(61,130,246,0.10), rgba(61,130,246,0.02))' : 'linear-gradient(135deg, rgba(61,130,246,0.06), rgba(61,130,246,0.01))',
+                    }}
+                  >
+                    {/* Pulsing glow */}
+                    <motion.div
+                      className="absolute inset-0 rounded-2xl"
+                      style={{ background: 'radial-gradient(circle at center, rgba(61,130,246,0.18), transparent 70%)' }}
+                      animate={{ opacity: [0.4, 0.8, 0.4] }}
+                      transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                    />
+                    <div className="relative w-12 h-12 rounded-xl bg-[#3D82F6] flex items-center justify-center shadow-lg shadow-[#3D82F6]/40">
+                      <LayoutGrid size={20} className="text-white" />
+                    </div>
+                    <div className="relative text-center">
+                      <div className={`text-base font-semibold ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 700 }}>Unispace</div>
+                      <div className={`text-[10px] mt-1 leading-relaxed max-w-[160px] ${mt}`}>One login · One design language · Three realities</div>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+
+              {/* Bottom stats strip */}
+              <div className={`relative mt-8 pt-6 border-t grid grid-cols-3 gap-4 ${isDark ? 'border-white/[0.06]' : 'border-zinc-100'}`}>
+                {[
+                  { n: '3',   label: 'User Roles',   color: '#22C55E' },
+                  { n: '9',   label: 'UX Flows',     color: '#F59E0B' },
+                  { n: '17',  label: 'Edge Cases',   color: '#3D82F6' },
+                ].map((s) => (
+                  <div key={s.label} className="text-center">
+                    <div className="text-2xl tracking-[-0.03em] mb-0.5" style={{ fontFamily: BRAND.headingFont, fontWeight: 800, color: s.color }}>{s.n}</div>
+                    <div className={`text-[10px] uppercase tracking-[0.15em] ${mt}`}>{s.label}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </FadeIn>
+
           <div className="space-y-4">
             {[
               { challenge: 'Conditional form complexity — 12 base fields expanding into 4 distinct paths with 0–5 additional fields each. Designing one pattern to cover all cases without cognitive overload.', solution: 'Same-page progressive disclosure — status fields expand inline below the dropdown, labeled as a distinct section. Users always see their position in the form with no multi-step wizard.' },
@@ -507,24 +742,34 @@ export function UnispaceCaseStudy() {
           </FadeIn>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { phase: 'PHASE 01', weeks: 'Weeks 1–2',  title: 'Discover', color: '#3D82F6', items: ['Stakeholder interviews (Unilab team, 4 sessions)', 'Competitive audit (Moodle, Google Classroom, Behance)', 'Technical spec analysis', 'User role mapping (student, lecturer, admin)', '17 edge cases identified and documented'] },
+              { phase: 'PHASE 01', weeks: 'Weeks 1–2',  title: 'Discover', color: '#3D82F6', items: ['Stakeholder interviews (Unilab team, 4 sessions)', 'Competitive audit of EdTech learning platforms, student portals, and online portfolio tools', 'Technical spec analysis', 'User role mapping (student, lecturer, admin)', '17 edge cases identified and documented'] },
               { phase: 'PHASE 02', weeks: 'Weeks 3–4',  title: 'Define',   color: '#A78BFA', items: ['Information architecture (3 role-specific IA maps)', 'User flow mapping per role (9 flows total)', 'Conditional form logic matrix', 'State inventory: 12 states per key screen', 'Design principles established'] },
-              { phase: 'PHASE 03', weeks: 'Weeks 5–10', title: 'Design',   color: '#10B981', items: ['Lo-fi wireframes (42 screens)', 'Dark design system — 38+ components built', 'High-fidelity screens (42 total, 3 roles)', 'Micro-interactions prototyped in ProtoPie', 'Responsive adaptation (1440 / 768 / 375px)'] },
+              { phase: 'PHASE 03', weeks: 'Weeks 5–10', title: 'Design',   color: '#10B981', items: ['Lo-fi wireframes (42 screens)', 'Dark design system — 38+ components built', 'High-fidelity screens (42 total, 3 roles)', 'Micro-interactions prototyped for key flows', 'Responsive adaptation (1440 / 768 / 375px)'] },
               { phase: 'PHASE 04', weeks: 'Weeks 11–12',title: 'Deliver',  color: '#F59E0B', items: ['Usability testing: 8 participants, 2 rounds', '14 issues identified, 11 resolved pre-handoff', 'Dev handoff with Figma annotations', 'Component spec documentation', 'Design QA with engineering team'] },
             ].map((phase, i) => (
               <FadeIn key={phase.phase} delay={i * 0.1}>
-                <div className={`rounded-2xl border p-6 h-full ${isDark ? `${cardBg} border-white/[0.06]` : 'bg-white border-zinc-200'}`}>
-                  <div className="mb-5">
-                    <div className="text-[9px] uppercase tracking-[0.25em] mb-1" style={{ color: phase.color }}>{phase.phase}</div>
+                <div className={`group relative rounded-2xl border p-6 h-full overflow-hidden transition-all duration-500 ease-out hover:-translate-y-1.5 ${isDark ? `${cardBg} border-white/[0.06] hover:border-white/[0.15]` : 'bg-white border-zinc-200 hover:border-zinc-300'}`}>
+                  {/* Radial glow on hover, tinted by phase color */}
+                  <div
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                    style={{ background: `radial-gradient(circle at 50% 0%, ${phase.color}22, transparent 70%)` }}
+                  />
+                  {/* Top accent stripe */}
+                  <div
+                    className="absolute top-0 left-0 right-0 h-[2px] origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out"
+                    style={{ background: phase.color }}
+                  />
+                  <div className="relative mb-5">
+                    <div className="text-[9px] uppercase tracking-[0.25em] mb-1 transition-transform duration-300 group-hover:translate-x-0.5" style={{ color: phase.color }}>{phase.phase}</div>
                     <div className={`text-[10px] uppercase tracking-[0.15em] mb-3 ${mt}`}>{phase.weeks}</div>
-                    <h3 className="text-2xl tracking-[-0.03em]" style={{ fontFamily: BRAND.headingFont, fontWeight: 700, color: phase.color }}>{phase.title}</h3>
+                    <h3 className="text-2xl tracking-[-0.03em] transition-transform duration-300 group-hover:translate-x-0.5" style={{ fontFamily: BRAND.headingFont, fontWeight: 700, color: phase.color }}>{phase.title}</h3>
                   </div>
-                  <div className={`w-full h-px mb-5 ${isDark ? 'bg-white/[0.06]' : 'bg-zinc-100'}`} />
-                  <ul className="space-y-2.5">
+                  <div className={`relative w-full h-px mb-5 ${isDark ? 'bg-white/[0.06]' : 'bg-zinc-100'}`} />
+                  <ul className="relative space-y-2.5">
                     {phase.items.map((item, j) => (
-                      <li key={j} className="flex items-start gap-2">
-                        <div className="w-1 h-1 rounded-full mt-2 flex-shrink-0" style={{ background: phase.color }} />
-                        <span className={`text-[12px] leading-relaxed ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>{item}</span>
+                      <li key={j} className="flex items-start gap-2 transition-transform duration-300" style={{ transitionDelay: `${j * 20}ms` }}>
+                        <div className="w-1 h-1 rounded-full mt-2 flex-shrink-0 transition-transform duration-300 group-hover:scale-150" style={{ background: phase.color }} />
+                        <span className={`text-[12px] leading-relaxed transition-colors duration-300 ${isDark ? 'text-zinc-400 group-hover:text-zinc-300' : 'text-zinc-500 group-hover:text-zinc-600'}`}>{item}</span>
                       </li>
                     ))}
                   </ul>
@@ -532,6 +777,77 @@ export function UnispaceCaseStudy() {
               </FadeIn>
             ))}
           </div>
+
+          {/* ── Delivery Edge — Code Literacy + Collaboration ── */}
+          <FadeIn delay={0.5}>
+            <div className={`mt-12 lg:mt-16 rounded-2xl border overflow-hidden transition-all duration-500 hover:border-[#3D82F6]/25 hover:shadow-2xl hover:shadow-[#3D82F6]/10 ${isDark ? `${cardBg} border-white/[0.06]` : 'bg-white border-zinc-200'}`}>
+              <div className="grid lg:grid-cols-5">
+                {/* Left — narrative */}
+                <div className={`lg:col-span-2 p-8 lg:p-10 lg:border-r ${isDark ? 'border-white/[0.06]' : 'border-zinc-100'}`}>
+                  <div className="flex items-center gap-3 mb-5">
+                    <div className="w-7 h-7 rounded-md bg-[#3D82F6]/15 flex items-center justify-center">
+                      <Code2 size={14} className="text-[#3D82F6]" />
+                    </div>
+                    <span className="text-[10px] uppercase tracking-[0.25em] text-[#3D82F6]">Delivery Edge</span>
+                  </div>
+                  <h3 className={`text-2xl lg:text-3xl tracking-[-0.03em] mb-4 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 700 }}>
+                    Code-literate design,<br />
+                    built for handoff
+                  </h3>
+                  <p className={`text-[14px] leading-relaxed mb-4 ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>
+                    Hands-on knowledge of HTML, CSS, JavaScript, and React shaped every design decision. Components were drawn knowing they'd map 1:1 to React components — no abstract patterns, no wasted iterations, no ambiguity at handoff.
+                  </p>
+                  <p className={`text-[14px] leading-relaxed ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>
+                    Daily collaboration with engineering during the high-fidelity phase turned design QA into a continuous, paired activity — issues were caught and resolved in the same conversation, not in async ticket cycles.
+                  </p>
+                </div>
+
+                {/* Right — practices grid */}
+                <div className="lg:col-span-3 p-8 lg:p-10">
+                  <div className={`text-[10px] uppercase tracking-[0.2em] mb-6 ${mt}`}>Practices that accelerated delivery</div>
+                  <div className="grid sm:grid-cols-2 gap-x-6 gap-y-5">
+                    {[
+                      { icon: <Code2 size={14} />,      title: '1:1 Component Mapping',   body: 'Every Figma component had a planned React equivalent — no design that couldn’t be built efficiently.' },
+                      { icon: <Layers size={14} />,     title: 'Tailwind-aligned tokens', body: 'Spacing, color, and radius tokens mirrored Tailwind defaults so engineers translated zero values by hand.' },
+                      { icon: <PenTool size={14} />,    title: 'HTML/CSS in handoff',     body: 'Specs included real CSS snippets for non-trivial states — focus rings, transitions, hover micro-interactions.' },
+                      { icon: <Users size={14} />,      title: 'Daily 15-min syncs',      body: 'Async questions resolved same day during weeks 5–10 — no waiting cycles, no email threads.' },
+                      { icon: <Search size={14} />,     title: 'Browser DevTools QA',     body: 'Paired live in DevTools to inspect builds — spacing, hierarchy, accessibility verified together in real time.' },
+                      { icon: <Component size={14} />,  title: 'Shared component vocab',  body: 'Same terminology in Figma, code, and docs — variants, props, states all named identically across surfaces.' },
+                    ].map((p) => (
+                      <div key={p.title} className="group/p flex gap-3 cursor-default">
+                        <div className="w-7 h-7 rounded-md bg-[#3D82F6]/10 flex items-center justify-center flex-shrink-0 transition-all duration-300 group-hover/p:bg-[#3D82F6]/20 group-hover/p:scale-110">
+                          <span className="text-[#3D82F6]">{p.icon}</span>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className={`text-[13px] font-semibold mb-1 transition-colors duration-300 group-hover/p:text-[#6BA4FF] ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont }}>{p.title}</div>
+                          <div className={`text-[12px] leading-relaxed ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>{p.body}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Impact stats footer */}
+              <div className={`border-t p-6 lg:p-7 grid grid-cols-1 sm:grid-cols-3 gap-6 ${isDark ? 'border-white/[0.06] bg-[#3D82F6]/[0.02]' : 'border-zinc-100 bg-blue-50/30'}`}>
+                {[
+                  { n: '~60%',   label: 'Fewer handoff clarification tickets' },
+                  { n: '12 wks', label: 'Total timeline · vs. 16–18 typical for scope' },
+                  { n: '0',      label: 'Design QA issues on form components post-launch' },
+                ].map((s) => (
+                  <div key={s.label} className="group/k cursor-default">
+                    <div
+                      className="text-2xl lg:text-3xl tracking-[-0.03em] mb-1 transition-transform duration-300 inline-block group-hover/k:scale-105"
+                      style={{ fontFamily: BRAND.headingFont, fontWeight: 800, color: BRAND.blue }}
+                    >
+                      {s.n}
+                    </div>
+                    <div className={`text-[10px] uppercase tracking-[0.15em] ${mt}`}>{s.label}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </FadeIn>
         </div>
       </section>
 
@@ -625,9 +941,15 @@ export function UnispaceCaseStudy() {
           </div>
 
           <FadeIn delay={0.15}>
-            <div className={`rounded-2xl overflow-hidden border mb-8 ${isDark ? 'border-white/[0.06]' : 'border-zinc-200'}`}>
-              <img src={imgSeparator} alt="Unispace UI components overview" className="w-full block" />
-            </div>
+            <motion.div
+              whileHover={{ scale: 1.005 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+              className={`group rounded-2xl overflow-hidden border mb-8 transition-shadow duration-500 hover:shadow-2xl ${isDark ? 'border-white/[0.06] hover:border-white/[0.12] hover:shadow-[#3D82F6]/10' : 'border-zinc-200 hover:border-zinc-300'}`}
+            >
+              <div className="aspect-[21/9] overflow-hidden">
+                <img src={imgSeparator} alt="Unispace UI components overview" className="w-full h-full block object-cover object-top group-hover:scale-[1.02] transition-transform duration-1000" />
+              </div>
+            </motion.div>
           </FadeIn>
         </div>
       </section>
@@ -680,55 +1002,333 @@ export function UnispaceCaseStudy() {
               A system built<br /><span style={{ color: BRAND.blue }}>to scale</span>
             </h2>
             <p className={`text-base leading-relaxed max-w-2xl mb-16 ${mt}`}>
-              38+ components built with auto-layout, variants, and full state coverage. Noto Sans Georgian ensures consistent readability across both English and Georgian scripts.
+              38+ components, full Georgian script support, four semantic color groups, and a decorative motif that signs every screen. Built dark-first with auto-layout and variants for every state.
             </p>
           </FadeIn>
 
-          {/* Color Tokens */}
+          {/* ── 7.1 — COLOR PALETTE (grouped tokens) ── */}
           <FadeIn delay={0.05}>
-            <h3 className={`text-sm uppercase tracking-[0.15em] mb-6 ${mt}`}>Color Tokens</h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3 mb-14">
+            <div className="mb-4 flex items-center gap-3">
+              <span className="text-[10px] uppercase tracking-[0.2em] font-mono text-[#3D82F6]">7.1</span>
+              <h3 className={`text-sm uppercase tracking-[0.15em] ${mt}`}>Color Palette</h3>
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-16">
               {[
-                { label: 'Background',     hex: '#090707' },
-                { label: 'Surface',        hex: '#141212' },
-                { label: 'Primary Blue',   hex: '#3D82F6' },
-                { label: 'Text Primary',   hex: '#FFFFFF' },
-                { label: 'Text Secondary', hex: '#9295A6' },
-                { label: 'Success',        hex: '#10B981' },
-                { label: 'Error',          hex: '#F87171' },
-                { label: 'Warning',        hex: '#FFC701' },
-              ].map((color) => (
-                <div key={color.label}>
-                  <div className="w-full aspect-square rounded-xl mb-2 border" style={{ background: color.hex, borderColor: color.hex === '#FFFFFF' ? 'rgba(255,255,255,0.3)' : color.hex === '#090707' || color.hex === '#141212' ? 'rgba(255,255,255,0.08)' : 'transparent' }} />
-                  <div className={`text-[10px] mb-0.5 ${isDark ? 'text-zinc-300' : 'text-zinc-700'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 600 }}>{color.label}</div>
-                  <div className={`text-[10px] font-mono ${mt}`}>{color.hex}</div>
+                {
+                  group: 'Surface',
+                  tokens: [
+                    { label: 'Canvas',   hex: '#090707' },
+                    { label: 'Surface',  hex: '#141212' },
+                    { label: 'Elevated', hex: '#1B1A1F' },
+                    { label: 'Field',    hex: '#FFFFFF' },
+                  ],
+                },
+                {
+                  group: 'Brand',
+                  tokens: [
+                    { label: 'Primary',    hex: '#3D82F6' },
+                    { label: 'Hover',      hex: '#6BA4FF' },
+                    { label: 'Pressed',    hex: '#1A5FCC' },
+                    { label: 'Accent Glow',hex: 'rgba(61,130,246,0.18)' },
+                  ],
+                },
+                {
+                  group: 'Semantic',
+                  tokens: [
+                    { label: 'Success', hex: '#22C55E' },
+                    { label: 'Warning', hex: '#F59E0B' },
+                    { label: 'Error',   hex: '#F87171' },
+                    { label: 'Info',    hex: '#3D82F6' },
+                  ],
+                },
+                {
+                  group: 'Neutral',
+                  tokens: [
+                    { label: 'Text Primary',   hex: '#FFFFFF' },
+                    { label: 'Text Secondary', hex: '#9295A6' },
+                    { label: 'Border',         hex: 'rgba(255,255,255,0.06)' },
+                    { label: 'Divider',        hex: 'rgba(255,255,255,0.04)' },
+                  ],
+                },
+              ].map((col) => (
+                <div key={col.group} className={`group/grp relative rounded-2xl border p-5 overflow-hidden transition-all duration-500 ease-out hover:-translate-y-1 ${isDark ? `${cardBg} border-white/[0.06] hover:border-white/[0.15]` : 'bg-white border-zinc-200 hover:border-zinc-300'}`}>
+                  <div className={`text-[10px] uppercase tracking-[0.2em] mb-4 font-medium transition-colors duration-300 group-hover/grp:text-[#3D82F6] ${mt}`}>{col.group}</div>
+                  <div className="space-y-2.5">
+                    {col.tokens.map((t) => (
+                      <div key={t.label} className="group/tok flex items-center gap-3 cursor-pointer">
+                        <div
+                          className="w-9 h-9 rounded-lg flex-shrink-0 transition-all duration-300 group-hover/tok:scale-110 group-hover/tok:rotate-3 group-hover/tok:shadow-xl"
+                          style={{
+                            background: t.hex,
+                            boxShadow: t.hex === '#FFFFFF' || t.hex.includes('rgba')
+                              ? 'inset 0 0 0 1px rgba(255,255,255,0.18)'
+                              : 'inset 0 0 0 1px rgba(255,255,255,0.04)',
+                          }}
+                        />
+                        <div className="flex-1 min-w-0">
+                          <div className={`text-[12px] font-medium leading-tight transition-colors ${isDark ? 'text-white' : 'text-zinc-900'}`}>{t.label}</div>
+                          <div className={`text-[10px] font-mono leading-tight transition-colors duration-300 group-hover/tok:text-[#6BA4FF] ${mt}`}>{t.hex}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               ))}
             </div>
           </FadeIn>
 
-          {/* Typography */}
+          {/* ── 7.2 — TYPOGRAPHY (Noto Sans Georgian — single typeface) ── */}
           <FadeIn delay={0.1}>
-            <h3 className={`text-sm uppercase tracking-[0.15em] mb-6 ${mt}`}>Typography</h3>
-            <div className={`rounded-2xl border p-8 mb-14 ${isDark ? `${cardBg} border-white/[0.06]` : 'bg-white border-zinc-200'}`}>
-              <div className="grid md:grid-cols-2 gap-10">
+            <div className="mb-4 flex items-center gap-3">
+              <span className="text-[10px] uppercase tracking-[0.2em] font-mono text-[#3D82F6]">7.2</span>
+              <h3 className={`text-sm uppercase tracking-[0.15em] ${mt}`}>Typography — Noto Sans Georgian</h3>
+            </div>
+            <div className="rounded-2xl border overflow-hidden mb-16 bg-[#090707] border-white/[0.06]">
+              <div className="p-8 lg:p-10">
+                {/* Header note */}
+                <div className="flex items-end justify-between mb-8 flex-wrap gap-4">
+                  <div>
+                    <div className="text-[10px] uppercase tracking-[0.2em] mb-3 text-[#9295A6]">Single Typeface · Georgian + Latin coverage</div>
+                    <div className="text-[13px] text-white/70 leading-relaxed max-w-md" style={{ fontFamily: F_GE }}>
+                      Unispace uses Noto Sans Georgian across the entire product. One typeface, one metric set — both Georgian and Latin scripts render with matching baselines, weights, and rhythm.
+                    </div>
+                  </div>
+                  <div className="px-3 py-1.5 rounded-full border border-[#3D82F6]/30 bg-[#3D82F6]/10 text-[#6BA4FF] text-[11px] font-mono">
+                    Noto Sans Georgian
+                  </div>
+                </div>
+
+                {/* Mega display */}
+                <div className="text-[10px] uppercase tracking-[0.15em] text-white/40 mb-2 font-mono">DISPLAY · 72px · 700</div>
+                <div className="text-6xl lg:text-7xl text-white mb-10 tracking-[-0.02em]" style={{ fontFamily: F_GE, fontWeight: 700 }}>
+                  გამარჯობა
+                </div>
+
+                {/* Weight specimen */}
+                <div className="grid sm:grid-cols-2 gap-x-12 gap-y-6 mb-10">
+                  {[
+                    { weight: 700, label: 'Bold · 700',     sample: 'უნივერსიტეტი' },
+                    { weight: 600, label: 'SemiBold · 600', sample: 'რეგისტრაცია' },
+                    { weight: 500, label: 'Medium · 500',   sample: 'პროექტის ატვირთვა' },
+                    { weight: 400, label: 'Regular · 400',  sample: 'უნილაბის სამართავ პანელი' },
+                  ].map((w) => (
+                    <div key={w.label}>
+                      <div className="text-[10px] uppercase tracking-[0.15em] text-white/40 mb-1.5 font-mono">{w.label}</div>
+                      <div className="text-2xl text-white" style={{ fontFamily: F_GE, fontWeight: w.weight }}>{w.sample}</div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Latin sample with same typeface */}
+                <div className="border-t border-white/[0.06] pt-6 grid md:grid-cols-2 gap-8">
+                  <div>
+                    <div className="text-[10px] uppercase tracking-[0.15em] text-white/40 mb-2 font-mono">GEORGIAN BODY · 14px · 400</div>
+                    <p className="text-[14px] text-white/70 leading-relaxed" style={{ fontFamily: F_GE, fontWeight: 400 }}>
+                      ერთიანი ტიპოგრაფიული სისტემა — სათაურები, ფორმის ლეიბლები, სტატუსები და მთავარი ტექსტი. ერთი შრიფტი ანბანის ყველა ფორმისთვის.
+                    </p>
+                  </div>
+                  <div>
+                    <div className="text-[10px] uppercase tracking-[0.15em] text-white/40 mb-2 font-mono">LATIN BODY · 14px · 400</div>
+                    <p className="text-[14px] text-white/70 leading-relaxed" style={{ fontFamily: F_GE, fontWeight: 400 }}>
+                      A single typographic system — headings, form labels, statuses, and body text. One typeface for every shape of the alphabet, both scripts.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Type scale footer */}
+              <div className="border-t border-white/[0.06] px-5 py-4 grid grid-cols-2 md:grid-cols-4 gap-4 text-[10px]">
+                {[
+                  { l: 'Display',  r: '48–72px · 700' },
+                  { l: 'Heading',  r: '20–32px · 600–700' },
+                  { l: 'Body',     r: '14–16px · 400' },
+                  { l: 'Caption',  r: '10–11px · 500 · +0.15em' },
+                ].map((s) => (
+                  <div key={s.l}>
+                    <div className="text-[#9295A6] uppercase tracking-[0.15em] mb-1">{s.l}</div>
+                    <div className="text-white/80 font-mono">{s.r}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </FadeIn>
+
+          {/* ── 7.3 — FORM SYSTEM (Inputs + Dropdown + Checkbox + Buttons) ── */}
+          <FadeIn delay={0.15}>
+            <div className="mb-4 flex items-center gap-3">
+              <span className="text-[10px] uppercase tracking-[0.2em] font-mono text-[#3D82F6]">7.3</span>
+              <h3 className={`text-sm uppercase tracking-[0.15em] ${mt}`}>Form System — Inputs, Selectors & Actions</h3>
+            </div>
+            <div className="rounded-2xl border p-8 lg:p-10 bg-[#090707] border-white/[0.06] mb-16">
+              <div className="grid md:grid-cols-2 gap-12">
+                {/* INPUTS COLUMN */}
                 <div>
-                  <div className={`text-[10px] uppercase tracking-[0.2em] mb-3 ${mt}`}>Headings — Syne</div>
-                  <div className={`text-5xl tracking-[-0.04em] mb-3 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 800 }}>Aa</div>
-                  <div className={`text-[13px] leading-relaxed ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>Used for all headings, titles, and display text. Weight range: 600–800. Letter-spacing: -0.03em to -0.04em.</div>
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {['800', '700', '600'].map((w) => (
-                      <span key={w} className={`text-[11px] px-2.5 py-1 rounded-md ${isDark ? 'bg-white/[0.04] text-zinc-300' : 'bg-zinc-100 text-zinc-600'}`}>Weight {w}</span>
+                  <div className="text-[10px] uppercase tracking-[0.2em] mb-6 text-[#9295A6]">Input States · 4 variants</div>
+                  <div className="space-y-5">
+                    {/* Default */}
+                    <div>
+                      <div className="text-[10px] uppercase tracking-[0.15em] text-white/40 mb-2 font-mono">DEFAULT</div>
+                      <label className="block text-[12px] mb-2 text-white/70" style={{ fontFamily: F_GE }}>ელ-ფოსტა</label>
+                      <div className="w-full h-11 rounded-[10px] bg-white px-4 flex items-center text-[13px] text-zinc-400" style={{ fontFamily: BRAND.bodyFont }}>
+                        @unilab.ge
+                      </div>
+                    </div>
+                    {/* Focused */}
+                    <div>
+                      <div className="text-[10px] uppercase tracking-[0.15em] text-white/40 mb-2 font-mono">FOCUSED · WITH ICON</div>
+                      <label className="block text-[12px] mb-2 text-white/70" style={{ fontFamily: F_GE }}>პაროლი</label>
+                      <div className="w-full h-11 rounded-[10px] bg-white px-4 flex items-center justify-between text-[13px] text-zinc-900 ring-2 ring-[#3D82F6] ring-offset-2 ring-offset-[#090707]" style={{ fontFamily: BRAND.bodyFont }}>
+                        <span>••••••••••</span>
+                        <Eye size={14} className="text-zinc-400" />
+                      </div>
+                    </div>
+                    {/* Error */}
+                    <div>
+                      <div className="text-[10px] uppercase tracking-[0.15em] text-white/40 mb-2 font-mono">ERROR</div>
+                      <label className="block text-[12px] mb-2 text-white/70" style={{ fontFamily: F_GE }}>სახელი</label>
+                      <div className="w-full h-11 rounded-[10px] bg-white px-4 flex items-center justify-between text-[13px] text-zinc-900 ring-2 ring-[#F87171]" style={{ fontFamily: BRAND.bodyFont }}>
+                        <span className="text-zinc-300">........</span>
+                        <span className="w-4 h-4 rounded-full border-2 border-[#F87171] text-[#F87171] text-[9px] flex items-center justify-center font-bold">!</span>
+                      </div>
+                      <p className="text-[11px] mt-2 text-[#F87171]" style={{ fontFamily: F_GE }}>სახელის მითითება აუცილებელია</p>
+                    </div>
+                    {/* Dropdown */}
+                    <div>
+                      <div className="text-[10px] uppercase tracking-[0.15em] text-white/40 mb-2 font-mono">DROPDOWN · CLOSED</div>
+                      <label className="block text-[12px] mb-2 text-white/70" style={{ fontFamily: F_GE }}>სტატუსი</label>
+                      <div className="w-full h-11 rounded-[10px] bg-white px-4 flex items-center justify-between text-[13px] text-zinc-900" style={{ fontFamily: BRAND.bodyFont }}>
+                        <span style={{ fontFamily: F_GE }}>სტუდენტი</span>
+                        <ArrowRight size={13} className="text-zinc-400 rotate-90" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* SELECTORS + BUTTONS COLUMN */}
+                <div className="space-y-9">
+                  {/* Checkbox */}
+                  <div>
+                    <div className="text-[10px] uppercase tracking-[0.2em] mb-5 text-[#9295A6]">Checkbox · 4 states</div>
+                    <div className="grid grid-cols-2 gap-3">
+                      {[
+                        { state: 'Unchecked', checked: false, disabled: false },
+                        { state: 'Checked',   checked: true,  disabled: false },
+                        { state: 'Disabled',  checked: false, disabled: true },
+                        { state: 'Done',      checked: true,  disabled: true },
+                      ].map((c) => (
+                        <div key={c.state} className="flex items-center gap-2.5">
+                          <span
+                            className="w-4 h-4 rounded flex items-center justify-center flex-shrink-0"
+                            style={{
+                              background: c.checked ? '#3D82F6' : 'transparent',
+                              border: `1.5px solid ${c.checked ? '#3D82F6' : c.disabled ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.4)'}`,
+                              opacity: c.disabled ? 0.5 : 1,
+                            }}
+                          >
+                            {c.checked && <CheckCircle size={10} className="text-white" strokeWidth={3} />}
+                          </span>
+                          <span className="text-[12px] text-white/70" style={{ fontFamily: BRAND.bodyFont }}>{c.state}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Buttons */}
+                  <div>
+                    <div className="text-[10px] uppercase tracking-[0.2em] mb-5 text-[#9295A6]">Buttons · 3 variants</div>
+                    <div className="space-y-5">
+                      <div>
+                        <div className="text-[10px] uppercase tracking-[0.15em] text-white/40 mb-2 font-mono">PRIMARY · FILLED</div>
+                        <div className="flex flex-wrap gap-3">
+                          <button className="h-11 px-6 rounded-[10px] bg-[#3D82F6] text-white text-[13px] font-medium hover:bg-[#6BA4FF] transition-colors" style={{ fontFamily: F_GE }}>
+                            ავტორიზაცია
+                          </button>
+                          <button className="h-11 px-6 rounded-[10px] bg-[#3D82F6]/40 text-white/50 text-[13px] cursor-not-allowed" style={{ fontFamily: F_GE }}>
+                            Disabled
+                          </button>
+                        </div>
+                      </div>
+                      <div>
+                        <div className="text-[10px] uppercase tracking-[0.15em] text-white/40 mb-2 font-mono">SECONDARY · OUTLINED</div>
+                        <div className="flex flex-wrap gap-3">
+                          <button className="h-11 px-6 rounded-[10px] border border-white/30 text-white text-[13px] hover:bg-white/[0.04] hover:border-white/50 transition-colors" style={{ fontFamily: F_GE }}>
+                            გაუქმება
+                          </button>
+                          <button className="h-11 px-6 rounded-[10px] border border-[#3D82F6] text-[#3D82F6] text-[13px] hover:bg-[#3D82F6]/10 transition-colors" style={{ fontFamily: F_GE }}>
+                            დამატება
+                          </button>
+                        </div>
+                      </div>
+                      <div>
+                        <div className="text-[10px] uppercase tracking-[0.15em] text-white/40 mb-2 font-mono">TEXT · LINK</div>
+                        <div className="flex flex-wrap items-center gap-5">
+                          <a className="text-[13px] text-white font-semibold underline underline-offset-4 cursor-pointer" style={{ fontFamily: F_GE }}>
+                            დარეგისტრირდი
+                          </a>
+                          <a className="text-[13px] text-[#9295A6] hover:text-white cursor-pointer transition-colors" style={{ fontFamily: F_GE }}>
+                            დაგავიწყდა პაროლი?
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </FadeIn>
+
+          {/* ── 7.4 — STATUS SYSTEM ── */}
+          <FadeIn delay={0.2}>
+            <div className="mb-4 flex items-center gap-3">
+              <span className="text-[10px] uppercase tracking-[0.2em] font-mono text-[#3D82F6]">7.4</span>
+              <h3 className={`text-sm uppercase tracking-[0.15em] ${mt}`}>Status System — Pills & Row Indicators</h3>
+            </div>
+            <div className="rounded-2xl border p-8 lg:p-10 bg-[#090707] border-white/[0.06] mb-16">
+              <div className="grid lg:grid-cols-2 gap-10">
+                {/* Pills */}
+                <div>
+                  <div className="text-[10px] uppercase tracking-[0.2em] mb-5 text-[#9295A6]">Status Pills · 5 types</div>
+                  <div className="space-y-3">
+                    {[
+                      { label: 'დასრულებული',   en: 'Completed',   bg: 'rgba(34,197,94,0.12)',  border: 'rgba(34,197,94,0.35)',  text: '#22C55E' },
+                      { label: 'გამოცხადებული', en: 'Announced',   bg: 'rgba(245,158,11,0.12)', border: 'rgba(245,158,11,0.35)', text: '#F59E0B' },
+                      { label: 'მიმდინარე',      en: 'In Progress', bg: 'rgba(61,130,246,0.12)', border: 'rgba(61,130,246,0.35)', text: '#6BA4FF' },
+                      { label: 'უარყოფილი',     en: 'Rejected',    bg: 'rgba(248,113,113,0.12)',border: 'rgba(248,113,113,0.35)',text: '#F87171' },
+                      { label: 'მონახაზი',       en: 'Draft',       bg: 'rgba(146,149,166,0.12)',border: 'rgba(146,149,166,0.35)',text: '#9295A6' },
+                    ].map((s) => (
+                      <div key={s.label} className="group/pill flex items-center gap-4 cursor-pointer">
+                        <motion.span
+                          whileHover={{ scale: 1.06, y: -1 }}
+                          whileTap={{ scale: 0.96 }}
+                          transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                          className="px-3 py-1 rounded-full text-[11px] border flex-shrink-0 transition-shadow duration-200"
+                          style={{ background: s.bg, borderColor: s.border, color: s.text, fontFamily: F_GE, fontWeight: 500, boxShadow: `0 0 0 0 ${s.text}00` }}
+                        >
+                          {s.label}
+                        </motion.span>
+                        <span className="text-[10px] font-mono uppercase tracking-[0.15em] text-white/30 transition-colors duration-300 group-hover/pill:text-white/60">{s.en}</span>
+                      </div>
                     ))}
                   </div>
                 </div>
+
+                {/* Row indicators */}
                 <div>
-                  <div className={`text-[10px] uppercase tracking-[0.2em] mb-3 ${mt}`}>Body + Georgian — Manrope / Noto Sans Georgian</div>
-                  <div className={`text-5xl tracking-[-0.02em] mb-3 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.bodyFont, fontWeight: 700 }}>Aa</div>
-                  <div className={`text-[13px] leading-relaxed ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>Body copy, labels, UI text. Noto Sans Georgian ensures native readability for all Georgian-script content with matching metrics.</div>
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {['400', '500', '600'].map((w) => (
-                      <span key={w} className={`text-[11px] px-2.5 py-1 rounded-md ${isDark ? 'bg-white/[0.04] text-zinc-300' : 'bg-zinc-100 text-zinc-600'}`}>Weight {w}</span>
+                  <div className="text-[10px] uppercase tracking-[0.2em] mb-5 text-[#9295A6]">Table Row · Left-Edge Indicator</div>
+                  <div className="space-y-2">
+                    {[
+                      { state: 'Completed',  color: '#22C55E' },
+                      { state: 'Announced',  color: '#F59E0B' },
+                      { state: 'In Review',  color: '#3D82F6' },
+                      { state: 'Rejected',   color: '#F87171' },
+                    ].map((r) => (
+                      <div key={r.state} className="group/row relative flex items-center h-11 rounded-r-[10px] bg-white/[0.02] border border-white/[0.06] overflow-hidden cursor-pointer transition-all duration-300 hover:bg-white/[0.04] hover:border-white/[0.12] hover:translate-x-1">
+                        <div className="absolute left-0 top-0 bottom-0 w-[3px] transition-[width] duration-300 group-hover/row:w-[5px]" style={{ background: r.color }} />
+                        <div className="pl-5 pr-4 flex items-center justify-between w-full">
+                          <span className="text-[12px] text-white/80 transition-colors duration-300 group-hover/row:text-white" style={{ fontFamily: F_GE }}>პითონის სტაჟირება 2024</span>
+                          <span className="text-[10px] font-mono uppercase tracking-[0.15em] transition-transform duration-300 group-hover/row:scale-105" style={{ color: r.color }}>{r.state}</span>
+                        </div>
+                      </div>
                     ))}
                   </div>
                 </div>
@@ -736,47 +1336,160 @@ export function UnispaceCaseStudy() {
             </div>
           </FadeIn>
 
-          {/* Component grid */}
-          <FadeIn delay={0.15}>
-            <h3 className={`text-sm uppercase tracking-[0.15em] mb-6 ${mt}`}>Component Library — 38+ Components</h3>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
-              {[
-                { src: imgButton,   label: 'Button',    desc: '6 variants · 3 sizes · All states' },
-                { src: imgCheckbox, label: 'Checkbox',  desc: 'Default, checked, error, disabled' },
-                { src: imgDropdown, label: 'Dropdown',  desc: 'Single select, multi-select, search' },
-                { src: imgFilter,   label: 'Filter',    desc: 'Tag, toggle, range filter types' },
-                { src: imgIcons,    label: 'Icons',     desc: '80+ custom icons, 3 sizes' },
-                { src: imgLayoutGrid, label: 'Grid',    desc: '12-col, 8-col, and 4-col variants' },
-                { src: imgUpload,   label: 'Upload',    desc: 'Drag-and-drop + click-to-browse' },
-                { src: imgSeparator,label: 'Dividers',  desc: 'Horizontal, vertical, section breaks' },
-              ].map((comp, i) => (
-                <FadeIn key={comp.label} delay={i * 0.04}>
-                  <div className={`rounded-xl border overflow-hidden ${isDark ? 'border-white/[0.06]' : 'border-zinc-200'}`}>
-                    <div className={`overflow-hidden ${isDark ? 'bg-[#141212]' : 'bg-zinc-50'}`}>
-                      <img src={comp.src} alt={comp.label} className="w-full block hover:scale-[1.03] transition-transform duration-500" />
-                    </div>
-                    <div className={`px-3 py-2.5 border-t ${isDark ? 'border-white/[0.04]' : 'border-zinc-100'}`}>
-                      <div className={`text-[12px] font-medium mb-0.5 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont }}>{comp.label}</div>
-                      <div className={`text-[10px] ${mt}`}>{comp.desc}</div>
-                    </div>
+          {/* ── 7.5 — DECORATIVE MOTIF ── */}
+          <FadeIn delay={0.25}>
+            <div className="mb-4 flex items-center gap-3">
+              <span className="text-[10px] uppercase tracking-[0.2em] font-mono text-[#3D82F6]">7.5</span>
+              <h3 className={`text-sm uppercase tracking-[0.15em] ${mt}`}>Decorative System — Brand Motif</h3>
+            </div>
+            <div className="rounded-2xl border overflow-hidden mb-16 bg-[#090707] border-white/[0.06]">
+              <div className="grid md:grid-cols-2">
+                {/* Concentric rings */}
+                <div className="relative p-8 overflow-hidden min-h-[300px] border-b md:border-b-0 md:border-r border-white/[0.06]">
+                  <svg className="absolute -top-16 -left-16 opacity-50" width="380" height="380" viewBox="0 0 380 380" fill="none" aria-hidden>
+                    <defs>
+                      <linearGradient id="unispaceRingGrad" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0%"   stopColor="#6BA4FF" />
+                        <stop offset="50%"  stopColor="#A78BFA" />
+                        <stop offset="100%" stopColor="#F472B6" />
+                      </linearGradient>
+                    </defs>
+                    {[...Array(22)].map((_, i) => (
+                      <circle
+                        key={i}
+                        cx="190"
+                        cy="190"
+                        r={20 + i * 8}
+                        fill="none"
+                        stroke="url(#unispaceRingGrad)"
+                        strokeWidth="0.7"
+                        strokeDasharray="2 5"
+                        opacity={1 - i * 0.035}
+                      />
+                    ))}
+                  </svg>
+                  <div className="relative">
+                    <div className="text-[10px] uppercase tracking-[0.2em] mb-3 text-[#9295A6]">Concentric Rings</div>
+                    <p className="text-[13px] text-white/70 leading-relaxed max-w-xs">Dashed concentric rings on a blue → purple → pink gradient. Signs every auth, onboarding, and verification screen — a calm, technical signature that frames otherwise utilitarian forms.</p>
                   </div>
-                </FadeIn>
-              ))}
+                </div>
+
+                {/* Spark */}
+                <div className="relative p-8 overflow-hidden min-h-[300px] flex items-center justify-center bg-[#0a0a0d]">
+                  <svg width="200" height="200" viewBox="0 0 200 200" fill="none" aria-hidden>
+                    <defs>
+                      <linearGradient id="unispaceSparkGrad" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0%"   stopColor="#6BA4FF" />
+                        <stop offset="100%" stopColor="#A78BFA" />
+                      </linearGradient>
+                    </defs>
+                    <path d="M100 12 L 110 85 L 188 100 L 110 115 L 100 188 L 90 115 L 12 100 L 90 85 Z" fill="none" stroke="url(#unispaceSparkGrad)" strokeWidth="0.9" strokeDasharray="3 3" />
+                    <path d="M100 34 L 106 89 L 165 100 L 106 111 L 100 166 L 94 111 L 35 100 L 94 89 Z" fill="none" stroke="url(#unispaceSparkGrad)" strokeWidth="0.6" strokeDasharray="2 4" opacity="0.6" />
+                  </svg>
+                  <div className="absolute bottom-6 left-6 right-6">
+                    <div className="text-[10px] uppercase tracking-[0.2em] text-[#9295A6]">Spark Mark</div>
+                    <p className="text-[11px] text-white/50 mt-1 leading-relaxed">Corner ornament — used for empty states, success moments, and as a transitional accent between sections.</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </FadeIn>
 
-          {/* Component stats row */}
-          <FadeIn delay={0.2}>
-            <div className={`rounded-2xl border p-6 grid grid-cols-2 md:grid-cols-4 gap-6 ${isDark ? `${cardBg} border-white/[0.06]` : 'bg-white border-zinc-200'}`}>
+          {/* ── 7.6 — LAYOUT & NAVIGATION ── */}
+          <FadeIn delay={0.27}>
+            <div className="mb-4 flex items-center gap-3">
+              <span className="text-[10px] uppercase tracking-[0.2em] font-mono text-[#3D82F6]">7.6</span>
+              <h3 className={`text-sm uppercase tracking-[0.15em] ${mt}`}>Layout & Navigation</h3>
+            </div>
+            <div className="rounded-2xl border overflow-hidden mb-16 bg-[#090707] border-white/[0.06]">
+              <div className="grid md:grid-cols-2">
+                {/* 12-Column Grid */}
+                <div className="group/grid p-8 border-b md:border-b-0 md:border-r border-white/[0.06]">
+                  <div className="text-[10px] uppercase tracking-[0.2em] mb-5 text-[#9295A6]">12-Column Grid · Desktop 1440px</div>
+                  <div className="relative h-44 bg-white/[0.02] rounded-lg border border-white/[0.04] overflow-hidden transition-colors duration-300 group-hover/grid:border-[#3D82F6]/30">
+                    <div className="absolute inset-0 grid grid-cols-12 gap-2 p-3">
+                      {[...Array(12)].map((_, i) => (
+                        <motion.div
+                          key={i}
+                          initial={{ opacity: 0.6 }}
+                          whileHover={{ opacity: 1, scale: 1.03 }}
+                          transition={{ duration: 0.2 }}
+                          className="bg-[#3D82F6]/[0.08] border border-[#3D82F6]/20 rounded-sm h-full group-hover/grid:bg-[#3D82F6]/[0.16] group-hover/grid:border-[#3D82F6]/40 transition-all duration-500"
+                          style={{ transitionDelay: `${i * 25}ms` }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <div className="mt-5 grid grid-cols-3 gap-3 text-[10px]">
+                    <div>
+                      <div className="text-[#9295A6] uppercase tracking-[0.15em] mb-0.5">Columns</div>
+                      <div className="text-white/80 font-mono">12</div>
+                    </div>
+                    <div>
+                      <div className="text-[#9295A6] uppercase tracking-[0.15em] mb-0.5">Gutter</div>
+                      <div className="text-white/80 font-mono">24px</div>
+                    </div>
+                    <div>
+                      <div className="text-[#9295A6] uppercase tracking-[0.15em] mb-0.5">Margin</div>
+                      <div className="text-white/80 font-mono">48px</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Sidebar */}
+                <div className="p-8">
+                  <div className="text-[10px] uppercase tracking-[0.2em] mb-5 text-[#9295A6]">Sidebar · Collapsible Icon Rail</div>
+                  <div className="flex gap-5 items-start">
+                    {/* Mini sidebar mockup */}
+                    <div className="w-14 rounded-lg bg-white/[0.02] border border-white/[0.06] p-2 flex flex-col gap-1.5">
+                      <motion.div whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.95 }} className="w-10 h-10 rounded-md bg-[#3D82F6] flex items-center justify-center text-white shadow-lg shadow-[#3D82F6]/30 cursor-pointer">
+                        <LayoutGrid size={15} />
+                      </motion.div>
+                      {[<PenTool size={14} key="p" />, <BookOpen size={14} key="b" />, <Component size={14} key="c" />].map((icon, idx) => (
+                        <motion.div
+                          key={idx}
+                          whileHover={{ scale: 1.08, backgroundColor: 'rgba(255,255,255,0.06)' }}
+                          whileTap={{ scale: 0.95 }}
+                          className="w-10 h-10 rounded-md flex items-center justify-center text-white/40 cursor-pointer transition-colors hover:text-white"
+                        >
+                          {icon}
+                        </motion.div>
+                      ))}
+                    </div>
+                    {/* Description */}
+                    <div className="flex-1">
+                      <p className="text-[12px] text-white/70 leading-relaxed mb-4" style={{ fontFamily: F_GE }}>
+                        Persistent icon rail at 56px wide. Active route filled with the primary blue. Expands to 240px on chevron click to reveal full Georgian labels.
+                      </p>
+                      <div className="grid grid-cols-2 gap-3 text-[10px]">
+                        <div>
+                          <div className="text-[#9295A6] uppercase tracking-[0.15em] mb-0.5">Collapsed</div>
+                          <div className="text-white/80 font-mono">56px</div>
+                        </div>
+                        <div>
+                          <div className="text-[#9295A6] uppercase tracking-[0.15em] mb-0.5">Expanded</div>
+                          <div className="text-white/80 font-mono">240px</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </FadeIn>
+
+          {/* ── BY THE NUMBERS ── */}
+          <FadeIn delay={0.3}>
+            <div className={`rounded-2xl border p-6 grid grid-cols-2 md:grid-cols-4 gap-6 transition-all duration-500 hover:border-[#3D82F6]/20 ${isDark ? `${cardBg} border-white/[0.06]` : 'bg-white border-zinc-200'}`}>
               {[
                 { n: '38+',  label: 'Total Components' },
-                { n: '100%', label: 'Auto-layout' },
+                { n: '100%', label: 'Auto-layout Coverage' },
                 { n: '4+',   label: 'States per Component' },
-                { n: '3',    label: 'Breakpoints' },
+                { n: '3',    label: 'Responsive Breakpoints' },
               ].map((s) => (
-                <div key={s.label} className="text-center">
-                  <div className="text-3xl tracking-[-0.03em] mb-1" style={{ fontFamily: BRAND.headingFont, fontWeight: 800, color: BRAND.blue }}>{s.n}</div>
-                  <div className={`text-[10px] uppercase tracking-[0.15em] ${mt}`}>{s.label}</div>
+                <div key={s.label} className="group/n text-center cursor-default">
+                  <div className="text-3xl tracking-[-0.03em] mb-1 transition-transform duration-300 group-hover/n:scale-110 group-hover/n:-translate-y-0.5" style={{ fontFamily: BRAND.headingFont, fontWeight: 800, color: BRAND.blue }}>{s.n}</div>
+                  <div className={`text-[10px] uppercase tracking-[0.15em] transition-colors duration-300 group-hover/n:text-[#6BA4FF] ${mt}`}>{s.label}</div>
                 </div>
               ))}
             </div>
@@ -809,12 +1522,20 @@ export function UnispaceCaseStudy() {
               { icon: <CheckCircle size={20} />,color: '#34D399',     title: '17 Edge Cases Covered',      body: 'Every form state, empty state, loading state, error state, and conditional path documented and designed before handoff.' },
             ].map((item, i) => (
               <FadeIn key={item.title} delay={i * 0.07}>
-                <div className={`rounded-2xl border p-7 h-full ${isDark ? `${cardBg} border-white/[0.06]` : 'bg-white border-zinc-200'}`}>
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-5" style={{ background: `${item.color}15`, color: item.color }}>
+                <div className={`group relative rounded-2xl border p-7 h-full overflow-hidden transition-all duration-500 ease-out hover:-translate-y-1.5 ${isDark ? `${cardBg} border-white/[0.06] hover:border-white/[0.15]` : 'bg-white border-zinc-200 hover:border-zinc-300'}`}>
+                  {/* Corner glow */}
+                  <div
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                    style={{ background: `radial-gradient(circle at 100% 0%, ${item.color}18, transparent 60%)` }}
+                  />
+                  <div
+                    className="relative w-10 h-10 rounded-xl flex items-center justify-center mb-5 transition-all duration-300 group-hover:scale-110 group-hover:rotate-3"
+                    style={{ background: `${item.color}15`, color: item.color, boxShadow: '0 0 0 0 transparent' }}
+                  >
                     {item.icon}
                   </div>
-                  <h3 className={`text-base mb-2 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 700 }}>{item.title}</h3>
-                  <p className={`text-[13px] leading-relaxed ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>{item.body}</p>
+                  <h3 className={`relative text-base mb-2 transition-colors duration-300 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 700 }}>{item.title}</h3>
+                  <p className={`relative text-[13px] leading-relaxed ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>{item.body}</p>
                 </div>
               </FadeIn>
             ))}
@@ -822,7 +1543,7 @@ export function UnispaceCaseStudy() {
 
           {/* Usability testing callout */}
           <FadeIn delay={0.2}>
-            <div className={`rounded-2xl border p-8 ${isDark ? 'border-[#3D82F6]/20 bg-[#3D82F6]/[0.04]' : 'border-blue-200 bg-blue-50/50'}`}>
+            <div className={`rounded-2xl border p-8 transition-all duration-500 hover:shadow-2xl hover:shadow-[#3D82F6]/10 ${isDark ? 'border-[#3D82F6]/20 bg-[#3D82F6]/[0.04] hover:border-[#3D82F6]/40' : 'border-blue-200 bg-blue-50/50 hover:border-blue-300'}`}>
               <div className="grid md:grid-cols-4 gap-8 text-center">
                 {[
                   { n: '8',   label: 'Test Participants' },
@@ -830,9 +1551,9 @@ export function UnispaceCaseStudy() {
                   { n: '14',  label: 'Issues Found' },
                   { n: '11',  label: 'Resolved Pre-Handoff' },
                 ].map((s) => (
-                  <div key={s.label}>
-                    <div className="text-4xl tracking-[-0.04em] mb-1" style={{ fontFamily: BRAND.headingFont, fontWeight: 800, color: BRAND.blue }}><CountUp end={Number(s.n)} /></div>
-                    <div className={`text-[11px] uppercase tracking-[0.15em] ${mt}`}>{s.label}</div>
+                  <div key={s.label} className="group/u cursor-default">
+                    <div className="text-4xl tracking-[-0.04em] mb-1 transition-transform duration-300 group-hover/u:scale-110" style={{ fontFamily: BRAND.headingFont, fontWeight: 800, color: BRAND.blue }}><CountUp end={Number(s.n)} /></div>
+                    <div className={`text-[11px] uppercase tracking-[0.15em] transition-colors duration-300 group-hover/u:text-[#6BA4FF] ${mt}`}>{s.label}</div>
                   </div>
                 ))}
               </div>
@@ -887,13 +1608,23 @@ export function UnispaceCaseStudy() {
               },
             ].map((col, i) => (
               <FadeIn key={col.label} delay={i * 0.1}>
-                <div className={`rounded-2xl border p-7 h-full ${isDark ? `${cardBg} border-white/[0.06]` : 'bg-white border-zinc-200'}`}>
-                  <div className={`text-[10px] uppercase tracking-[0.2em] mb-5 font-medium`} style={{ color: col.color }}>{col.label}</div>
-                  <ul className="space-y-4">
+                <div className={`group relative rounded-2xl border p-7 h-full overflow-hidden transition-all duration-500 ease-out hover:-translate-y-1.5 ${isDark ? `${cardBg} border-white/[0.06] hover:border-white/[0.15]` : 'bg-white border-zinc-200 hover:border-zinc-300'}`}>
+                  {/* Animated top accent stripe */}
+                  <div
+                    className="absolute top-0 left-0 right-0 h-[2px] origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-700 ease-out"
+                    style={{ background: col.color }}
+                  />
+                  {/* Subtle glow */}
+                  <div
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                    style={{ background: `radial-gradient(circle at 50% 0%, ${col.color}14, transparent 70%)` }}
+                  />
+                  <div className={`relative text-[10px] uppercase tracking-[0.2em] mb-5 font-medium transition-transform duration-300 group-hover:translate-x-0.5`} style={{ color: col.color }}>{col.label}</div>
+                  <ul className="relative space-y-4">
                     {col.items.map((item, j) => (
                       <li key={j} className="flex items-start gap-3">
-                        <div className="w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0" style={{ background: col.color }} />
-                        <span className={`text-[13px] leading-relaxed ${isDark ? 'text-zinc-300' : 'text-zinc-600'}`}>{item}</span>
+                        <div className="w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0 transition-transform duration-300 group-hover:scale-150" style={{ background: col.color }} />
+                        <span className={`text-[13px] leading-relaxed transition-colors duration-300 ${isDark ? 'text-zinc-300 group-hover:text-zinc-200' : 'text-zinc-600 group-hover:text-zinc-700'}`}>{item}</span>
                       </li>
                     ))}
                   </ul>
@@ -902,16 +1633,6 @@ export function UnispaceCaseStudy() {
             ))}
           </div>
 
-          {/* Closing quote */}
-          <FadeIn delay={0.3}>
-            <div className={`mt-14 rounded-2xl border p-10 text-center ${isDark ? 'border-white/[0.06] bg-white/[0.02]' : 'border-zinc-200 bg-white'}`}>
-              <div className="text-5xl mb-4 opacity-20" style={{ color: BRAND.blue, fontFamily: BRAND.headingFont }}>"</div>
-              <p className={`text-xl lg:text-2xl leading-relaxed tracking-[-0.01em] max-w-2xl mx-auto ${isDark ? 'text-zinc-200' : 'text-zinc-700'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 500 }}>
-                Designing for three roles in one system taught me that clarity is not a feature — it's the foundation everything else is built on.
-              </p>
-              <div className={`mt-6 text-[11px] uppercase tracking-[0.2em] ${mt}`}>Salome Mosiava — Lead Designer, Unispace</div>
-            </div>
-          </FadeIn>
         </div>
       </section>
 

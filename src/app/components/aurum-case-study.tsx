@@ -357,7 +357,7 @@ export function AurumCaseStudy() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-14">
               {[
                 { value: 196, suffix: '', label: 'Screens', sub: 'Full Product', icon: <Monitor size={20} />, color: '#D59A04' },
-                { value: 64, suffix: '+', label: 'Components', sub: 'Design System', icon: <Component size={20} />, color: '#F0C040' },
+                { value: 64, suffix: '', label: 'Components', sub: 'Design System', icon: <Component size={20} />, color: '#F0C040' },
                 { value: 8, suffix: '', label: 'Color Tokens', sub: 'Brand Palette', icon: <Droplets size={20} />, color: '#D59A04' },
                 { value: 2, suffix: '', label: 'Platforms', sub: 'Mobile & Desktop', icon: <Smartphone size={20} />, color: '#9295A6' },
               ].map((m) => (
@@ -443,6 +443,55 @@ export function AurumCaseStudy() {
               </GlowCard>
             </FadeIn>
           </div>
+
+          {/* ── Trust Architecture · Show-Don't-Tell visual ── */}
+          <FadeIn delay={0.2}>
+            <div className={`mt-14 lg:mt-16 rounded-2xl border overflow-hidden transition-all duration-500 hover:border-[#D59A04]/25 hover:shadow-2xl hover:shadow-[#D59A04]/10 ${isDark ? 'bg-[#121318]/60 border-white/[0.06]' : 'bg-white border-zinc-200'}`}>
+              {/* Header */}
+              <div className={`px-7 lg:px-10 pt-7 pb-5 border-b ${isDark ? 'border-white/[0.06]' : 'border-zinc-100'}`}>
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-7 h-7 rounded-md bg-[#D59A04]/15 flex items-center justify-center">
+                    <Shield size={14} className="text-[#D59A04]" />
+                  </div>
+                  <span className="text-[10px] uppercase tracking-[0.25em] text-[#D59A04] font-medium">Trust Architecture</span>
+                </div>
+                <h3 className={`text-2xl lg:text-3xl tracking-[-0.02em] ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 700 }}>
+                  Four pillars · engineered into every touchpoint
+                </h3>
+              </div>
+
+              {/* 4 pillars */}
+              <div className={`grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x ${isDark ? 'divide-white/[0.06]' : 'divide-zinc-100'}`}>
+                {[
+                  { icon: <Shield size={18} />,      name: 'Security',   practice: 'Multi-layer auth, KYC, 2FA, biometric',  metric: 'Every transaction · Every login' },
+                  { icon: <Eye size={18} />,         name: 'Clarity',    practice: 'Progressive disclosure, no clutter',     metric: 'One primary action per screen' },
+                  { icon: <Zap size={18} />,         name: 'Speed',      practice: 'Single-click trade execution',           metric: 'Sub-100ms response targets' },
+                  { icon: <CheckCircle size={18} />, name: 'Confidence', practice: 'Verified status at every step',          metric: 'Visible audit trail' },
+                ].map((p) => (
+                  <div key={p.name} className={`group/p p-6 lg:p-7 cursor-default transition-colors duration-300 ${isDark ? 'hover:bg-white/[0.02]' : 'hover:bg-zinc-50'}`}>
+                    <div className="w-9 h-9 rounded-lg bg-[#D59A04]/10 flex items-center justify-center mb-4 text-[#D59A04] transition-transform duration-300 group-hover/p:scale-110 group-hover/p:rotate-3">
+                      {p.icon}
+                    </div>
+                    <div className={`text-[14px] mb-2 transition-colors duration-300 group-hover/p:text-[#D59A04] ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 700 }}>{p.name}</div>
+                    <div className={`text-[12px] leading-relaxed mb-3 ${bt}`}>{p.practice}</div>
+                    <div className="text-[10px] uppercase tracking-[0.15em] text-[#D59A04]/70">{p.metric}</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Footer stats */}
+              <div className={`px-7 lg:px-10 py-4 border-t bg-[#D59A04]/[0.03] ${isDark ? 'border-white/[0.06]' : 'border-zinc-100'}`}>
+                <div className="flex items-center justify-between gap-4 flex-wrap">
+                  <span className={`text-[12px] ${bt}`} style={{ fontFamily: BRAND.bodyFont }}>How trust is engineered into</span>
+                  <div className="flex items-center gap-5 text-[12px]">
+                    <span className="group/n cursor-default"><span className="text-[#D59A04] font-mono transition-transform inline-block group-hover/n:scale-110" style={{ fontWeight: 700 }}>196</span> <span className={mt}>screens</span></span>
+                    <span className="group/n cursor-default"><span className="text-[#D59A04] font-mono transition-transform inline-block group-hover/n:scale-110" style={{ fontWeight: 700 }}>64+</span> <span className={mt}>components</span></span>
+                    <span className="group/n cursor-default"><span className="text-[#D59A04] font-mono transition-transform inline-block group-hover/n:scale-110" style={{ fontWeight: 700 }}>3</span> <span className={mt}>surfaces</span></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </FadeIn>
         </div>
       </section>
 

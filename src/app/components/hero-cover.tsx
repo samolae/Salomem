@@ -96,20 +96,30 @@ const PerspectiveCard = ({
   mouseX: any;
   mouseY: any;
 }) => {
-  const springConfig = { stiffness: 50, damping: 30 };
-  const rx = useSpring(useTransform(mouseY, [-0.5, 0.5], [rotateX + 3, rotateX - 3]), springConfig);
-  const ry = useSpring(useTransform(mouseX, [-0.5, 0.5], [rotateY - 3, rotateY + 3]), springConfig);
+  // Spring-smoothed mouse tracking — drives rotation continuously via style.
+  // IMPORTANT: do NOT also animate rotateX/rotateY in `animate`, or the
+  // entry keyframes will override the MotionValues and freeze rotation
+  // after the entry transition finishes.
+  const springConfig = { stiffness: 80, damping: 22, mass: 0.6 };
+  const rx = useSpring(useTransform(mouseY, [-0.5, 0.5], [rotateX + 9, rotateX - 9]), springConfig);
+  const ry = useSpring(useTransform(mouseX, [-0.5, 0.5], [rotateY - 9, rotateY + 9]), springConfig);
+  // Subtle parallax translation for added depth on hover
+  const tx = useSpring(useTransform(mouseX, [-0.5, 0.5], [-12, 12]), springConfig);
+  const ty = useSpring(useTransform(mouseY, [-0.5, 0.5], [-8, 8]), springConfig);
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 60, rotateX: rotateX + 10, rotateY }}
-      animate={{ opacity: 1, y: 0, rotateX, rotateY }}
+      initial={{ opacity: 0, y: 60 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ delay, duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
       style={{
         rotateX: rx,
         rotateY: ry,
+        x: tx,
+        y: ty,
         translateZ: z,
         transformStyle: 'preserve-3d',
+        willChange: 'transform',
       }}
       className={className}
     >
@@ -361,10 +371,12 @@ export function HeroCover() {
             </motion.div>
           </div>
 
-          {/* Fade-out gradient at the bottom */}
+          {/* Fade-out gradient at the bottom — extends below to cover the 3D-tilted mockup overhang */}
           <div
-            className="absolute bottom-0 left-0 right-0 h-32 z-30 pointer-events-none"
-            style={{ background: `linear-gradient(to bottom, transparent, ${isDark ? '#080B0F' : '#F3F3F3'})` }}
+            className="absolute -bottom-20 left-0 right-0 h-56 lg:h-72 z-30 pointer-events-none"
+            style={{
+              background: `linear-gradient(to bottom, transparent 0%, ${isDark ? 'rgba(8,11,15,0.4)' : 'rgba(243,243,243,0.4)'} 30%, ${isDark ? '#080B0F' : '#F3F3F3'} 70%, ${isDark ? '#080B0F' : '#F3F3F3'} 100%)`,
+            }}
           />
         </motion.div>
       </motion.section>

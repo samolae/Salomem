@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef, useLayoutEffect, useMemo, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { motion, AnimatePresence, useScroll, useTransform, useVelocity, useMotionValue, useAnimationFrame, useSpring, useMotionValueEvent, useReducedMotion } from 'motion/react';
+import { motion, AnimatePresence, useScroll, useTransform, useVelocity, useMotionValue, useMotionTemplate, useAnimationFrame, useSpring, useMotionValueEvent, useReducedMotion } from 'motion/react';
 import type { MotionValue } from 'motion/react';
 import { Link, useSearchParams, useLocation, useParams, useNavigate } from 'react-router';
 import { useActiveSection } from './active-section-context';
@@ -173,15 +173,15 @@ const Sidebar = ({
           <img
             src="https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1777841338/fav_ggorfv.png"
             alt="Salome Mosiava"
-            width="64" height="64"
-            className="w-8 h-8 rounded-full object-cover flex-shrink-0 ring-1 ring-white/[0.08]"
+            width="80" height="80"
+            className="w-10 h-10 rounded-full object-cover flex-shrink-0 ring-1 ring-white/[0.08]"
           />
-          <div className={`min-w-0 ${inDrawer ? 'block' : 'hidden lg:block'}`}>
-            <h2 className={`text-[13px] font-semibold truncate leading-snug ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: F.heading, letterSpacing: '-0.02em' }}>
+          <div className={`min-w-0 flex flex-col gap-[2px] ${inDrawer ? 'block' : 'hidden lg:block'}`}>
+            <h2 className={`text-[13px] font-semibold truncate leading-[1.15] ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: F.heading, letterSpacing: '-0.02em' }}>
               Salome Mosiava
             </h2>
-            <p className="text-[10px] leading-snug mt-[3px]" style={{ fontFamily: F.body, fontWeight: 500, color: '#ed592b' }}>Senior Product Designer</p>
-            <p className="text-[9.5px] leading-snug" style={{ fontFamily: F.body, fontWeight: 400, color: isDark ? 'rgba(255,255,255,0.28)' : '#aaa' }}>& Art Direction</p>
+            <p className="text-[10px] leading-[1.2]" style={{ fontFamily: F.body, fontWeight: 500, color: '#ed592b' }}>Senior Product Designer</p>
+            <p className="text-[10px] leading-[1.2]" style={{ fontFamily: F.body, fontWeight: 400, color: isDark ? 'rgba(255,255,255,0.32)' : '#999' }}>& Art Direction</p>
           </div>
         </div>
       </motion.div>
@@ -638,15 +638,33 @@ const SpotlightDeckSection = ({ isDark, border }: { isDark: boolean; border: str
   const mt = isDark ? 'text-[#7a7d8a]' : 'text-zinc-400';
 
   return (
-    <div ref={sectionRef}>
+    <div
+      ref={sectionRef}
+      className="ux-page-fixed"
+      style={{
+        ['--pin-top' as any]: '5vh',
+        ['--peek' as any]: '5vh',
+        ['--runway' as any]: '0vh',
+      }}
+    >
       <div className="flex items-center gap-3 mb-6">
         <div className="w-1.5 h-1.5 rounded-full bg-[#a855f7]" />
         <p className={`text-[11px] uppercase tracking-[0.15em] ${mt}`} style={{ fontFamily: F.body, fontWeight: 500 }}>Spotlights of 2025</p>
         <div className={`flex-1 h-px ${isDark ? 'bg-white/[0.04]' : 'bg-zinc-200'}`} />
       </div>
-      <div className="space-y-4">
+      {/*
+        Bento sticky stack — 20vh padding-bottom is the sweet spot:
+        gives Card 3 a brief but visible pin duration (~190px of scroll
+        on a typical viewport) without leaving a huge void below the
+        stacked composition.
+      */}
+      <div className="ux-stack-wrapper" style={{ paddingBottom: '26vh' }}>
         {spotlights.map((sp, i) => (
-          <div key={sp.tag} className="h-[260px]">
+          <div
+            key={sp.tag}
+            className="ux-stack-card h-[260px]"
+            style={{ ['--stack-idx' as any]: i }}
+          >
             <SpotlightCardInner sp={sp} index={i} total={spotlights.length} isDark={isDark} border={border} />
           </div>
         ))}
@@ -812,8 +830,14 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
         </div>
       </FadeIn>
 
-      {/* TRUE BENTO GRID — 3-col asymmetric, dense row spans */}
-      <FadeIn delay={0.2}>
+      {/* TRUE BENTO GRID — 3-col asymmetric, dense row spans · creative scroll reveal */}
+      <motion.div
+        initial={{ opacity: 0, y: 80, scale: 0.94, rotateX: -8, filter: 'blur(10px)' }}
+        whileInView={{ opacity: 1, y: 0, scale: 1, rotateX: 0, filter: 'blur(0px)' }}
+        viewport={{ once: true, margin: '-80px' }}
+        transition={{ duration: 1.0, ease: [0.22, 1, 0.36, 1], opacity: { duration: 0.6 } }}
+        style={{ transformPerspective: 1600, transformStyle: 'preserve-3d', transformOrigin: 'center top' }}
+      >
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 mb-2.5" style={{ gridTemplateRows: 'auto auto auto' }}>
 
           {/* AURUM — spans 2 cols × 2 rows: the hero cell */}
@@ -893,7 +917,7 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
           </div>
 
         </div>
-      </FadeIn>
+      </motion.div>
 
       {/* Explore more — inline CTA */}
       <FadeIn delay={0.3}>
@@ -1072,134 +1096,184 @@ const ServicesContent = ({ isDark }: { isDark: boolean }) => {
   ];
 
   return (
-    <div>
-      {/* Heading */}
+    <div className="space-y-7 lg:space-y-8">
+      {/* ─── HEADING ──────────────────────────────────────── */}
       <FadeIn>
-        <div className="mb-8">
-          <p className={`text-[10px] uppercase tracking-[0.2em] ${mt} mb-4 flex items-center gap-2`} style={{ fontFamily: F.body, fontWeight: 500 }}>
-            <span className="inline-block w-6 h-px bg-[#ed592b]" />
+        <div>
+          <p className={`text-[10px] uppercase tracking-[0.25em] ${mt} mb-5 flex items-center gap-3`} style={{ fontFamily: F.body, fontWeight: 500 }}>
+            <span className="inline-block w-8 h-px bg-[#ed592b]" />
             What I do
           </p>
-          <h1 className={`text-[22px] sm:text-[28px] tracking-[-0.03em] leading-[1.15] ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: F.heading, fontWeight: 700 }}>
+          <h1 className={`text-3xl sm:text-4xl lg:text-5xl tracking-[-0.035em] leading-[1.05] mb-5 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: F.heading, fontWeight: 700 }}>
             Design <span className="text-[#ed592b]">Services</span><span className={isDark ? 'text-white/15' : 'text-zinc-200'}>.</span>
           </h1>
+          <p className={`text-[14px] sm:text-[15px] leading-[1.55] max-w-md ${isDark ? 'text-white/55' : 'text-zinc-500'}`} style={{ fontFamily: F.body }}>
+            Four focused engagements — from end-to-end product design to art direction, social, and motion. Pick one or combine them.
+          </p>
         </div>
       </FadeIn>
 
-      {/* Service cards */}
-      <div className="space-y-2 mb-7">
-        {services.map((s, i) => {
-          const isOpen = openIndex === i;
-          return (
-            <FadeIn key={s.title} delay={i * 0.06}>
-              <div
-                onClick={() => setOpenIndex(isOpen ? null : i)}
-                className={`rounded-2xl overflow-hidden cursor-pointer border transition-colors duration-300 ${
-                  isOpen
-                    ? isDark ? 'border-[#ed592b]/15 bg-[#0d0e13]' : 'border-[#ed592b]/15 bg-white'
-                    : isDark ? 'border-white/[0.05] bg-[#0c0d11] hover:border-white/[0.08]' : `${border} bg-white hover:border-zinc-300`
-                }`}
-              >
-                <div className={`h-[2px] transition-all duration-500 ${isOpen ? 'bg-gradient-to-r from-[#ed592b] to-transparent' : 'bg-transparent'}`} />
+      {/* ─── SERVICE CARDS ────────────────────────────────── */}
+      <div>
+        <div className="flex items-center justify-between mb-5">
+          <p className={`text-[10px] uppercase tracking-[0.2em] ${mt}`} style={{ fontFamily: F.body, fontWeight: 600 }}>
+            01 — Services
+          </p>
+          <span className={`text-[10px] font-mono ${mt}`}>04 offerings</span>
+        </div>
+        <div className="space-y-3">
+          {services.map((s, i) => {
+            const isOpen = openIndex === i;
+            return (
+              <FadeIn key={s.title} delay={i * 0.06}>
+                <div
+                  onClick={() => setOpenIndex(isOpen ? null : i)}
+                  className={`rounded-2xl overflow-hidden cursor-pointer border transition-colors duration-300 ${
+                    isOpen
+                      ? isDark ? 'border-[#ed592b]/25 bg-[#0d0e13]' : 'border-[#ed592b]/25 bg-white'
+                      : isDark ? 'border-white/[0.05] bg-[#0c0d11] hover:border-white/[0.10]' : `${border} bg-white hover:border-zinc-300`
+                  }`}
+                >
+                  <div className={`h-[2px] transition-all duration-500 ${isOpen ? 'bg-gradient-to-r from-[#ed592b] via-[#ed592b]/60 to-transparent' : 'bg-transparent'}`} />
 
-                <div className="px-5 py-4 flex items-center gap-3">
-                  <div className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors duration-300 ${isOpen ? 'bg-[#ed592b]/12 text-[#ed592b]' : isDark ? 'bg-white/[0.04] text-white/30' : 'bg-zinc-100 text-zinc-400'}`}>{s.icon}</div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <h3 className={`text-[14px] tracking-[-0.02em] transition-colors duration-300 ${isOpen ? (isDark ? 'text-white' : 'text-zinc-900') : isDark ? 'text-white/60' : 'text-zinc-500'}`} style={{ fontFamily: F.heading, fontWeight: 600 }}>{s.title}</h3>
-                      <span className={`text-[9px] px-2 py-0.5 rounded-full flex-shrink-0 ${isDark ? 'bg-white/[0.05] text-white/25' : 'bg-zinc-100 text-zinc-400'}`} style={{ fontFamily: F.body }}>{s.timeline}</span>
-                    </div>
-                    <p className={`text-[11px] mt-0.5 ${isDark ? 'text-white/25' : 'text-zinc-400'}`} style={{ fontFamily: F.body }}>{s.tagline}</p>
-                  </div>
-                  <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-300 ${isOpen ? 'rotate-180' : ''} ${isDark ? 'bg-white/[0.03] text-white/15' : 'bg-zinc-100 text-zinc-300'}`}>
-                    <ChevronDown size={12} />
-                  </div>
-                </div>
-
-                <AnimatePresence initial={false}>
-                  {isOpen && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1], opacity: { duration: 0.25, delay: 0.1 } }}
-                      className="overflow-hidden"
-                    >
-                      <div className="px-5 pb-5 pt-0">
-                        <div className={`h-px mb-4 ${isDark ? 'bg-white/[0.05]' : 'bg-zinc-100'}`} />
-                        <div className="grid grid-cols-2 gap-x-4 gap-y-2 mb-4">
-                          {s.deliverables.map((d) => (
-                            <div key={d} className="flex items-start gap-2">
-                              <Check size={11} className="text-[#ed592b]/60 flex-shrink-0 mt-[2px]" />
-                              <span className={`text-[11px] leading-[1.4] ${isDark ? 'text-white/40' : 'text-zinc-500'}`} style={{ fontFamily: F.body }}>{d}</span>
-                            </div>
-                          ))}
-                        </div>
-                        <div className={`flex items-center gap-2 px-3 py-2 rounded-lg ${isDark ? 'bg-[#ed592b]/[0.06]' : 'bg-[#ed592b]/[0.04]'}`}>
-                          <div className="w-1.5 h-1.5 rounded-full bg-[#ed592b]/50 flex-shrink-0" />
-                          <span className={`text-[10px] ${isDark ? 'text-white/35' : 'text-zinc-400'}`} style={{ fontFamily: F.body }}>{s.outcome}</span>
-                        </div>
+                  <div className="px-6 py-5 flex items-center gap-4">
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-300 ${isOpen ? 'bg-[#ed592b]/15 text-[#ed592b] scale-105' : isDark ? 'bg-white/[0.04] text-white/35' : 'bg-zinc-100 text-zinc-400'}`}>{s.icon}</div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2.5 flex-wrap mb-1">
+                        <h3 className={`text-[16px] tracking-[-0.02em] transition-colors duration-300 ${isOpen ? (isDark ? 'text-white' : 'text-zinc-900') : isDark ? 'text-white/70' : 'text-zinc-600'}`} style={{ fontFamily: F.heading, fontWeight: 600 }}>{s.title}</h3>
+                        <span className={`text-[9px] px-2 py-0.5 rounded-full uppercase tracking-[0.1em] flex-shrink-0 ${isDark ? 'bg-white/[0.05] text-white/35' : 'bg-zinc-100 text-zinc-500'}`} style={{ fontFamily: F.body, fontWeight: 500 }}>{s.timeline}</span>
                       </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </FadeIn>
-          );
-        })}
+                      <p className={`text-[12px] leading-[1.5] ${isDark ? 'text-white/35' : 'text-zinc-400'}`} style={{ fontFamily: F.body }}>{s.tagline}</p>
+                    </div>
+                    <div className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-300 ${isOpen ? 'rotate-180 bg-[#ed592b]/15 text-[#ed592b]' : isDark ? 'bg-white/[0.03] text-white/25' : 'bg-zinc-100 text-zinc-400'}`}>
+                      <ChevronDown size={13} />
+                    </div>
+                  </div>
+
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1], opacity: { duration: 0.25, delay: 0.1 } }}
+                        className="overflow-hidden"
+                      >
+                        <div className="px-6 pb-6 pt-0">
+                          <div className={`h-px mb-5 ${isDark ? 'bg-white/[0.05]' : 'bg-zinc-100'}`} />
+                          <p className={`text-[10px] uppercase tracking-[0.2em] mb-3 ${mt}`} style={{ fontFamily: F.body, fontWeight: 600 }}>What's included</p>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-2.5 mb-5">
+                            {s.deliverables.map((d) => (
+                              <div key={d} className="flex items-start gap-2.5">
+                                <Check size={12} className="text-[#ed592b]/70 flex-shrink-0 mt-[3px]" strokeWidth={2.5} />
+                                <span className={`text-[12px] leading-[1.45] ${isDark ? 'text-white/55' : 'text-zinc-600'}`} style={{ fontFamily: F.body }}>{d}</span>
+                              </div>
+                            ))}
+                          </div>
+                          <div className={`flex items-start gap-2.5 px-4 py-3 rounded-xl border ${isDark ? 'bg-[#ed592b]/[0.06] border-[#ed592b]/15' : 'bg-[#ed592b]/[0.05] border-[#ed592b]/15'}`}>
+                            <span className="text-[#ed592b] text-[9px] uppercase tracking-[0.15em] flex-shrink-0 mt-0.5" style={{ fontFamily: F.body, fontWeight: 600 }}>Proof</span>
+                            <span className={`text-[11px] leading-[1.45] ${isDark ? 'text-white/55' : 'text-zinc-600'}`} style={{ fontFamily: F.body }}>{s.outcome}</span>
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </FadeIn>
+            );
+          })}
+        </div>
       </div>
 
-      {/* How I work with you */}
-      <FadeIn delay={0.3}>
-        <div className={`rounded-2xl border p-5 mb-4 ${isDark ? 'border-white/[0.05] bg-[#0c0d11]' : `${border} bg-white`}`}>
-          <p className={`text-[10px] uppercase tracking-[0.15em] ${mt} mb-4`} style={{ fontFamily: F.body, fontWeight: 500 }}>How I work with you</p>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {process.map((p, i) => (
-              <div key={p.step} className="relative">
-                <div className={`text-[10px] mb-1.5 font-mono ${isDark ? 'text-[#ed592b]/50' : 'text-[#ed592b]/60'}`}>{p.step}</div>
-                <div className={`text-[12px] mb-1 ${isDark ? 'text-white/70' : 'text-zinc-700'}`} style={{ fontFamily: F.heading, fontWeight: 600 }}>{p.title}</div>
-                <p className={`text-[10px] leading-[1.5] ${mt}`} style={{ fontFamily: F.body }}>{p.desc}</p>
-              </div>
-            ))}
+      {/* ─── PROCESS ─────────────────────────────────────── */}
+      <motion.div
+        initial={{ opacity: 0, y: 60, scale: 0.95, rotateX: -8, filter: 'blur(8px)' }}
+        whileInView={{ opacity: 1, y: 0, scale: 1, rotateX: 0, filter: 'blur(0px)' }}
+        viewport={{ once: true, margin: '-60px' }}
+        transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], opacity: { duration: 0.5 } }}
+        style={{ transformPerspective: 1400 }}
+      >
+        <div>
+          <div className="flex items-center justify-between mb-5">
+            <p className={`text-[10px] uppercase tracking-[0.2em] ${mt}`} style={{ fontFamily: F.body, fontWeight: 600 }}>
+              02 — How I work with you
+            </p>
+            <span className={`text-[10px] font-mono ${mt}`}>04 stages</span>
+          </div>
+          <div className={`rounded-2xl border overflow-hidden ${isDark ? 'border-white/[0.05] bg-[#0c0d11]' : `${border} bg-white`}`}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x lg:divide-y-0 lg:divide-x divide-white/[0.05]">
+              {process.map((p) => (
+                <div key={p.step} className="p-5 lg:p-6 relative">
+                  <div className={`text-[11px] mb-3 font-mono ${isDark ? 'text-[#ed592b]/60' : 'text-[#ed592b]/70'}`}>{p.step}</div>
+                  <div className={`text-[15px] mb-1.5 tracking-[-0.01em] ${isDark ? 'text-white/85' : 'text-zinc-800'}`} style={{ fontFamily: F.heading, fontWeight: 600 }}>{p.title}</div>
+                  <p className={`text-[11px] leading-[1.55] ${mt}`} style={{ fontFamily: F.body }}>{p.desc}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-      </FadeIn>
+      </motion.div>
 
-      {/* Stats */}
-      <FadeIn delay={0.35}>
-        <div className={`flex items-center justify-between px-4 py-3.5 rounded-xl border mb-4 ${isDark ? 'border-white/[0.04] bg-white/[0.015]' : 'border-zinc-100 bg-zinc-50'}`}>
-          {[
-            { num: '80+', label: 'Projects' },
-            { num: '50+', label: 'Clients' },
-            { num: '6+', label: 'Years' },
-            { num: 'Top 3%', label: 'Upwork' },
-          ].map((stat) => (
-            <div key={stat.label} className="text-center flex-1">
-              <div className={`text-[13px] sm:text-[15px] tracking-[-0.02em] ${isDark ? 'text-white/80' : 'text-zinc-800'}`} style={{ fontFamily: F.heading, fontWeight: 700 }}>{stat.num}</div>
-              <div className={`text-[8px] uppercase tracking-[0.1em] ${mt} mt-0.5`} style={{ fontFamily: F.body }}>{stat.label}</div>
+      {/* ─── PROOF STATS ─────────────────────────────────── */}
+      <motion.div
+        initial={{ opacity: 0, x: 50, scale: 0.94, rotateY: 8, filter: 'blur(8px)' }}
+        whileInView={{ opacity: 1, x: 0, scale: 1, rotateY: 0, filter: 'blur(0px)' }}
+        viewport={{ once: true, margin: '-60px' }}
+        transition={{ duration: 0.95, ease: [0.22, 1, 0.36, 1], opacity: { duration: 0.5 } }}
+        style={{ transformPerspective: 1400 }}
+      >
+        <div>
+          <div className="flex items-center justify-between mb-5">
+            <p className={`text-[10px] uppercase tracking-[0.2em] ${mt}`} style={{ fontFamily: F.body, fontWeight: 600 }}>
+              03 — Track record
+            </p>
+            <span className={`text-[10px] font-mono ${mt}`}>06+ years</span>
+          </div>
+          <div className={`rounded-2xl border overflow-hidden ${isDark ? 'border-white/[0.05] bg-[#0c0d11]' : `${border} bg-white`}`}>
+            <div className="grid grid-cols-2 lg:grid-cols-4 divide-x divide-y lg:divide-y-0 divide-white/[0.05]">
+              {[
+                { num: '80+',    label: 'Projects shipped' },
+                { num: '50+',    label: 'Clients served' },
+                { num: '6+',     label: 'Years designing' },
+                { num: 'Top 3%', label: 'Upwork rating' },
+              ].map((stat) => (
+                <div key={stat.label} className="px-4 sm:px-5 py-5 lg:py-6 min-w-0">
+                  <div className={`text-[13px] sm:text-[15px] lg:text-[17px] xl:text-[19px] tracking-[-0.02em] leading-none mb-2 whitespace-nowrap ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: F.heading, fontWeight: 800 }}>{stat.num}</div>
+                  <div className={`text-[10px] uppercase tracking-[0.12em] ${mt} whitespace-nowrap`} style={{ fontFamily: F.body, fontWeight: 500 }}>{stat.label}</div>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
-      </FadeIn>
+      </motion.div>
 
-      {/* Start a project CTA */}
-      <FadeIn delay={0.4}>
+      {/* ─── START A PROJECT CTA ─────────────────────────── */}
+      <motion.div
+        initial={{ opacity: 0, y: 70, scale: 0.96, filter: 'blur(8px)' }}
+        whileInView={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+        viewport={{ once: true, margin: '-40px' }}
+        transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], opacity: { duration: 0.5 } }}
+      >
         <Link to="/contact">
           <motion.div
-            whileHover={{ scale: 1.01 }}
-            whileTap={{ scale: 0.99 }}
-            className="flex items-center justify-between px-5 py-4 rounded-2xl bg-[#ed592b] cursor-pointer group"
+            whileHover={{ scale: 1.005, y: -2 }}
+            whileTap={{ scale: 0.995 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 28 }}
+            className="relative flex items-center justify-between px-6 py-6 lg:px-8 lg:py-7 rounded-2xl bg-[#ed592b] cursor-pointer group overflow-hidden shadow-lg shadow-[#ed592b]/20 hover:shadow-xl hover:shadow-[#ed592b]/30 transition-shadow"
           >
-            <div>
-              <div className="text-white text-[14px] tracking-[-0.02em]" style={{ fontFamily: F.heading, fontWeight: 600 }}>Start a project</div>
-              <div className="text-white/60 text-[11px] mt-0.5" style={{ fontFamily: F.body }}>Tell me about your goals — I'll get back within 24h</div>
+            {/* Subtle moving glow */}
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ background: 'radial-gradient(circle at 30% 50%, rgba(255,255,255,0.12), transparent 60%)' }} />
+            <div className="relative">
+              <p className="text-white/70 text-[10px] uppercase tracking-[0.2em] mb-2" style={{ fontFamily: F.body, fontWeight: 600 }}>04 — Let's begin</p>
+              <div className="text-white text-[18px] sm:text-[22px] tracking-[-0.02em] mb-1" style={{ fontFamily: F.heading, fontWeight: 600 }}>Start a project</div>
+              <div className="text-white/70 text-[12px]" style={{ fontFamily: F.body }}>Tell me about your goals — I'll reply within 24h</div>
             </div>
-            <div className="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center group-hover:bg-white/25 transition-colors flex-shrink-0">
-              <ArrowUpRight size={15} className="text-white" />
+            <div className="relative w-12 h-12 rounded-full bg-white/15 flex items-center justify-center group-hover:bg-white/25 group-hover:scale-110 transition-all duration-300 flex-shrink-0">
+              <ArrowUpRight size={18} className="text-white group-hover:rotate-[12deg] transition-transform" />
             </div>
           </motion.div>
         </Link>
-      </FadeIn>
+      </motion.div>
     </div>
   );
 };
@@ -1347,10 +1421,19 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
         </div>
       </FadeIn>
 
-      {/* Contact cards — interactive grid */}
+      {/* Contact cards — interactive grid with creative scroll reveal */}
       <div className="space-y-1.5 mb-6">
-        {contactItems.map((item, i) => (
-          <FadeIn key={item.label} delay={0.35 + i * 0.06}>
+        {contactItems.map((item, i) => {
+          const dir = i % 2 === 0 ? 1 : -1;
+          return (
+          <motion.div
+            key={item.label}
+            initial={{ opacity: 0, x: dir * 40, y: 20, scale: 0.96, rotate: dir * -1, filter: 'blur(6px)' }}
+            whileInView={{ opacity: 1, x: 0, y: 0, scale: 1, rotate: 0, filter: 'blur(0px)' }}
+            viewport={{ once: true, margin: '-30px' }}
+            transition={{ duration: 0.65, delay: i * 0.06, ease: [0.22, 1, 0.36, 1], opacity: { duration: 0.4 } }}
+            style={{ transformPerspective: 1200 }}
+          >
             <motion.div
               onMouseEnter={() => setHoveredIdx(i)}
               onMouseLeave={() => setHoveredIdx(null)}
@@ -1453,12 +1536,19 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
                 transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
               />
             </motion.div>
-          </FadeIn>
-        ))}
+          </motion.div>
+          );
+        })}
       </div>
 
-      {/* Intake form */}
-      <FadeIn delay={0.55}>
+      {/* Intake form — creative scroll reveal */}
+      <motion.div
+        initial={{ opacity: 0, y: 70, scale: 0.95, rotateX: -8, filter: 'blur(10px)' }}
+        whileInView={{ opacity: 1, y: 0, scale: 1, rotateX: 0, filter: 'blur(0px)' }}
+        viewport={{ once: true, margin: '-50px' }}
+        transition={{ duration: 0.95, ease: [0.22, 1, 0.36, 1], opacity: { duration: 0.5 } }}
+        style={{ transformPerspective: 1400 }}
+      >
         <div className={`rounded-2xl border p-5 ${isDark ? 'border-white/[0.06] bg-[#0c0d11]' : `${border} bg-white`}`}>
           <p className={`text-[10px] uppercase tracking-[0.15em] ${mt} mb-4`} style={{ fontFamily: F.body, fontWeight: 500 }}>Quick inquiry</p>
           {/* Close dropdown when clicking outside */}
@@ -1636,7 +1726,7 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
             </motion.button>
           </form>
         </div>
-      </FadeIn>
+      </motion.div>
 
     </div>
   );
@@ -1943,6 +2033,127 @@ const TiltCard = ({ children, className, onClick, style: extraStyle }: { childre
   );
 };
 
+/* ─── Magnetic Ad Card — magnetic-hover + scroll-velocity tilt + fluid spotlight ─── */
+type MagneticAdCardProps = {
+  v: {
+    src: string;
+    type?: 'image' | 'video';
+    brandName: string;
+    logoImg?: string;
+    whiteBg?: boolean;
+  };
+  border: string;
+  isDark: boolean;
+  cardTilt: any; // MotionValue<number>
+  index: number;
+  delayStep: number;
+  onClick: () => void;
+};
+
+const MagneticAdCard = ({ v, border, isDark, cardTilt, index, delayStep, onClick }: MagneticAdCardProps) => {
+  const ref = useRef<HTMLButtonElement>(null);
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const spotX = useMotionValue('50%');
+  const spotY = useMotionValue('50%');
+
+  // Magnetic spring physics — card glides toward cursor
+  const springConfig = { stiffness: 220, damping: 22, mass: 0.5 };
+  const x = useSpring(mouseX, springConfig);
+  const y = useSpring(mouseY, springConfig);
+  // Skew based on cursor offset — fluid distortion feel
+  const skewX = useSpring(useTransform(mouseY, [-60, 60], [1.5, -1.5]), springConfig);
+  const skewY = useSpring(useTransform(mouseX, [-60, 60], [-1.5, 1.5]), springConfig);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const rect = ref.current?.getBoundingClientRect();
+    if (!rect) return;
+    const cx = e.clientX - rect.left;
+    const cy = e.clientY - rect.top;
+    mouseX.set((cx - rect.width / 2) * 0.18);
+    mouseY.set((cy - rect.height / 2) * 0.18);
+    spotX.set(`${(cx / rect.width) * 100}%`);
+    spotY.set(`${(cy / rect.height) * 100}%`);
+  };
+
+  const handleMouseLeave = () => {
+    mouseX.set(0);
+    mouseY.set(0);
+  };
+
+  // Cursor-tracked spotlight — gives "fluid" feel without WebGL
+  const spotlightBg = useMotionTemplate`radial-gradient(220px circle at ${spotX} ${spotY}, rgba(237,89,43,0.22), rgba(255,255,255,0.05) 35%, transparent 65%)`;
+
+  return (
+    <motion.button
+      ref={ref}
+      onClick={onClick}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      initial={{ opacity: 0, y: 16, scale: 0.96 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, margin: '-20px' }}
+      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: (index % delayStep) * 0.03 }}
+      style={{ x, y, rotateZ: cardTilt, willChange: 'transform' }}
+      className={`group relative rounded-lg overflow-hidden border ${border} block break-inside-avoid mb-1.5 transition-[border-color] duration-300 ${isDark ? 'hover:border-white/[0.18]' : 'hover:border-zinc-400'}`}
+    >
+      {/* Skewed image layer — fluid distortion */}
+      <motion.div className="overflow-hidden" style={{ skewX, skewY, willChange: 'transform' }}>
+        {v.type === 'video' ? (
+          <video src={v.src} autoPlay loop muted playsInline className="w-full h-auto object-cover block" />
+        ) : (
+          <img
+            src={v.src}
+            alt={`${v.brandName} social media advertising design`}
+            loading="lazy"
+            decoding="async"
+            width="800"
+            height="800"
+            className="w-full h-auto object-cover block transition-transform duration-500 group-hover:scale-[1.07]"
+            style={{ willChange: 'transform' }}
+          />
+        )}
+      </motion.div>
+
+      {/* Spotlight overlay — follows cursor via MotionTemplate */}
+      <motion.div
+        aria-hidden
+        className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 mix-blend-screen"
+        style={{ background: spotlightBg, willChange: 'opacity' }}
+      />
+
+      {/* Bottom label */}
+      <div className={`absolute inset-0 bg-gradient-to-t ${isDark ? 'from-black/70' : 'from-black/50'} to-transparent flex items-end p-2 pointer-events-none`}>
+        <div className="flex items-center gap-1.5">
+          <div className={`w-4 h-4 rounded flex items-center justify-center text-[7px] flex-shrink-0 ${isDark ? 'bg-white/15 text-white/70' : 'bg-white/20 text-white/80'}`} style={{ fontFamily: F.heading, fontWeight: 700 }}>
+            {v.logoImg ? <img src={v.logoImg} alt={`${v.brandName} logo`} loading="lazy" width="16" height="16" className="w-full h-full object-cover rounded" /> : v.brandName.charAt(0)}
+          </div>
+          <span className="text-[9px] text-white/90 truncate" style={{ fontFamily: F.body, fontWeight: 500 }}>{v.brandName.split(' · ')[0]}</span>
+        </div>
+      </div>
+
+      {/* Video badge */}
+      {v.type === 'video' && (
+        <div className="absolute top-1.5 left-1.5 pointer-events-none">
+          <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-black/50 backdrop-blur-md border border-white/[0.08]">
+            <Play size={7} className="text-white/70 fill-white/70" />
+            <span className="text-[7px] font-mono text-white/60 uppercase tracking-wider">Reel</span>
+          </div>
+        </div>
+      )}
+
+      {/* Hover arrow */}
+      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-all duration-300 flex items-center justify-center pointer-events-none">
+        <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 scale-75 group-hover:scale-100">
+          <div className="w-7 h-7 rounded-full bg-white/20 backdrop-blur-xl flex items-center justify-center border border-white/15">
+            {v.type === 'video' ? <Play size={11} className="text-white ml-0.5" /> : <ArrowUpRight size={11} className="text-white" />}
+          </div>
+        </div>
+      </div>
+    </motion.button>
+  );
+};
+
 const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
   const mt = isDark ? 'text-[#7a7d8a]' : 'text-zinc-400';
   const border = isDark ? 'border-white/[0.06]' : 'border-zinc-200';
@@ -1958,19 +2169,97 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
     });
   }, []);
   const [activeBrand, setActiveBrand] = useState(0); // -1 = All
-  const [viewAllPage, setViewAllPage] = useState(0);
   const [showStickyBar, setShowStickyBar] = useState(false);
   const brand = activeBrand >= 0 ? adsBrands[activeBrand] : null;
 
-  const ITEMS_PER_PAGE = 9;
+  // Infinite scroll for "All" tab
+  const INITIAL_BATCH = 18;
+  const ITEMS_PER_BATCH = 18;
+  const [visibleCount, setVisibleCount] = useState(INITIAL_BATCH);
+  const sentinelRef = useRef<HTMLDivElement>(null);
+
   const allVisuals = useMemo(() =>
     adsBrands.flatMap((b) => b.items.map((item) => ({ ...item, brandName: b.name, brandIdx: adsBrands.indexOf(b), logoImg: b.logoImg, whiteBg: b.whiteBg }))),
     []
   );
-  const totalPages = Math.ceil(allVisuals.length / ITEMS_PER_PAGE);
-  const pagedVisuals = allVisuals.slice(viewAllPage * ITEMS_PER_PAGE, (viewAllPage + 1) * ITEMS_PER_PAGE);
+  const visibleVisuals = allVisuals.slice(0, visibleCount);
+  const hasMore = visibleCount < allVisuals.length;
 
-  const goTo = (idx: number) => { setActiveBrand(idx); setViewAllPage(0); };
+  // Reset visible count when toggling tabs
+  useEffect(() => {
+    setVisibleCount(INITIAL_BATCH);
+  }, [activeBrand]);
+
+  // Shared scroll-velocity → tilt for ALL cards (cheap, computed once)
+  const { scrollY } = useScroll();
+  const scrollVelocity = useVelocity(scrollY);
+  const smoothVelocity = useSpring(scrollVelocity, { stiffness: 90, damping: 28, mass: 1 });
+  const cardTilt = useTransform(smoothVelocity, [-2500, 2500], [-2, 2]);
+
+  // Robust infinite scroll — listener attached ONCE per tab change.
+  // Using document scroll distance (window.scrollY + window.innerHeight vs
+  // document.documentElement.scrollHeight) is unaffected by parent
+  // transforms/filters, unlike sentinel.getBoundingClientRect().
+  useEffect(() => {
+    if (activeBrand !== -1) return;
+
+    let raf: number | null = null;
+    let mounted = true;
+
+    const tryLoad = () => {
+      if (!mounted) return;
+      const scrolled = window.scrollY + window.innerHeight;
+      const docHeight = document.documentElement.scrollHeight;
+      const fromBottom = docHeight - scrolled;
+      // Sentinel as backup signal
+      let sentinelInZone = false;
+      const sentinel = sentinelRef.current;
+      if (sentinel) {
+        const r = sentinel.getBoundingClientRect();
+        sentinelInZone = r.top < window.innerHeight + 1000;
+      }
+      if (fromBottom < 1400 || sentinelInZone) {
+        // setVisibleCount with functional form reads current state — no
+        // closure-staleness issues. The clamp inside is a no-op once done.
+        setVisibleCount((c) => {
+          if (c >= allVisuals.length) return c;
+          return Math.min(c + ITEMS_PER_BATCH, allVisuals.length);
+        });
+      }
+    };
+
+    const onScroll = () => {
+      if (raf !== null) return;
+      raf = requestAnimationFrame(() => {
+        raf = null;
+        tryLoad();
+      });
+    };
+
+    // Initial check — handles short pages where sentinel is already in view
+    raf = requestAnimationFrame(() => {
+      raf = null;
+      tryLoad();
+    });
+    // Cascade check after layout settles from each batch
+    const cascadeInterval = setInterval(() => {
+      if (!mounted) return;
+      tryLoad();
+    }, 200);
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+
+    return () => {
+      mounted = false;
+      if (raf !== null) cancelAnimationFrame(raf);
+      clearInterval(cascadeInterval);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, [activeBrand, allVisuals.length]);
+
+  const goTo = (idx: number) => { setActiveBrand(idx); };
   const goPrev = () => setActiveBrand(p => p <= 0 ? adsBrands.length - 1 : p - 1);
   const goNext = () => setActiveBrand(p => (p + 1) % adsBrands.length);
 
@@ -2041,87 +2330,105 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
       <AnimatePresence mode="wait">
         {activeBrand === -1 ? (
           /* All visuals — paginated */
-          <motion.div key="all" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }} transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}>
+          <motion.div
+            key="all"
+            initial={{ opacity: 0, x: -50, rotateY: 8, scale: 0.97, filter: 'blur(10px)' }}
+            animate={{ opacity: 1, x: 0, rotateY: 0, scale: 1, filter: 'blur(0px)' }}
+            exit={{ opacity: 0, x: 50, rotateY: -8, scale: 0.97, filter: 'blur(10px)' }}
+            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], opacity: { duration: 0.35 } }}
+            style={{ transformPerspective: 1400, transformOrigin: 'center center' }}
+          >
             <div className={`rounded-xl ${bg2} border ${border} p-3`}>
-              <div className="flex items-center justify-between mb-2.5">
-                <span className={`text-[10px] font-mono ${mt}`}>{allVisuals.length} visuals · Page {viewAllPage + 1}/{totalPages}</span>
-                <div className="flex items-center gap-1">
-                  <motion.button whileHover={{ scale: 1.12 }} whileTap={{ scale: 0.88 }}
-                    onClick={() => setViewAllPage(p => Math.max(0, p - 1))}
-                    disabled={viewAllPage === 0} aria-label="Previous page"
-                    className={`min-w-[40px] min-h-[40px] md:min-w-0 md:min-h-0 md:w-6 md:h-6 rounded-md flex items-center justify-center transition-colors focus-visible:shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${viewAllPage === 0 ? isDark ? 'text-white/10 cursor-not-allowed' : 'text-zinc-200 cursor-not-allowed' : isDark ? 'text-[#5a5d6a] hover:text-white hover:bg-white/[0.06]' : 'text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100'}`}
-                  ><ChevronLeft size={13} /></motion.button>
-                  <motion.button whileHover={{ scale: 1.12 }} whileTap={{ scale: 0.88 }}
-                    onClick={() => setViewAllPage(p => Math.min(totalPages - 1, p + 1))}
-                    disabled={viewAllPage === totalPages - 1} aria-label="Next page"
-                    className={`min-w-[40px] min-h-[40px] md:min-w-0 md:min-h-0 md:w-6 md:h-6 rounded-md flex items-center justify-center transition-colors focus-visible:shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${viewAllPage === totalPages - 1 ? isDark ? 'text-white/10 cursor-not-allowed' : 'text-zinc-200 cursor-not-allowed' : isDark ? 'text-[#5a5d6a] hover:text-white hover:bg-white/[0.06]' : 'text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100'}`}
-                  ><ChevronRight size={13} /></motion.button>
+              <div className="flex items-center justify-between gap-4 mb-3">
+                <span className={`text-[10px] font-mono whitespace-nowrap ${mt}`}>
+                  <span className={isDark ? 'text-white/70' : 'text-zinc-700'}>{visibleVisuals.length}</span>
+                  <span className="opacity-50"> / {allVisuals.length}</span> visuals
+                </span>
+                {/* Inline mini progress */}
+                <div className={`flex-1 h-px max-w-[160px] ${isDark ? 'bg-white/[0.04]' : 'bg-zinc-200'} rounded-full overflow-hidden`}>
+                  <motion.div
+                    className="h-full"
+                    style={{ background: hasMore ? 'linear-gradient(90deg, #ed592b, #ff8252)' : 'rgb(52,211,153)' }}
+                    initial={false}
+                    animate={{ width: `${(visibleCount / allVisuals.length) * 100}%` }}
+                    transition={{ type: 'spring', stiffness: 90, damping: 22 }}
+                  />
                 </div>
+                <span className={`text-[9px] font-mono uppercase tracking-[0.15em] whitespace-nowrap ${hasMore ? mt : isDark ? 'text-emerald-400/70' : 'text-emerald-600/70'}`}>
+                  {hasMore ? `${Math.round((visibleCount / allVisuals.length) * 100)}%` : 'Complete'}
+                </span>
               </div>
-              <AnimatePresence mode="wait">
-                <motion.div key={viewAllPage} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                  className="columns-2 md:columns-3" style={{ columnGap: '0.375rem' }}
-                >
-                  {(() => {
-                    const pageImgSrcs = pagedVisuals.filter(v => v.type === 'image').map(v => v.src);
-                    return pagedVisuals.map((v, i) => (
-                      <motion.button key={`${v.brandName}-${v.src}`}
-                        onClick={() => v.type === 'image' ? setLightbox({ src: v.src, alt: v.brandName, whiteBg: v.whiteBg, images: pageImgSrcs, index: pageImgSrcs.indexOf(v.src) }) : undefined}
-                        initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04, ease: [0.22, 1, 0.36, 1] }}
-                        className={`group relative rounded-lg overflow-hidden border ${border} transition-all duration-200 block break-inside-avoid mb-1.5 ${isDark ? 'hover:border-white/[0.12]' : 'hover:border-zinc-300'}`}
-                      >
-                        <div className="overflow-hidden">
-                          {v.type === 'video' ? (
-                            <video src={v.src} autoPlay loop muted playsInline className="w-full h-auto object-cover block" />
-                          ) : (
-                            <img src={v.src} alt={`${v.brandName} social media advertising design`} loading="lazy" decoding="async" width="800" height="800" className="w-full h-auto object-cover block transition-transform duration-500 group-hover:scale-105" />
-                          )}
-                        </div>
-                        <div className={`absolute inset-0 bg-gradient-to-t ${isDark ? 'from-black/70' : 'from-black/50'} to-transparent flex items-end p-2`}>
-                          <div className="flex items-center gap-1.5">
-                            <div className={`w-4 h-4 rounded flex items-center justify-center text-[7px] flex-shrink-0 ${isDark ? 'bg-white/15 text-white/70' : 'bg-white/20 text-white/80'}`} style={{ fontFamily: F.heading, fontWeight: 700 }}>
-                              {v.logoImg ? <img src={v.logoImg} alt={`${v.brandName} logo`} loading="lazy" width="16" height="16" className="w-full h-full object-cover rounded" /> : v.brandName.charAt(0)}
-                            </div>
-                            <span className="text-[9px] text-white/90 truncate" style={{ fontFamily: F.body, fontWeight: 500 }}>{v.brandName.split(' · ')[0]}</span>
-                          </div>
-                        </div>
-                        {v.type === 'video' && (
-                          <div className="absolute top-1.5 left-1.5">
-                            <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-black/50 backdrop-blur-md border border-white/[0.08]">
-                              <Play size={7} className="text-white/70 fill-white/70" />
-                              <span className="text-[7px] font-mono text-white/60 uppercase tracking-wider">Reel</span>
-                            </div>
-                          </div>
-                        )}
-                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center pointer-events-none">
-                          <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 scale-75 group-hover:scale-100">
-                            <div className="w-7 h-7 rounded-full bg-white/15 backdrop-blur-xl flex items-center justify-center border border-white/10">
-                              {v.type === 'video' ? <Play size={11} className="text-white ml-0.5" /> : <ArrowUpRight size={11} className="text-white" />}
-                            </div>
-                          </div>
-                        </div>
-                      </motion.button>
-                    ));
-                  })()}
-                </motion.div>
-              </AnimatePresence>
-              <div className="flex items-center justify-center gap-1 mt-3">
-                {Array.from({ length: totalPages }).map((_, i) => (
-                  <button key={i} onClick={() => setViewAllPage(i)} className="min-w-[40px] min-h-[40px] md:min-w-0 md:min-h-0 md:p-0.5 flex items-center justify-center" aria-label={`Page ${i + 1}`}>
-                    <motion.div
-                      animate={{ width: i === viewAllPage ? 16 : 4, height: 4, backgroundColor: i === viewAllPage ? '#ed592b' : isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)', borderRadius: 2 }}
-                      whileHover={{ backgroundColor: i === viewAllPage ? '#ed592b' : isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)', scale: i === viewAllPage ? 1 : 1.5 }}
-                      transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+
+              <div className="columns-2 md:columns-3" style={{ columnGap: '0.375rem' }}>
+                {(() => {
+                  const visibleImgSrcs = visibleVisuals.filter(v => v.type === 'image').map(v => v.src);
+                  return visibleVisuals.map((v, i) => (
+                    <MagneticAdCard
+                      key={`${v.brandName}-${v.src}`}
+                      v={v}
+                      border={border}
+                      isDark={isDark}
+                      cardTilt={cardTilt}
+                      index={i}
+                      delayStep={ITEMS_PER_BATCH}
+                      onClick={() => v.type === 'image'
+                        ? setLightbox({ src: v.src, alt: v.brandName, whiteBg: v.whiteBg, images: visibleImgSrcs, index: visibleImgSrcs.indexOf(v.src) })
+                        : undefined}
                     />
-                  </button>
-                ))}
+                  ));
+                })()}
               </div>
+
+              {/* Continuation indicator — clear visual cue that more content follows */}
+              {hasMore && (
+                <div ref={sentinelRef} className="mt-5">
+                  {/* Animated hint */}
+                  <div className="flex items-center justify-center gap-2.5 py-3">
+                    <motion.span
+                      animate={{ y: [0, 4, 0], opacity: [0.5, 1, 0.5] }}
+                      transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
+                      className="text-[#ed592b]"
+                    >
+                      <ChevronDown size={13} />
+                    </motion.span>
+                    <span className="text-[10px] font-mono uppercase tracking-[0.2em]">
+                      <span className="text-[#ed592b]">{allVisuals.length - visibleCount}</span>
+                      <span className={`ml-1.5 ${mt}`}>more · keep scrolling</span>
+                    </span>
+                  </div>
+                  {/* Progress strip */}
+                  <div className={`h-[2px] ${isDark ? 'bg-white/[0.04]' : 'bg-zinc-200'} rounded-full overflow-hidden`}>
+                    <motion.div
+                      className="h-full rounded-full"
+                      style={{ background: 'linear-gradient(90deg, #ed592b, #ff8252)' }}
+                      initial={false}
+                      animate={{ width: `${(visibleCount / allVisuals.length) * 100}%` }}
+                      transition={{ type: 'spring', stiffness: 90, damping: 22 }}
+                    />
+                  </div>
+                </div>
+              )}
+              {!hasMore && allVisuals.length > INITIAL_BATCH && (
+                <div className="flex items-center justify-center gap-2 py-5 mt-3">
+                  <span className="text-emerald-400/70">●</span>
+                  <span className={`text-[9px] font-mono uppercase tracking-[0.2em] ${mt}`}>
+                    <span className={isDark ? 'text-emerald-400/80' : 'text-emerald-600/80'}>All {allVisuals.length} visuals</span>
+                    <span className="ml-1.5">— end reached</span>
+                  </span>
+                </div>
+              )}
             </div>
           </motion.div>
         ) : (
           /* Selected brand visuals */
-          <motion.div key={activeBrand} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }} transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}>
+          <motion.div
+            key={activeBrand}
+            initial={{ opacity: 0, x: 50, rotateY: -8, scale: 0.97, filter: 'blur(10px)' }}
+            animate={{ opacity: 1, x: 0, rotateY: 0, scale: 1, filter: 'blur(0px)' }}
+            exit={{ opacity: 0, x: -50, rotateY: 8, scale: 0.97, filter: 'blur(10px)' }}
+            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], opacity: { duration: 0.35 } }}
+            style={{ transformPerspective: 1400, transformOrigin: 'center center' }}
+          >
             <div className={`rounded-xl ${bg2} border ${border} p-3 relative overflow-hidden`}>
               <div className="absolute top-0 left-0 w-32 h-32 opacity-[0.04] pointer-events-none" style={{ background: 'radial-gradient(circle, #ed592b 0%, transparent 70%)' }} />
 
@@ -2527,14 +2834,30 @@ const SocialMediaMotionContent = ({ isDark }: { isDark: boolean }) => {
         </p>
       </FadeIn>
 
-      {/* All Reels Grid */}
-      <StaggerChildren className="columns-2 md:columns-3" style={{ columnGap: '0.75rem' }} stagger={0.06}>
-          {motionReels.map((reel, idx) => (
-            <StaggerItem key={`${reel.brand}-${idx}`} className="break-inside-avoid mb-3">
+      {/* Reels Grid — row-major flow, left-aligned (reads top-left → bottom-right) */}
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 items-start justify-items-start">
+        {motionReels.map((reel, idx) => {
+          const dir = idx % 2 === 0 ? 1 : -1;
+          return (
+            <motion.div
+              key={`${reel.brand}-${idx}`}
+              initial={{ opacity: 0, y: 60, scale: 0.9, rotate: dir * -1.5, filter: 'blur(8px)' }}
+              whileInView={{ opacity: 1, y: 0, scale: 1, rotate: 0, filter: 'blur(0px)' }}
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{
+                duration: 0.7,
+                delay: (idx % 6) * 0.04,
+                ease: [0.22, 1, 0.36, 1],
+                opacity: { duration: 0.4 },
+              }}
+              style={{ transformPerspective: 1200, transformOrigin: dir > 0 ? 'left center' : 'right center' }}
+              className="w-full"
+            >
               <MotionReelCard reel={reel} idx={idx} isDark={isDark} mt={mt} bg2={bg2} border={border} activeUnmutedIdx={activeUnmutedIdx} onUnmute={setActiveUnmutedIdx} />
-            </StaggerItem>
-          ))}
-      </StaggerChildren>
+            </motion.div>
+          );
+        })}
+      </div>
     </div>
   );
 };
@@ -2547,17 +2870,27 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
   const border = isDark ? 'border-white/[0.06]' : 'border-zinc-200';
 
   return (
-    <div>
+    <div className="ux-page-fixed">
+      {/* Heading — scrolls naturally with the page (no sticky) */}
       <FadeIn>
         <h1 className="text-3xl lg:text-4xl mb-3 tracking-[0]" style={{ fontFamily: F.heading, fontWeight: 700, letterSpacing: 0 }}>
           <TextScramble text="UX/UI Design" delay={0.2} duration={1} style={{ fontFamily: F.heading, fontWeight: 700, letterSpacing: 0 }} />
         </h1>
-        <p className={`${mt} max-w-xl leading-relaxed mb-12 text-[14px]`} style={{ fontFamily: F.body }}>
+        <p className={`${mt} max-w-xl leading-relaxed text-[14px]`} style={{ fontFamily: F.body }}>
           End-to-end product design — from user research to polished interfaces and scalable design systems.
         </p>
       </FadeIn>
 
-      <FadeIn delay={0.1}>
+      {/* ─── Bento-Grid Stack & Sticky Reveal — pure CSS view-timeline ─── */}
+      <div className="ux-stack-wrapper mt-12 lg:mt-16">
+      <div className="ux-stack-card" style={{ ['--stack-idx' as any]: 0 }}>
+      <motion.div
+        initial={{ opacity: 0, x: 70, y: 100, scale: 0.92, rotate: -2.5, rotateY: -8, filter: 'blur(14px)' }}
+        whileInView={{ opacity: 1, x: 0, y: 0, scale: 1, rotate: 0, rotateY: 0, filter: 'blur(0px)' }}
+        viewport={{ once: true, margin: '-80px' }}
+        transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1], opacity: { duration: 0.6 } }}
+        style={{ transformPerspective: 1400, transformStyle: 'preserve-3d', transformOrigin: 'center 30%' }}
+      >
         <Link to="/projects/aurum">
           <motion.div
             whileHover={{ y: -6 }}
@@ -2565,6 +2898,15 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
           >
             <div className="relative aspect-[16/9] overflow-hidden bg-[#080B0F] img-hover-zoom">
               <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+              {/* Shine sweep — fires once on scroll-into-view */}
+              <motion.div
+                initial={{ x: '-110%' }}
+                whileInView={{ x: '110%' }}
+                viewport={{ once: true, margin: '-50px' }}
+                transition={{ duration: 1.4, delay: 0.75, ease: [0.65, 0, 0.35, 1] }}
+                className="absolute inset-0 z-[15] pointer-events-none"
+                style={{ background: 'linear-gradient(115deg, transparent 38%, rgba(255,255,255,0.10) 50%, transparent 62%)' }}
+              />
               <img src={screenLanding} alt="AURUM crypto landing page UX design" loading="lazy" decoding="async" width="1440" height="900" className="absolute top-4 left-4 w-[50%] rounded-lg shadow-2xl shadow-black/50 opacity-25" />
               <img src={screenProfile} alt="AURUM user profile UX design" loading="lazy" decoding="async" width="1440" height="900" className="absolute top-8 right-4 w-[45%] rounded-lg shadow-2xl shadow-black/50 opacity-35" />
               <img src={screenAurumMainHQ} alt="AURUM exchange dashboard — cryptocurrency trading platform case study" loading="lazy" decoding="async" width="1440" height="900" className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[70%] rounded-t-lg shadow-2xl shadow-black/60 group-hover:-translate-y-2 group-hover:scale-[1.02] transition-all duration-500" />
@@ -2601,10 +2943,18 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
             </div>
           </motion.div>
         </Link>
-      </FadeIn>
+      </motion.div>
+      </div>
 
       {/* SCHENKER Card */}
-      <FadeIn delay={0.2}>
+      <div className="ux-stack-card" style={{ ['--stack-idx' as any]: 1 }}>
+      <motion.div
+        initial={{ opacity: 0, x: -70, y: 100, scale: 0.92, rotate: 2.5, rotateY: 8, filter: 'blur(14px)' }}
+        whileInView={{ opacity: 1, x: 0, y: 0, scale: 1, rotate: 0, rotateY: 0, filter: 'blur(0px)' }}
+        viewport={{ once: true, margin: '-80px' }}
+        transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1], opacity: { duration: 0.6 } }}
+        style={{ transformPerspective: 1400, transformStyle: 'preserve-3d', transformOrigin: 'center 30%' }}
+      >
         <Link to="/projects/schenker">
           <motion.div
             whileHover={{ y: -6 }}
@@ -2612,6 +2962,15 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
           >
             <div className="relative aspect-[16/9] overflow-hidden bg-[#e8ecd8] img-hover-zoom">
               <div className="absolute inset-0 z-10 bg-gradient-to-t from-[#2a3a0e]/90 via-[#2a3a0e]/20 to-transparent" />
+              {/* Shine sweep */}
+              <motion.div
+                initial={{ x: '-110%' }}
+                whileInView={{ x: '110%' }}
+                viewport={{ once: true, margin: '-50px' }}
+                transition={{ duration: 1.4, delay: 0.75, ease: [0.65, 0, 0.35, 1] }}
+                className="absolute inset-0 z-[15] pointer-events-none"
+                style={{ background: 'linear-gradient(115deg, transparent 38%, rgba(255,255,255,0.12) 50%, transparent 62%)' }}
+              />
               <img src={schenkerLabels} alt="Schenker logistics label tracking interface" loading="lazy" decoding="async" width="1440" height="900" className="absolute top-4 left-4 w-[50%] rounded-lg shadow-2xl shadow-black/50 opacity-30" />
               <img src={schenkerSettings} alt="Schenker enterprise settings panel" loading="lazy" decoding="async" width="1440" height="900" className="absolute top-8 right-4 w-[45%] rounded-lg shadow-2xl shadow-black/50 opacity-35" />
               <img src={schenkerMainHQ} alt="Schenker Sendung Empfänger — sender & recipient form, enterprise logistics platform case study" loading="lazy" decoding="async" width="1440" height="900" className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[70%] rounded-t-lg shadow-2xl shadow-black/60 group-hover:-translate-y-2 group-hover:scale-[1.02] transition-all duration-500" />
@@ -2648,10 +3007,18 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
             </div>
           </motion.div>
         </Link>
-      </FadeIn>
+      </motion.div>
+      </div>
 
       {/* UNISPACE Card — 3rd position */}
-      <FadeIn delay={0.3}>
+      <div className="ux-stack-card" style={{ ['--stack-idx' as any]: 2 }}>
+      <motion.div
+        initial={{ opacity: 0, x: 70, y: 100, scale: 0.92, rotate: -2.5, rotateY: -8, filter: 'blur(14px)' }}
+        whileInView={{ opacity: 1, x: 0, y: 0, scale: 1, rotate: 0, rotateY: 0, filter: 'blur(0px)' }}
+        viewport={{ once: true, margin: '-80px' }}
+        transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1], opacity: { duration: 0.6 } }}
+        style={{ transformPerspective: 1400, transformStyle: 'preserve-3d', transformOrigin: 'center 30%' }}
+      >
         <Link to="/projects/unispace">
           <motion.div
             whileHover={{ y: -6 }}
@@ -2659,6 +3026,15 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
           >
             <div className="relative aspect-[16/9] overflow-hidden bg-[#090707] img-hover-zoom">
               <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
+              {/* Shine sweep */}
+              <motion.div
+                initial={{ x: '-110%' }}
+                whileInView={{ x: '110%' }}
+                viewport={{ once: true, margin: '-50px' }}
+                transition={{ duration: 1.4, delay: 0.75, ease: [0.65, 0, 0.35, 1] }}
+                className="absolute inset-0 z-[15] pointer-events-none"
+                style={{ background: 'linear-gradient(115deg, transparent 38%, rgba(107,164,255,0.14) 50%, transparent 62%)' }}
+              />
               <img src={unispaceRegister} alt="Unispace registration form — multi-role student platform" loading="lazy" decoding="async" width="1440" height="900" className="absolute top-4 left-4 w-[50%] rounded-lg shadow-2xl shadow-black/50 opacity-30" />
               <img src={unispaceTable} alt="Unispace submitted forms table — dashboard view" loading="lazy" decoding="async" width="1440" height="900" className="absolute top-8 right-4 w-[45%] rounded-lg shadow-2xl shadow-black/50 opacity-40" />
               <img src={unispaceLogin} alt="Unispace student management platform — Unilab / Ilia State University case study" loading="lazy" decoding="async" width="1440" height="900" className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[70%] rounded-t-lg shadow-2xl shadow-black/60 group-hover:-translate-y-2 group-hover:scale-[1.02] transition-all duration-500" />
@@ -2695,7 +3071,9 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
             </div>
           </motion.div>
         </Link>
-      </FadeIn>
+      </motion.div>
+      </div>
+      </div>{/* ux-stack-wrapper */}
     </div>
   );
 };

@@ -54,6 +54,85 @@ button:active:not(:disabled),
   transform: scale(0.98);
 }
 
+/* ════════════════════════════════════════════════════════════════ */
+/*  UX/UI Case Study — Bento Stack & Sticky Reveal (pure CSS)       */
+/*  Native scroll-driven animations via view-timeline + sticky.     */
+/*  Covers stay at FULL brightness — no filter dimming.             */
+/* ════════════════════════════════════════════════════════════════ */
+.ux-stack-wrapper {
+  position: relative;
+  isolation: isolate;
+}
+
+.ux-stack-card {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .ux-page-fixed {
+    --pin-top: 6vh;
+    --peek: 10vh;
+    --runway: 14vh;
+  }
+
+  .ux-stack-card {
+    position: sticky;
+    top: calc(var(--pin-top, 6vh) + var(--stack-idx, 0) * var(--peek, 10vh));
+    margin-bottom: var(--runway, 14vh);
+    transform-origin: center top;
+    will-change: transform;
+    z-index: calc(var(--stack-idx, 0) + 1);
+  }
+
+  .ux-stack-card:last-child { margin-bottom: 0; }
+
+  /* Alternating fan tilt for the deck feel */
+  .ux-stack-card:nth-child(odd)  { --recede-tilt: -1deg; }
+  .ux-stack-card:nth-child(even) { --recede-tilt:  1deg; }
+}
+
+@supports (animation-timeline: view()) {
+  @media (min-width: 768px) {
+    .ux-stack-card:not(:last-child) {
+      /* Smooth ease-in-out — premium organic feel.
+         NOTE: NO filter/brightness in keyframes — covers stay at
+         full color/brightness throughout the recede. Only geometry
+         (scale, translateY, rotate) changes. */
+      animation: ux-card-recede cubic-bezier(0.65, 0, 0.35, 1) forwards;
+      animation-timeline: view();
+      animation-range: contain 50% exit 95%;
+    }
+
+    @keyframes ux-card-recede {
+      0% {
+        transform: scale(1) translateY(0) rotate(0deg);
+      }
+      35% {
+        transform: scale(0.995) translateY(-2px)
+                   rotate(calc(var(--recede-tilt, 0deg) * 0.15));
+      }
+      70% {
+        transform: scale(0.975) translateY(-9px)
+                   rotate(calc(var(--recede-tilt, 0deg) * 0.7));
+      }
+      100% {
+        transform: scale(0.95) translateY(-14px)
+                   rotate(var(--recede-tilt, -1deg));
+      }
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ux-stack-card {
+    animation: none !important;
+    position: relative !important;
+    top: auto !important;
+    margin-bottom: 1.5rem !important;
+  }
+}
+
 /* ─── Subtle image hover zoom utility ─────────────────────────── */
 .img-hover-zoom {
   overflow: hidden;

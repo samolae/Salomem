@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useNavigate } from 'react-router';
+import { CaseHeroTarget } from './case-transition';
 import {
   ArrowLeft, ChevronUp, Eye, Zap, CheckCircle, Layers,
   Users, BookOpen, Shield, Monitor, Component, Palette,
@@ -183,6 +184,7 @@ export function UnispaceCaseStudy() {
   return (
     <div className={`${bg} min-h-screen transition-colors duration-500 relative`} style={{ fontFamily: BRAND.bodyFont }}>
       <UnispaceSEO />
+      <CaseHeroTarget path="/projects/unispace" />
       <ScrollToTopButton />
       <CaseStudySectionNav accentColor="#3D82F6" sections={SECTIONS} />
 
@@ -208,7 +210,7 @@ export function UnispaceCaseStudy() {
         <div className="max-w-7xl mx-auto px-6 lg:px-12 py-4 flex justify-between items-center">
           <div className="flex items-center gap-4">
             <motion.button
-              onClick={() => navigate('/')}
+              onClick={() => navigate('/', { viewTransition: true })}
               whileHover={{ x: -3 }}
               whileTap={{ scale: 0.95 }}
               className={`flex items-center gap-2 text-sm rounded-lg px-2 py-1.5 min-h-[44px] focus-visible:!shadow-[0_0_0_2px_rgba(61,130,246,0.4)] ${isDark ? 'text-[#9295A6] hover:text-white hover:bg-white/[0.04]' : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100'} transition-colors`}
@@ -303,14 +305,14 @@ export function UnispaceCaseStudy() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                className="text-5xl lg:text-7xl tracking-[-0.04em] leading-[0.9] mb-6"
+                className="text-fluid-48-72 tracking-[-0.04em] leading-[0.9] mb-6"
                 style={{ fontFamily: BRAND.headingFont, fontWeight: 800 }}
               >
                 <span className={isDark ? 'text-white' : 'text-zinc-900'}>Uni</span>
                 <span style={{ color: BRAND.blue }}>space</span>
               </motion.h1>
 
-              <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45, duration: 0.7, ease: [0.22, 1, 0.36, 1] }} className={`text-xl lg:text-2xl leading-relaxed mb-3 ${isDark ? 'text-zinc-300' : 'text-zinc-700'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 600 }}>
+              <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45, duration: 0.7, ease: [0.22, 1, 0.36, 1] }} className={`text-fluid-20-24 leading-relaxed mb-3 ${isDark ? 'text-zinc-300' : 'text-zinc-700'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 600 }}>
                 Student Management Platform
               </motion.p>
 
@@ -326,7 +328,7 @@ export function UnispaceCaseStudy() {
                 ].map((stat) => (
                   <div key={stat.label} className="group cursor-default">
                     <div
-                      className={`text-3xl lg:text-4xl tracking-[-0.04em] mb-1 transition-colors duration-300 group-hover:text-[#3D82F6] ${isDark ? 'text-white' : 'text-zinc-900'}`}
+                      className={`text-fluid-30-36 tracking-[-0.04em] mb-1 transition-colors duration-300 group-hover:text-[#3D82F6] ${isDark ? 'text-white' : 'text-zinc-900'}`}
                       style={{ fontFamily: BRAND.headingFont, fontWeight: 800 }}
                     >
                       <CountUp end={stat.value} />{stat.suffix}
@@ -462,7 +464,7 @@ export function UnispaceCaseStudy() {
                     <span className="text-[9px] font-mono" style={{ color: item.accent }}>{item.number}</span>
                     <span className="text-[10px] uppercase tracking-[0.25em]" style={{ color: item.accent }}>{item.step}</span>
                   </div>
-                  <p className={`text-xl lg:text-2xl leading-relaxed tracking-[-0.01em] ${isDark ? 'text-zinc-200' : 'text-zinc-700'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 500 }}>{item.text}</p>
+                  <p className={`text-fluid-20-24 leading-relaxed tracking-[-0.01em] ${isDark ? 'text-zinc-200' : 'text-zinc-700'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 500 }}>{item.text}</p>
                 </div>
               </div>
             </TextReveal>
@@ -477,7 +479,7 @@ export function UnispaceCaseStudy() {
         <div className="max-w-6xl mx-auto">
           <FadeIn>
             <SectionTag number="01" label="Project Overview" />
-            <h2 className={`text-4xl lg:text-5xl tracking-[-0.03em] mb-4 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 800 }}>
+            <h2 className={`text-fluid-36-48 tracking-[-0.03em] mb-4 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 800 }}>
               One ecosystem,<br /><span style={{ color: BRAND.blue }}>three user realities</span>
             </h2>
           </FadeIn>
@@ -566,7 +568,7 @@ export function UnispaceCaseStudy() {
         <div className="max-w-6xl mx-auto">
           <FadeIn>
             <SectionTag number="02" label="Challenge & Solution" />
-            <h2 className={`text-4xl lg:text-5xl tracking-[-0.03em] mb-4 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 800 }}>
+            <h2 className={`text-fluid-36-48 tracking-[-0.03em] mb-4 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 800 }}>
               Three users, one system,<br /><span style={{ color: BRAND.blue }}>zero compromises</span>
             </h2>
             <p className={`text-base leading-relaxed max-w-2xl mb-12 ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>
@@ -736,7 +738,7 @@ export function UnispaceCaseStudy() {
         <div className="max-w-6xl mx-auto">
           <FadeIn>
             <SectionTag number="03" label="Design Process" />
-            <h2 className={`text-4xl lg:text-5xl tracking-[-0.03em] mb-14 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 800 }}>
+            <h2 className={`text-fluid-36-48 tracking-[-0.03em] mb-14 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 800 }}>
               12 weeks from research<br /><span style={{ color: BRAND.blue }}>to handoff</span>
             </h2>
           </FadeIn>
@@ -790,7 +792,7 @@ export function UnispaceCaseStudy() {
                     </div>
                     <span className="text-[10px] uppercase tracking-[0.25em] text-[#3D82F6]">Delivery Edge</span>
                   </div>
-                  <h3 className={`text-2xl lg:text-3xl tracking-[-0.03em] mb-4 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 700 }}>
+                  <h3 className={`text-fluid-24-30 tracking-[-0.03em] mb-4 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 700 }}>
                     Code-literate design,<br />
                     built for handoff
                   </h3>
@@ -837,7 +839,7 @@ export function UnispaceCaseStudy() {
                 ].map((s) => (
                   <div key={s.label} className="group/k cursor-default">
                     <div
-                      className="text-2xl lg:text-3xl tracking-[-0.03em] mb-1 transition-transform duration-300 inline-block group-hover/k:scale-105"
+                      className="text-fluid-24-30 tracking-[-0.03em] mb-1 transition-transform duration-300 inline-block group-hover/k:scale-105"
                       style={{ fontFamily: BRAND.headingFont, fontWeight: 800, color: BRAND.blue }}
                     >
                       {s.n}
@@ -858,7 +860,7 @@ export function UnispaceCaseStudy() {
         <div className="max-w-6xl mx-auto">
           <FadeIn>
             <SectionTag number="05" label="Key Screens" />
-            <h2 className={`text-4xl lg:text-5xl tracking-[-0.03em] mb-4 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 800 }}>
+            <h2 className={`text-fluid-36-48 tracking-[-0.03em] mb-4 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 800 }}>
               Core screens<br /><span style={{ color: BRAND.blue }}>in detail</span>
             </h2>
             <p className={`text-base leading-relaxed max-w-xl mb-14 ${mt}`}>
@@ -961,7 +963,7 @@ export function UnispaceCaseStudy() {
         <div className="max-w-6xl mx-auto">
           <FadeIn>
             <SectionTag number="06" label="Key Design Decisions" />
-            <h2 className={`text-4xl lg:text-5xl tracking-[-0.03em] mb-14 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 800 }}>
+            <h2 className={`text-fluid-36-48 tracking-[-0.03em] mb-14 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 800 }}>
               Why we made<br /><span style={{ color: BRAND.blue }}>the choices we made</span>
             </h2>
           </FadeIn>
@@ -998,7 +1000,7 @@ export function UnispaceCaseStudy() {
         <div className="max-w-6xl mx-auto">
           <FadeIn>
             <SectionTag number="07" label="Design System" />
-            <h2 className={`text-4xl lg:text-5xl tracking-[-0.03em] mb-4 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 800 }}>
+            <h2 className={`text-fluid-36-48 tracking-[-0.03em] mb-4 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 800 }}>
               A system built<br /><span style={{ color: BRAND.blue }}>to scale</span>
             </h2>
             <p className={`text-base leading-relaxed max-w-2xl mb-16 ${mt}`}>
@@ -1100,7 +1102,7 @@ export function UnispaceCaseStudy() {
 
                 {/* Mega display */}
                 <div className="text-[10px] uppercase tracking-[0.15em] text-white/40 mb-2 font-mono">DISPLAY · 72px · 700</div>
-                <div className="text-6xl lg:text-7xl text-white mb-10 tracking-[-0.02em]" style={{ fontFamily: F_GE, fontWeight: 700 }}>
+                <div className="text-fluid-60-72 text-white mb-10 tracking-[-0.02em]" style={{ fontFamily: F_GE, fontWeight: 700 }}>
                   გამარჯობა
                 </div>
 
@@ -1504,7 +1506,7 @@ export function UnispaceCaseStudy() {
         <div className="max-w-6xl mx-auto">
           <FadeIn>
             <SectionTag number="08" label="Outcome" />
-            <h2 className={`text-4xl lg:text-5xl tracking-[-0.03em] mb-4 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 800 }}>
+            <h2 className={`text-fluid-36-48 tracking-[-0.03em] mb-4 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 800 }}>
               Delivered, tested,<br /><span style={{ color: BRAND.blue }}>and handed off</span>
             </h2>
             <p className={`text-base leading-relaxed max-w-2xl mb-16 ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>
@@ -1569,7 +1571,7 @@ export function UnispaceCaseStudy() {
         <div className="max-w-5xl mx-auto">
           <FadeIn>
             <SectionTag number="09" label="Reflection" />
-            <h2 className={`text-4xl lg:text-5xl tracking-[-0.03em] mb-4 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 800 }}>
+            <h2 className={`text-fluid-36-48 tracking-[-0.03em] mb-4 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 800 }}>
               What I learned<br /><span style={{ color: BRAND.blue }}>building Unispace</span>
             </h2>
           </FadeIn>

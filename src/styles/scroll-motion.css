@@ -1,0 +1,201 @@
+/* ─── Scroll motion ──────────────────────────────────────────────
+   Native, off-main-thread scroll animations. FadeIn picks a mode per
+   element on mount (components/animated-helpers.tsx):
+     intro   on screen at mount: short timed entrance
+     scroll  below the fold: tied to scroll with animation-timeline
+     wait    no scroll timelines: hidden until it enters, then intro
+   Fill mode is "backwards" on purpose: once an element has arrived the
+   animation stops applying, so wrappers never linger as stacking
+   contexts or containing blocks.                                    */
+
+.reveal[data-dir='up'] { --reveal-x: 0px; --reveal-y: 20px; }
+.reveal[data-dir='down'] { --reveal-x: 0px; --reveal-y: -20px; }
+.reveal[data-dir='left'] { --reveal-x: 20px; --reveal-y: 0px; }
+.reveal[data-dir='right'] { --reveal-x: -20px; --reveal-y: 0px; }
+.reveal[data-blur] { --reveal-blur: 4px; }
+
+.reveal[data-reveal='wait'] {
+  opacity: 0;
+}
+
+.reveal[data-reveal='intro'] {
+  animation: reveal-intro 0.6s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0s) backwards;
+}
+
+@supports (animation-timeline: view()) {
+  .reveal[data-reveal='scroll'] {
+    animation: reveal-scroll linear backwards;
+    animation-timeline: view();
+    /* Fully in after ~200px of travel, or as soon as the whole element is
+       on screen if that comes first, so blocks at the very bottom of a
+       page always finish. A FadeIn delay starts it a little later.   */
+    animation-range:
+      entry min(var(--reveal-shift, 0px), 40%)
+      entry min(100%, calc(200px + var(--reveal-shift, 0px)));
+  }
+}
+
+@keyframes reveal-intro {
+  from {
+    opacity: 0;
+    translate: var(--reveal-x, 0px) var(--reveal-y, 20px);
+    filter: blur(var(--reveal-blur, 0px));
+  }
+}
+
+/* No blur while scrolling: opacity and translate stay on the compositor */
+@keyframes reveal-scroll {
+  from {
+    opacity: 0;
+    translate: var(--reveal-x, 0px) var(--reveal-y, 20px);
+  }
+}
+
+/* ─── Reading progress ─────────────────────────────────────────── */
+.scroll-progress {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 2px;
+  z-index: 70;
+  transform-origin: 0 50%;
+  animation: scroll-progress linear both;
+  animation-timeline: scroll(root block);
+}
+
+@keyframes scroll-progress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal[data-reveal] {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+}
+
+/* ─── Horizontal showcase (components/ads-showcase.tsx) ──────────
+   is-pinned: the section is as tall as the screen plus the track's
+   overflow; its frame sticks while a view-timeline slides the track.
+   is-native: a swipe row with snap points and a scroll-linked bar.  */
+
+.ads-showcase {
+  timeline-scope: --ads-x;
+}
+
+.ads-showcase-track {
+  display: flex;
+  gap: 12px;
+  width: max-content;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ads-slide {
+  position: relative;
+  display: block;
+  width: clamp(220px, 26vw, 290px);
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-width: 1px;
+  border-radius: 16px;
+}
+.ads-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: scale 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.ads-slide:hover img {
+  scale: 1.04;
+}
+.ads-slide:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(237, 89, 43, 0.6);
+}
+.ads-slide-meta {
+  position: absolute;
+  inset: auto 0 0 0;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 32px 14px 12px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.72), transparent);
+  text-align: left;
+}
+
+.ads-showcase-progress {
+  height: 2px;
+  margin-top: 16px;
+  overflow: hidden;
+  border-radius: 2px;
+}
+.ads-showcase-progress span {
+  display: block;
+  height: 100%;
+  background: #ed592b;
+  transform-origin: 0 50%;
+  transform: scaleX(0.04);
+}
+
+@keyframes ads-track {
+  to { translate: calc(-1 * var(--hs-distance, 0px)) 0; }
+}
+@keyframes ads-progress {
+  from { transform: scaleX(0.04); }
+  to { transform: scaleX(1); }
+}
+
+/* Pinned: vertical scroll drives the track (0.55px down = 1px across,
+   so sixteen brands take about two screens of scrolling) */
+.ads-showcase.is-pinned {
+  height: calc(100vh + var(--hs-distance, 0px) * 0.55);
+  view-timeline: --ads-showcase block;
+}
+.ads-showcase.is-pinned .ads-showcase-frame {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100vh;
+}
+.ads-showcase.is-pinned .ads-slide {
+  width: clamp(260px, 22vw, 320px);
+}
+.ads-showcase.is-pinned .ads-showcase-viewport {
+  overflow: clip;
+  overflow-clip-margin: 6px;
+}
+.ads-showcase.is-pinned .ads-showcase-track,
+.ads-showcase.is-pinned .ads-showcase-progress span {
+  animation: ads-track linear both;
+  animation-timeline: --ads-showcase;
+  animation-range: contain 0% contain 100%;
+}
+.ads-showcase.is-pinned .ads-showcase-progress span {
+  animation-name: ads-progress;
+}
+
+/* Native: swipe or trackpad, snapping slide by slide */
+.ads-showcase.is-native .ads-showcase-viewport {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  scroll-timeline: --ads-x inline;
+}
+.ads-showcase.is-native .ads-showcase-viewport::-webkit-scrollbar {
+  display: none;
+}
+.ads-showcase.is-native .ads-showcase-track > li {
+  scroll-snap-align: start;
+}
+@supports (animation-timeline: scroll()) {
+  .ads-showcase.is-native .ads-showcase-progress span {
+    animation: ads-progress linear both;
+    animation-timeline: --ads-x;
+  }
+}

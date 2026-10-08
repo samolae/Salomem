@@ -64,7 +64,7 @@ export function DesignSystemFull() {
         <FadeIn>
           <div className="flex items-baseline justify-between mb-10">
             <div>
-              <h3 className="text-2xl lg:text-3xl mb-2" style={{ fontFamily: BRAND.headingFont }}>
+              <h3 className="text-fluid-24-30 mb-2" style={{ fontFamily: BRAND.headingFont }}>
                 Color <span className="text-[#D59A04]">Palette</span>
               </h3>
               <p className={`text-sm ${mt}`}>8 semantic tokens powering the entire interface</p>
@@ -113,7 +113,7 @@ export function DesignSystemFull() {
         <FadeIn>
           <div className="flex items-baseline justify-between mb-10">
             <div>
-              <h3 className="text-2xl lg:text-3xl mb-2" style={{ fontFamily: BRAND.headingFont }}>
+              <h3 className="text-fluid-24-30 mb-2" style={{ fontFamily: BRAND.headingFont }}>
                 Typo<span className="text-[#D59A04]">graphy</span>
               </h3>
               <p className={`text-sm ${mt}`}>Two typeface families — display and body</p>
@@ -127,7 +127,7 @@ export function DesignSystemFull() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
             <div className={`p-8 rounded-2xl border ${cb} ${cardBg}`}>
               <div className={`text-[10px] uppercase tracking-[0.2em] ${mt} mb-4`}>Display Font</div>
-              <div className={`text-4xl lg:text-5xl mb-3 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont, lineHeight: 1.1 }}>
+              <div className={`text-fluid-36-48 mb-3 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont, lineHeight: 1.1 }}>
                 BPG LE Studio<br />02 Caps
               </div>
               <div className={`text-[12px] ${mt} mb-4`}>Georgian display typeface for headings and brand elements</div>
@@ -138,7 +138,7 @@ export function DesignSystemFull() {
             </div>
             <div className={`p-8 rounded-2xl border ${cb} ${cardBg}`}>
               <div className={`text-[10px] uppercase tracking-[0.2em] ${mt} mb-4`}>Body Font</div>
-              <div className={`text-4xl lg:text-5xl mb-3 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.bodyFont, lineHeight: 1.1 }}>
+              <div className={`text-fluid-36-48 mb-3 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.bodyFont, lineHeight: 1.1 }}>
                 TBC<br />Contractica
               </div>
               <div className={`text-[12px] ${mt} mb-4`}>Georgian body typeface for readable content and UI labels</div>
@@ -184,7 +184,7 @@ export function DesignSystemFull() {
         <FadeIn>
           <div className="flex items-baseline justify-between mb-10">
             <div>
-              <h3 className="text-2xl lg:text-3xl mb-2" style={{ fontFamily: BRAND.headingFont }}>
+              <h3 className="text-fluid-24-30 mb-2" style={{ fontFamily: BRAND.headingFont }}>
                 Spacing & <span className="text-[#D59A04]">Radius</span>
               </h3>
               <p className={`text-sm ${mt}`}>Consistent spatial rhythm across all components</p>
@@ -240,7 +240,7 @@ export function DesignSystemFull() {
         <FadeIn>
           <div className="flex items-baseline justify-between mb-10">
             <div>
-              <h3 className="text-2xl lg:text-3xl mb-2" style={{ fontFamily: BRAND.headingFont }}>
+              <h3 className="text-fluid-24-30 mb-2" style={{ fontFamily: BRAND.headingFont }}>
                 Component <span className="text-[#D59A04]">Library</span>
               </h3>
               <p className={`text-sm ${mt}`}>Reusable building blocks for consistency at scale</p>

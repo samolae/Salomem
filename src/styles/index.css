@@ -2,11 +2,48 @@
 @import './tailwind.css';
 @import './theme.css';
 @import './cursor.css';
+@import './view-transitions.css';
+@import './scroll-motion.css';
+@import './kinetic.css';
 
-/* Prevent horizontal scroll on mobile across all pages */
+/* Prevent horizontal scroll on mobile across all pages.
+   clip, not hidden: hidden turns body into a scroll container, which
+   breaks position: sticky and makes every view() scroll animation bind
+   to a box that never scrolls. clip trims overflow without that.     */
 html, body {
-  overflow-x: hidden;
+  overflow-x: clip;
   max-width: 100vw;
+}
+
+/* Dark-only site: native scrollbars, form controls and the overscroll
+   canvas follow suit instead of flashing white */
+:root {
+  color-scheme: dark;
+}
+
+/* Headlines without lonely last words, paragraphs without orphans */
+h1, h2, h3, h4 {
+  text-wrap: balance;
+}
+p, li, figcaption, blockquote {
+  text-wrap: pretty;
+}
+
+/* Reduced motion: honour the system setting everywhere. JS-driven motion
+   is handled by MotionConfig and useReducedMotion in the components.  */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  /* Reading progress is information, not decoration: keep it */
+  .scroll-progress {
+    animation-duration: auto !important;
+  }
 }
 
 /* ─── Selection color — brand accent ─────────────────────────── */
@@ -162,4 +199,81 @@ button:active:not(:disabled),
   .dark ::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.15);
   }
+}
+
+/* ─── Fluid type ────────────────────────────────────────────────
+   Headings that used to jump at breakpoints (text-3xl lg:text-4xl)
+   now scale smoothly from a 375px screen to that breakpoint. Named
+   after the px range; line-height still yields to leading-* classes. */
+@utility text-fluid-14-16 {
+  font-size: clamp(0.875rem, 0.8028rem + 0.3082vw, 1rem);
+  line-height: var(--tw-leading, 1.464);
+}
+@utility text-fluid-18-20 {
+  font-size: clamp(1.125rem, 1.006rem + 0.5089vw, 1.25rem);
+  line-height: var(--tw-leading, 1.478);
+}
+@utility text-fluid-18-24 {
+  font-size: clamp(1.125rem, 0.7672rem + 1.527vw, 1.5rem);
+  line-height: var(--tw-leading, 1.444);
+}
+@utility text-fluid-20-24 {
+  font-size: clamp(1.25rem, 1.106rem + 0.6163vw, 1.5rem);
+  line-height: var(--tw-leading, 1.367);
+}
+@utility text-fluid-24-30 {
+  font-size: clamp(1.5rem, 1.283rem + 0.9245vw, 1.875rem);
+  line-height: var(--tw-leading, 1.267);
+}
+@utility text-fluid-24-36 {
+  font-size: clamp(1.5rem, 1.067rem + 1.849vw, 2.25rem);
+  line-height: var(--tw-leading, 1.222);
+}
+@utility text-fluid-30-36 {
+  font-size: clamp(1.875rem, 1.658rem + 0.9245vw, 2.25rem);
+  line-height: var(--tw-leading, 1.156);
+}
+@utility text-fluid-30-48 {
+  font-size: clamp(1.875rem, 1.225rem + 2.773vw, 3rem);
+  line-height: var(--tw-leading, 1.1);
+}
+@utility text-fluid-36-48 {
+  font-size: clamp(2.25rem, 1.817rem + 1.849vw, 3rem);
+  line-height: var(--tw-leading, 1.056);
+}
+@utility text-fluid-36-72 {
+  font-size: clamp(2.25rem, 0.9499rem + 5.547vw, 4.5rem);
+  line-height: var(--tw-leading, 1.056);
+}
+@utility text-fluid-48-72 {
+  font-size: clamp(3rem, 2.133rem + 3.698vw, 4.5rem);
+  line-height: var(--tw-leading, 1.0);
+}
+@utility text-fluid-60-72 {
+  font-size: clamp(3.75rem, 3.317rem + 1.849vw, 4.5rem);
+  line-height: var(--tw-leading, 1.0);
+}
+@utility text-fluidpx-12-14 {
+  font-size: clamp(0.75rem, 0.5731rem + 0.7547vw, 0.875rem);
+}
+@utility text-fluidpx-13-19 {
+  font-size: clamp(0.8125rem, 0.6571rem + 0.663vw, 1.188rem);
+}
+@utility text-fluidpx-15-17 {
+  font-size: clamp(0.9375rem, 0.8653rem + 0.3082vw, 1.062rem);
+}
+@utility text-fluidpx-16-18 {
+  font-size: clamp(1rem, 0.8231rem + 0.7547vw, 1.125rem);
+}
+@utility text-fluidpx-18-22 {
+  font-size: clamp(1.125rem, 0.7712rem + 1.509vw, 1.375rem);
+}
+@utility text-fluidpx-22-28 {
+  font-size: clamp(1.375rem, 1.017rem + 1.527vw, 1.75rem);
+}
+@utility text-fluidpx-80-240 {
+  font-size: clamp(5rem, 0.8564rem + 17.68vw, 15rem);
+}
+@utility text-fluidpx-120-160 {
+  font-size: clamp(7.5rem, 3.962rem + 15.09vw, 10rem);
 }

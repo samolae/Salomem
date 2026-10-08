@@ -1,6 +1,7 @@
 import { ArrowRight, ArrowUpRight, ArrowLeft, Layers, Video, Image, Home, Mail } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link } from 'react-router';
+import { CaseLink } from './case-transition';
 import { useTheme } from './theme-provider';
 import { FadeIn, MagneticWrap, AnimatedDivider } from './animated-helpers';
 
@@ -122,7 +123,7 @@ export function NextProjectRecommendation({ currentProject }: { currentProject: 
           </FadeIn>
 
           <FadeIn delay={0.05}>
-            <h2 className={`text-2xl lg:text-4xl tracking-[-0.03em] mb-10 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: F.heading, fontWeight: 700 }}>
+            <h2 className={`text-fluid-24-36 tracking-[-0.03em] mb-10 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: F.heading, fontWeight: 700 }}>
               More <span style={{ color: accent }}>Case Studies</span>
             </h2>
           </FadeIn>
@@ -134,7 +135,7 @@ export function NextProjectRecommendation({ currentProject }: { currentProject: 
               const isSchenker = key === 'schenker';
               return (
                 <FadeIn key={key} delay={0.1 + idx * 0.08}>
-                  <Link to={p.path} data-cursor="view">
+                  <CaseLink to={p.path} cardId={`next-${key}`} data-cursor="view">
                     <motion.div
                       whileHover={{ y: -6 }}
                       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
@@ -183,7 +184,7 @@ export function NextProjectRecommendation({ currentProject }: { currentProject: 
                         <div className="absolute bottom-0 left-0 right-0 z-20 p-4 md:p-5">
                           <div className="flex items-end justify-between gap-3">
                             <div className="min-w-0">
-                              <h3 className="text-lg md:text-2xl text-white mb-0.5 tracking-[-0.03em] truncate" style={{ fontFamily: F.heading, fontWeight: 700 }}>
+                              <h3 className="text-fluid-18-24 text-white mb-0.5 tracking-[-0.03em] truncate" style={{ fontFamily: F.heading, fontWeight: 700 }}>
                                 {p.title}
                               </h3>
                               <p className="text-white/40 text-[10px] tracking-wide truncate" style={{ fontFamily: F.body }}>
@@ -230,7 +231,7 @@ export function NextProjectRecommendation({ currentProject }: { currentProject: 
                         </span>
                       </div>
                     </motion.div>
-                  </Link>
+                  </CaseLink>
                 </FadeIn>
               );
             })}
@@ -244,7 +245,7 @@ export function NextProjectRecommendation({ currentProject }: { currentProject: 
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {crossRecommendations.map((rec) => (
-                  <Link key={rec.section} to={`/work/${rec.section}`} data-cursor="explore">
+                  <Link key={rec.section} to={`/work/${rec.section}`} data-cursor="explore" viewTransition>
                     <motion.div
                       whileHover={{ y: -3, scale: 1.01 }}
                       transition={{ type: 'spring', stiffness: 300, damping: 25 }}
@@ -300,7 +301,7 @@ export function NextProjectRecommendation({ currentProject }: { currentProject: 
           {/* Action buttons */}
           <FadeIn delay={0.3}>
             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-              <Link to="/">
+              <Link to="/" viewTransition>
                 <motion.div
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
@@ -312,7 +313,7 @@ export function NextProjectRecommendation({ currentProject }: { currentProject: 
                 </motion.div>
               </Link>
               <MagneticWrap strength={0.2}>
-                <Link to="/contact">
+                <Link to="/contact" viewTransition>
                   <motion.div
                     whileHover={{ scale: 1.03, boxShadow: '0 4px 24px rgba(237,89,43,0.2)' }}
                     whileTap={{ scale: 0.97 }}

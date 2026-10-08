@@ -244,7 +244,7 @@ export function HeroCover() {
             className="mb-4"
           >
             <h1
-              className="text-[80px] sm:text-[120px] md:text-[160px] lg:text-[200px] xl:text-[240px] tracking-[-0.04em] leading-[0.8] select-none"
+              className="text-fluidpx-80-240 tracking-[-0.04em] leading-[0.8] select-none"
               style={{ fontFamily: BRAND.headingFont }}
             >
               <ShineText>AURUM</ShineText>
@@ -258,7 +258,7 @@ export function HeroCover() {
             transition={{ delay: 0.6, duration: 0.8 }}
             className="mb-6"
           >
-            <p className="text-lg sm:text-xl lg:text-2xl tracking-wide" style={{ fontFamily: BRAND.headingFont }}>
+            <p className="text-fluid-18-24 tracking-wide" style={{ fontFamily: BRAND.headingFont }}>
               Crypto Exchange Platform
             </p>
           </motion.div>
@@ -268,7 +268,7 @@ export function HeroCover() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8, duration: 0.8 }}
-            className={`text-sm lg:text-base ${mt} max-w-lg mx-auto leading-relaxed mb-8`}
+            className={`text-fluid-14-16 ${mt} max-w-lg mx-auto leading-relaxed mb-8`}
           >
             A regulated crypto exchange designed for complex onboarding, verification logic, and online/offline transaction flows.
           </motion.p>
@@ -293,7 +293,7 @@ export function HeroCover() {
                     <span className="text-[#D59A04]">{s.icon}</span>
                   </div>
                   <div>
-                    <div className="text-xl lg:text-2xl text-[#D59A04] leading-none" style={{ fontFamily: BRAND.headingFont }}>{s.n}</div>
+                    <div className="text-fluid-20-24 text-[#D59A04] leading-none" style={{ fontFamily: BRAND.headingFont }}>{s.n}</div>
                     <div className={`text-[9px] uppercase tracking-[0.15em] ${mt} mt-0.5`}>{s.l}</div>
                   </div>
                 </div>

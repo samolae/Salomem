@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
 import { AnimatePresence, motion, useMotionValue, useReducedMotion, useSpring } from 'motion/react';
-import { ArrowRight, ArrowUpRight, Check, Copy, Maximize2, Volume2, VolumeX, X } from 'lucide-react';
+import { ArrowDown, ArrowRight, ArrowUpRight, Check, Copy, Maximize2, Volume2, VolumeX, X } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 /* ------------------------------------------------------------------ */
@@ -20,6 +20,7 @@ type Preset = { label: string; icon: LucideIcon };
 const PRESETS: Record<string, Preset> = {
   view: { label: 'View case', icon: ArrowUpRight },
   explore: { label: 'Explore', icon: ArrowRight },
+  jump: { label: 'View', icon: ArrowDown },
   expand: { label: 'Expand', icon: Maximize2 },
   close: { label: 'Close', icon: X },
   copy: { label: 'Copy', icon: Copy },

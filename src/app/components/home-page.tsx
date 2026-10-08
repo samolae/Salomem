@@ -14,6 +14,9 @@ import {
   Volume2, VolumeX, Code2, Pause, LayoutGrid,
 } from 'lucide-react';
 import { useTheme } from './theme-provider';
+import { CaseLink } from './case-transition';
+import { KineticText } from './kinetic-text';
+import { AdsShowcase } from './ads-showcase';
 import { FadeIn, StaggerChildren, StaggerItem, ScrollProgress, MagneticWrap, AnimatedDivider, SplitText, ScaleOnScroll, CursorGlow, FloatingParticles, TextScramble, MorphingBlob, RevealMask, AnimatedLine, LightBeamCard, BentoTiltCard, LiquidMeshBackground, SpringBadge, ParallaxFloat, ScrollRevealScale, MagneticLink, MicroPulse } from './animated-helpers';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { HomeSEO, ServicesSEO, ContactSEO, UxUiSEO, SocialMediaAdsSEO, SocialMediaMotionSEO } from './seo';
@@ -596,7 +599,7 @@ const SpotlightCardInner = ({
       </span>
     </motion.div>
     <div className="absolute bottom-5 left-5 right-5 z-10">
-      <h3 className="text-xl md:text-2xl text-white tracking-[-0.02em] mb-1.5" style={{ fontFamily: F.heading, fontWeight: 700 }}>
+      <h3 className="text-fluid-20-24 text-white tracking-[-0.02em] mb-1.5" style={{ fontFamily: F.heading, fontWeight: 700 }}>
         {sp.title}
       </h3>
       <p className="text-white/50 text-[12px] leading-relaxed max-w-md" style={{ fontFamily: F.body }}>
@@ -716,20 +719,23 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
         </div>
       </FadeIn>
 
-      {/* Hero tagline */}
-      <FadeIn delay={0.05}>
-        <div className="mb-6">
-          <p className="uppercase tracking-[0.15em] mb-3" style={{ fontFamily: F.body, fontWeight: 500, fontSize: '10px' }}>
+      {/* Hero statement: eyebrow + kinetic headline (variable Syne 400-800) */}
+      <div className="mb-7">
+        <FadeIn delay={0.05}>
+          <p className="uppercase tracking-[0.15em] mb-4" style={{ fontFamily: F.body, fontWeight: 500, fontSize: '10px' }}>
             <span className={isDark ? 'text-white/70' : 'text-zinc-600'}>
               <TextScramble text="80+ projects." delay={0.3} duration={1} style={{ fontFamily: F.body, fontWeight: 500, fontSize: '10px' }} />
             </span>
-            {' '}
-            <span className="bg-gradient-to-r from-[#ed592b] via-[#f47a4d] to-[#ed592b] bg-clip-text text-transparent bg-[length:200%_auto] animate-[shimmer_4s_linear_infinite]">
-              <TextScramble text="Countless sparks." delay={0.8} duration={1} style={{ fontFamily: F.body, fontWeight: 500, fontSize: '10px' }} />
-            </span>
           </p>
-        </div>
-      </FadeIn>
+        </FadeIn>
+        <KineticText
+          label="Countless sparks."
+          lines={[{ text: 'Countless' }, { text: 'sparks.' }]}
+          accentLast
+          className={isDark ? 'text-white' : 'text-zinc-900'}
+          style={{ fontFamily: F.heading, fontSize: 'clamp(3rem, 1.96rem + 4.42vw, 5.5rem)', lineHeight: 0.92, letterSpacing: '-0.035em' }}
+        />
+      </div>
 
       <FadeIn delay={0.1}>
         <div className={`max-w-2xl mb-8 space-y-4 text-[14px] leading-[1.75] ${bt}`} style={{ fontFamily: F.body, fontWeight: 400 }}>
@@ -841,7 +847,7 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 mb-2.5" style={{ gridTemplateRows: 'auto auto auto' }}>
 
           {/* AURUM — spans 2 cols × 2 rows: the hero cell */}
-          <Link to="/projects/aurum" data-cursor="view" className="sm:col-span-2 sm:row-span-2">
+          <CaseLink to="/projects/aurum" cardId="bento-aurum" data-cursor="view" className="sm:col-span-2 sm:row-span-2">
             <motion.div whileHover={{ y: -3, scale: 1.004 }} transition={{ type: 'spring', stiffness: 400, damping: 30 }} className="h-full">
               <BentoTiltCard tiltStrength={5} glareOpacity={0.06} className={`rounded-2xl border overflow-hidden h-full ${border} ${isDark ? 'bg-[#0a0b0f]' : 'bg-white'}`}>
                 <div className="relative h-full min-h-[220px] sm:min-h-[320px] overflow-hidden bg-gradient-to-br from-[#080B0F] via-[#0d0e14] to-[#0a0c12] img-hover-zoom">
@@ -863,7 +869,7 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
                 </div>
               </BentoTiltCard>
             </motion.div>
-          </Link>
+          </CaseLink>
 
           {/* Terminal — col 3, row 1 */}
           <div className="sm:col-start-3 sm:row-start-1">
@@ -889,7 +895,7 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
 
           {/* SCHENKER — full-width bottom row, 3 cols */}
           <div className="sm:col-span-3">
-            <Link to="/projects/schenker" data-cursor="view">
+            <CaseLink to="/projects/schenker" cardId="bento-schenker" data-cursor="view">
               <motion.div whileHover={{ y: -3, scale: 1.004 }} transition={{ type: 'spring', stiffness: 400, damping: 30 }}>
                 <BentoTiltCard tiltStrength={4} glareOpacity={0.05} className={`rounded-2xl border overflow-hidden ${border} ${isDark ? 'bg-[#0a0b0f]' : 'bg-white'}`}>
                   <div className="grid grid-cols-1 sm:grid-cols-[1fr_1.6fr]">
@@ -897,7 +903,7 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
                       <div className="flex items-center gap-1.5 mb-2">
                         <span className="text-[7px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-full bg-[#6B8E23]/10 text-[#8FBC3B]/80 border border-[#6B8E23]/15">Enterprise · UX/UI</span>
                       </div>
-                      <h3 className="text-[16px] md:text-[18px] text-white mb-1 tracking-[0] leading-none" style={{ fontFamily: F.heading, fontWeight: 600, letterSpacing: 0 }}>SCHENKER</h3>
+                      <h3 className="text-fluidpx-16-18 text-white mb-1 tracking-[0] leading-none" style={{ fontFamily: F.heading, fontWeight: 600, letterSpacing: 0 }}>SCHENKER</h3>
                       <p className={`text-[10px] ${bt} mb-3 leading-relaxed`} style={{ fontFamily: F.body }}>
                         Enterprise logistics — form systems & shipment tracking.
                       </p>
@@ -913,7 +919,7 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
                   </div>
                 </BentoTiltCard>
               </motion.div>
-            </Link>
+            </CaseLink>
           </div>
 
         </div>
@@ -1104,7 +1110,7 @@ const ServicesContent = ({ isDark }: { isDark: boolean }) => {
             <span className="inline-block w-8 h-px bg-[#ed592b]" />
             What I do
           </p>
-          <h1 className={`text-3xl sm:text-4xl lg:text-5xl tracking-[-0.035em] leading-[1.05] mb-5 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: F.heading, fontWeight: 700 }}>
+          <h1 className={`text-fluid-30-48 tracking-[-0.035em] leading-[1.05] mb-5 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: F.heading, fontWeight: 700 }}>
             Design <span className="text-[#ed592b]">Services</span><span className={isDark ? 'text-white/15' : 'text-zinc-200'}>.</span>
           </h1>
           <p className={`text-[14px] sm:text-[15px] leading-[1.55] max-w-md ${isDark ? 'text-white/55' : 'text-zinc-500'}`} style={{ fontFamily: F.body }}>
@@ -1238,7 +1244,7 @@ const ServicesContent = ({ isDark }: { isDark: boolean }) => {
                 { num: 'Top 3%', label: 'Upwork rating' },
               ].map((stat) => (
                 <div key={stat.label} className="px-4 sm:px-5 py-5 lg:py-6 min-w-0">
-                  <div className={`text-[13px] sm:text-[15px] lg:text-[17px] xl:text-[19px] tracking-[-0.02em] leading-none mb-2 whitespace-nowrap ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: F.heading, fontWeight: 800 }}>{stat.num}</div>
+                  <div className={`text-fluidpx-13-19 tracking-[-0.02em] leading-none mb-2 whitespace-nowrap ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: F.heading, fontWeight: 800 }}>{stat.num}</div>
                   <div className={`text-[10px] uppercase tracking-[0.12em] ${mt} whitespace-nowrap`} style={{ fontFamily: F.body, fontWeight: 500 }}>{stat.label}</div>
                 </div>
               ))}
@@ -1265,7 +1271,7 @@ const ServicesContent = ({ isDark }: { isDark: boolean }) => {
             <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ background: 'radial-gradient(circle at 30% 50%, rgba(255,255,255,0.12), transparent 60%)' }} />
             <div className="relative">
               <p className="text-white/70 text-[10px] uppercase tracking-[0.2em] mb-2" style={{ fontFamily: F.body, fontWeight: 600 }}>04 — Let's begin</p>
-              <div className="text-white text-[18px] sm:text-[22px] tracking-[-0.02em] mb-1" style={{ fontFamily: F.heading, fontWeight: 600 }}>Start a project</div>
+              <div className="text-white text-fluidpx-18-22 tracking-[-0.02em] mb-1" style={{ fontFamily: F.heading, fontWeight: 600 }}>Start a project</div>
               <div className="text-white/70 text-[12px]" style={{ fontFamily: F.body }}>Tell me about your goals — I'll reply within 24h</div>
             </div>
             <div className="relative w-12 h-12 rounded-full bg-white/15 flex items-center justify-center group-hover:bg-white/25 group-hover:scale-110 transition-all duration-300 flex-shrink-0">
@@ -1401,7 +1407,7 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
                 initial={{ y: '100%' }}
                 animate={{ y: 0 }}
                 transition={{ delay: 0.2, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                className={`text-[16px] sm:text-[18px] tracking-[-0.02em] leading-[1.2] ${isDark ? 'text-white' : 'text-zinc-900'}`}
+                className={`text-fluidpx-16-18 tracking-[-0.02em] leading-[1.2] ${isDark ? 'text-white' : 'text-zinc-900'}`}
                 style={{ fontFamily: F.heading, fontWeight: 600 }}
               >
                 Let's create <span className="text-[#ed592b]">something amazing.</span>
@@ -1474,7 +1480,7 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
                     href={item.href}
                     target={item.external ? '_blank' : undefined}
                     rel={item.external ? 'noopener noreferrer' : undefined}
-                    className={`text-[12px] sm:text-[14px] block truncate transition-colors duration-300 ${
+                    className={`text-fluidpx-12-14 block truncate transition-colors duration-300 ${
                       hoveredIdx === i
                         ? isDark ? 'text-white' : 'text-zinc-900'
                         : isDark ? 'text-white/70' : 'text-zinc-600'
@@ -1700,7 +1706,7 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
                 onChange={(e) => setForm({ ...form, message: e.target.value })}
                 placeholder="Tell me about your project..."
                 rows={3}
-                className={`w-full text-[12px] px-4 py-3 rounded-3xl border resize-none transition-colors duration-200 ${isDark ? 'bg-[#0a0b0f] border-white/[0.10] text-white/80 placeholder-white/15 hover:border-white/[0.22] focus:border-white/45 focus:shadow-[0_0_0_2px_rgba(255,255,255,0.06)]' : 'bg-zinc-50 border-zinc-300 text-zinc-800 placeholder-zinc-300 hover:border-zinc-400 focus:border-zinc-900/50 focus:shadow-[0_0_0_2px_rgba(0,0,0,0.04)]'} outline-none`}
+                className={`w-full text-[12px] px-4 py-3 rounded-3xl border resize-none [field-sizing:content] min-h-[88px] max-h-[260px] transition-colors duration-200 ${isDark ? 'bg-[#0a0b0f] border-white/[0.10] text-white/80 placeholder-white/15 hover:border-white/[0.22] focus:border-white/45 focus:shadow-[0_0_0_2px_rgba(255,255,255,0.06)]' : 'bg-zinc-50 border-zinc-300 text-zinc-800 placeholder-zinc-300 hover:border-zinc-400 focus:border-zinc-900/50 focus:shadow-[0_0_0_2px_rgba(0,0,0,0.04)]'} outline-none`}
                 style={{ fontFamily: F.body }}
               />
             </div>
@@ -2071,9 +2077,10 @@ const MagneticAdCard = ({ v, border, isDark, cardTilt, index, delayStep, onClick
   const skewX = useSpring(useTransform(mouseY, [-60, 60], [1.5, -1.5]), springConfig);
   const skewY = useSpring(useTransform(mouseX, [-60, 60], [-1.5, 1.5]), springConfig);
 
+  const reduceMotion = useReducedMotion();
   const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
     const rect = ref.current?.getBoundingClientRect();
-    if (!rect) return;
+    if (!rect || reduceMotion) return;
     const cx = e.clientX - rect.left;
     const cy = e.clientY - rect.top;
     mouseX.set((cx - rect.width / 2) * 0.18);
@@ -2176,6 +2183,7 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
     });
   }, []);
   const [activeBrand, setActiveBrand] = useState(0); // -1 = All
+  const brandAnchorRef = useRef<HTMLDivElement>(null);
   const [showStickyBar, setShowStickyBar] = useState(false);
   const brand = activeBrand >= 0 ? adsBrands[activeBrand] : null;
 
@@ -2291,13 +2299,32 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
 
   return (
     <div className="relative">
-      {/* ── Section header + filter chips ── */}
+      {/* ── Section header ── */}
       <FadeIn>
         <div className="flex items-center gap-2.5 mb-5">
           <motion.div className="w-1.5 h-1.5 rounded-full bg-[#ed592b]" animate={{ scale: [1, 1.4, 1] }} transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }} />
           <h1 className="text-[15px] tracking-[-0.02em]" style={{ fontFamily: F.heading, fontWeight: 600 }}>Social Media Ads</h1>
         </div>
+      </FadeIn>
 
+      {/* ── Featured campaigns: vertical scroll slides a horizontal track ── */}
+      <AdsShowcase
+        brands={adsBrands}
+        isDark={isDark}
+        onSelect={(i) => {
+          goTo(i);
+          requestAnimationFrame(() =>
+            brandAnchorRef.current?.scrollIntoView({
+              behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+              block: 'start',
+            }),
+          );
+        }}
+      />
+
+      {/* ── Filter chips ── */}
+      <div ref={brandAnchorRef} className="scroll-mt-20" />
+      <FadeIn>
         <div className="flex flex-wrap gap-2 mb-6">
           {/* All chip */}
           <button
@@ -2881,7 +2908,7 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
     <div className="ux-page-fixed">
       {/* Heading — scrolls naturally with the page (no sticky) */}
       <FadeIn>
-        <h1 className="text-3xl lg:text-4xl mb-3 tracking-[0]" style={{ fontFamily: F.heading, fontWeight: 700, letterSpacing: 0 }}>
+        <h1 className="text-fluid-30-36 mb-3 tracking-[0]" style={{ fontFamily: F.heading, fontWeight: 700, letterSpacing: 0 }}>
           <TextScramble text="UX/UI Design" delay={0.2} duration={1} style={{ fontFamily: F.heading, fontWeight: 700, letterSpacing: 0 }} />
         </h1>
         <p className={`${mt} max-w-xl leading-relaxed text-[14px]`} style={{ fontFamily: F.body }}>
@@ -2899,7 +2926,7 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
         transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1], opacity: { duration: 0.6 } }}
         style={{ transformPerspective: 1400, transformStyle: 'preserve-3d', transformOrigin: 'center 30%' }}
       >
-        <Link to="/projects/aurum" data-cursor="view">
+        <CaseLink to="/projects/aurum" cardId="ux-aurum" data-cursor="view">
           <motion.div
             whileHover={{ y: -6 }}
             className={`group rounded-2xl border overflow-hidden ${border} ${isDark ? 'bg-[#0e0f13]' : 'bg-white'} mb-6`}
@@ -2930,7 +2957,7 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
               <div className="absolute bottom-0 left-0 right-0 z-20 p-6">
                 <div className="flex items-end justify-between">
                   <div>
-                    <h3 className="text-[22px] md:text-[28px] text-white mb-1.5 tracking-[0] leading-none" style={{ fontFamily: F.heading, fontWeight: 600, letterSpacing: 0 }}>AURUM</h3>
+                    <h3 className="text-fluidpx-22-28 text-white mb-1.5 tracking-[0] leading-none" style={{ fontFamily: F.heading, fontWeight: 600, letterSpacing: 0 }}>AURUM</h3>
                     <p className="text-white/45 text-[11.5px] uppercase tracking-[0.18em]" style={{ fontFamily: F.body, fontWeight: 500 }}>Crypto Exchange · B2C Fintech</p>
                   </div>
                   <div className="w-10 h-10 rounded-full bg-[#ed592b] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all group-hover:shadow-[0_0_30px_rgba(237,89,43,0.3)]">
@@ -2950,7 +2977,7 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
               </span>
             </div>
           </motion.div>
-        </Link>
+        </CaseLink>
       </motion.div>
       </div>
 
@@ -2963,7 +2990,7 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
         transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1], opacity: { duration: 0.6 } }}
         style={{ transformPerspective: 1400, transformStyle: 'preserve-3d', transformOrigin: 'center 30%' }}
       >
-        <Link to="/projects/schenker" data-cursor="view">
+        <CaseLink to="/projects/schenker" cardId="ux-schenker" data-cursor="view">
           <motion.div
             whileHover={{ y: -6 }}
             className={`group rounded-2xl border overflow-hidden ${border} ${isDark ? 'bg-[#0e0f13]' : 'bg-white'} mb-6`}
@@ -2994,7 +3021,7 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
               <div className="absolute bottom-0 left-0 right-0 z-20 p-6">
                 <div className="flex items-end justify-between">
                   <div>
-                    <h3 className="text-[22px] md:text-[28px] text-white mb-1.5 tracking-[0] leading-none" style={{ fontFamily: F.heading, fontWeight: 600, letterSpacing: 0 }}>SCHENKER</h3>
+                    <h3 className="text-fluidpx-22-28 text-white mb-1.5 tracking-[0] leading-none" style={{ fontFamily: F.heading, fontWeight: 600, letterSpacing: 0 }}>SCHENKER</h3>
                     <p className="text-white/55 text-[11.5px] uppercase tracking-[0.18em]" style={{ fontFamily: F.body, fontWeight: 500 }}>Logistics Platform · Enterprise UX</p>
                   </div>
                   <div className="w-10 h-10 rounded-full bg-[#6B8E23] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all group-hover:shadow-[0_0_30px_rgba(107,142,35,0.3)]">
@@ -3014,7 +3041,7 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
               </span>
             </div>
           </motion.div>
-        </Link>
+        </CaseLink>
       </motion.div>
       </div>
 
@@ -3027,7 +3054,7 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
         transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1], opacity: { duration: 0.6 } }}
         style={{ transformPerspective: 1400, transformStyle: 'preserve-3d', transformOrigin: 'center 30%' }}
       >
-        <Link to="/projects/unispace" data-cursor="view">
+        <CaseLink to="/projects/unispace" cardId="ux-unispace" data-cursor="view">
           <motion.div
             whileHover={{ y: -6 }}
             className={`group rounded-2xl border overflow-hidden ${border} ${isDark ? 'bg-[#0e0f13]' : 'bg-white'} mb-6`}
@@ -3058,7 +3085,7 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
               <div className="absolute bottom-0 left-0 right-0 z-20 p-6">
                 <div className="flex items-end justify-between">
                   <div>
-                    <h3 className="text-[22px] md:text-[28px] text-white mb-1.5 tracking-[0] leading-none" style={{ fontFamily: F.heading, fontWeight: 600, letterSpacing: 0 }}>UNISPACE</h3>
+                    <h3 className="text-fluidpx-22-28 text-white mb-1.5 tracking-[0] leading-none" style={{ fontFamily: F.heading, fontWeight: 600, letterSpacing: 0 }}>UNISPACE</h3>
                     <p className="text-white/55 text-[11.5px] uppercase tracking-[0.18em]" style={{ fontFamily: F.body, fontWeight: 500 }}>Student Management · Multi-role EdTech</p>
                   </div>
                   <div className="w-10 h-10 rounded-full bg-[#3D82F6] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all group-hover:shadow-[0_0_30px_rgba(61,130,246,0.4)]">
@@ -3078,7 +3105,7 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
               </span>
             </div>
           </motion.div>
-        </Link>
+        </CaseLink>
       </motion.div>
       </div>
       </div>{/* ux-stack-wrapper */}

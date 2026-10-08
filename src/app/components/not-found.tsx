@@ -65,7 +65,7 @@ export function NotFound() {
               className="relative inline-block mb-6"
             >
               <span
-                className="text-[120px] sm:text-[160px] tracking-[-0.06em] leading-none"
+                className="text-fluidpx-120-160 tracking-[-0.06em] leading-none"
                 style={{
                   fontFamily: F.heading,
                   fontWeight: 800,
@@ -92,7 +92,7 @@ export function NotFound() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-              className={`text-[18px] sm:text-[22px] tracking-[-0.02em] mb-2 ${isDark ? 'text-white/90' : 'text-zinc-800'}`}
+              className={`text-fluidpx-18-22 tracking-[-0.02em] mb-2 ${isDark ? 'text-white/90' : 'text-zinc-800'}`}
               style={{ fontFamily: F.heading, fontWeight: 600 }}
             >
               Page not found

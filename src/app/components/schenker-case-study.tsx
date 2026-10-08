@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { FadeIn, CountUp, GlowCard, ShineText, StaggerChildren, StaggerItem, ScrollProgress, AnimatedDivider, ScaleOnScroll, MagneticWrap, ParallaxFloat, ScrollRevealScale } from './animated-helpers';
 import { useNavigate } from 'react-router';
+import { CaseHeroTarget } from './case-transition';
 import {
   ArrowLeft, ArrowRight, ArrowUpRight, Sun, Moon,
   Package, FileText, Settings, HelpCircle, Code,
@@ -194,6 +195,7 @@ export function SchenkerCaseStudy() {
   return (
     <div className={`${bg} min-h-screen transition-colors duration-500 relative`} style={{ fontFamily: BRAND.bodyFont }}>
       <SchenkerSEO />
+      <CaseHeroTarget path="/projects/schenker" />
       {/* Scroll to top */}
       <ScrollToTopButton />
       {/* Section navigator */}
@@ -226,7 +228,7 @@ export function SchenkerCaseStudy() {
         <div className="max-w-7xl mx-auto px-6 lg:px-12 py-4 flex justify-between items-center">
           <div className="flex items-center gap-4">
               <motion.button
-                onClick={() => navigate('/')}
+                onClick={() => navigate('/', { viewTransition: true })}
                 whileHover={{ x: -3 }}
                 whileTap={{ scale: 0.95 }}
                 className={`flex items-center gap-2 text-sm rounded-lg px-2 py-1.5 min-h-[44px] focus-visible:!shadow-[0_0_0_2px_rgba(107,142,35,0.4)] ${isDark ? 'text-[#9295A6] hover:text-white hover:bg-white/[0.04]' : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100'} transition-colors`}
@@ -279,7 +281,7 @@ export function SchenkerCaseStudy() {
           </FadeIn>
 
           <FadeIn delay={0.05}>
-            <h1 className="text-4xl md:text-6xl lg:text-7xl tracking-[-0.03em] mb-6" style={{ fontFamily: BRAND.headingFont }}>
+            <h1 className="text-fluid-36-72 tracking-[-0.03em] mb-6" style={{ fontFamily: BRAND.headingFont }}>
               <span className="text-[#6B8E23]">SCHENKER</span>
               <br />
               <span className={isDark ? 'text-white/90' : 'text-zinc-800'}>Logistics Platform</span>
@@ -287,7 +289,7 @@ export function SchenkerCaseStudy() {
           </FadeIn>
 
           <FadeIn delay={0.1}>
-            <p className={`text-lg md:text-xl max-w-2xl leading-relaxed mb-8 ${bt}`}>
+            <p className={`text-fluid-18-20 max-w-2xl leading-relaxed mb-8 ${bt}`}>
               Simplifying a complex shipping workflow — designing a structured logistics interface for shipment creation, document handling, and operational efficiency.
             </p>
           </FadeIn>
@@ -391,7 +393,7 @@ export function SchenkerCaseStudy() {
                     <span className="text-[10px] font-mono" style={{ color: item.accent }}>{item.number}</span>
                     <span className={`text-[9px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-md ${isDark ? 'bg-white/[0.03] text-white/40' : 'bg-zinc-100 text-zinc-400'}`}>{item.step}</span>
                   </div>
-                  <p className={`text-[15px] lg:text-[17px] leading-relaxed ${i === 0 ? (isDark ? 'text-white' : 'text-zinc-900') : bt}`} style={{ fontFamily: i === 0 ? BRAND.headingFont : BRAND.bodyFont }}>
+                  <p className={`text-fluidpx-15-17 leading-relaxed ${i === 0 ? (isDark ? 'text-white' : 'text-zinc-900') : bt}`} style={{ fontFamily: i === 0 ? BRAND.headingFont : BRAND.bodyFont }}>
                     {item.text}
                   </p>
                 </div>
@@ -408,7 +410,7 @@ export function SchenkerCaseStudy() {
         <div className="max-w-6xl mx-auto">
           <FadeIn><SectionTag number="01" label="Project Overview" /></FadeIn>
           <FadeIn>
-            <h2 className="text-3xl lg:text-5xl leading-tight mb-6" style={{ fontFamily: BRAND.headingFont }}>
+            <h2 className="text-fluid-30-48 leading-tight mb-6" style={{ fontFamily: BRAND.headingFont }}>
               Designing <span className="text-[#6B8E23]">clarity</span> for<br />enterprise logistics
             </h2>
             <div className="max-w-3xl">
@@ -440,7 +442,7 @@ export function SchenkerCaseStudy() {
                     </div>
                     <div className={`text-[9px] uppercase tracking-[0.15em] px-2 py-0.5 rounded-md ${isDark ? 'bg-white/[0.03] text-[#9295A6]/60' : 'bg-zinc-100 text-zinc-400'}`}>{m.sub}</div>
                   </div>
-                  <div className="text-3xl lg:text-4xl mb-1 leading-none" style={{ fontFamily: BRAND.headingFont, color: m.color }}>
+                  <div className="text-fluid-30-36 mb-1 leading-none" style={{ fontFamily: BRAND.headingFont, color: m.color }}>
                     <CountUp target={m.value} suffix={m.suffix} />
                   </div>
                   <div className={`text-[11px] tracking-wide ${isDark ? 'text-white/70' : 'text-zinc-600'}`}>{m.label}</div>
@@ -523,7 +525,7 @@ export function SchenkerCaseStudy() {
                   </div>
                   <span className="text-[10px] uppercase tracking-[0.25em] text-[#6B8E23] font-medium">Friction → Flow</span>
                 </div>
-                <h3 className={`text-2xl lg:text-3xl tracking-[-0.02em] ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 700 }}>
+                <h3 className={`text-fluid-24-30 tracking-[-0.02em] ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 700 }}>
                   Four principles · applied to enterprise complexity
                 </h3>
               </div>
@@ -570,7 +572,7 @@ export function SchenkerCaseStudy() {
         <div className="max-w-6xl mx-auto">
           <FadeIn><SectionTag number="03" label="Product Structure" /></FadeIn>
           <FadeIn>
-            <h2 className="text-3xl lg:text-4xl leading-tight mb-16" style={{ fontFamily: BRAND.headingFont }}>
+            <h2 className="text-fluid-30-36 leading-tight mb-16" style={{ fontFamily: BRAND.headingFont }}>
               Modular <span className="text-[#6B8E23]">architecture</span>
             </h2>
           </FadeIn>
@@ -599,7 +601,7 @@ export function SchenkerCaseStudy() {
         <div className="max-w-6xl mx-auto">
           <FadeIn><SectionTag number="04" label="Shipment Flow" /></FadeIn>
           <FadeIn>
-            <h2 className="text-3xl lg:text-4xl leading-tight mb-4" style={{ fontFamily: BRAND.headingFont }}>
+            <h2 className="text-fluid-30-36 leading-tight mb-4" style={{ fontFamily: BRAND.headingFont }}>
               Step-based <span className="text-[#6B8E23]">shipment</span> creation
             </h2>
             <p className={`${bt} max-w-xl mb-16 leading-relaxed text-sm`}>
@@ -668,7 +670,7 @@ export function SchenkerCaseStudy() {
         <div className="max-w-6xl mx-auto">
           <FadeIn><SectionTag number="05" label="Key Screens" /></FadeIn>
           <FadeIn>
-            <h2 className="text-3xl lg:text-5xl leading-tight mb-4" style={{ fontFamily: BRAND.headingFont }}>
+            <h2 className="text-fluid-30-48 leading-tight mb-4" style={{ fontFamily: BRAND.headingFont }}>
               Every module, <span className="text-[#6B8E23]">designed</span>
             </h2>
             <p className={`${bt} max-w-xl leading-relaxed text-sm mb-16`}>
@@ -722,7 +724,7 @@ export function SchenkerCaseStudy() {
         <div className="max-w-6xl mx-auto">
           <FadeIn><SectionTag number="06" label="Document Workflows" /></FadeIn>
           <FadeIn>
-            <h2 className="text-3xl lg:text-4xl leading-tight mb-4" style={{ fontFamily: BRAND.headingFont }}>
+            <h2 className="text-fluid-30-36 leading-tight mb-4" style={{ fontFamily: BRAND.headingFont }}>
               Structured <span className="text-[#6B8E23]">table views</span>
             </h2>
             <p className={`${bt} max-w-xl mb-12 leading-relaxed text-sm`}>
@@ -749,7 +751,7 @@ export function SchenkerCaseStudy() {
         <div className="max-w-6xl mx-auto">
           <FadeIn><SectionTag number="07" label="Design Approach" /></FadeIn>
           <FadeIn>
-            <h2 className="text-3xl lg:text-4xl leading-tight mb-5" style={{ fontFamily: BRAND.headingFont }}>
+            <h2 className="text-fluid-30-36 leading-tight mb-5" style={{ fontFamily: BRAND.headingFont }}>
               Clarity over <span className="text-[#6B8E23]">decoration</span>
             </h2>
             <p className={`${bt} leading-relaxed max-w-xl mb-12`}>
@@ -808,7 +810,7 @@ export function SchenkerCaseStudy() {
           <FadeIn><SectionTag number="08" label="Outcome" /></FadeIn>
           <FadeIn>
             <div className="max-w-3xl">
-              <h2 className="text-3xl lg:text-4xl leading-tight mb-6" style={{ fontFamily: BRAND.headingFont }}>
+              <h2 className="text-fluid-30-36 leading-tight mb-6" style={{ fontFamily: BRAND.headingFont }}>
                 A clearer <span className="text-[#6B8E23]">enterprise</span> interface
               </h2>
               <p className={`${bt} leading-relaxed mb-6`}>

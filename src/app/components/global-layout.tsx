@@ -1,5 +1,5 @@
 import { Link, Outlet, useLocation, useNavigate } from 'react-router';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import { useTheme } from './theme-provider';
 import { useActiveSection } from './active-section-context';
 import { Home, Mail, Layers, Image, Video } from 'lucide-react';
@@ -109,6 +109,9 @@ export function GlobalLayout() {
 
   // Detect mobile at render time to skip expensive animations on phones
   const isMobile = typeof window !== 'undefined' && window.matchMedia('(max-width: 1023px)').matches;
+  // Ambient motion (mesh, glow, particles, blobs) is pure decoration: skip it
+  // for visitors who ask their system for reduced motion
+  const reduceMotion = useReducedMotion();
 
   return (
     <div
@@ -119,7 +122,7 @@ export function GlobalLayout() {
       <ScrollProgress color="#ed592b" />
 
       {/* Desktop-only heavy effects — skipped on mobile to protect INP and LCP */}
-      {!isMobile && (
+      {!isMobile && !reduceMotion && (
         <>
           <LiquidMeshBackground />
           <CursorGlow color="rgba(237,89,43,0.04)" size={700} />

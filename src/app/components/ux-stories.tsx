@@ -109,7 +109,7 @@ const StoryWrapper = ({
             <div className="w-6 h-px bg-[#D59A04]/30" />
             <span className={`text-[9px] uppercase tracking-[0.2em] ${mt}`}>UX Story</span>
           </div>
-          <h3 className="text-xl lg:text-2xl mb-2" style={{ fontFamily: BRAND.headingFont }}>
+          <h3 className="text-fluid-20-24 mb-2" style={{ fontFamily: BRAND.headingFont }}>
             {titleEn}
           </h3>
           <p className="text-[#D59A04]/60 text-sm mb-3" style={{ fontFamily: BRAND.bodyFont }}>

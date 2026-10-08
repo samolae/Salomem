@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useNavigate } from 'react-router';
+import { CaseHeroTarget } from './case-transition';
 import {
   ArrowLeft, ArrowRight, ArrowUpRight, ArrowLeftRight, Home,
   Lock, Shield, UserCheck, QrCode, MapPin, Eye, Zap, PenTool,
@@ -152,6 +153,7 @@ export function AurumCaseStudy() {
   return (
     <div className={`${bg} min-h-screen transition-colors duration-500 relative`} style={{ fontFamily: BRAND.bodyFont }}>
       <AurumSEO />
+      <CaseHeroTarget path="/projects/aurum" />
       {/* Scroll to top */}
       <ScrollToTopButton />
       {/* Section navigator */}
@@ -183,7 +185,7 @@ export function AurumCaseStudy() {
         <div className="max-w-7xl mx-auto px-6 lg:px-12 py-4 flex justify-between items-center">
           <div className="flex items-center gap-4">
             <motion.button
-              onClick={() => navigate('/')}
+              onClick={() => navigate('/', { viewTransition: true })}
               whileHover={{ x: -3 }}
               whileTap={{ scale: 0.95 }}
               className={`flex items-center gap-2 text-sm rounded-lg px-2 py-1.5 min-h-[44px] focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${isDark ? 'text-[#9295A6] hover:text-white hover:bg-white/[0.04]' : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100'} transition-colors`}
@@ -323,7 +325,7 @@ export function AurumCaseStudy() {
                     <span className="text-[10px] font-mono" style={{ color: item.accent }}>{item.number}</span>
                     <span className={`text-[9px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-md ${isDark ? 'bg-white/[0.03] text-white/40' : 'bg-zinc-100 text-zinc-400'}`}>{item.step}</span>
                   </div>
-                  <p className={`text-[15px] lg:text-[17px] leading-relaxed ${i === 0 ? (isDark ? 'text-white' : 'text-zinc-900') : bt}`} style={{ fontFamily: i === 0 ? BRAND.headingFont : BRAND.bodyFont }}>
+                  <p className={`text-fluidpx-15-17 leading-relaxed ${i === 0 ? (isDark ? 'text-white' : 'text-zinc-900') : bt}`} style={{ fontFamily: i === 0 ? BRAND.headingFont : BRAND.bodyFont }}>
                     {item.text}
                   </p>
                 </div>
@@ -340,7 +342,7 @@ export function AurumCaseStudy() {
         <div className="max-w-6xl mx-auto">
           <FadeIn><SectionTag number="01" label="Project Overview" /></FadeIn>
           <FadeIn>
-            <h2 className="text-3xl lg:text-5xl leading-tight mb-6" style={{ fontFamily: BRAND.headingFont }}>
+            <h2 className="text-fluid-30-48 leading-tight mb-6" style={{ fontFamily: BRAND.headingFont }}>
               Redefining <span className="text-[#D59A04]">crypto</span> trading<br />experience
             </h2>
             <div className="max-w-3xl">
@@ -372,7 +374,7 @@ export function AurumCaseStudy() {
                     </div>
                     <div className={`text-[9px] uppercase tracking-[0.15em] px-2 py-0.5 rounded-md ${isDark ? 'bg-white/[0.03] text-[#9295A6]/60' : 'bg-zinc-100 text-zinc-400'}`}>{m.sub}</div>
                   </div>
-                  <div className="text-3xl lg:text-4xl mb-1 leading-none" style={{ fontFamily: BRAND.headingFont, color: m.color }}>
+                  <div className="text-fluid-30-36 mb-1 leading-none" style={{ fontFamily: BRAND.headingFont, color: m.color }}>
                     <CountUp target={m.value} suffix={m.suffix} />
                   </div>
                   <div className={`text-[11px] tracking-wide ${isDark ? 'text-white/70' : 'text-zinc-600'}`}>{m.label}</div>
@@ -455,7 +457,7 @@ export function AurumCaseStudy() {
                   </div>
                   <span className="text-[10px] uppercase tracking-[0.25em] text-[#D59A04] font-medium">Trust Architecture</span>
                 </div>
-                <h3 className={`text-2xl lg:text-3xl tracking-[-0.02em] ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 700 }}>
+                <h3 className={`text-fluid-24-30 tracking-[-0.02em] ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 700 }}>
                   Four pillars · engineered into every touchpoint
                 </h3>
               </div>
@@ -502,7 +504,7 @@ export function AurumCaseStudy() {
         <div className="max-w-6xl mx-auto">
           <FadeIn><SectionTag number="03" label="Key Screens" /></FadeIn>
           <FadeIn>
-            <h2 className="text-3xl lg:text-4xl leading-tight mb-4" style={{ fontFamily: BRAND.headingFont }}>
+            <h2 className="text-fluid-30-36 leading-tight mb-4" style={{ fontFamily: BRAND.headingFont }}>
               Core <span className="text-[#D59A04]">experiences</span>
             </h2>
             <p className={`${bt} max-w-xl mb-16 leading-relaxed text-sm`}>
@@ -595,7 +597,7 @@ export function AurumCaseStudy() {
         <div className="max-w-6xl mx-auto">
           <FadeIn><SectionTag number="06" label="Interactive Preview" /></FadeIn>
           <FadeIn>
-            <h2 className="text-3xl lg:text-4xl leading-tight mb-4" style={{ fontFamily: BRAND.headingFont }}>
+            <h2 className="text-fluid-30-36 leading-tight mb-4" style={{ fontFamily: BRAND.headingFont }}>
               Live <span className="text-[#D59A04]">components</span>
             </h2>
             <p className={`${bt} max-w-xl mb-12 leading-relaxed text-sm`}>
@@ -623,7 +625,7 @@ export function AurumCaseStudy() {
           <FadeIn>
             <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 mb-10">
               <div>
-                <h2 className="text-3xl lg:text-4xl leading-tight mb-3" style={{ fontFamily: BRAND.headingFont }}>
+                <h2 className="text-fluid-30-36 leading-tight mb-3" style={{ fontFamily: BRAND.headingFont }}>
                   <span className="text-[#D59A04]">AURUM</span> Design System
                 </h2>
                 <p className={`${bt} max-w-xl leading-relaxed`}>
@@ -644,7 +646,7 @@ export function AurumCaseStudy() {
             <div className="mt-24">
               <div className="flex items-center justify-between mb-8">
                 <div>
-                  <h3 className="text-2xl lg:text-3xl mb-2" style={{ fontFamily: BRAND.headingFont }}>
+                  <h3 className="text-fluid-24-30 mb-2" style={{ fontFamily: BRAND.headingFont }}>
                     Component <span className="text-[#D59A04]">Sheet</span>
                   </h3>
                   <p className={`text-sm ${mt}`}>The complete Figma design components document</p>
@@ -695,7 +697,7 @@ export function AurumCaseStudy() {
         <div className="max-w-6xl mx-auto">
           <FadeIn><SectionTag number="08" label="Design Approach" /></FadeIn>
           <FadeIn>
-            <h2 className="text-3xl lg:text-4xl leading-tight mb-5" style={{ fontFamily: BRAND.headingFont }}>
+            <h2 className="text-fluid-30-36 leading-tight mb-5" style={{ fontFamily: BRAND.headingFont }}>
               Trust through <span className="text-[#D59A04]">craft</span>
             </h2>
             <p className={`${bt} leading-relaxed max-w-xl mb-12`}>
@@ -754,7 +756,7 @@ export function AurumCaseStudy() {
           <FadeIn><SectionTag number="09" label="Outcome" /></FadeIn>
           <FadeIn>
             <div className="max-w-3xl">
-              <h2 className="text-3xl lg:text-4xl leading-tight mb-6" style={{ fontFamily: BRAND.headingFont }}>
+              <h2 className="text-fluid-30-36 leading-tight mb-6" style={{ fontFamily: BRAND.headingFont }}>
                 A premium <span className="text-[#D59A04]">crypto</span> experience
               </h2>
               <p className={`${bt} leading-relaxed mb-6`}>

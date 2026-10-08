@@ -1,9 +1,41 @@
-import { useRef, useEffect, useState, useCallback, useMemo, type ReactNode, type CSSProperties } from 'react';
-import { motion, useScroll, useTransform, useInView, useMotionValue, useSpring, useAnimationFrame } from 'motion/react';
+import { useRef, useEffect, useLayoutEffect, useState, useCallback, useMemo, type ReactNode, type CSSProperties } from 'react';
+import { motion, useScroll, useTransform, useInView, useMotionValue, useSpring, useAnimationFrame, useReducedMotion } from 'motion/react';
 
 /* ═══════════════════════════════════════════════════════════════════ */
 /*                      FADE IN ON SCROLL                            */
 /* ═══════════════════════════════════════════════════════════════════ */
+/*
+ * Reveal on scroll, now driven by CSS instead of a per-element JS animation
+ * (see styles/scroll-motion.css). Elements already on screen when they mount
+ * play a short timed intro; everything below the fold is tied to scroll
+ * position with animation-timeline: view(), which runs off the main thread.
+ * Browsers without scroll timelines get the timed intro when the element
+ * enters the viewport. Same props as before, so every call site is unchanged.
+ */
+let revealObserver: IntersectionObserver | null = null;
+const supportsScrollTimeline = () =>
+  typeof CSS !== 'undefined' && CSS.supports('animation-timeline: view()');
+
+// view() binds to the nearest scroll container. Inside an overflow:hidden /
+// auto box that never scrolls, the timeline stalls mid-way and the content
+// stays half transparent, so those elements use the timed reveal instead.
+const scrollerCache = new WeakMap<Element, boolean>();
+const isScroller = (v: string) => v === 'hidden' || v === 'auto' || v === 'scroll' || v === 'overlay';
+function insideInnerScroller(el: Element): boolean {
+  const chain: Element[] = [];
+  let found = false;
+  for (let node = el.parentElement; node && node !== document.body; node = node.parentElement) {
+    const cached = scrollerCache.get(node);
+    if (cached !== undefined) { found = cached; break; }
+    chain.push(node);
+    const cs = getComputedStyle(node);
+    if (isScroller(cs.overflowX) || isScroller(cs.overflowY)) { found = true; break; }
+  }
+  // Every node walked shares the answer of the first decisive ancestor
+  for (const node of chain) scrollerCache.set(node, found);
+  return found;
+}
+
 export const FadeIn = ({
   children,
   delay = 0,
@@ -17,26 +49,45 @@ export const FadeIn = ({
   className?: string;
   blur?: boolean;
 }) => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '0px' });
+  const ref = useRef<HTMLDivElement>(null);
 
-  const dirMap = {
-    up: { x: 0, y: 20 },
-    down: { x: 0, y: -20 },
-    left: { x: 20, y: 0 },
-    right: { x: -20, y: 0 },
-  };
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    const onScreen = r.top < window.innerHeight && r.bottom > 0 && r.height > 0;
+    if (onScreen) {
+      el.dataset.reveal = 'intro';
+    } else if (supportsScrollTimeline() && !insideInnerScroller(el)) {
+      el.dataset.reveal = 'scroll';
+    } else {
+      el.dataset.reveal = 'wait';
+      revealObserver ??= new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          (entry.target as HTMLElement).dataset.reveal = 'intro';
+          revealObserver?.unobserve(entry.target);
+        }
+      });
+      revealObserver.observe(el);
+      return () => revealObserver?.unobserve(el);
+    }
+  }, []);
 
   return (
-    <motion.div
+    <div
       ref={ref}
-      initial={{ opacity: 0, filter: blur ? 'blur(4px)' : 'blur(0px)', ...dirMap[direction] }}
-      animate={isInView ? { opacity: 1, filter: 'blur(0px)', x: 0, y: 0 } : { opacity: 0, filter: blur ? 'blur(4px)' : 'blur(0px)', ...dirMap[direction] }}
-      transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
-      className={className}
+      className={`reveal ${className}`}
+      data-dir={direction}
+      data-blur={blur ? '' : undefined}
+      style={{
+        '--reveal-delay': `${delay}s`,
+        // On scroll, a delay becomes a later start along the reveal range
+        '--reveal-shift': `${Math.min(delay, 0.6) * 240}px`,
+      } as CSSProperties}
     >
       {children}
-    </motion.div>
+    </div>
   );
 };
 
@@ -267,9 +318,10 @@ export const MagneticWrap = ({
   const y = useMotionValue(0);
   const springX = useSpring(x, { stiffness: 200, damping: 20 });
   const springY = useSpring(y, { stiffness: 200, damping: 20 });
+  const reduceMotion = useReducedMotion();
 
   const handleMouse = (e: React.MouseEvent) => {
-    if (!ref.current) return;
+    if (!ref.current || reduceMotion) return;
     const rect = ref.current.getBoundingClientRect();
     const cx = rect.left + rect.width / 2;
     const cy = rect.top + rect.height / 2;
@@ -295,12 +347,19 @@ export const MagneticWrap = ({
 /* ═══════════════════════════════════════════════════════════════════ */
 /*             SCROLL PROGRESS INDICATOR                             */
 /* ═══════════════════════════════════════════════════════════════════ */
-export const ScrollProgress = ({ color = '#ed592b' }: { color?: string }) => {
+export const ScrollProgress = ({ color = '#ed592b' }: { color?: string }) =>
+  supportsScrollTimeline() ? (
+    <div aria-hidden className="scroll-progress" style={{ backgroundColor: color }} />
+  ) : (
+    <ScrollProgressFallback color={color} />
+  );
+
+const ScrollProgressFallback = ({ color }: { color: string }) => {
   const { scrollYProgress } = useScroll({ layoutEffect: false });
   const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
-
   return (
     <motion.div
+      aria-hidden
       className="fixed top-0 left-0 right-0 h-[2px] z-[70] origin-left"
       style={{ scaleX, backgroundColor: color }}
     />
@@ -557,11 +616,12 @@ export const TextScramble = ({
 }) => {
   const ref = useRef<HTMLSpanElement>(null);
   const isInView = useInView(ref, { once: true, margin: '0px' });
+  const reduceMotion = useReducedMotion();
   const [displayText, setDisplayText] = useState(text);
   const chars = '!<>-_\\/[]{}—=+*^?#________';
 
   useEffect(() => {
-    if (!isInView) return;
+    if (!isInView || reduceMotion) return;
     const timeout = setTimeout(() => {
       let iteration = 0;
       const totalFrames = text.length * 3;
@@ -585,7 +645,7 @@ export const TextScramble = ({
       return () => clearInterval(interval);
     }, delay * 1000);
     return () => clearTimeout(timeout);
-  }, [isInView, text, delay, duration, chars]);
+  }, [isInView, reduceMotion, text, delay, duration, chars]);
 
   return (
     <motion.span
@@ -896,8 +956,9 @@ export const BentoTiltCard = ({
   const scale = useMotionValue(1);
   const springScale = useSpring(scale, { stiffness: 400, damping: 25 });
 
+  const reduceMotion = useReducedMotion();
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    if (!ref.current) return;
+    if (!ref.current || reduceMotion) return;
     const rect = ref.current.getBoundingClientRect();
     const nx = (e.clientX - rect.left) / rect.width - 0.5;
     const ny = (e.clientY - rect.top) / rect.height - 0.5;
@@ -905,9 +966,9 @@ export const BentoTiltCard = ({
     rotateY.set(nx * tiltStrength);
     glareX.set((nx + 0.5) * 100);
     glareY.set((ny + 0.5) * 100);
-  }, [rotateX, rotateY, glareX, glareY, tiltStrength]);
+  }, [rotateX, rotateY, glareX, glareY, tiltStrength, reduceMotion]);
 
-  const handleMouseEnter = useCallback(() => { scale.set(1.02); }, [scale]);
+  const handleMouseEnter = useCallback(() => { if (!reduceMotion) scale.set(1.02); }, [scale, reduceMotion]);
   const handleMouseLeave = useCallback(() => {
     rotateX.set(0);
     rotateY.set(0);

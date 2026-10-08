@@ -14,7 +14,7 @@ import {
   Volume2, VolumeX, Code2, Pause, LayoutGrid,
 } from 'lucide-react';
 import { useTheme } from './theme-provider';
-import { FadeIn, StaggerChildren, StaggerItem, ScrollProgress, MagneticWrap, AnimatedDivider, SplitText, ScaleOnScroll, CursorGlow, FloatingParticles, TextScramble, MorphingBlob, RevealMask, AnimatedLine, LightBeamCard, BentoTiltCard, LiquidCursor, LiquidMeshBackground, SpringBadge, ParallaxFloat, ScrollRevealScale, MagneticLink, MicroPulse } from './animated-helpers';
+import { FadeIn, StaggerChildren, StaggerItem, ScrollProgress, MagneticWrap, AnimatedDivider, SplitText, ScaleOnScroll, CursorGlow, FloatingParticles, TextScramble, MorphingBlob, RevealMask, AnimatedLine, LightBeamCard, BentoTiltCard, LiquidMeshBackground, SpringBadge, ParallaxFloat, ScrollRevealScale, MagneticLink, MicroPulse } from './animated-helpers';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { HomeSEO, ServicesSEO, ContactSEO, UxUiSEO, SocialMediaAdsSEO, SocialMediaMotionSEO } from './seo';
 import { scrollContentToTop } from './scroll-to-top';
@@ -841,7 +841,7 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 mb-2.5" style={{ gridTemplateRows: 'auto auto auto' }}>
 
           {/* AURUM — spans 2 cols × 2 rows: the hero cell */}
-          <Link to="/projects/aurum" className="sm:col-span-2 sm:row-span-2">
+          <Link to="/projects/aurum" data-cursor="view" className="sm:col-span-2 sm:row-span-2">
             <motion.div whileHover={{ y: -3, scale: 1.004 }} transition={{ type: 'spring', stiffness: 400, damping: 30 }} className="h-full">
               <BentoTiltCard tiltStrength={5} glareOpacity={0.06} className={`rounded-2xl border overflow-hidden h-full ${border} ${isDark ? 'bg-[#0a0b0f]' : 'bg-white'}`}>
                 <div className="relative h-full min-h-[220px] sm:min-h-[320px] overflow-hidden bg-gradient-to-br from-[#080B0F] via-[#0d0e14] to-[#0a0c12] img-hover-zoom">
@@ -889,7 +889,7 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
 
           {/* SCHENKER — full-width bottom row, 3 cols */}
           <div className="sm:col-span-3">
-            <Link to="/projects/schenker">
+            <Link to="/projects/schenker" data-cursor="view">
               <motion.div whileHover={{ y: -3, scale: 1.004 }} transition={{ type: 'spring', stiffness: 400, damping: 30 }}>
                 <BentoTiltCard tiltStrength={4} glareOpacity={0.05} className={`rounded-2xl border overflow-hidden ${border} ${isDark ? 'bg-[#0a0b0f]' : 'bg-white'}`}>
                   <div className="grid grid-cols-1 sm:grid-cols-[1fr_1.6fr]">
@@ -1493,12 +1493,14 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
                       whileHover={{ scale: 1.15 }}
                       whileTap={{ scale: 0.85 }}
                       onClick={(e) => { e.preventDefault(); handleCopy(item.value, item.label); }}
+                      data-cursor={copied === item.label ? 'copied' : 'copy'}
+                      data-cursor-label={copied === item.label ? undefined : `Copy ${item.label.toLowerCase()}`}
                       className={`w-10 h-10 sm:w-8 sm:h-8 rounded-xl sm:rounded-lg flex items-center justify-center sm:opacity-0 sm:group-hover:opacity-100 transition-all duration-300 focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] focus-visible:!opacity-100 ${
                         copied === item.label
                           ? 'bg-[#22c55e]/15 text-[#22c55e]'
                           : isDark ? 'bg-white/[0.05] text-white/40 hover:text-white/80' : 'bg-zinc-100 text-zinc-400 hover:text-zinc-600'
                       }`}
-                      title="Copy"
+                      aria-label={`Copy ${item.label.toLowerCase()}`}
                     >
                       {copied === item.label ? (
                         <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} className="text-[11px] sm:text-[10px]">✓</motion.span>
@@ -1870,6 +1872,7 @@ const ImageLightbox = ({ src, alt, onClose, whiteBg, onPrev, onNext, hasPrev, ha
       className="fixed inset-0 z-[9998] flex items-center justify-center p-4 sm:p-6 md:p-8 cursor-pointer"
       style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}
       onClick={onClose}
+      data-cursor="close"
     >
       <motion.div
         className="absolute inset-0 bg-black/85 backdrop-blur-xl"
@@ -1889,6 +1892,7 @@ const ImageLightbox = ({ src, alt, onClose, whiteBg, onPrev, onNext, hasPrev, ha
           transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
           className={`relative z-10 max-w-[82vw] max-h-[82vh] rounded-xl shadow-2xl object-contain select-none cursor-default ${whiteBg ? 'bg-white p-4' : ''}`}
           onClick={(e) => e.stopPropagation()}
+          data-cursor="none"
           draggable={false}
         />
       </AnimatePresence>
@@ -1968,6 +1972,7 @@ const AdsMediaItem = ({ item, brandName, index, isDark, border, onImageClick, wh
   return (
     <TiltCard
       onClick={() => item.type === 'image' ? onImageClick() : undefined}
+      cursor={item.type === 'image' ? 'expand' : undefined}
       className={`relative rounded-lg overflow-hidden border ${border} group cursor-pointer ${fill ? 'h-full' : 'break-inside-avoid mb-2.5'} ${whiteBg ? 'bg-white' : ''}`}
     >
       <div className={`relative ${fill ? 'h-full' : ''}`}>
@@ -2018,10 +2023,11 @@ const AdsMediaItem = ({ item, brandName, index, isDark, border, onImageClick, wh
 };
 
 /* Simple hover card for images — no 3D transforms (avoids CSS columns + preserve-3d browser bugs) */
-const TiltCard = ({ children, className, onClick, style: extraStyle }: { children: React.ReactNode; className?: string; onClick?: () => void; style?: React.CSSProperties }) => {
+const TiltCard = ({ children, className, onClick, cursor, style: extraStyle }: { children: React.ReactNode; className?: string; onClick?: () => void; cursor?: string; style?: React.CSSProperties }) => {
   return (
     <motion.div
       onClick={onClick}
+      data-cursor={cursor}
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       transition={{ type: 'spring', stiffness: 300, damping: 20 }}
@@ -2088,6 +2094,7 @@ const MagneticAdCard = ({ v, border, isDark, cardTilt, index, delayStep, onClick
     <motion.button
       ref={ref}
       onClick={onClick}
+      data-cursor={v.type === 'video' ? undefined : 'expand'}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       initial={{ opacity: 0, y: 16, scale: 0.96 }}
@@ -2476,7 +2483,7 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
                   return (
                     <div className="relative z-10 flex gap-2.5 items-stretch">
                       {tallItem && (
-                        <motion.button className={`flex-1 ${btnCls}`} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                        <motion.button data-cursor="expand" className={`flex-1 ${btnCls}`} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                           transition={{ type: 'spring', stiffness: 300, damping: 20 }}
                           onClick={() => setLightbox({ src: tallItem.src, alt: brand!.name, whiteBg: brand!.whiteBg, images: imgSrcs, index: imgSrcs.indexOf(tallItem.src) })}
                         >
@@ -2486,7 +2493,7 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
                       )}
                       <div className="flex-1 flex flex-col gap-2.5">
                         {regularItems.slice(0, 2).map((item, i) => (
-                          <motion.button key={i} className={`flex-1 aspect-square ${btnCls}`} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                          <motion.button key={i} data-cursor="expand" className={`flex-1 aspect-square ${btnCls}`} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                             transition={{ type: 'spring', stiffness: 300, damping: 20 }}
                             onClick={() => setLightbox({ src: item.src, alt: brand!.name, whiteBg: brand!.whiteBg, images: imgSrcs, index: imgSrcs.indexOf(item.src) })}
                           >
@@ -2789,6 +2796,7 @@ const MotionReelCard = ({
         {/* Mute / Unmute button */}
         <motion.button
           onClick={toggleMute}
+          data-cursor={isMuted ? 'unmute' : 'mute'}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           whileHover={{ scale: 1.15 }}
@@ -2891,7 +2899,7 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
         transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1], opacity: { duration: 0.6 } }}
         style={{ transformPerspective: 1400, transformStyle: 'preserve-3d', transformOrigin: 'center 30%' }}
       >
-        <Link to="/projects/aurum">
+        <Link to="/projects/aurum" data-cursor="view">
           <motion.div
             whileHover={{ y: -6 }}
             className={`group rounded-2xl border overflow-hidden ${border} ${isDark ? 'bg-[#0e0f13]' : 'bg-white'} mb-6`}
@@ -2955,7 +2963,7 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
         transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1], opacity: { duration: 0.6 } }}
         style={{ transformPerspective: 1400, transformStyle: 'preserve-3d', transformOrigin: 'center 30%' }}
       >
-        <Link to="/projects/schenker">
+        <Link to="/projects/schenker" data-cursor="view">
           <motion.div
             whileHover={{ y: -6 }}
             className={`group rounded-2xl border overflow-hidden ${border} ${isDark ? 'bg-[#0e0f13]' : 'bg-white'} mb-6`}
@@ -3019,7 +3027,7 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
         transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1], opacity: { duration: 0.6 } }}
         style={{ transformPerspective: 1400, transformStyle: 'preserve-3d', transformOrigin: 'center 30%' }}
       >
-        <Link to="/projects/unispace">
+        <Link to="/projects/unispace" data-cursor="view">
           <motion.div
             whileHover={{ y: -6 }}
             className={`group rounded-2xl border overflow-hidden ${border} ${isDark ? 'bg-[#0e0f13]' : 'bg-white'} mb-6`}

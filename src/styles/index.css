@@ -18,13 +18,6 @@ html, body {
   color: inherit;
 }
 
-/* Hide native cursor on desktop when custom LiquidCursor is active */
-@media (min-width: 1024px) {
-  *, *::before, *::after {
-    cursor: none !important;
-  }
-}
-
 /* ─── Focus-visible — accessible, elegant ring ────────────────── */
 /* NOTE: do NOT set border-radius here — it would override the
    element's own radius (e.g. rounded-full pills) and force a

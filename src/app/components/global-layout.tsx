@@ -9,8 +9,8 @@ import {
   CursorGlow,
   FloatingParticles,
   MorphingBlob,
-  LiquidCursor,
 } from './animated-helpers';
+import { CursorTag } from './cursor-tag';
 
 const F = {
   body: '"Manrope", "Inter", sans-serif',
@@ -98,7 +98,7 @@ function MobileBottomBar() {
 
 /**
  * GlobalLayout — wraps ALL routes with shared ambient assets.
- * Heavy desktop-only effects (cursor, particles, mesh) are skipped on mobile
+ * Heavy desktop-only effects (particles, mesh) are skipped on mobile
  * to improve INP and LCP on small devices.
  */
 export function GlobalLayout() {
@@ -126,7 +126,6 @@ export function GlobalLayout() {
           <FloatingParticles count={15} color="rgba(237,89,43,0.06)" />
           <MorphingBlob color="rgba(237,89,43,0.02)" className="-top-40 -right-40 z-[0]" />
           <MorphingBlob color="rgba(99,102,241,0.015)" className="top-[60%] -left-60 z-[0]" />
-          <LiquidCursor color="#ed592b" size={28} dotSize={4} />
         </>
       )}
 
@@ -137,6 +136,9 @@ export function GlobalLayout() {
 
       {/* Mobile bottom navigation */}
       <MobileBottomBar />
+
+      {/* Contextual cursor tag (mouse and trackpad only) */}
+      <CursorTag />
     </div>
   );
 }

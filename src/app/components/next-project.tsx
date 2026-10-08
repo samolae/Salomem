@@ -134,7 +134,7 @@ export function NextProjectRecommendation({ currentProject }: { currentProject: 
               const isSchenker = key === 'schenker';
               return (
                 <FadeIn key={key} delay={0.1 + idx * 0.08}>
-                  <Link to={p.path}>
+                  <Link to={p.path} data-cursor="view">
                     <motion.div
                       whileHover={{ y: -6 }}
                       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
@@ -244,7 +244,7 @@ export function NextProjectRecommendation({ currentProject }: { currentProject: 
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {crossRecommendations.map((rec) => (
-                  <Link key={rec.section} to={`/work/${rec.section}`}>
+                  <Link key={rec.section} to={`/work/${rec.section}`} data-cursor="explore">
                     <motion.div
                       whileHover={{ y: -3, scale: 1.01 }}
                       transition={{ type: 'spring', stiffness: 300, damping: 25 }}

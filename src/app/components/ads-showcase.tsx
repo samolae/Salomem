@@ -18,6 +18,20 @@ const F = {
   body: '"Manrope", "Inter", sans-serif',
 };
 const PIN_QUERY = '(hover: hover) and (pointer: fine) and (min-width: 768px)';
+
+/** Cloudinary covers at slide size (2x for retina) instead of the full image */
+const thumb = (src: string, width = 640) => {
+  const marker = '/image/upload/';
+  const at = src.indexOf(marker);
+  if (!src.includes('res.cloudinary.com') || at < 0) return src;
+  const head = src.slice(0, at + marker.length);
+  const rest = src.slice(at + marker.length);
+  const size = `w_${width},c_limit`;
+  // Keep existing transformations (f_auto,q_auto/...) and add the size to them
+  return /^[a-z]_[^/]+\//.test(rest)
+    ? head + rest.replace(/^([^/]+)\//, `$1,${size}/`)
+    : `${head}f_auto,q_auto,${size}/${rest}`;
+};
 const supportsViewTimeline = () => typeof CSS !== 'undefined' && CSS.supports('view-timeline: --probe');
 
 function usePinnedMode() {
@@ -138,10 +152,14 @@ export function AdsShowcase({
                   data-cursor="jump"
                   data-cursor-label={`View ${s.name}`}
                 >
+                  {/* Small thumbnails, all requested up front (low priority after
+                      the first few) so slides never arrive blank mid-scroll */}
                   <img
-                    src={s.cover}
+                    src={thumb(s.cover)}
                     alt={`${s.name} campaign visual`}
-                    loading={i < 4 ? 'eager' : 'lazy'}
+                    loading="eager"
+                    // lowercase attribute: React 18 does not know fetchPriority yet
+                    {...{ fetchpriority: i < 4 ? 'auto' : 'low' }}
                     decoding="async"
                     draggable={false}
                   />

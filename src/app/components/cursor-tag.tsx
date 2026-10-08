@@ -5,9 +5,9 @@ import type { LucideIcon } from 'lucide-react';
 
 /* ------------------------------------------------------------------ */
 /*  CursorTag                                                          */
-/*  A contextual label that rides along with the native cursor, in the */
-/*  spirit of Figma's multiplayer cursors. The system cursor is never  */
-/*  hidden, so pointing stays instant and precise everywhere.          */
+/*  A contextual label attached to the branded arrow cursor, like a    */
+/*  Figma multiplayer name tag. The arrow itself is a hardware cursor  */
+/*  (see styles/cursor.css), so pointing stays instant and precise.    */
 /*                                                                     */
 /*  Opt in on any element:            data-cursor="view"               */
 /*  Override the preset text:         data-cursor-label="Copy email"   */
@@ -33,8 +33,8 @@ const INTERACTIVE =
 const SELECTOR = `[data-cursor], ${INTERACTIVE}`;
 const FINE_POINTER = '(hover: hover) and (pointer: fine)';
 
-const GAP_X = 16; // clears the system arrow and hand
-const GAP_Y = 20;
+const GAP_X = 12; // nests the tag in the notch of the branded arrow
+const GAP_Y = 14; // (hotspot sits at the arrow tip)
 const NEAR = 8; // gap when the tag flips to the other side of the cursor
 const EDGE = 8; // breathing room from the viewport edge
 const H = 28;
@@ -104,11 +104,9 @@ function CursorTagLayer() {
   const [corner, setCorner] = useState<Corner>('tl');
   const [pressed, setPressed] = useState(false);
 
-  // Raw pointer position plus a softly sprung copy the tag rides on
+  // Pointer position. Set directly, no spring: the tag stays glued to the arrow
   const px = useMotionValue(-100);
   const py = useMotionValue(-100);
-  const sx = useSpring(px, { stiffness: 600, damping: 38, mass: 0.4 });
-  const sy = useSpring(py, { stiffness: 600, damping: 38, mass: 0.4 });
 
   // Tag width springs between labels
   const width = useMotionValue(0);
@@ -139,13 +137,9 @@ function CursorTagLayer() {
     }
   };
 
-  const follow = (jump: boolean) => {
+  const follow = () => {
     px.set(s.x);
     py.set(s.y);
-    if (jump) {
-      sx.jump(s.x);
-      sy.jump(s.y);
-    }
     fitCorner();
   };
 
@@ -163,9 +157,8 @@ function CursorTagLayer() {
       if (key === s.key) return;
       s.key = key;
       if (next && !s.visible) {
-        // Appear right at the cursor instead of flying in from the last spot
         s.appearing = true;
-        follow(true);
+        follow();
       }
       s.visible = !!next;
       setTag(next);
@@ -184,7 +177,7 @@ function CursorTagLayer() {
       s.x = e.clientX;
       s.y = e.clientY;
       s.target = e.target instanceof Element ? e.target : null;
-      if (s.visible) follow(false);
+      if (s.visible) follow();
       schedule();
     };
     const onLeaveWindow = (e: MouseEvent) => {
@@ -265,7 +258,7 @@ function CursorTagLayer() {
     <motion.div
       aria-hidden
       className="pointer-events-none fixed left-0 top-0 z-[9999] h-0 w-0"
-      style={{ x: prefersReduced ? px : sx, y: prefersReduced ? py : sy }}
+      style={{ x: px, y: py }}
     >
       <AnimatePresence>
         {tag && (

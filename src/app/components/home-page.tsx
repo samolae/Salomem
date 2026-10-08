@@ -2001,7 +2001,7 @@ const AdsMediaItem = ({ item, brandName, index, isDark, border, onImageClick, wh
         {!loaded && !fill && <div className="w-full" style={{ paddingBottom: '100%' }} />}
       </div>
       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-400 flex items-center justify-center">
-        <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 scale-75 group-hover:scale-100">
+        <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 scale-75 group-hover:scale-100 pointer-fine:hidden">
           <div className="w-7 h-7 rounded-full bg-white/15 backdrop-blur-xl flex items-center justify-center border border-white/10">
             {item.type === 'video' ? <Play size={11} className="text-white ml-0.5" /> : <ArrowUpRight size={11} className="text-white" />}
           </div>
@@ -2151,7 +2151,7 @@ const MagneticAdCard = ({ v, border, isDark, cardTilt, index, delayStep, onClick
 
       {/* Hover arrow */}
       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-all duration-300 flex items-center justify-center pointer-events-none">
-        <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 scale-75 group-hover:scale-100">
+        <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 scale-75 group-hover:scale-100 pointer-fine:hidden">
           <div className="w-7 h-7 rounded-full bg-white/20 backdrop-blur-xl flex items-center justify-center border border-white/15">
             {v.type === 'video' ? <Play size={11} className="text-white ml-0.5" /> : <ArrowUpRight size={11} className="text-white" />}
           </div>
@@ -2473,7 +2473,7 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
                   const btnCls = `relative rounded-lg overflow-hidden border ${border} group cursor-pointer`;
                   const hoverOverlay = (
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center pointer-events-none">
-                      <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 scale-75 group-hover:scale-100">
+                      <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 scale-75 group-hover:scale-100 pointer-fine:hidden">
                         <div className="w-7 h-7 rounded-full bg-white/15 backdrop-blur-xl flex items-center justify-center border border-white/10">
                           <ArrowUpRight size={11} className="text-white" />
                         </div>

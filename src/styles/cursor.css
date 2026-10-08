@@ -1,0 +1,41 @@
+/* ─── Branded cursor ─────────────────────────────────────────────
+   Hardware cursors drawn as SVG: the system moves them, so there is
+   zero lag. Arrow by default, arrow + sparks on anything clickable,
+   accent I-beam in text fields. Mouse and trackpad only; touch is
+   untouched. Shapes live in ./cursors (32x32 SVG, editable in Figma);
+   Vite inlines them at build time. Hotspots: arrow and spark at the
+   arrow tip, I-beam at the centre. Rules use :where() so element type
+   decides, and stay unlayered so they beat Tailwind cursor utilities. */
+@media (hover: hover) and (pointer: fine) {
+  :root {
+    --cursor-arrow: url("./cursors/arrow.svg") 4 4, auto;
+    --cursor-spark: url("./cursors/spark.svg") 11 11, pointer;
+    --cursor-text: url("./cursors/text.svg") 16 16, text;
+  }
+
+  :where(html, .cursor-default) {
+    cursor: var(--cursor-arrow);
+  }
+
+  :where(
+    a[href], button, summary, select, label[for],
+    [role="button"], [role="link"], [role="tab"], [role="menuitem"], [role="option"],
+    input[type="checkbox"], input[type="radio"], input[type="range"],
+    input[type="submit"], input[type="button"], input[type="reset"],
+    .cursor-pointer
+  ) {
+    cursor: var(--cursor-spark);
+  }
+
+  :where(
+    textarea, input:not([type]), input[type="text"], input[type="email"], input[type="tel"],
+    input[type="search"], input[type="url"], input[type="password"], input[type="number"],
+    [contenteditable]:not([contenteditable="false"])
+  ) {
+    cursor: var(--cursor-text);
+  }
+
+  :where(:disabled, [aria-disabled="true"], .cursor-not-allowed) {
+    cursor: not-allowed;
+  }
+}

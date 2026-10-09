@@ -31,6 +31,22 @@ if (!template.includes(EMPTY_ROOT)) {
   throw new Error('prerender: <div id="root"></div> not found in dist/index.html');
 }
 
+// Every page's first screen sets type in Manrope and Syne (latin). Preloading
+// them lets the text paint in the brand fonts instead of swapping in later.
+// The hrefs must match the hashed URLs Vite wrote into the CSS.
+const PRELOAD_FONTS = ['manrope-latin-wght-normal', 'syne-latin-wght-normal'];
+if (!template.includes('as="font"')) {
+  const assets = await fs.readdir(path.join(dist, 'assets'));
+  const links = PRELOAD_FONTS.map((name) => {
+    const file = assets.find((f) => f.startsWith(`${name}-`) && f.endsWith('.woff2'));
+    if (!file) throw new Error(`prerender: font ${name} not found in dist/assets`);
+    return `<link rel="preload" href="/assets/${file}" as="font" type="font/woff2" crossorigin>`;
+  });
+  const css = template.match(/<link rel="stylesheet"[^>]*>/);
+  if (!css) throw new Error('prerender: stylesheet link not found in the template');
+  template = template.replace(css[0], `${links.join('\n  ')}\n  ${css[0]}`);
+}
+
 // Client-only shell for paths without static HTML
 await fs.writeFile(path.join(dist, 'app.html'), template);
 

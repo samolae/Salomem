@@ -213,6 +213,8 @@ const Sidebar = ({
             {...IMG.logo('https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1777841338/fav_ggorfv.png')}
             alt="Salome Mosiava"
             width="80" height="80"
+            loading="lazy"
+            decoding="async"
             className="w-10 h-10 rounded-full object-cover flex-shrink-0 ring-1 ring-white/[0.08]"
           />
           <div className={`min-w-0 flex flex-col gap-[2px] ${inDrawer ? 'block' : 'hidden lg:block'}`}>
@@ -531,6 +533,8 @@ const DiscoveryTile = ({
           <img
             {...responsive(image, [320, 480, 720, 960], '(min-width: 640px) 240px, 92vw')}
             alt={alt || label}
+            loading="lazy"
+            decoding="async"
             className={`w-full h-full object-cover transition-all duration-500 ${isHovered && videoSrc ? 'opacity-0 scale-105' : 'opacity-100 group-hover:scale-105'}`}
           />
           {videoSrc && videoLoaded && (
@@ -864,7 +868,7 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
                   aria-hidden={i >= all.length / 2 ? true : undefined}
                 >
                   <div className={`w-5 h-5 rounded overflow-hidden flex-shrink-0 ${isDark ? 'opacity-35' : 'opacity-50'}`}>
-                    <img {...IMG.logo(client.logo)} alt="" width="20" height="20" className="w-full h-full object-contain" />
+                    <img {...IMG.logo(client.logo)} alt="" width="20" height="20" loading="lazy" decoding="async" className="w-full h-full object-contain" />
                   </div>
                   <span className={`text-[11px] whitespace-nowrap ${isDark ? 'text-white/50' : 'text-zinc-500'}`} style={{ fontFamily: F.body, fontWeight: 500 }}>{client.name}</span>
                 </div>
@@ -902,9 +906,9 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
                 <div className="relative h-full min-h-[220px] sm:min-h-[320px] overflow-hidden bg-gradient-to-br from-[#080B0F] via-[#0d0e14] to-[#0a0c12] img-hover-zoom">
                   <div className="absolute inset-0 opacity-40 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 50% 80%, rgba(213,154,4,0.08) 0%, transparent 60%)' }} />
                   <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/70 via-transparent to-black/10" />
-                  <motion.img {...IMG.caseSide(screenLanding)} alt="AURUM crypto platform landing page design" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 0.2, y: 0 }} transition={{ duration: 1, delay: 0.2 }} className="absolute top-[8%] left-[3%] w-[42%] rounded-xl shadow-2xl shadow-black/60" />
-                  <motion.img {...IMG.caseSide(screenProfile)} alt="AURUM user profile dashboard" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 0.3, y: 0 }} transition={{ duration: 1, delay: 0.35 }} className="absolute top-[4%] right-[3%] w-[38%] rounded-xl shadow-2xl shadow-black/60" />
-                  <motion.img {...IMG.caseMain(screenExchange)} {...{ fetchpriority: 'high' }} alt="AURUM Crypto Exchange UI/UX Design by Salome Mosiava" initial={{ opacity: 0, y: 50, scale: 0.95 }} whileInView={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 1.2, delay: 0.5, ease: [0.22, 1, 0.36, 1] }} className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[65%] rounded-t-xl shadow-[0_-20px_60px_rgba(0,0,0,0.5)]" />
+                  <motion.img {...IMG.caseSide(screenLanding)} alt="AURUM crypto platform landing page design" loading="lazy" decoding="async" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 0.2, y: 0 }} transition={{ duration: 1, delay: 0.2 }} className="absolute top-[8%] left-[3%] w-[42%] rounded-xl shadow-2xl shadow-black/60" />
+                  <motion.img {...IMG.caseSide(screenProfile)} alt="AURUM user profile dashboard" loading="lazy" decoding="async" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 0.3, y: 0 }} transition={{ duration: 1, delay: 0.35 }} className="absolute top-[4%] right-[3%] w-[38%] rounded-xl shadow-2xl shadow-black/60" />
+                  <motion.img {...IMG.caseMain(screenExchange)} alt="AURUM Crypto Exchange UI/UX Design by Salome Mosiava" loading="lazy" decoding="async" initial={{ opacity: 0, y: 50, scale: 0.95 }} whileInView={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 1.2, delay: 0.5, ease: [0.22, 1, 0.36, 1] }} className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[65%] rounded-t-xl shadow-[0_-20px_60px_rgba(0,0,0,0.5)]" />
                   <div className="absolute top-2.5 left-2.5 z-20 flex items-center gap-1.5">
                     <span className="text-[10px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-full bg-[#0a0b0f]/60 backdrop-blur-xl text-[#D59A04] border border-[#D59A04]/20">Crypto · Fintech</span>
                   </div>

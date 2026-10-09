@@ -117,7 +117,7 @@ export function NextProjectRecommendation({ currentProject }: { currentProject: 
                 animate={{ scale: [1, 1.5, 1] }}
                 transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
               />
-              <span className={`text-[9px] uppercase tracking-[0.25em] ${mt}`} style={{ fontFamily: F.body, fontWeight: 500 }}>
+              <span className={`text-[10px] uppercase tracking-[0.25em] ${mt}`} style={{ fontFamily: F.body, fontWeight: 500 }}>
                 Continue exploring
               </span>
             </div>
@@ -170,12 +170,11 @@ export function NextProjectRecommendation({ currentProject }: { currentProject: 
                         {/* Top-left badges */}
                         <div className="absolute top-3 left-3 z-20 flex items-center gap-1.5">
                           <span
-                            className="text-[8px] uppercase tracking-[0.2em] px-2.5 py-1 rounded-full backdrop-blur-xl border"
-                            style={{
-                              backgroundColor: `${p.color}18`,
-                              color: `${p.color}dd`,
-                              borderColor: `${p.color}30`,
-                            }}
+                            className="text-[10px] uppercase tracking-[0.2em] px-2.5 py-1 rounded-full backdrop-blur-xl border"
+                            style={isSchenker
+                              // Light olive panel: a dark chip keeps the label readable
+                              ? { backgroundColor: 'rgba(63,90,18,0.9)', color: '#ffffff', borderColor: `${p.color}40` }
+                              : { backgroundColor: `${p.color}18`, color: p.color, borderColor: `${p.color}30` }}
                           >
                             {p.screens}
                           </span>
@@ -188,7 +187,7 @@ export function NextProjectRecommendation({ currentProject }: { currentProject: 
                               <h3 className="text-fluid-18-24 text-white mb-0.5 tracking-[-0.03em] truncate" style={{ fontFamily: F.heading, fontWeight: 700 }}>
                                 {p.title}
                               </h3>
-                              <p className="text-white/40 text-[10px] tracking-wide truncate" style={{ fontFamily: F.body }}>
+                              <p className="text-white/70 text-[10px] tracking-wide truncate" style={{ fontFamily: F.body }}>
                                 {p.subtitle}
                               </p>
                             </div>
@@ -212,7 +211,7 @@ export function NextProjectRecommendation({ currentProject }: { currentProject: 
                           {p.tags.slice(0, 2).map((t) => (
                             <span
                               key={t}
-                              className={`text-[8px] uppercase tracking-[0.15em] px-2 py-0.5 rounded-md whitespace-nowrap ${isDark ? 'bg-white/[0.03] text-white/30' : 'bg-zinc-100 text-zinc-500'}`}
+                              className={`text-[10px] uppercase tracking-[0.15em] px-2 py-0.5 rounded-md whitespace-nowrap ${isDark ? 'bg-white/[0.03] text-white/60' : 'bg-zinc-100 text-zinc-500'}`}
                               style={{ fontFamily: F.body }}
                             >
                               {t}
@@ -222,7 +221,7 @@ export function NextProjectRecommendation({ currentProject }: { currentProject: 
                         <span
                           className="text-[11px] whitespace-nowrap flex items-center gap-1.5 px-2.5 py-1 rounded-full border transition-all duration-300 group-hover:translate-x-0.5 flex-shrink-0"
                           style={{
-                            color: `${p.color}b3`,
+                            color: p.color,
                             borderColor: `${p.color}25`,
                             fontFamily: F.body,
                             fontWeight: 500,
@@ -241,7 +240,7 @@ export function NextProjectRecommendation({ currentProject }: { currentProject: 
           {/* Cross-category recommendations — "Infinite Loop" */}
           <FadeIn delay={0.2}>
             <div className="mt-8">
-              <p className={`text-[9px] uppercase tracking-[0.2em] ${mt} mb-4`} style={{ fontFamily: F.body, fontWeight: 500 }}>
+              <p className={`text-[10px] uppercase tracking-[0.2em] ${mt} mb-4`} style={{ fontFamily: F.body, fontWeight: 500 }}>
                 Also explore
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -302,11 +301,12 @@ export function NextProjectRecommendation({ currentProject }: { currentProject: 
           {/* Action buttons */}
           <FadeIn delay={0.3}>
             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-              <Link to="/" viewTransition>
+              <Link to="/" viewTransition className="inline-block rounded-full">
                 <motion.div
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
-                  className={`inline-flex items-center gap-2.5 px-6 py-3 rounded-full border text-[12px] group focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${isDark ? 'border-white/[0.08] text-white/60 hover:text-white hover:border-white/[0.15]' : 'border-zinc-200 text-zinc-500 hover:text-zinc-800 hover:border-zinc-300'}`}
+                  tabIndex={-1}
+                  className={`inline-flex items-center gap-2.5 px-6 py-3 rounded-full border text-[12px] group focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)] ${isDark ? 'border-white/[0.08] text-white/60 hover:text-white hover:border-white/[0.15]' : 'border-zinc-200 text-zinc-500 hover:text-zinc-800 hover:border-zinc-300'}`}
                   style={{ fontFamily: F.body, fontWeight: 500 }}
                 >
                   <ArrowLeft size={13} />
@@ -314,11 +314,12 @@ export function NextProjectRecommendation({ currentProject }: { currentProject: 
                 </motion.div>
               </Link>
               <MagneticWrap strength={0.2}>
-                <Link to="/contact" viewTransition>
+                <Link to="/contact" viewTransition className="inline-block rounded-full">
                   <motion.div
                     whileHover={{ scale: 1.03, boxShadow: '0 4px 24px rgba(237,89,43,0.2)' }}
                     whileTap={{ scale: 0.97 }}
-                    className="inline-flex items-center gap-2.5 px-6 py-3 rounded-full bg-[#ed592b] text-white text-[12px] group focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.5),0_0_0_4px_rgba(237,89,43,0.2)]"
+                    tabIndex={-1}
+                    className="inline-flex items-center gap-2.5 px-6 py-3 rounded-full bg-[#c94a20] text-white text-[12px] group focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9),0_0_0_4px_rgba(237,89,43,0.2)]"
                     style={{ fontFamily: F.body, fontWeight: 500 }}
                   >
                     <Mail size={13} />

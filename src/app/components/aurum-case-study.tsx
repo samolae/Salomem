@@ -115,7 +115,8 @@ const ScrollToTopButton = () => {
           exit={{ opacity: 0, scale: 0.8, y: 20 }}
           transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className={`fixed bottom-8 right-8 z-50 w-12 h-12 rounded-full flex items-center justify-center shadow-2xl backdrop-blur-xl transition-colors group focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.5)] ${
+          aria-label="Back to top"
+          className={`fixed bottom-24 md:bottom-8 right-5 md:right-8 z-50 w-12 h-12 rounded-full flex items-center justify-center shadow-2xl backdrop-blur-xl transition-colors group focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)] ${
             isDark
               ? 'bg-[#D59A04]/90 hover:bg-[#D59A04] shadow-[#D59A04]/20 text-black'
               : 'bg-[#D59A04] hover:bg-[#D59A04]/90 shadow-[#D59A04]/30 text-white'
@@ -123,7 +124,7 @@ const ScrollToTopButton = () => {
           whileHover={{ scale: 1.1, y: -2 }}
           whileTap={{ scale: 0.95 }}
         >
-          <ChevronUp size={20} className="group-hover:-translate-y-0.5 transition-transform" />
+          <ChevronUp size={20} aria-hidden className="group-hover:-translate-y-0.5 transition-transform" />
         </motion.button>
       )}
     </AnimatePresence>
@@ -155,8 +156,6 @@ export function AurumCaseStudy() {
     <div className={`${bg} min-h-screen transition-colors duration-500 relative`} style={{ fontFamily: BRAND.bodyFont }}>
       <AurumSEO />
       <CaseHeroTarget path="/projects/aurum" />
-      {/* Scroll to top */}
-      <ScrollToTopButton />
       {/* Section navigator */}
       <CaseStudySectionNav
         accentColor="#D59A04"
@@ -178,6 +177,7 @@ export function AurumCaseStudy() {
 
       {/* ─── NAV ────────────────────────────────────────────────────── */}
       <motion.nav
+        aria-label="Case study"
         initial={{ y: -80 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
@@ -189,14 +189,14 @@ export function AurumCaseStudy() {
               onClick={() => navigate('/', { viewTransition: true })}
               whileHover={{ x: -3 }}
               whileTap={{ scale: 0.95 }}
-              className={`flex items-center gap-2 text-sm rounded-lg px-2 py-1.5 min-h-[44px] focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${isDark ? 'text-[#9295A6] hover:text-white hover:bg-white/[0.04]' : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100'} transition-colors`}
+              className={`flex items-center gap-2 text-sm rounded-lg px-2 py-1.5 min-h-[44px] focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)] ${isDark ? 'text-[#9295A6] hover:text-white hover:bg-white/[0.04]' : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100'} transition-colors`}
             >
               <ArrowLeft size={15} />
               <span className="text-[12px] tracking-wide">Back to Portfolio</span>
             </motion.button>
             <div className={`w-px h-5 ${isDark ? 'bg-white/10' : 'bg-zinc-200'}`} />
             <div className="flex items-center gap-2.5">
-              <svg className="h-[28px] w-auto" fill="none" viewBox="0 0 172.683 42">
+              <svg className="h-[28px] w-auto" fill="none" viewBox="0 0 172.683 42" role="img" aria-label="AURUM">
                 <g clipPath="url(#aurumNavClip)">
                   <g>
                     <path d={aurumSvgPaths.p6257700} fill="white" />
@@ -245,6 +245,9 @@ export function AurumCaseStudy() {
         </div>
       </motion.nav>
 
+      <main id="main-content" tabIndex={-1} className="outline-none">
+      <ScrollToTopButton />
+
       {/* ═══════════════════════════════════════════════════════════════ */}
       {/* ─── HERO ────────────────────────────────────────────────── */}
       {/* ═══════════════════════════════════════════════════════════════ */}
@@ -265,7 +268,7 @@ export function AurumCaseStudy() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 * i + 0.3, duration: 0.5 }}
               >
-                <span className={`text-[9px] uppercase tracking-[0.2em] block mb-1 ${isDark ? 'text-[#9295A6]' : 'text-zinc-400'}`}>{item.label}</span>
+                <span className={`text-[10px] uppercase tracking-[0.2em] block mb-1 ${isDark ? 'text-[#9295A6]' : 'text-zinc-500'}`}>{item.label}</span>
                 <span className={`text-[13px] ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont }}>{item.value}</span>
               </motion.div>
             ))}
@@ -324,7 +327,7 @@ export function AurumCaseStudy() {
                 <div className="pt-1.5">
                   <div className="flex items-center gap-3 mb-2">
                     <span className="text-[10px] font-mono" style={{ color: item.accent }}>{item.number}</span>
-                    <span className={`text-[9px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-md ${isDark ? 'bg-white/[0.03] text-white/40' : 'bg-zinc-100 text-zinc-400'}`}>{item.step}</span>
+                    <span className={`text-[10px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-md ${isDark ? 'bg-white/[0.03] text-white/60' : 'bg-zinc-100 text-zinc-500'}`}>{item.step}</span>
                   </div>
                   <p className={`text-fluidpx-15-17 leading-relaxed ${i === 0 ? (isDark ? 'text-white' : 'text-zinc-900') : bt}`} style={{ fontFamily: i === 0 ? BRAND.headingFont : BRAND.bodyFont }}>
                     {item.text}
@@ -373,7 +376,7 @@ export function AurumCaseStudy() {
                     <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isDark ? 'bg-white/[0.03]' : 'bg-zinc-50'} group-hover:scale-110 transition-transform duration-300`}>
                       <span style={{ color: m.color }}>{m.icon}</span>
                     </div>
-                    <div className={`text-[9px] uppercase tracking-[0.15em] px-2 py-0.5 rounded-md ${isDark ? 'bg-white/[0.03] text-[#9295A6]/60' : 'bg-zinc-100 text-zinc-400'}`}>{m.sub}</div>
+                    <div className={`text-[10px] uppercase tracking-[0.15em] px-2 py-0.5 rounded-md ${isDark ? 'bg-white/[0.03] text-[#9295A6]' : 'bg-zinc-100 text-zinc-500'}`}>{m.sub}</div>
                   </div>
                   <div className="text-fluid-30-36 mb-1 leading-none" style={{ fontFamily: BRAND.headingFont, color: m.color }}>
                     <CountUp target={m.value} suffix={m.suffix} />
@@ -477,7 +480,7 @@ export function AurumCaseStudy() {
                     </div>
                     <div className={`text-[14px] mb-2 transition-colors duration-300 group-hover/p:text-[#D59A04] ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 700 }}>{p.name}</div>
                     <div className={`text-[12px] leading-relaxed mb-3 ${bt}`}>{p.practice}</div>
-                    <div className="text-[10px] uppercase tracking-[0.15em] text-[#D59A04]/70">{p.metric}</div>
+                    <div className="text-[10px] uppercase tracking-[0.15em] text-[#D59A04]">{p.metric}</div>
                   </div>
                 ))}
               </div>
@@ -555,7 +558,7 @@ export function AurumCaseStudy() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
                   <div className={step.reverse ? 'order-1 lg:order-2' : ''}>
                     <div className="flex items-center gap-3 mb-4">
-                      <span className="text-3xl text-[#D59A04]/30" style={{ fontFamily: BRAND.headingFont }}>{step.num}</span>
+                      <span className="text-3xl text-[#D59A04]/30 before:content-[attr(data-num)]" data-num={step.num} aria-hidden="true" style={{ fontFamily: BRAND.headingFont }} />
                       <div className="w-8 h-px bg-[#D59A04]/20" />
                       {step.icon}
                     </div>
@@ -563,7 +566,7 @@ export function AurumCaseStudy() {
                     <p className={`text-[13px] ${bt} leading-relaxed mb-4`}>{step.desc}</p>
                     <div className="flex flex-wrap gap-2">
                       {step.tags.map((t) => (
-                        <span key={t} className={`text-[9px] uppercase tracking-wider px-2 py-1 rounded-md ${isDark ? 'bg-[#121318] text-[#b0b3c0]' : 'bg-zinc-100 text-zinc-500'}`}>{t}</span>
+                        <span key={t} className={`text-[10px] uppercase tracking-wider px-2 py-1 rounded-md ${isDark ? 'bg-[#121318] text-[#b0b3c0]' : 'bg-zinc-100 text-zinc-500'}`}>{t}</span>
                       ))}
                     </div>
                   </div>
@@ -654,7 +657,7 @@ export function AurumCaseStudy() {
                 </div>
                 <div className="hidden md:flex items-center gap-2">
                   <Figma size={14} className="text-[#D59A04]" />
-                  <span className={`text-[9px] uppercase tracking-[0.15em] ${mt}`}>Figma Source</span>
+                  <span className={`text-[10px] uppercase tracking-[0.15em] ${mt}`}>Figma Source</span>
                 </div>
               </div>
 
@@ -666,13 +669,13 @@ export function AurumCaseStudy() {
                     <div className="w-2.5 h-2.5 rounded-full bg-[#10B981]/60" />
                   </div>
                   <div className="flex-1 flex items-center justify-center gap-2">
-                    <Figma size={11} className={`${isDark ? 'text-white/30' : 'text-zinc-400'}`} />
-                    <span className={`text-[10px] tracking-wide ${isDark ? 'text-white/30' : 'text-zinc-400'}`}>AURUM — Design Components</span>
+                    <Figma size={11} aria-hidden className={`${isDark ? 'text-white/50' : 'text-zinc-500'}`} />
+                    <span className={`text-[10px] tracking-wide ${isDark ? 'text-white/60' : 'text-zinc-500'}`}>AURUM — Design Components</span>
                   </div>
-                  <div className={`text-[9px] font-mono ${isDark ? 'text-white/20' : 'text-zinc-300'}`}>64+ components</div>
+                  <div className={`text-[10px] font-mono ${isDark ? 'text-white/55' : 'text-zinc-500'}`}>64+ components</div>
                 </div>
                 <div className={`relative ${isDark ? 'bg-[#0a0c10]' : 'bg-zinc-50'}`}>
-                  <div className="overflow-y-auto max-h-[80vh] scrollbar-thin">
+                  <div className="overflow-y-auto max-h-[80vh] scrollbar-thin rounded-b-2xl" tabIndex={0} role="region" aria-label="AURUM design system sheet, scrollable">
                     <img {...IMG.wide(designSystemSheet)} alt="AURUM Design System" width="1440" height="1200" className="w-full block" />
                   </div>
                   <div className={`absolute bottom-0 left-0 right-0 h-24 pointer-events-none bg-gradient-to-t ${isDark ? 'from-[#0a0c10]' : 'from-zinc-50'} to-transparent`} />
@@ -681,7 +684,7 @@ export function AurumCaseStudy() {
 
               <div className="flex flex-wrap gap-2 mt-6">
                 {['Navbar', 'Buttons', 'Tabs & Toggles', 'Input Fields', 'Icons', 'Use Case Styles', 'Card Styles', 'Footers', 'Chart Data', 'QR Codes', 'Modals'].map((tag) => (
-                  <span key={tag} className={`text-[9px] uppercase tracking-[0.12em] px-3 py-1.5 rounded-lg ${isDark ? 'bg-white/[0.03] text-[#9295A6]/70 border border-white/[0.04]' : 'bg-zinc-100 text-zinc-400 border border-zinc-200'}`}>
+                  <span key={tag} className={`text-[10px] uppercase tracking-[0.12em] px-3 py-1.5 rounded-lg ${isDark ? 'bg-white/[0.03] text-[#9295A6] border border-white/[0.04]' : 'bg-zinc-100 text-zinc-500 border border-zinc-200'}`}>
                     {tag}
                   </span>
                 ))}
@@ -778,6 +781,7 @@ export function AurumCaseStudy() {
 
       {/* footer removed */}
       <NextProjectRecommendation currentProject="aurum" />
+      </main>
     </div>
   );
 }

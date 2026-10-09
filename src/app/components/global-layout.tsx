@@ -57,6 +57,7 @@ function MobileBottomBar() {
           transition={{ type: 'spring', stiffness: 320, damping: 32, mass: 0.6 }}
           className="fixed bottom-0 left-0 right-0 z-[60] md:hidden"
           style={{ fontFamily: F.body }}
+          aria-label="Primary"
         >
           <div
             className="absolute inset-0 backdrop-blur-xl"
@@ -74,8 +75,9 @@ function MobileBottomBar() {
                 <Link
                   key={item.id}
                   to={item.path}
-                  className="relative flex flex-col items-center justify-center gap-1 py-2.5 px-3 min-w-[60px] transition-colors duration-200"
-                  style={{ color: active ? '#ed592b' : isDark ? '#5a5d6a' : '#a1a1aa' }}
+                  aria-current={active ? 'page' : undefined}
+                  className="relative flex flex-col items-center justify-center gap-1 py-2.5 px-3 min-w-[60px] transition-colors duration-200 focus-visible:!shadow-[inset_0_0_0_2px_rgba(237,89,43,0.9)] rounded-lg"
+                  style={{ color: active ? '#ed592b' : isDark ? '#8a8d9a' : '#71717a' }}
                 >
                   {active && (
                     <motion.span
@@ -84,7 +86,7 @@ function MobileBottomBar() {
                       transition={{ type: 'spring', stiffness: 500, damping: 35 }}
                     />
                   )}
-                  <Icon size={22} strokeWidth={active ? 2.2 : 1.6} />
+                  <Icon size={22} strokeWidth={active ? 2.2 : 1.6} aria-hidden />
                   <span className="text-[10px] tracking-[0.02em]" style={{ fontWeight: active ? 600 : 400 }}>{item.label}</span>
                 </Link>
               );
@@ -93,6 +95,30 @@ function MobileBottomBar() {
         </motion.nav>
       )}
     </AnimatePresence>
+  );
+}
+
+/**
+ * First stop for keyboard users: jumps past the navigation to the page's
+ * <main id="main-content">. Hidden until focused. Focus is moved by hand
+ * so the URL hash (and the router) never changes.
+ */
+function SkipLink() {
+  return (
+    <a
+      href="#main-content"
+      onClick={(e) => {
+        const main = document.getElementById('main-content');
+        if (!main) return;
+        e.preventDefault();
+        main.focus({ preventScroll: true });
+        main.scrollIntoView({ block: 'start' });
+      }}
+      className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[10000] focus:inline-flex focus:items-center focus:rounded-full focus:bg-[#c94a20] focus:px-4 focus:py-2.5 focus:text-[13px] focus:font-medium focus:text-white focus:shadow-[0_0_0_2px_rgba(255,255,255,0.7),0_8px_24px_rgba(0,0,0,0.4)] focus:outline-none"
+      style={{ fontFamily: F.body }}
+    >
+      Skip to content
+    </a>
   );
 }
 
@@ -118,6 +144,8 @@ export function GlobalLayout() {
       className="min-h-screen transition-colors duration-500 relative"
       style={{ backgroundColor: isDark ? '#0a0a0c' : '#f5f5f5', color: isDark ? '#ffffff' : '#18181b' }}
     >
+      <SkipLink />
+
       {/* Scroll progress */}
       <ScrollProgress color="#ed592b" />
 

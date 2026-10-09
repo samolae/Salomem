@@ -168,6 +168,42 @@ const Sidebar = ({
   const { pathname } = useLocation();
   const isHome = pathname === '/';
 
+  // Mobile drawer: focus the close button on open, keep Tab inside,
+  // close on Escape and hand focus back to whatever opened it
+  const drawerRef = useRef<HTMLElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const closeDrawer = useRef(onMobileClose);
+  closeDrawer.current = onMobileClose;
+  useEffect(() => {
+    if (!isMobileOpen) return;
+    const opener = document.activeElement as HTMLElement | null;
+    const raf = requestAnimationFrame(() => closeRef.current?.focus());
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        closeDrawer.current();
+        return;
+      }
+      if (e.key !== 'Tab' || !drawerRef.current) return;
+      const items = drawerRef.current.querySelectorAll<HTMLElement>('a[href], button:not([disabled])');
+      if (!items.length) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (e.shiftKey && (document.activeElement === first || !drawerRef.current.contains(document.activeElement))) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && (document.activeElement === last || !drawerRef.current.contains(document.activeElement))) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener('keydown', onKey);
+      if (opener && opener.isConnected) opener.focus();
+    };
+  }, [isMobileOpen]);
+
   const sidebarContent = (inDrawer = false) => (
     <motion.div className="flex flex-col h-full" style={{ fontFamily: F.body }} initial="hidden" animate="visible" variants={SIDEBAR_MOUNT}>
       <motion.div variants={SIDEBAR_ITEM} className="px-3 pt-4 pb-4 lg:px-4 lg:pt-5 lg:pb-5">
@@ -179,11 +215,11 @@ const Sidebar = ({
             className="w-10 h-10 rounded-full object-cover flex-shrink-0 ring-1 ring-white/[0.08]"
           />
           <div className={`min-w-0 flex flex-col gap-[2px] ${inDrawer ? 'block' : 'hidden lg:block'}`}>
-            <h2 className={`text-[13px] font-semibold truncate leading-[1.15] ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: F.heading, letterSpacing: '-0.02em' }}>
+            <p className={`text-[13px] font-semibold truncate leading-[1.15] ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: F.heading, letterSpacing: '-0.02em' }}>
               Salome Mosiava
-            </h2>
+            </p>
             <p className="text-[10px] leading-[1.2]" style={{ fontFamily: F.body, fontWeight: 500, color: '#ed592b' }}>Senior Product Designer</p>
-            <p className="text-[10px] leading-[1.2]" style={{ fontFamily: F.body, fontWeight: 400, color: isDark ? 'rgba(255,255,255,0.32)' : '#999' }}>& Art Direction</p>
+            <p className="text-[10px] leading-[1.2]" style={{ fontFamily: F.body, fontWeight: 400, color: isDark ? 'rgba(255,255,255,0.55)' : '#71717a' }}>& Art Direction</p>
           </div>
         </div>
       </motion.div>
@@ -193,13 +229,14 @@ const Sidebar = ({
           const active = activeSection === item.id;
           return (
             <MagneticWrap key={item.id} strength={0.15}>
-              <Link to={navHref(item.id)} onClick={() => { onSectionChange(item.id); onMobileClose(); }} className="block">
+              <Link to={navHref(item.id)} onClick={() => { onSectionChange(item.id); onMobileClose(); }} className="block rounded-[10px]" aria-label={item.label} aria-current={active ? 'page' : undefined}>
                 <motion.div
                   whileHover="hover"
                   initial="rest"
                   whileTap={{ scale: 0.97 }}
+                  tabIndex={-1}
                   title={item.label}
-                  className={`group relative w-full flex items-center ${inDrawer ? 'justify-start' : 'md:justify-center lg:justify-start'} gap-2.5 px-3 py-2 lg:py-[5px] rounded-[10px] text-[13px] whitespace-nowrap transition-colors overflow-hidden min-h-[44px] md:min-h-[36px] lg:min-h-0 focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
+                  className={`group relative w-full flex items-center ${inDrawer ? 'justify-start' : 'md:justify-center lg:justify-start'} gap-2.5 px-3 py-2 lg:py-[5px] rounded-[10px] text-[13px] whitespace-nowrap transition-colors overflow-hidden min-h-[44px] md:min-h-[36px] lg:min-h-0 focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)] ${
                     active
                       ? isDark ? 'bg-white/[0.06] text-white' : 'bg-zinc-200/70 text-zinc-900'
                       : isDark ? 'text-[#7a7d8a]' : 'text-zinc-400'
@@ -243,19 +280,20 @@ const Sidebar = ({
         <div className={`h-px mx-2 my-2 ${isDark ? 'bg-white/[0.05]' : 'bg-zinc-200'}`} />
 
         <div className={`px-3 pt-1 pb-0.5 ${inDrawer ? 'block' : 'hidden lg:block'}`}>
-          <span className={`text-[8.5px] uppercase tracking-[0.15em] font-medium ${isDark ? 'text-white/25' : 'text-zinc-400/70'}`} style={{ fontFamily: F.body }}>Case Studies</span>
+          <span className={`text-[10px] uppercase tracking-[0.15em] font-medium ${isDark ? 'text-white/50' : 'text-zinc-500'}`} style={{ fontFamily: F.body }}>Case Studies</span>
         </div>
         {projectCategories.filter(c => c.typeLabel === 'Case Study').map((cat) => {
           const active = activeSection === cat.id;
           return (
             <MagneticWrap key={cat.id} strength={0.15}>
-              <Link to={catHref(cat.id)} onClick={() => { onSectionChange(cat.id); onMobileClose(); }} className="block">
+              <Link to={catHref(cat.id)} onClick={() => { onSectionChange(cat.id); onMobileClose(); }} className="block rounded-[10px]" aria-label={cat.label} aria-current={active ? 'page' : undefined}>
                 <motion.div
                   whileHover="hover"
                   initial="rest"
                   whileTap={{ scale: 0.97 }}
+                  tabIndex={-1}
                   title={cat.label}
-                  className={`group relative w-full flex items-center ${inDrawer ? 'justify-start' : 'md:justify-center lg:justify-start'} gap-2.5 px-3 py-2 lg:py-[5px] rounded-[10px] text-[13px] transition-colors overflow-hidden min-h-[36px] focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
+                  className={`group relative w-full flex items-center ${inDrawer ? 'justify-start' : 'md:justify-center lg:justify-start'} gap-2.5 px-3 py-2 lg:py-[5px] rounded-[10px] text-[13px] transition-colors overflow-hidden min-h-[36px] focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)] ${
                     active
                       ? isDark ? 'bg-white/[0.06] text-white' : 'bg-zinc-200/70 text-zinc-900'
                       : isDark ? 'text-[#7a7d8a]' : 'text-zinc-400'
@@ -297,19 +335,20 @@ const Sidebar = ({
         })}
 
         <div className={`px-3 pt-2 pb-0.5 ${inDrawer ? 'block' : 'hidden lg:block'}`}>
-          <span className={`text-[8.5px] uppercase tracking-[0.15em] font-medium ${isDark ? 'text-white/20' : 'text-zinc-400/50'}`} style={{ fontFamily: F.body }}>Galleries</span>
+          <span className={`text-[10px] uppercase tracking-[0.15em] font-medium ${isDark ? 'text-white/50' : 'text-zinc-500'}`} style={{ fontFamily: F.body }}>Galleries</span>
         </div>
         {projectCategories.filter(c => c.typeLabel === 'Gallery').map((cat) => {
           const active = activeSection === cat.id;
           return (
             <MagneticWrap key={cat.id} strength={0.15}>
-              <Link to={catHref(cat.id)} onClick={() => { onSectionChange(cat.id); onMobileClose(); }} className="block">
+              <Link to={catHref(cat.id)} onClick={() => { onSectionChange(cat.id); onMobileClose(); }} className="block rounded-[10px]" aria-label={cat.label} aria-current={active ? 'page' : undefined}>
                 <motion.div
                   whileHover="hover"
                   initial="rest"
                   whileTap={{ scale: 0.97 }}
+                  tabIndex={-1}
                   title={cat.label}
-                  className={`group relative w-full flex items-center ${inDrawer ? 'justify-start' : 'md:justify-center lg:justify-start'} gap-2.5 px-3 py-2 lg:py-[5px] rounded-[10px] text-[13px] transition-colors overflow-hidden min-h-[36px] focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
+                  className={`group relative w-full flex items-center ${inDrawer ? 'justify-start' : 'md:justify-center lg:justify-start'} gap-2.5 px-3 py-2 lg:py-[5px] rounded-[10px] text-[13px] transition-colors overflow-hidden min-h-[36px] focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)] ${
                     active
                       ? isDark ? 'bg-white/[0.06] text-white' : 'bg-zinc-200/70 text-zinc-900'
                       : isDark ? 'text-[#7a7d8a]' : 'text-zinc-400'
@@ -357,7 +396,7 @@ const Sidebar = ({
           <Link
             to="/contact"
             aria-label="Available for new projects — go to contact page"
-            className={`group flex items-center gap-2 px-3.5 py-2 ${inDrawer ? 'min-h-[44px]' : ''} rounded-full border text-[11px] no-underline cursor-pointer ${border} ${isDark ? 'text-[#7a7d8a] hover:text-white hover:bg-white/[0.04] hover:border-white/[0.12]' : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 hover:border-zinc-300'} transition-[background-color,border-color,color,transform] duration-200 hover:translate-x-[1px] focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)]`}
+            className={`group flex items-center gap-2 px-3.5 py-2 ${inDrawer ? 'min-h-[44px]' : ''} rounded-full border text-[11px] no-underline cursor-pointer ${border} ${isDark ? 'text-[#7a7d8a] hover:text-white hover:bg-white/[0.04] hover:border-white/[0.12]' : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 hover:border-zinc-300'} transition-[background-color,border-color,color,transform] duration-200 hover:translate-x-[1px] focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)]`}
             style={{ fontFamily: F.body }}
           >
             <span className="relative flex h-2 w-2 flex-shrink-0">
@@ -382,7 +421,7 @@ const Sidebar = ({
               href={item.href}
               target="_blank"
               rel="noopener noreferrer"
-              className={`group flex items-center justify-center gap-1.5 px-3 ${inDrawer ? 'min-h-[44px] flex-1' : 'py-[7px] flex-1'} rounded-[10px] text-[11px] whitespace-nowrap border no-underline transition-[background-color,border-color,color,transform] duration-200 hover:-translate-y-[1px] focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
+              className={`group flex items-center justify-center gap-1.5 px-3 ${inDrawer ? 'min-h-[44px] flex-1' : 'py-[7px] flex-1'} rounded-[10px] text-[11px] whitespace-nowrap border no-underline transition-[background-color,border-color,color,transform] duration-200 hover:-translate-y-[1px] focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)] ${
                 isDark
                   ? `${border} text-[#7a7d8a] hover:text-white hover:bg-white/[0.04] hover:border-white/[0.12]`
                   : `${border} text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 hover:border-zinc-300`
@@ -410,8 +449,8 @@ const Sidebar = ({
         {isMobileOpen && (
           <>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 md:hidden" onClick={onMobileClose} />
-            <motion.aside initial={{ x: -300 }} animate={{ x: 0 }} exit={{ x: -300 }} transition={{ type: 'spring', damping: 30, stiffness: 300 }} className={`fixed left-0 top-0 bottom-0 w-[80vw] max-w-[300px] z-50 md:hidden border-r ${isDark ? 'bg-[#0b0b0e] border-white/[0.05]' : 'bg-white border-zinc-200'}`}>
-              <button onClick={onMobileClose} className="absolute top-3 right-3 p-2.5 rounded-xl text-[#7a7d8a] hover:text-white hover:bg-white/[0.06] min-w-[44px] min-h-[44px] flex items-center justify-center focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] z-10" aria-label="Close menu"><X size={20} /></button>
+            <motion.aside ref={drawerRef} id="mobile-menu" role="dialog" aria-modal="true" aria-label="Menu" initial={{ x: -300 }} animate={{ x: 0 }} exit={{ x: -300 }} transition={{ type: 'spring', damping: 30, stiffness: 300 }} className={`fixed left-0 top-0 bottom-0 w-[80vw] max-w-[300px] z-50 md:hidden border-r ${isDark ? 'bg-[#0b0b0e] border-white/[0.05]' : 'bg-white border-zinc-200'}`}>
+              <button ref={closeRef} onClick={onMobileClose} className="absolute top-3 right-3 p-2.5 rounded-xl text-[#7a7d8a] hover:text-white hover:bg-white/[0.06] min-w-[44px] min-h-[44px] flex items-center justify-center focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)] z-10" aria-label="Close menu"><X size={20} /></button>
               {sidebarContent(true)}
             </motion.aside>
           </>
@@ -508,11 +547,12 @@ const DiscoveryTile = ({
           <div className="absolute top-2 left-2 z-10 flex flex-col gap-1">
             <SpringBadge delay={0.1}>
               <span
-                className="text-[7px] uppercase tracking-[0.15em] px-2 py-0.5 rounded-full backdrop-blur-xl border"
+                className="text-[10px] uppercase tracking-[0.15em] px-2 py-0.5 rounded-full backdrop-blur-xl border"
                 style={{
-                  backgroundColor: `${categoryColor}15`,
-                  color: `${categoryColor}cc`,
-                  borderColor: `${categoryColor}20`,
+                  // Tint over a dark glass base, so the label reads on bright thumbnails too
+                  background: `linear-gradient(${categoryColor}24, ${categoryColor}24), rgba(10,10,12,0.6)`,
+                  color: categoryColor,
+                  borderColor: `${categoryColor}33`,
                 }}
               >
                 {category}
@@ -520,7 +560,7 @@ const DiscoveryTile = ({
             </SpringBadge>
             {typeBadge && (
               <SpringBadge delay={0.18}>
-                <span className="text-[7px] uppercase tracking-[0.12em] px-2 py-0.5 rounded-full backdrop-blur-xl border border-white/[0.08] bg-black/30 text-white/50">
+                <span className="text-[10px] uppercase tracking-[0.12em] px-2 py-0.5 rounded-full backdrop-blur-xl border border-white/[0.08] bg-black/50 text-white/80">
                   {typeBadge}
                 </span>
               </SpringBadge>
@@ -540,12 +580,12 @@ const DiscoveryTile = ({
           </div>
         </div>
         <div className="px-2 py-1.5 flex items-center justify-between gap-1">
-          <span className={`text-[9px] ${isDark ? 'text-white/60' : 'text-zinc-500'}`} style={{ fontFamily: F.heading, fontWeight: 500 }}>
+          <span className={`text-[10px] ${isDark ? 'text-white/70' : 'text-zinc-600'}`} style={{ fontFamily: F.heading, fontWeight: 500 }}>
             {label}
           </span>
           {ctaLabel && (
-            <span className={`text-[8px] flex-shrink-0 flex items-center gap-0.5 ${isDark ? 'text-white/35' : 'text-zinc-400'}`} style={{ fontFamily: F.body, fontWeight: 500 }}>
-              {ctaLabel} <ArrowRight size={7} />
+            <span className={`text-[10px] flex-shrink-0 flex items-center gap-0.5 ${isDark ? 'text-white/60' : 'text-zinc-500'}`} style={{ fontFamily: F.body, fontWeight: 500 }}>
+              {ctaLabel} <ArrowRight size={9} aria-hidden />
             </span>
           )}
         </div>
@@ -553,7 +593,7 @@ const DiscoveryTile = ({
     </BentoTiltCard>
   );
 
-  return link ? <Link to={link}>{tile}</Link> : tile;
+  return link ? <Link to={link} className="block rounded-xl">{tile}</Link> : tile;
 };
 
 /* ─── Spotlight types ─────────────────────────────────────────────── */
@@ -579,7 +619,7 @@ const SpotlightCardInner = ({
     />
     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
     <div className="absolute top-4 right-4 z-10">
-      <span className="text-[10px] font-mono text-white/25 tabular-nums">
+      <span className="text-[10px] font-mono text-white/60 tabular-nums">
         {String(index + 1).padStart(2, '0')}/{String(total).padStart(2, '0')}
       </span>
     </div>
@@ -591,7 +631,7 @@ const SpotlightCardInner = ({
       transition={{ type: 'spring', stiffness: 380, damping: 22, delay: 0.25 }}
     >
       <span
-        className="text-[9px] uppercase tracking-wider px-2.5 py-1 rounded-full backdrop-blur-md border"
+        className="text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-full backdrop-blur-md border"
         style={{ backgroundColor: `${sp.tagColor}20`, color: sp.tagColor, borderColor: `${sp.tagColor}30` }}
       >
         {sp.tag}
@@ -601,7 +641,7 @@ const SpotlightCardInner = ({
       <h3 className="text-fluid-20-24 text-white tracking-[-0.02em] mb-1.5" style={{ fontFamily: F.heading, fontWeight: 700 }}>
         {sp.title}
       </h3>
-      <p className="text-white/50 text-[12px] leading-relaxed max-w-md" style={{ fontFamily: F.body }}>
+      <p className="text-white/70 text-[12px] leading-relaxed max-w-md" style={{ fontFamily: F.body }}>
         {sp.desc}
       </p>
     </div>
@@ -651,7 +691,7 @@ const SpotlightDeckSection = ({ isDark, border }: { isDark: boolean; border: str
     >
       <div className="flex items-center gap-3 mb-6">
         <div className="w-1.5 h-1.5 rounded-full bg-[#a855f7]" />
-        <p className={`text-[11px] uppercase tracking-[0.15em] ${mt}`} style={{ fontFamily: F.body, fontWeight: 500 }}>Spotlights of 2025</p>
+        <h2 className={`text-[11px] uppercase tracking-[0.15em] ${mt}`} style={{ fontFamily: F.body, fontWeight: 500 }}>Spotlights of 2025</h2>
         <div className={`flex-1 h-px ${isDark ? 'bg-white/[0.04]' : 'bg-zinc-200'}`} />
       </div>
       {/*
@@ -694,10 +734,11 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
 
   return (
     <div>
+      <h1 className="sr-only">Salome Mosiava, Senior Product Designer and Art Director</h1>
       {/* Top bar — Available badge only (name/photo live in the sidebar) */}
       <FadeIn>
         <div className="flex items-center justify-end mb-5">
-          <Link to="/contact" aria-label="Available for new projects — go to contact page">
+          <Link to="/contact" aria-label="Available for new projects — go to contact page" className="rounded-full">
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -749,10 +790,11 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
       <FadeIn delay={0.12}>
         <div className="flex flex-wrap items-center gap-3 mb-14">
           <MagneticWrap strength={0.25}>
-            <Link to="/contact">
+            <Link to="/contact" className="inline-block rounded-full">
               <motion.div
                 whileHover={{ scale: 1.06, boxShadow: '0 6px 30px rgba(237,89,43,0.3)' }}
                 whileTap={{ scale: 0.93, y: 2 }}
+                tabIndex={-1}
                 transition={{ type: 'spring', stiffness: 500, damping: 15 }}
                 className="relative inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#c94a20] text-white text-[13px] whitespace-nowrap shadow-[0_2px_16px_rgba(237,89,43,0.2)] overflow-hidden group"
                 style={{ fontFamily: F.body, fontWeight: 500 }}
@@ -776,14 +818,10 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
       {/* Selected clients — scrolling logo strip */}
       <div className="mb-10">
         <FadeIn delay={0.15}>
-          <div className="relative overflow-hidden">
+          <div className="client-marquee-wrap relative overflow-hidden">
             <div className={`absolute left-0 top-0 bottom-0 w-10 z-10 pointer-events-none ${isDark ? 'bg-gradient-to-r from-[#0b0b0e] to-transparent' : 'bg-gradient-to-r from-[#f5f5f5] to-transparent'}`} />
             <div className={`absolute right-0 top-0 bottom-0 w-10 z-10 pointer-events-none ${isDark ? 'bg-gradient-to-l from-[#0b0b0e] to-transparent' : 'bg-gradient-to-l from-[#f5f5f5] to-transparent'}`} />
-            <motion.div
-              animate={{ x: ['0%', '-50%'] }}
-              transition={{ duration: 28, repeat: Infinity, ease: 'linear' }}
-              className="flex items-center gap-7 w-max py-1"
-            >
+            <div className="client-marquee flex items-center gap-7 w-max py-1" role="list" aria-label="Selected clients">
               {(() => {
                 const clients = [
                   { name: 'Terminal', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773916799/terminal_hcftru.webp' },
@@ -808,15 +846,20 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
                   { name: 'BTU', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/v1778354745/BTU_lfezfk.png' },
                 ];
                 return [...clients, ...clients];
-              })().map((client, i) => (
-                <div key={i} className="flex items-center gap-2 flex-shrink-0">
+              })().map((client, i, all) => (
+                <div
+                  key={i}
+                  className="flex items-center gap-2 flex-shrink-0"
+                  role={i < all.length / 2 ? 'listitem' : undefined}
+                  aria-hidden={i >= all.length / 2 ? true : undefined}
+                >
                   <div className={`w-5 h-5 rounded overflow-hidden flex-shrink-0 ${isDark ? 'opacity-35' : 'opacity-50'}`}>
-                    <img {...IMG.logo(client.logo)} alt={client.name} width="20" height="20" className="w-full h-full object-contain" />
+                    <img {...IMG.logo(client.logo)} alt="" width="20" height="20" className="w-full h-full object-contain" />
                   </div>
-                  <span className={`text-[11px] whitespace-nowrap ${isDark ? 'text-white/20' : 'text-zinc-300'}`} style={{ fontFamily: F.body, fontWeight: 500 }}>{client.name}</span>
+                  <span className={`text-[11px] whitespace-nowrap ${isDark ? 'text-white/50' : 'text-zinc-500'}`} style={{ fontFamily: F.body, fontWeight: 500 }}>{client.name}</span>
                 </div>
               ))}
-            </motion.div>
+            </div>
           </div>
         </FadeIn>
       </div>
@@ -825,9 +868,9 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
       <FadeIn delay={0.2}>
         <div className="flex items-center gap-3 mb-5">
           <div className="w-1.5 h-1.5 rounded-full bg-[#ed592b]" />
-          <p className={`text-[11px] uppercase tracking-[0.15em] ${mt}`} style={{ fontFamily: F.body, fontWeight: 500 }}>
+          <h2 className={`text-[11px] uppercase tracking-[0.15em] ${mt}`} style={{ fontFamily: F.body, fontWeight: 500 }}>
             Featured Work
-          </p>
+          </h2>
           <div className={`flex-1 h-px ${isDark ? 'bg-white/[0.04]' : 'bg-zinc-200'}`} />
         </div>
       </FadeIn>
@@ -853,12 +896,12 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
                   <motion.img {...IMG.caseSide(screenProfile)} alt="AURUM user profile dashboard" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 0.3, y: 0 }} transition={{ duration: 1, delay: 0.35 }} className="absolute top-[4%] right-[3%] w-[38%] rounded-xl shadow-2xl shadow-black/60" />
                   <motion.img {...IMG.caseMain(screenExchange)} {...{ fetchpriority: 'high' }} alt="AURUM Crypto Exchange UI/UX Design by Salome Mosiava" initial={{ opacity: 0, y: 50, scale: 0.95 }} whileInView={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 1.2, delay: 0.5, ease: [0.22, 1, 0.36, 1] }} className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[65%] rounded-t-xl shadow-[0_-20px_60px_rgba(0,0,0,0.5)]" />
                   <div className="absolute top-2.5 left-2.5 z-20 flex items-center gap-1.5">
-                    <span className="text-[7px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-full bg-[#D59A04]/10 backdrop-blur-xl text-[#D59A04]/80 border border-[#D59A04]/15">Crypto · Fintech</span>
+                    <span className="text-[10px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-full bg-[#0a0b0f]/60 backdrop-blur-xl text-[#D59A04] border border-[#D59A04]/20">Crypto · Fintech</span>
                   </div>
                   <div className="absolute bottom-0 left-0 right-0 z-20 p-4">
                     <h3 className="text-[18px] text-white mb-1 tracking-[0] leading-none" style={{ fontFamily: F.heading, fontWeight: 600, letterSpacing: 0 }}>AURUM</h3>
-                    <p className="text-white/35 text-[9.5px] uppercase tracking-[0.18em] mb-2.5" style={{ fontFamily: F.body, fontWeight: 500 }}>Crypto Exchange · Fintech</p>
-                    <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#D59A04]/15 border border-[#D59A04]/20 text-[10px] text-[#D59A04]/80 transition-all" style={{ fontFamily: F.body, fontWeight: 500 }}>
+                    <p className="text-white/65 text-[10px] uppercase tracking-[0.18em] mb-2.5" style={{ fontFamily: F.body, fontWeight: 500 }}>Crypto Exchange · Fintech</p>
+                    <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#D59A04]/15 border border-[#D59A04]/20 text-[10px] text-[#D59A04] transition-all" style={{ fontFamily: F.body, fontWeight: 500 }}>
                       View Case Study <ArrowRight size={10} />
                     </span>
                   </div>
@@ -897,13 +940,13 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
                   <div className="grid grid-cols-1 sm:grid-cols-[1fr_1.6fr]">
                     <div className="p-4 sm:p-5 flex flex-col justify-center order-2 sm:order-1">
                       <div className="flex items-center gap-1.5 mb-2">
-                        <span className="text-[7px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-full bg-[#6B8E23]/10 text-[#8FBC3B]/80 border border-[#6B8E23]/15">Enterprise · UX/UI</span>
+                        <span className="text-[10px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-full bg-[#6B8E23]/10 text-[#8FBC3B] border border-[#6B8E23]/20">Enterprise · UX/UI</span>
                       </div>
                       <h3 className="text-fluidpx-16-18 text-white mb-1 tracking-[0] leading-none" style={{ fontFamily: F.heading, fontWeight: 600, letterSpacing: 0 }}>SCHENKER</h3>
                       <p className={`text-[10px] ${bt} mb-3 leading-relaxed`} style={{ fontFamily: F.body }}>
                         Enterprise logistics — form systems & shipment tracking.
                       </p>
-                      <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#6B8E23]/12 border border-[#6B8E23]/20 text-[10px] text-[#8FBC3B]/70 transition-all w-full sm:w-auto justify-center sm:justify-start" style={{ fontFamily: F.body, fontWeight: 500 }}>
+                      <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#6B8E23]/12 border border-[#6B8E23]/20 text-[10px] text-[#8FBC3B] transition-all w-full sm:w-auto justify-center sm:justify-start" style={{ fontFamily: F.body, fontWeight: 500 }}>
                         View Case Study <ArrowRight size={10} />
                       </span>
                     </div>
@@ -934,7 +977,7 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
               whileHover={{ scale: 1.04, y: -1 }}
               whileTap={{ scale: 0.96 }}
               onClick={() => onSectionNavigate?.(cta.section)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] border transition-all focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${isDark ? 'border-white/[0.06] text-white/40 hover:text-white hover:bg-white/[0.04] hover:border-white/[0.1]' : 'border-zinc-200 text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100'}`}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] border transition-all focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)] ${isDark ? 'border-white/[0.06] text-white/60 hover:text-white hover:bg-white/[0.04] hover:border-white/[0.1]' : 'border-zinc-200 text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100'}`}
               style={{ fontFamily: F.body, fontWeight: 500 }}
             >
               {cta.icon}
@@ -949,7 +992,7 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
         <FadeIn delay={0.05}>
           <div className="flex items-center gap-3 mb-8">
             <div className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" />
-            <p className={`text-[11px] uppercase tracking-[0.15em] ${mt}`} style={{ fontFamily: F.body, fontWeight: 500 }}>Who I am</p>
+            <h2 className={`text-[11px] uppercase tracking-[0.15em] ${mt}`} style={{ fontFamily: F.body, fontWeight: 500 }}>Who I am</h2>
             <div className={`flex-1 h-px ${isDark ? 'bg-white/[0.04]' : 'bg-zinc-200'}`} />
           </div>
         </FadeIn>
@@ -994,14 +1037,14 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
                     {exp.logoImg ? (
                       <img {...IMG.logo(exp.logoImg)} alt={`${exp.company} logo`} loading="lazy" width="28" height="28" className="w-full h-full object-cover" />
                     ) : (
-                      <span className="text-[9px] font-mono text-white/60" style={{ fontWeight: 600 }}>{exp.company.slice(0, 2).toUpperCase()}</span>
+                      <span className="text-[10px] font-mono text-white/70" style={{ fontWeight: 600 }}>{exp.company.slice(0, 2).toUpperCase()}</span>
                     )}
                   </motion.div>
                   <div className="min-w-0">
                     <span className={`text-[13px] ${isDark ? 'text-white/90' : 'text-zinc-800'} flex items-center gap-2 truncate`} style={{ fontFamily: F.body, fontWeight: 500 }}>
                       {exp.company}
                       {exp.type && (
-                        <span className={`text-[8px] uppercase tracking-[0.1em] px-1.5 py-[2px] rounded-[4px] flex-shrink-0 ${isDark ? 'bg-white/[0.05] text-white/35' : 'bg-zinc-100 text-zinc-400'}`}>{exp.type}</span>
+                        <span className={`text-[10px] uppercase tracking-[0.1em] px-1.5 py-[2px] rounded-[4px] flex-shrink-0 ${isDark ? 'bg-white/[0.05] text-white/60' : 'bg-zinc-100 text-zinc-500'}`}>{exp.type}</span>
                       )}
                     </span>
                     <span className={`text-[11px] ${bt} block sm:hidden truncate`} style={{ fontFamily: F.body }}>
@@ -1015,7 +1058,8 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
                   </span>
                   <div className={`flex items-center gap-2 text-[10px] sm:text-[11px] font-mono ${mt}`}>
                     <span>{exp.start}</span>
-                    <motion.span className="opacity-40" whileHover={{ scale: 1.3 }}>→</motion.span>
+                    <motion.span className="opacity-40" whileHover={{ scale: 1.3 }} aria-hidden="true">→</motion.span>
+                    <span className="sr-only">to</span>
                     {exp.end === 'NOW' ? (
                       <MicroPulse intensity={0.8}>
                         <span className="text-[#22c55e] flex items-center gap-1">
@@ -1118,9 +1162,9 @@ const ServicesContent = ({ isDark }: { isDark: boolean }) => {
       {/* ─── SERVICE CARDS ────────────────────────────────── */}
       <div>
         <div className="flex items-center justify-between mb-5">
-          <p className={`text-[10px] uppercase tracking-[0.2em] ${mt}`} style={{ fontFamily: F.body, fontWeight: 600 }}>
+          <h2 className={`text-[10px] uppercase tracking-[0.2em] ${mt}`} style={{ fontFamily: F.body, fontWeight: 600 }}>
             01 — Services
-          </p>
+          </h2>
           <span className={`text-[10px] font-mono ${mt}`}>04 offerings</span>
         </div>
         <div className="space-y-3">
@@ -1129,8 +1173,7 @@ const ServicesContent = ({ isDark }: { isDark: boolean }) => {
             return (
               <FadeIn key={s.title} delay={i * 0.06}>
                 <div
-                  onClick={() => setOpenIndex(isOpen ? null : i)}
-                  className={`rounded-2xl overflow-hidden cursor-pointer border transition-colors duration-300 ${
+                  className={`rounded-2xl overflow-hidden border transition-colors duration-300 ${
                     isOpen
                       ? isDark ? 'border-[#ed592b]/25 bg-[#0d0e13]' : 'border-[#ed592b]/25 bg-white'
                       : isDark ? 'border-white/[0.05] bg-[#0c0d11] hover:border-white/[0.10]' : `${border} bg-white hover:border-zinc-300`
@@ -1138,19 +1181,27 @@ const ServicesContent = ({ isDark }: { isDark: boolean }) => {
                 >
                   <div className={`h-[2px] transition-all duration-500 ${isOpen ? 'bg-gradient-to-r from-[#ed592b] via-[#ed592b]/60 to-transparent' : 'bg-transparent'}`} />
 
-                  <div className="px-6 py-5 flex items-center gap-4">
-                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-300 ${isOpen ? 'bg-[#ed592b]/15 text-[#ed592b] scale-105' : isDark ? 'bg-white/[0.04] text-white/35' : 'bg-zinc-100 text-zinc-400'}`}>{s.icon}</div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2.5 flex-wrap mb-1">
-                        <h3 className={`text-[16px] tracking-[-0.02em] transition-colors duration-300 ${isOpen ? (isDark ? 'text-white' : 'text-zinc-900') : isDark ? 'text-white/70' : 'text-zinc-600'}`} style={{ fontFamily: F.heading, fontWeight: 600 }}>{s.title}</h3>
-                        <span className={`text-[9px] px-2 py-0.5 rounded-full uppercase tracking-[0.1em] flex-shrink-0 ${isDark ? 'bg-white/[0.05] text-white/35' : 'bg-zinc-100 text-zinc-500'}`} style={{ fontFamily: F.body, fontWeight: 500 }}>{s.timeline}</span>
-                      </div>
-                      <p className={`text-[12px] leading-[1.5] ${isDark ? 'text-white/35' : 'text-zinc-400'}`} style={{ fontFamily: F.body }}>{s.tagline}</p>
-                    </div>
-                    <div className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-300 ${isOpen ? 'rotate-180 bg-[#ed592b]/15 text-[#ed592b]' : isDark ? 'bg-white/[0.03] text-white/25' : 'bg-zinc-100 text-zinc-400'}`}>
-                      <ChevronDown size={13} />
-                    </div>
-                  </div>
+                  <h3>
+                    <button
+                      type="button"
+                      onClick={() => setOpenIndex(isOpen ? null : i)}
+                      aria-expanded={isOpen}
+                      aria-controls={`service-panel-${i}`}
+                      className="w-full px-6 py-5 flex items-center gap-4 text-left cursor-pointer rounded-2xl focus-visible:!shadow-[inset_0_0_0_2px_rgba(237,89,43,0.9)]"
+                    >
+                      <span aria-hidden="true" className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-300 ${isOpen ? 'bg-[#ed592b]/15 text-[#ed592b] scale-105' : isDark ? 'bg-white/[0.04] text-white/45' : 'bg-zinc-100 text-zinc-500'}`}>{s.icon}</span>
+                      <span className="block flex-1 min-w-0">
+                        <span className="flex items-center gap-2.5 flex-wrap mb-1">
+                          <span id={`service-title-${i}`} className={`text-[16px] tracking-[-0.02em] transition-colors duration-300 ${isOpen ? (isDark ? 'text-white' : 'text-zinc-900') : isDark ? 'text-white/70' : 'text-zinc-600'}`} style={{ fontFamily: F.heading, fontWeight: 600 }}>{s.title}</span>
+                          <span id={`service-meta-${i}`} className={`text-[10px] px-2 py-0.5 rounded-full uppercase tracking-[0.1em] flex-shrink-0 ${isDark ? 'bg-white/[0.05] text-white/60' : 'bg-zinc-100 text-zinc-500'}`} style={{ fontFamily: F.body, fontWeight: 500 }}>{s.timeline}</span>
+                        </span>
+                        <span id={`service-tagline-${i}`} className={`block text-[12px] leading-[1.5] ${isDark ? 'text-white/55' : 'text-zinc-500'}`} style={{ fontFamily: F.body }}>{s.tagline}</span>
+                      </span>
+                      <span aria-hidden="true" className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-300 ${isOpen ? 'rotate-180 bg-[#ed592b]/15 text-[#ed592b]' : isDark ? 'bg-white/[0.03] text-white/45' : 'bg-zinc-100 text-zinc-500'}`}>
+                        <ChevronDown size={13} />
+                      </span>
+                    </button>
+                  </h3>
 
                   <AnimatePresence initial={false}>
                     {isOpen && (
@@ -1160,6 +1211,9 @@ const ServicesContent = ({ isDark }: { isDark: boolean }) => {
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1], opacity: { duration: 0.25, delay: 0.1 } }}
                         className="overflow-hidden"
+                        id={`service-panel-${i}`}
+                        role="region"
+                        aria-labelledby={`service-title-${i}`}
                       >
                         <div className="px-6 pb-6 pt-0">
                           <div className={`h-px mb-5 ${isDark ? 'bg-white/[0.05]' : 'bg-zinc-100'}`} />
@@ -1173,7 +1227,7 @@ const ServicesContent = ({ isDark }: { isDark: boolean }) => {
                             ))}
                           </div>
                           <div className={`flex items-start gap-2.5 px-4 py-3 rounded-xl border ${isDark ? 'bg-[#ed592b]/[0.06] border-[#ed592b]/15' : 'bg-[#ed592b]/[0.05] border-[#ed592b]/15'}`}>
-                            <span className="text-[#ed592b] text-[9px] uppercase tracking-[0.15em] flex-shrink-0 mt-0.5" style={{ fontFamily: F.body, fontWeight: 600 }}>Proof</span>
+                            <span className="text-[#ed592b] text-[10px] uppercase tracking-[0.15em] flex-shrink-0 mt-0.5" style={{ fontFamily: F.body, fontWeight: 600 }}>Proof</span>
                             <span className={`text-[11px] leading-[1.45] ${isDark ? 'text-white/55' : 'text-zinc-600'}`} style={{ fontFamily: F.body }}>{s.outcome}</span>
                           </div>
                         </div>
@@ -1197,17 +1251,17 @@ const ServicesContent = ({ isDark }: { isDark: boolean }) => {
       >
         <div>
           <div className="flex items-center justify-between mb-5">
-            <p className={`text-[10px] uppercase tracking-[0.2em] ${mt}`} style={{ fontFamily: F.body, fontWeight: 600 }}>
+            <h2 className={`text-[10px] uppercase tracking-[0.2em] ${mt}`} style={{ fontFamily: F.body, fontWeight: 600 }}>
               02 — How I work with you
-            </p>
+            </h2>
             <span className={`text-[10px] font-mono ${mt}`}>04 stages</span>
           </div>
           <div className={`rounded-2xl border overflow-hidden ${isDark ? 'border-white/[0.05] bg-[#0c0d11]' : `${border} bg-white`}`}>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x lg:divide-y-0 lg:divide-x divide-white/[0.05]">
               {process.map((p) => (
                 <div key={p.step} className="p-5 lg:p-6 relative">
-                  <div className={`text-[11px] mb-3 font-mono ${isDark ? 'text-[#ed592b]/60' : 'text-[#ed592b]/70'}`}>{p.step}</div>
-                  <div className={`text-[15px] mb-1.5 tracking-[-0.01em] ${isDark ? 'text-white/85' : 'text-zinc-800'}`} style={{ fontFamily: F.heading, fontWeight: 600 }}>{p.title}</div>
+                  <div className={`text-[11px] mb-3 font-mono ${isDark ? 'text-[#ed592b]' : 'text-[#c94a20]'}`}>{p.step}</div>
+                  <h3 className={`text-[15px] mb-1.5 tracking-[-0.01em] ${isDark ? 'text-white/85' : 'text-zinc-800'}`} style={{ fontFamily: F.heading, fontWeight: 600 }}>{p.title}</h3>
                   <p className={`text-[11px] leading-[1.55] ${mt}`} style={{ fontFamily: F.body }}>{p.desc}</p>
                 </div>
               ))}
@@ -1226,9 +1280,9 @@ const ServicesContent = ({ isDark }: { isDark: boolean }) => {
       >
         <div>
           <div className="flex items-center justify-between mb-5">
-            <p className={`text-[10px] uppercase tracking-[0.2em] ${mt}`} style={{ fontFamily: F.body, fontWeight: 600 }}>
+            <h2 className={`text-[10px] uppercase tracking-[0.2em] ${mt}`} style={{ fontFamily: F.body, fontWeight: 600 }}>
               03 — Track record
-            </p>
+            </h2>
             <span className={`text-[10px] font-mono ${mt}`}>06+ years</span>
           </div>
           <div className={`rounded-2xl border overflow-hidden ${isDark ? 'border-white/[0.05] bg-[#0c0d11]' : `${border} bg-white`}`}>
@@ -1256,19 +1310,20 @@ const ServicesContent = ({ isDark }: { isDark: boolean }) => {
         viewport={{ once: true, margin: '-40px' }}
         transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], opacity: { duration: 0.5 } }}
       >
-        <Link to="/contact">
+        <Link to="/contact" className="block rounded-2xl">
           <motion.div
             whileHover={{ scale: 1.005, y: -2 }}
             whileTap={{ scale: 0.995 }}
+            tabIndex={-1}
             transition={{ type: 'spring', stiffness: 400, damping: 28 }}
-            className="relative flex items-center justify-between px-6 py-6 lg:px-8 lg:py-7 rounded-2xl bg-[#ed592b] cursor-pointer group overflow-hidden shadow-lg shadow-[#ed592b]/20 hover:shadow-xl hover:shadow-[#ed592b]/30 transition-shadow"
+            className="relative flex items-center justify-between px-6 py-6 lg:px-8 lg:py-7 rounded-2xl bg-[#c94a20] cursor-pointer group overflow-hidden shadow-lg shadow-[#ed592b]/20 hover:shadow-xl hover:shadow-[#ed592b]/30 transition-shadow"
           >
             {/* Subtle moving glow */}
             <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ background: 'radial-gradient(circle at 30% 50%, rgba(255,255,255,0.12), transparent 60%)' }} />
             <div className="relative">
-              <p className="text-white/70 text-[10px] uppercase tracking-[0.2em] mb-2" style={{ fontFamily: F.body, fontWeight: 600 }}>04 — Let's begin</p>
+              <p className="text-white text-[10px] uppercase tracking-[0.2em] mb-2" style={{ fontFamily: F.body, fontWeight: 600 }}>04 — Let's begin</p>
               <div className="text-white text-fluidpx-18-22 tracking-[-0.02em] mb-1" style={{ fontFamily: F.heading, fontWeight: 600 }}>Start a project</div>
-              <div className="text-white/70 text-[12px]" style={{ fontFamily: F.body }}>Tell me about your goals — I'll reply within 24h</div>
+              <div className="text-white text-[12px]" style={{ fontFamily: F.body }}>Tell me about your goals — I'll reply within 24h</div>
             </div>
             <div className="relative w-12 h-12 rounded-full bg-white/15 flex items-center justify-center group-hover:bg-white/25 group-hover:scale-110 transition-all duration-300 flex-shrink-0">
               <ArrowUpRight size={18} className="text-white group-hover:rotate-[12deg] transition-transform" />
@@ -1497,10 +1552,10 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
                       onClick={(e) => { e.preventDefault(); handleCopy(item.value, item.label); }}
                       data-cursor={copied === item.label ? 'copied' : 'copy'}
                       data-cursor-label={copied === item.label ? undefined : `Copy ${item.label.toLowerCase()}`}
-                      className={`w-10 h-10 sm:w-8 sm:h-8 rounded-xl sm:rounded-lg flex items-center justify-center sm:opacity-0 sm:group-hover:opacity-100 transition-all duration-300 focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] focus-visible:!opacity-100 ${
+                      className={`w-10 h-10 sm:w-8 sm:h-8 rounded-xl sm:rounded-lg flex items-center justify-center sm:opacity-0 sm:group-hover:opacity-100 transition-all duration-300 focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)] focus-visible:!opacity-100 ${
                         copied === item.label
                           ? 'bg-[#22c55e]/15 text-[#22c55e]'
-                          : isDark ? 'bg-white/[0.05] text-white/40 hover:text-white/80' : 'bg-zinc-100 text-zinc-400 hover:text-zinc-600'
+                          : isDark ? 'bg-white/[0.05] text-white/60 hover:text-white/90' : 'bg-zinc-100 text-zinc-500 hover:text-zinc-700'
                       }`}
                       aria-label={`Copy ${item.label.toLowerCase()}`}
                     >
@@ -1519,12 +1574,13 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
                     rel={item.external ? 'noopener noreferrer' : undefined}
                     whileHover={{ scale: 1.15, rotate: 8 }}
                     whileTap={{ scale: 0.85 }}
-                    className={`w-10 h-10 sm:w-8 sm:h-8 rounded-xl sm:rounded-lg flex items-center justify-center transition-all duration-300 focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
+                    className={`w-10 h-10 sm:w-8 sm:h-8 rounded-xl sm:rounded-lg flex items-center justify-center transition-all duration-300 focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)] ${
                       hoveredIdx === i
                         ? 'bg-[#ed592b]/15 text-[#ed592b]'
-                        : isDark ? 'bg-white/[0.03] text-white/20' : 'bg-zinc-50 text-zinc-300'
+                        : isDark ? 'bg-white/[0.03] text-white/50' : 'bg-zinc-50 text-zinc-500'
                     }`}
                     title={item.label === 'Email' ? 'Send email' : item.label === 'Phone' ? 'Call' : `Open ${item.label}`}
+                    aria-label={item.label === 'Email' ? 'Send email' : item.label === 'Phone' ? 'Call' : `Open ${item.label}`}
                   >
                     {item.external ? <ExternalLink size={15} className="sm:w-[13px] sm:h-[13px]" /> : item.label === 'Email' ? <Send size={15} className="sm:w-[13px] sm:h-[13px]" /> : <Phone size={15} className="sm:w-[13px] sm:h-[13px]" />}
                   </motion.a>
@@ -1568,10 +1624,13 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
                 { field: 'email' as const, label: 'Email', placeholder: 'Where can I reach you?', type: 'email', required: true },
               ]).map(({ field, label, placeholder, type, required }) => (
                 <div key={field}>
-                  <label className={`text-[10px] uppercase tracking-[0.1em] ${mt} block mb-1.5`} style={{ fontFamily: F.body, fontWeight: 500 }}>
-                    {label}{required && <span className="text-[#ed592b] ml-0.5">*</span>}
+                  <label htmlFor={`contact-${field}`} className={`text-[10px] uppercase tracking-[0.1em] ${mt} block mb-1.5`} style={{ fontFamily: F.body, fontWeight: 500 }}>
+                    {label}{required && <span className="text-[#ed592b] ml-0.5" aria-hidden="true">*</span>}
                   </label>
                   <input
+                    id={`contact-${field}`}
+                    name={field}
+                    autoComplete={field === 'email' ? 'email' : 'name'}
                     type={type}
                     required={required}
                     value={form[field]}
@@ -1579,7 +1638,7 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
                     placeholder={placeholder}
                     className={`w-full text-[12px] px-4 py-2.5 rounded-full border transition-colors duration-200 ${
                       isDark
-                        ? 'bg-[#0a0b0f] border-white/[0.10] text-white/80 placeholder-white/15 hover:border-white/[0.22] focus:border-white/45 focus:shadow-[0_0_0_2px_rgba(255,255,255,0.06)]'
+                        ? 'bg-[#0a0b0f] border-white/[0.10] text-white/85 placeholder-white/50 hover:border-white/[0.22] focus:border-white/45 focus:shadow-[0_0_0_2px_rgba(255,255,255,0.06)]'
                         : 'bg-zinc-50 border-zinc-300 text-zinc-800 placeholder-zinc-300 hover:border-zinc-400 focus:border-zinc-900/50 focus:shadow-[0_0_0_2px_rgba(0,0,0,0.04)]'
                     } outline-none`}
                     style={{ fontFamily: F.body }}
@@ -1629,11 +1688,34 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
                   const selected = options.find((o) => o.value === form[field]);
                   return (
                     <div key={field}>
-                      <label className={`text-[10px] uppercase tracking-[0.1em] ${mt} block mb-1.5`} style={{ fontFamily: F.body, fontWeight: 500 }}>{label}</label>
-                      <div className="relative" style={{ zIndex: isOpen ? 50 : 'auto' }}>
+                      <span id={`contact-${field}-label`} className={`text-[10px] uppercase tracking-[0.1em] ${mt} block mb-1.5`} style={{ fontFamily: F.body, fontWeight: 500 }}>{label}</span>
+                      <div
+                        className="relative"
+                        style={{ zIndex: isOpen ? 50 : 'auto' }}
+                        onKeyDown={(e) => {
+                          if (e.key !== 'Escape' || !isOpen) return;
+                          e.stopPropagation();
+                          setOpenDropdown(null);
+                          document.getElementById(`contact-${field}-trigger`)?.focus();
+                        }}
+                      >
                         <button
                           type="button"
-                          onClick={() => setOpenDropdown(isOpen ? null : field)}
+                          id={`contact-${field}-trigger`}
+                          aria-expanded={isOpen}
+                          aria-controls={`contact-${field}-options`}
+                          aria-labelledby={`contact-${field}-label contact-${field}-value`}
+                          onClick={(e) => {
+                            const opening = !isOpen;
+                            setOpenDropdown(opening ? field : null);
+                            // Opened from the keyboard: move into the options
+                            if (opening && e.detail === 0) {
+                              requestAnimationFrame(() => {
+                                const list = document.getElementById(`contact-${field}-options`);
+                                (list?.querySelector<HTMLElement>('[aria-pressed="true"]') ?? list?.querySelector<HTMLElement>('button'))?.focus();
+                              });
+                            }
+                          }}
                           className={`w-full flex items-center justify-between px-4 py-2.5 rounded-full border text-[12px] transition-colors duration-200 cursor-pointer ${
                             isOpen
                               ? isDark ? 'border-white/45 bg-[#0a0b0f] shadow-[0_0_0_2px_rgba(255,255,255,0.06)]' : 'border-zinc-900/50 bg-white shadow-[0_0_0_2px_rgba(0,0,0,0.04)]'
@@ -1641,11 +1723,11 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
                           }`}
                           style={{ fontFamily: F.body }}
                         >
-                          <span className={selected ? (isDark ? 'text-white/80' : 'text-zinc-800') : (isDark ? 'text-white/20' : 'text-zinc-300')}>
+                          <span id={`contact-${field}-value`} className={selected ? (isDark ? 'text-white/85' : 'text-zinc-800') : (isDark ? 'text-white/50' : 'text-zinc-500')}>
                             {selected?.label ?? placeholder}
                           </span>
                           <motion.span animate={{ rotate: isOpen ? 180 : 0 }} transition={{ duration: 0.2 }} className="flex-shrink-0 ml-2">
-                            <ChevronDown size={13} className={isOpen ? 'text-[#ed592b]' : isDark ? 'text-white/20' : 'text-zinc-300'} />
+                            <ChevronDown size={13} aria-hidden className={isOpen ? 'text-[#ed592b]' : isDark ? 'text-white/45' : 'text-zinc-400'} />
                           </motion.span>
                         </button>
 
@@ -1657,6 +1739,9 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
                               exit={{ opacity: 0, y: -4, scaleY: 0.94 }}
                               transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
                               style={{ transformOrigin: 'top', zIndex: 51 }}
+                              id={`contact-${field}-options`}
+                              role="group"
+                              aria-labelledby={`contact-${field}-label`}
                               className={`absolute top-full left-0 right-0 mt-1.5 rounded-2xl border py-2 overflow-hidden ${
                                 isDark ? 'bg-[#0e0f15] border-white/[0.16] shadow-2xl shadow-black/70' : 'bg-white border-zinc-300 shadow-xl shadow-black/[0.08]'
                               }`}
@@ -1670,7 +1755,12 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
                                     initial={{ opacity: 0, x: -4 }}
                                     animate={{ opacity: 1, x: 0 }}
                                     transition={{ duration: 0.12, delay: oi * 0.025 }}
-                                    onClick={() => { setForm((f) => ({ ...f, [field]: opt.value })); setOpenDropdown(null); }}
+                                    aria-pressed={isSel}
+                                    onClick={() => {
+                                      setForm((f) => ({ ...f, [field]: opt.value }));
+                                      setOpenDropdown(null);
+                                      document.getElementById(`contact-${field}-trigger`)?.focus();
+                                    }}
                                     className={`w-full flex items-center gap-2.5 px-3.5 py-2 text-[12px] transition-colors duration-100 ${
                                       isSel
                                         ? isDark ? 'text-[#ed592b] bg-[#ed592b]/[0.08]' : 'text-[#ed592b] bg-[#ed592b]/[0.05]'
@@ -1678,7 +1768,7 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
                                     }`}
                                     style={{ fontFamily: F.body }}
                                   >
-                                    <span className={`w-3.5 h-3.5 rounded-full border flex-shrink-0 flex items-center justify-center ${isSel ? 'bg-[#ed592b] border-[#ed592b]' : isDark ? 'border-white/[0.15]' : 'border-zinc-300'}`}>
+                                    <span aria-hidden="true" className={`w-3.5 h-3.5 rounded-full border flex-shrink-0 flex items-center justify-center ${isSel ? 'bg-[#ed592b] border-[#ed592b]' : isDark ? 'border-white/[0.15]' : 'border-zinc-300'}`}>
                                       {isSel && <span className="w-1.5 h-1.5 rounded-full bg-white block" />}
                                     </span>
                                     {opt.label}
@@ -1696,13 +1786,15 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
             ))}
 
             <div>
-              <label className={`text-[10px] uppercase tracking-[0.1em] ${mt} block mb-1.5`} style={{ fontFamily: F.body, fontWeight: 500 }}>Message</label>
+              <label htmlFor="contact-message" className={`text-[10px] uppercase tracking-[0.1em] ${mt} block mb-1.5`} style={{ fontFamily: F.body, fontWeight: 500 }}>Message</label>
               <textarea
+                id="contact-message"
+                name="message"
                 value={form.message}
                 onChange={(e) => setForm({ ...form, message: e.target.value })}
                 placeholder="Tell me about your project..."
                 rows={3}
-                className={`w-full text-[12px] px-4 py-3 rounded-3xl border resize-none [field-sizing:content] min-h-[88px] max-h-[260px] transition-colors duration-200 ${isDark ? 'bg-[#0a0b0f] border-white/[0.10] text-white/80 placeholder-white/15 hover:border-white/[0.22] focus:border-white/45 focus:shadow-[0_0_0_2px_rgba(255,255,255,0.06)]' : 'bg-zinc-50 border-zinc-300 text-zinc-800 placeholder-zinc-300 hover:border-zinc-400 focus:border-zinc-900/50 focus:shadow-[0_0_0_2px_rgba(0,0,0,0.04)]'} outline-none`}
+                className={`w-full text-[12px] px-4 py-3 rounded-3xl border resize-none [field-sizing:content] min-h-[88px] max-h-[260px] transition-colors duration-200 ${isDark ? 'bg-[#0a0b0f] border-white/[0.10] text-white/85 placeholder-white/50 hover:border-white/[0.22] focus:border-white/45 focus:shadow-[0_0_0_2px_rgba(255,255,255,0.06)]' : 'bg-zinc-50 border-zinc-300 text-zinc-800 placeholder-zinc-300 hover:border-zinc-400 focus:border-zinc-900/50 focus:shadow-[0_0_0_2px_rgba(0,0,0,0.04)]'} outline-none`}
                 style={{ fontFamily: F.body }}
               />
             </div>
@@ -1713,10 +1805,10 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
               whileTap={formSending || formSent ? {} : { scale: 0.97 }}
               className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-[12px] transition-all disabled:cursor-not-allowed ${
                 formSent
-                  ? 'bg-[#22c55e] text-white'
+                  ? 'bg-[#15803d] text-white'
                   : formSending
-                  ? 'bg-[#ed592b]/60 text-white'
-                  : 'bg-[#ed592b] text-white hover:brightness-110 hover:shadow-[0_4px_20px_rgba(237,89,43,0.3)]'
+                  ? 'bg-[#c94a20]/70 text-white'
+                  : 'bg-[#c94a20] text-white hover:shadow-[0_4px_20px_rgba(237,89,43,0.35)] focus-visible:!shadow-[0_0_0_2px_rgba(255,255,255,0.6)]'
               }`}
               style={{ fontFamily: F.body, fontWeight: 500 }}
             >
@@ -1729,6 +1821,10 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
               )}
             </motion.button>
           </form>
+          {/* Announces form and copy results to screen readers */}
+          <p className="sr-only" role="status" aria-live="polite">
+            {formSent ? "Inquiry sent. I'll get back to you soon." : formSending ? 'Sending your inquiry' : copied ? `${copied} copied` : ''}
+          </p>
         </div>
       </motion.div>
 
@@ -1920,7 +2016,7 @@ const ImageLightbox = ({ src, alt, onClose, whiteBg, onPrev, onNext, hasPrev, ha
       </AnimatePresence>
       <button
         onClick={onClose}
-        className="absolute top-4 right-4 z-20 w-11 h-11 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white/70 hover:text-white hover:bg-white/20 active:bg-white/30 transition-colors focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.5)]"
+        className="absolute top-4 right-4 z-20 w-11 h-11 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white/70 hover:text-white hover:bg-white/20 active:bg-white/30 transition-colors focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)]"
         aria-label="Close lightbox"
       >
         <X size={20} />
@@ -1996,6 +2092,7 @@ const AdsMediaItem = ({ item, brandName, index, isDark, border, onImageClick, on
     <TiltCard
       onClick={() => item.type === 'image' ? onImageClick() : onVideoClick?.()}
       cursor={item.type === 'image' ? 'expand' : 'play'}
+      srLabel={item.type === 'video' ? `Play ${brandName} video ${index + 1}` : undefined}
       className={`relative rounded-lg overflow-hidden border ${border} group cursor-pointer ${fill ? 'h-full' : 'break-inside-avoid mb-2.5'} ${whiteBg ? 'bg-white' : ''}`}
     >
       <div className={`relative ${fill ? 'h-full' : ''}`}>
@@ -2034,22 +2131,31 @@ const AdsMediaItem = ({ item, brandName, index, isDark, border, onImageClick, on
         <div className="absolute top-2 right-2 z-10">
           <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-black/50 backdrop-blur-md border border-white/[0.08]">
             <Play size={8} className="text-white/70 fill-white/70" />
-            <span className="text-[7px] font-mono text-white/60 uppercase tracking-wider">Reel</span>
+            <span className="text-[10px] font-mono text-white/80 uppercase tracking-wider">Reel</span>
           </div>
         </div>
       )}
       <div className="absolute bottom-1.5 left-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
-        <span className="text-[7px] font-mono px-1.5 py-0.5 rounded bg-black/40 backdrop-blur-md text-white/50 border border-white/[0.04]">{String(index + 1).padStart(2, '0')}</span>
+        <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-black/50 backdrop-blur-md text-white/80 border border-white/[0.04]">{String(index + 1).padStart(2, '0')}</span>
       </div>
     </TiltCard>
   );
 };
 
 /* Simple hover card for images — no 3D transforms (avoids CSS columns + preserve-3d browser bugs) */
-const TiltCard = ({ children, className, onClick, cursor, style: extraStyle }: { children: React.ReactNode; className?: string; onClick?: () => void; cursor?: string; style?: React.CSSProperties }) => {
+const TiltCard = ({ children, className, onClick, cursor, srLabel, style: extraStyle }: { children: React.ReactNode; className?: string; onClick?: () => void; cursor?: string; srLabel?: string; style?: React.CSSProperties }) => {
   return (
     <motion.div
       onClick={onClick}
+      // Clickable cards open the lightbox from the keyboard too
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : -1}
+      onKeyDown={onClick ? (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick();
+        }
+      } : undefined}
       data-cursor={cursor}
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
@@ -2057,6 +2163,7 @@ const TiltCard = ({ children, className, onClick, cursor, style: extraStyle }: {
       className={className}
       style={extraStyle}
     >
+      {srLabel && <span className="sr-only">{srLabel}</span>}
       {children}
     </motion.div>
   );
@@ -2156,10 +2263,10 @@ const MagneticAdCard = ({ v, border, isDark, cardTilt, index, delayStep, onClick
       {/* Bottom label */}
       <div className={`absolute inset-0 bg-gradient-to-t ${isDark ? 'from-black/70' : 'from-black/50'} to-transparent flex items-end p-2 pointer-events-none`}>
         <div className="flex items-center gap-1.5">
-          <div className={`w-4 h-4 rounded flex items-center justify-center text-[7px] flex-shrink-0 ${isDark ? 'bg-white/15 text-white/70' : 'bg-white/20 text-white/80'}`} style={{ fontFamily: F.heading, fontWeight: 700 }}>
+          <div className={`w-4 h-4 rounded flex items-center justify-center text-[10px] flex-shrink-0 ${isDark ? 'bg-white/15 text-white/70' : 'bg-white/20 text-white/80'}`} style={{ fontFamily: F.heading, fontWeight: 700 }}>
             {v.logoImg ? <img {...IMG.logo(v.logoImg)} alt={`${v.brandName} logo`} loading="lazy" width="16" height="16" className="w-full h-full object-cover rounded" /> : v.brandName.charAt(0)}
           </div>
-          <span className="text-[9px] text-white/90 truncate" style={{ fontFamily: F.body, fontWeight: 500 }}>{v.brandName.split(' · ')[0]}</span>
+          <span className="text-[10px] text-white/90 truncate" style={{ fontFamily: F.body, fontWeight: 500 }}>{v.brandName.split(' · ')[0]}</span>
         </div>
       </div>
 
@@ -2168,7 +2275,7 @@ const MagneticAdCard = ({ v, border, isDark, cardTilt, index, delayStep, onClick
         <div className="absolute top-1.5 left-1.5 pointer-events-none">
           <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-black/50 backdrop-blur-md border border-white/[0.08]">
             <Play size={7} className="text-white/70 fill-white/70" />
-            <span className="text-[7px] font-mono text-white/60 uppercase tracking-wider">Reel</span>
+            <span className="text-[10px] font-mono text-white/80 uppercase tracking-wider">Reel</span>
           </div>
         </div>
       )}
@@ -2326,7 +2433,8 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
           {/* All chip */}
           <button
             onClick={() => goTo(-1)}
-            className={`flex items-center gap-1.5 px-3.5 py-2 min-h-[40px] md:min-h-0 rounded-full border text-[10px] tracking-[0.04em] transition-colors duration-200 focus-visible:shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
+            aria-pressed={activeBrand === -1}
+            className={`flex items-center gap-1.5 px-3.5 py-2 min-h-[40px] md:min-h-0 rounded-full border text-[10px] tracking-[0.04em] transition-colors duration-200 focus-visible:shadow-[0_0_0_2px_rgba(237,89,43,0.9)] ${
               activeBrand === -1
                 ? 'border-[#ed592b] bg-[#ed592b]/10 text-[#ed592b]'
                 : isDark ? 'border-white/[0.06] bg-white/[0.03] text-[#7a7d8a] hover:border-white/[0.12] hover:text-white/80' : 'border-zinc-200 bg-zinc-50 text-zinc-500 hover:border-zinc-300 hover:text-zinc-700'
@@ -2343,7 +2451,8 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
               <button
                 key={b.name}
                 onClick={() => goTo(i)}
-                className={`flex items-center px-3.5 py-2 min-h-[40px] md:min-h-0 rounded-full border text-[10px] tracking-[0.04em] transition-colors duration-200 focus-visible:shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
+                aria-pressed={active}
+                className={`flex items-center px-3.5 py-2 min-h-[40px] md:min-h-0 rounded-full border text-[10px] tracking-[0.04em] transition-colors duration-200 focus-visible:shadow-[0_0_0_2px_rgba(237,89,43,0.9)] ${
                   active
                     ? 'border-[#ed592b] bg-[#ed592b]/10 text-[#ed592b]'
                     : isDark ? 'border-white/[0.06] bg-white/[0.03] text-[#7a7d8a] hover:border-white/[0.12] hover:text-white/80' : 'border-zinc-200 bg-zinc-50 text-zinc-500 hover:border-zinc-300 hover:text-zinc-700'
@@ -2385,7 +2494,7 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
                     transition={{ type: 'spring', stiffness: 90, damping: 22 }}
                   />
                 </div>
-                <span className={`text-[9px] font-mono uppercase tracking-[0.15em] whitespace-nowrap ${hasMore ? mt : isDark ? 'text-emerald-400/70' : 'text-emerald-600/70'}`}>
+                <span className={`text-[10px] font-mono uppercase tracking-[0.15em] whitespace-nowrap ${hasMore ? mt : isDark ? 'text-emerald-400' : 'text-emerald-700'}`}>
                   {hasMore ? `${Math.round((visibleCount / allVisuals.length) * 100)}%` : 'Complete'}
                 </span>
               </div>
@@ -2441,9 +2550,9 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
               )}
               {!hasMore && allVisuals.length > INITIAL_BATCH && (
                 <div className="flex items-center justify-center gap-2 py-5 mt-3">
-                  <span className="text-emerald-400/70">●</span>
-                  <span className={`text-[9px] font-mono uppercase tracking-[0.2em] ${mt}`}>
-                    <span className={isDark ? 'text-emerald-400/80' : 'text-emerald-600/80'}>All {allVisuals.length} visuals</span>
+                  <span className="text-emerald-400/70" aria-hidden="true">●</span>
+                  <span className={`text-[10px] font-mono uppercase tracking-[0.2em] ${mt}`}>
+                    <span className={isDark ? 'text-emerald-400' : 'text-emerald-700'}>All {allVisuals.length} visuals</span>
                     <span className="ml-1.5">— end reached</span>
                   </span>
                 </div>
@@ -2476,16 +2585,16 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
                   <div className="flex items-center gap-2">
                     <span className={`text-[12px] ${isDark ? 'text-white/90' : 'text-zinc-800'}`} style={{ fontFamily: F.body, fontWeight: 500 }}>{brand!.name}</span>
                     {brand!.aiContent && (
-                      <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[8px] uppercase tracking-[0.1em] ${isDark ? 'bg-[#ed592b]/10 text-[#ed592b] border border-[#ed592b]/20' : 'bg-[#ed592b]/8 text-[#ed592b] border border-[#ed592b]/15'}`}
+                      <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] uppercase tracking-[0.1em] ${isDark ? 'bg-[#ed592b]/10 text-[#ed592b] border border-[#ed592b]/20' : 'bg-[#ed592b]/8 text-[#ed592b] border border-[#ed592b]/15'}`}
                         style={{ fontFamily: F.body, fontWeight: 600 }}
                       >
-                        <svg width="8" height="8" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1l2.2 4.4L15 6.3l-3.5 3.4.8 4.9L8 12.4l-4.3 2.2.8-4.9L1 6.3l4.8-.9L8 1z"/></svg>
+                        <svg width="9" height="9" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 1l2.2 4.4L15 6.3l-3.5 3.4.8 4.9L8 12.4l-4.3 2.2.8-4.9L1 6.3l4.8-.9L8 1z"/></svg>
                         AI Content
                       </span>
                     )}
                   </div>
                 </div>
-                <span className={`text-[9px] font-mono ${mt}`}>{brand!.items.length} {brand!.items.length === 1 ? 'visual' : 'visuals'}</span>
+                <span className={`text-[10px] font-mono ${mt}`}>{brand!.items.length} {brand!.items.length === 1 ? 'visual' : 'visuals'}</span>
               </div>
 
               {/* Grid layout */}
@@ -2617,14 +2726,15 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
             <div className="flex items-center gap-2 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
               <button
                 onClick={() => goTo(-1)}
-                className={`flex-shrink-0 px-3 py-1.5 rounded-full text-[10px] tracking-[0.04em] transition-colors focus-visible:shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${activeBrand === -1 ? 'bg-[#ed592b]/10 text-[#ed592b] border border-[#ed592b]/30' : isDark ? 'text-[#5a5d6a] border border-transparent hover:text-white/70' : 'text-zinc-500 border border-transparent hover:text-zinc-700'}`}
+                aria-pressed={activeBrand === -1}
+                className={`flex-shrink-0 px-3 py-1.5 rounded-full text-[10px] tracking-[0.04em] transition-colors focus-visible:shadow-[0_0_0_2px_rgba(237,89,43,0.9)] ${activeBrand === -1 ? 'bg-[#ed592b]/10 text-[#ed592b] border border-[#ed592b]/30' : isDark ? 'text-[#8a8d9a] border border-transparent hover:text-white/80' : 'text-zinc-500 border border-transparent hover:text-zinc-700'}`}
                 style={{ fontFamily: F.body, fontWeight: 500 }}
               >All</button>
               {adsBrands.map((b, i) => {
                 const active = activeBrand === i;
                 return (
-                  <button key={b.name} onClick={() => goTo(i)}
-                    className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] tracking-[0.04em] transition-colors focus-visible:shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${active ? 'bg-[#ed592b]/10 text-[#ed592b] border border-[#ed592b]/30' : isDark ? 'text-[#5a5d6a] border border-transparent hover:text-white/70' : 'text-zinc-500 border border-transparent hover:text-zinc-700'}`}
+                  <button key={b.name} onClick={() => goTo(i)} aria-pressed={active}
+                    className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] tracking-[0.04em] transition-colors focus-visible:shadow-[0_0_0_2px_rgba(237,89,43,0.9)] ${active ? 'bg-[#ed592b]/10 text-[#ed592b] border border-[#ed592b]/30' : isDark ? 'text-[#8a8d9a] border border-transparent hover:text-white/80' : 'text-zinc-500 border border-transparent hover:text-zinc-700'}`}
                     style={{ fontFamily: F.body, fontWeight: 500 }}
                   >
                     {b.logoImg && <img {...IMG.logo(b.logoImg)} alt="" aria-hidden="true" loading="lazy" width="12" height="12" className="w-3 h-3 rounded object-cover flex-shrink-0" />}
@@ -2800,7 +2910,7 @@ const MotionReelCard = ({
           <span className={`text-[11px] block truncate ${isDark ? 'text-white/90' : 'text-zinc-800'}`} style={{ fontFamily: F.body, fontWeight: 500 }}>
             {reel.brand}
           </span>
-          <span className={`text-[9px] block truncate ${mt}`} style={{ fontFamily: F.body }}>
+          <span className={`text-[10px] block truncate ${mt}`} style={{ fontFamily: F.body }}>
             {reel.label}
           </span>
         </div>
@@ -2833,7 +2943,7 @@ const MotionReelCard = ({
           onClick={onOpen}
           data-cursor="play"
           data-cursor-label="Play with sound"
-          className="absolute bottom-2 left-2 z-20 w-10 h-10 md:w-7 md:h-7 rounded-full flex items-center justify-center backdrop-blur-md bg-black/50 border border-white/10 text-white/70 hover:text-white hover:bg-black/70 transition-colors focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.5)]"
+          className="absolute bottom-2 left-2 z-20 w-10 h-10 md:w-7 md:h-7 rounded-full flex items-center justify-center backdrop-blur-md bg-black/50 border border-white/10 text-white/70 hover:text-white hover:bg-black/70 transition-colors focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)]"
           aria-label={`Watch ${reel.brand} reel with sound`}
         >
           <Maximize2 size={12} />
@@ -2847,7 +2957,7 @@ const MotionReelCard = ({
           animate={{ opacity: 1 }}
           whileHover={{ scale: 1.15 }}
           whileTap={{ scale: 0.9 }}
-          className="absolute bottom-2 right-2 z-20 w-10 h-10 md:w-7 md:h-7 rounded-full flex items-center justify-center backdrop-blur-md bg-black/50 border border-white/10 text-white/70 hover:text-white hover:bg-black/70 transition-colors cursor-pointer focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.5)]"
+          className="absolute bottom-2 right-2 z-20 w-10 h-10 md:w-7 md:h-7 rounded-full flex items-center justify-center backdrop-blur-md bg-black/50 border border-white/10 text-white/70 hover:text-white hover:bg-black/70 transition-colors cursor-pointer focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)]"
           aria-label={isMuted ? 'Unmute' : 'Mute'}
         >
           <AnimatePresence mode="wait">
@@ -2980,19 +3090,19 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
               <img {...IMG.caseSide(screenProfile)} alt="AURUM user profile UX design" loading="lazy" decoding="async" width="1440" height="900" className="absolute top-8 right-4 w-[45%] rounded-lg shadow-2xl shadow-black/50 opacity-35" />
               <img {...IMG.caseMain(screenAurumMainHQ)} alt="AURUM exchange dashboard — cryptocurrency trading platform case study" loading="lazy" decoding="async" width="1440" height="900" className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[70%] rounded-t-lg shadow-2xl shadow-black/60 group-hover:-translate-y-2 group-hover:scale-[1.02] transition-all duration-500" />
               <div className="absolute top-4 left-4 z-20 flex items-center gap-2">
-                <span className="text-[9px] uppercase tracking-[0.15em] px-2.5 py-1 rounded-full bg-[#ed592b]/20 backdrop-blur-md text-[#ed592b] border border-[#ed592b]/30">Featured</span>
-                <span className="text-[9px] uppercase tracking-[0.15em] px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-md text-white/50 border border-white/10">2025</span>
+                <span className="text-[10px] uppercase tracking-[0.15em] px-2.5 py-1 rounded-full bg-[#ed592b]/20 backdrop-blur-md text-[#ed592b] border border-[#ed592b]/30">Featured</span>
+                <span className="text-[10px] uppercase tracking-[0.15em] px-2.5 py-1 rounded-full bg-black/50 backdrop-blur-md text-white/80 border border-white/10">2025</span>
               </div>
               <div className="absolute top-4 right-4 z-20">
-                <span className="text-[9px] uppercase tracking-[0.15em] px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-md text-white/40 border border-white/10 flex items-center gap-1.5">
+                <span className="text-[10px] uppercase tracking-[0.15em] px-2.5 py-1 rounded-full bg-black/50 backdrop-blur-md text-white/80 border border-white/10 flex items-center gap-1.5">
                   <Monitor size={10} /> 196 screens
                 </span>
               </div>
               <div className="absolute bottom-0 left-0 right-0 z-20 p-6">
                 <div className="flex items-end justify-between">
                   <div>
-                    <h3 className="text-fluidpx-22-28 text-white mb-1.5 tracking-[0] leading-none" style={{ fontFamily: F.heading, fontWeight: 600, letterSpacing: 0 }}>AURUM</h3>
-                    <p className="text-white/45 text-[11.5px] uppercase tracking-[0.18em]" style={{ fontFamily: F.body, fontWeight: 500 }}>Crypto Exchange · B2C Fintech</p>
+                    <h2 className="text-fluidpx-22-28 text-white mb-1.5 tracking-[0] leading-none" style={{ fontFamily: F.heading, fontWeight: 600, letterSpacing: 0 }}>AURUM</h2>
+                    <p className="text-white/65 text-[11.5px] uppercase tracking-[0.18em]" style={{ fontFamily: F.body, fontWeight: 500 }}>Crypto Exchange · B2C Fintech</p>
                   </div>
                   <div className="w-10 h-10 rounded-full bg-[#ed592b] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all group-hover:shadow-[0_0_30px_rgba(237,89,43,0.3)]">
                     <ArrowUpRight size={18} className="text-black" />
@@ -3003,10 +3113,10 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
             <div className="px-4 sm:p-5 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
               <div className="flex flex-wrap gap-1.5">
                 {['Design System', '196 Screens', '64+ Components', 'Web · iOS · Android'].map((t) => (
-                  <span key={t} className={`text-[9px] uppercase tracking-[0.14em] px-2.5 py-1 rounded-md whitespace-nowrap border ${isDark ? 'bg-white/[0.025] text-[#9094a3] border-white/[0.05]' : 'bg-zinc-50 text-zinc-500 border-zinc-200'}`} style={{ fontFamily: F.body, fontWeight: 500 }}>{t}</span>
+                  <span key={t} className={`text-[10px] uppercase tracking-[0.14em] px-2.5 py-1 rounded-md whitespace-nowrap border ${isDark ? 'bg-white/[0.025] text-[#9094a3] border-white/[0.05]' : 'bg-zinc-50 text-zinc-500 border-zinc-200'}`} style={{ fontFamily: F.body, fontWeight: 500 }}>{t}</span>
                 ))}
               </div>
-              <span className="text-[12px] whitespace-nowrap text-[#ed592b]/70 flex items-center justify-center gap-2 px-3 py-1.5 rounded-full border border-[#ed592b]/15 group-hover:border-[#ed592b]/30 group-hover:bg-[#ed592b]/5 group-hover:text-[#ed592b] transition-all duration-300 w-full sm:w-auto" style={{ fontFamily: F.body, fontWeight: 500 }}>
+              <span className="text-[12px] whitespace-nowrap text-[#ed592b] flex items-center justify-center gap-2 px-3 py-1.5 rounded-full border border-[#ed592b]/15 group-hover:border-[#ed592b]/30 group-hover:bg-[#ed592b]/5 group-hover:text-[#ed592b] transition-all duration-300 w-full sm:w-auto" style={{ fontFamily: F.body, fontWeight: 500 }}>
                 View Case Study <ArrowRight size={12} />
               </span>
             </div>
@@ -3044,19 +3154,19 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
               <img {...IMG.caseSide(schenkerSettings)} alt="Schenker enterprise settings panel" loading="lazy" decoding="async" width="1440" height="900" className="absolute top-8 right-4 w-[45%] rounded-lg shadow-2xl shadow-black/50 opacity-35" />
               <img {...IMG.caseMain(schenkerMainHQ)} alt="Schenker Sendung Empfänger — sender & recipient form, enterprise logistics platform case study" loading="lazy" decoding="async" width="1440" height="900" className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[70%] rounded-t-lg shadow-2xl shadow-black/60 group-hover:-translate-y-2 group-hover:scale-[1.02] transition-all duration-500" />
               <div className="absolute top-4 left-4 z-20 flex items-center gap-2">
-                <span className="text-[9px] uppercase tracking-[0.15em] px-2.5 py-1 rounded-full bg-[#6B8E23]/20 backdrop-blur-md text-[#8FBC3B] border border-[#6B8E23]/30">Enterprise</span>
-                <span className="text-[9px] uppercase tracking-[0.15em] px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-md text-white/70 border border-white/15">Desktop</span>
+                <span className="text-[10px] uppercase tracking-[0.15em] px-2.5 py-1 rounded-full bg-[#3f5a12]/90 backdrop-blur-md text-white border border-[#6B8E23]/40">Enterprise</span>
+                <span className="text-[10px] uppercase tracking-[0.15em] px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md text-white border border-white/15">Desktop</span>
               </div>
               <div className="absolute top-4 right-4 z-20">
-                <span className="text-[9px] uppercase tracking-[0.15em] px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-md text-white/40 border border-white/10 flex items-center gap-1.5">
-                  <Monitor size={10} /> 9+ screens
+                <span className="text-[10px] uppercase tracking-[0.15em] px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md text-white border border-white/10 flex items-center gap-1.5">
+                  <Monitor size={10} aria-hidden /> 9+ screens
                 </span>
               </div>
               <div className="absolute bottom-0 left-0 right-0 z-20 p-6">
                 <div className="flex items-end justify-between">
                   <div>
-                    <h3 className="text-fluidpx-22-28 text-white mb-1.5 tracking-[0] leading-none" style={{ fontFamily: F.heading, fontWeight: 600, letterSpacing: 0 }}>SCHENKER</h3>
-                    <p className="text-white/55 text-[11.5px] uppercase tracking-[0.18em]" style={{ fontFamily: F.body, fontWeight: 500 }}>Logistics Platform · Enterprise UX</p>
+                    <h2 className="text-fluidpx-22-28 text-white mb-1.5 tracking-[0] leading-none" style={{ fontFamily: F.heading, fontWeight: 600, letterSpacing: 0 }}>SCHENKER</h2>
+                    <p className="text-white/65 text-[11.5px] uppercase tracking-[0.18em]" style={{ fontFamily: F.body, fontWeight: 500 }}>Logistics Platform · Enterprise UX</p>
                   </div>
                   <div className="w-10 h-10 rounded-full bg-[#6B8E23] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all group-hover:shadow-[0_0_30px_rgba(107,142,35,0.3)]">
                     <ArrowUpRight size={18} className="text-white" />
@@ -3067,10 +3177,10 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
             <div className="px-4 sm:p-5 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
               <div className="flex flex-wrap gap-1.5">
                 {['Enterprise UX', 'Form Architecture', 'B2B · Desktop', 'Dev-Ready Spec'].map((t) => (
-                  <span key={t} className={`text-[9px] uppercase tracking-[0.14em] px-2.5 py-1 rounded-md whitespace-nowrap border ${isDark ? 'bg-white/[0.025] text-[#9094a3] border-white/[0.05]' : 'bg-zinc-50 text-zinc-500 border-zinc-200'}`} style={{ fontFamily: F.body, fontWeight: 500 }}>{t}</span>
+                  <span key={t} className={`text-[10px] uppercase tracking-[0.14em] px-2.5 py-1 rounded-md whitespace-nowrap border ${isDark ? 'bg-white/[0.025] text-[#9094a3] border-white/[0.05]' : 'bg-zinc-50 text-zinc-500 border-zinc-200'}`} style={{ fontFamily: F.body, fontWeight: 500 }}>{t}</span>
                 ))}
               </div>
-              <span className="text-[12px] whitespace-nowrap text-[#6B8E23]/70 flex items-center justify-center gap-2 px-3 py-1.5 rounded-full border border-[#6B8E23]/15 group-hover:border-[#6B8E23]/30 group-hover:bg-[#6B8E23]/5 group-hover:text-[#8FBC3B] transition-all duration-300 w-full sm:w-auto" style={{ fontFamily: F.body, fontWeight: 500 }}>
+              <span className="text-[12px] whitespace-nowrap text-[#8FBC3B] flex items-center justify-center gap-2 px-3 py-1.5 rounded-full border border-[#6B8E23]/15 group-hover:border-[#6B8E23]/30 group-hover:bg-[#6B8E23]/5 group-hover:text-[#8FBC3B] transition-all duration-300 w-full sm:w-auto" style={{ fontFamily: F.body, fontWeight: 500 }}>
                 View Case Study <ArrowRight size={12} />
               </span>
             </div>
@@ -3108,19 +3218,19 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
               <img {...IMG.caseSide(unispaceTable)} alt="Unispace submitted forms table — dashboard view" loading="lazy" decoding="async" width="1440" height="900" className="absolute top-8 right-4 w-[45%] rounded-lg shadow-2xl shadow-black/50 opacity-40" />
               <img {...IMG.caseMain(unispaceLogin)} alt="Unispace student management platform — Unilab / Ilia State University case study" loading="lazy" decoding="async" width="1440" height="900" className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[70%] rounded-t-lg shadow-2xl shadow-black/60 group-hover:-translate-y-2 group-hover:scale-[1.02] transition-all duration-500" />
               <div className="absolute top-4 left-4 z-20 flex items-center gap-2">
-                <span className="text-[9px] uppercase tracking-[0.15em] px-2.5 py-1 rounded-full bg-[#3D82F6]/20 backdrop-blur-md text-[#6BA4FF] border border-[#3D82F6]/30">EdTech</span>
-                <span className="text-[9px] uppercase tracking-[0.15em] px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-md text-white/70 border border-white/15">Web · Responsive</span>
+                <span className="text-[10px] uppercase tracking-[0.15em] px-2.5 py-1 rounded-full bg-[#3D82F6]/20 backdrop-blur-md text-[#6BA4FF] border border-[#3D82F6]/30">EdTech</span>
+                <span className="text-[10px] uppercase tracking-[0.15em] px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-md text-white/70 border border-white/15">Web · Responsive</span>
               </div>
               <div className="absolute top-4 right-4 z-20">
-                <span className="text-[9px] uppercase tracking-[0.15em] px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-md text-white/40 border border-white/10 flex items-center gap-1.5">
+                <span className="text-[10px] uppercase tracking-[0.15em] px-2.5 py-1 rounded-full bg-black/50 backdrop-blur-md text-white/80 border border-white/10 flex items-center gap-1.5">
                   <Monitor size={10} /> 42+ screens
                 </span>
               </div>
               <div className="absolute bottom-0 left-0 right-0 z-20 p-6">
                 <div className="flex items-end justify-between">
                   <div>
-                    <h3 className="text-fluidpx-22-28 text-white mb-1.5 tracking-[0] leading-none" style={{ fontFamily: F.heading, fontWeight: 600, letterSpacing: 0 }}>UNISPACE</h3>
-                    <p className="text-white/55 text-[11.5px] uppercase tracking-[0.18em]" style={{ fontFamily: F.body, fontWeight: 500 }}>Student Management · Multi-role EdTech</p>
+                    <h2 className="text-fluidpx-22-28 text-white mb-1.5 tracking-[0] leading-none" style={{ fontFamily: F.heading, fontWeight: 600, letterSpacing: 0 }}>UNISPACE</h2>
+                    <p className="text-white/65 text-[11.5px] uppercase tracking-[0.18em]" style={{ fontFamily: F.body, fontWeight: 500 }}>Student Management · Multi-role EdTech</p>
                   </div>
                   <div className="w-10 h-10 rounded-full bg-[#3D82F6] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all group-hover:shadow-[0_0_30px_rgba(61,130,246,0.4)]">
                     <ArrowUpRight size={18} className="text-white" />
@@ -3131,10 +3241,10 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
             <div className="px-4 sm:p-5 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
               <div className="flex flex-wrap gap-1.5">
                 {['Multi-role Platform', 'Student Portal', '42+ Screens', '38+ Components'].map((t) => (
-                  <span key={t} className={`text-[9px] uppercase tracking-[0.14em] px-2.5 py-1 rounded-md whitespace-nowrap border ${isDark ? 'bg-white/[0.025] text-[#9094a3] border-white/[0.05]' : 'bg-zinc-50 text-zinc-500 border-zinc-200'}`} style={{ fontFamily: F.body, fontWeight: 500 }}>{t}</span>
+                  <span key={t} className={`text-[10px] uppercase tracking-[0.14em] px-2.5 py-1 rounded-md whitespace-nowrap border ${isDark ? 'bg-white/[0.025] text-[#9094a3] border-white/[0.05]' : 'bg-zinc-50 text-zinc-500 border-zinc-200'}`} style={{ fontFamily: F.body, fontWeight: 500 }}>{t}</span>
                 ))}
               </div>
-              <span className="text-[12px] whitespace-nowrap text-[#3D82F6]/70 flex items-center justify-center gap-2 px-3 py-1.5 rounded-full border border-[#3D82F6]/15 group-hover:border-[#3D82F6]/30 group-hover:bg-[#3D82F6]/5 group-hover:text-[#6BA4FF] transition-all duration-300 w-full sm:w-auto" style={{ fontFamily: F.body, fontWeight: 500 }}>
+              <span className="text-[12px] whitespace-nowrap text-[#6BA4FF] flex items-center justify-center gap-2 px-3 py-1.5 rounded-full border border-[#3D82F6]/15 group-hover:border-[#3D82F6]/30 group-hover:bg-[#3D82F6]/5 group-hover:text-[#6BA4FF] transition-all duration-300 w-full sm:w-auto" style={{ fontFamily: F.body, fontWeight: 500 }}>
                 View Case Study <ArrowRight size={12} />
               </span>
             </div>
@@ -3269,14 +3379,16 @@ export function HomePage() {
       {/* Mobile hamburger trigger */}
       <button
         onClick={() => setIsMobileOpen(true)}
-        className={`fixed top-3 left-3 z-[45] md:hidden w-10 h-10 rounded-xl flex items-center justify-center border shadow-sm transition-colors focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${isDark ? 'bg-[#0b0b0e]/90 border-white/[0.08] text-white/70 hover:text-white' : 'bg-white/90 border-zinc-200 text-zinc-600 hover:text-zinc-900'} backdrop-blur-md`}
+        className={`fixed top-3 left-3 z-[45] md:hidden w-10 h-10 rounded-xl flex items-center justify-center border shadow-sm transition-colors focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)] ${isDark ? 'bg-[#0b0b0e]/90 border-white/[0.08] text-white/70 hover:text-white' : 'bg-white/90 border-zinc-200 text-zinc-600 hover:text-zinc-900'} backdrop-blur-md`}
         aria-label="Open navigation"
+        aria-expanded={isMobileOpen}
+        aria-controls="mobile-menu"
       >
         <Menu size={18} />
       </button>
 
       {/* Main content */}
-      <main className="md:ml-[64px] lg:ml-[240px] min-h-screen lg:pt-0">
+      <main id="main-content" tabIndex={-1} className="md:ml-[64px] lg:ml-[240px] min-h-screen lg:pt-0 outline-none">
         <div className="max-w-3xl mx-auto px-5 sm:px-8 lg:px-12 pt-16 pb-6 md:py-8 lg:py-10">
           <AnimatePresence mode="wait">
             <motion.div
@@ -3295,10 +3407,10 @@ export function HomePage() {
           <FadeIn delay={0.1}>
             <div className="max-w-3xl mx-auto">
               <div className="flex justify-between items-center">
-                <span className={`text-[10px] ${isDark ? 'text-white/20' : 'text-zinc-300'}`} style={{ fontFamily: F.body }}>
+                <span className={`text-[10px] ${isDark ? 'text-white/50' : 'text-zinc-500'}`} style={{ fontFamily: F.body }}>
                   Designed and developed by Salome Mosiava
                 </span>
-                <span className={`text-[10px] ${isDark ? 'text-white/15' : 'text-zinc-250'}`} style={{ fontFamily: F.body }}>
+                <span className={`text-[10px] ${isDark ? 'text-white/50' : 'text-zinc-500'}`} style={{ fontFamily: F.body }}>
                   © 2026
                 </span>
               </div>
@@ -3306,28 +3418,6 @@ export function HomePage() {
           </FadeIn>
         </footer>
       </main>
-
-      {/* Mobile bottom quick-nav tab */}
-      <nav className={`fixed bottom-0 left-0 right-0 z-40 md:hidden flex items-center justify-around border-t py-2 px-4 ${isDark ? 'bg-[#0b0b0e]/95 border-white/[0.06]' : 'bg-white/95 border-zinc-200'} backdrop-blur-md`} aria-label="Quick navigation">
-        {[
-          { icon: <Home size={20} />, label: 'Home', action: () => { handleSectionChange('home'); } },
-          { icon: <Layers size={20} />, label: 'Work', action: () => { handleSectionChange('ux-ui'); } },
-          { icon: <Mail size={20} />, label: 'Contact', action: () => { handleSectionChange('contact'); } },
-        ].map((tab) => {
-          const tabActive = (tab.label === 'Home' && activeSection === 'home') || (tab.label === 'Work' && ['ux-ui','social-media-ads','social-media-motion'].includes(activeSection)) || (tab.label === 'Contact' && activeSection === 'contact');
-          return (
-            <button
-              key={tab.label}
-              onClick={tab.action}
-              className={`flex flex-col items-center gap-0.5 min-w-[60px] py-1 transition-colors focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${tabActive ? 'text-[#ed592b]' : isDark ? 'text-white/40 hover:text-white/70' : 'text-zinc-400 hover:text-zinc-700'}`}
-              aria-label={tab.label}
-            >
-              {tab.icon}
-              <span className="text-[9px] uppercase tracking-[0.1em]" style={{ fontFamily: F.body, fontWeight: 500 }}>{tab.label}</span>
-            </button>
-          );
-        })}
-      </nav>
 
       <style>{`
         @keyframes shimmer { 0% { background-position: 200% 50%; } 100% { background-position: -200% 50%; } }

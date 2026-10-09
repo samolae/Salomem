@@ -112,7 +112,8 @@ const ScrollToTopButton = () => {
           exit={{ opacity: 0, scale: 0.8, y: 20 }}
           transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className={`fixed bottom-8 right-8 z-50 w-12 h-12 rounded-full flex items-center justify-center shadow-2xl backdrop-blur-xl transition-colors group focus-visible:!shadow-[0_0_0_2px_rgba(61,130,246,0.5)] ${
+          aria-label="Back to top"
+          className={`fixed bottom-24 md:bottom-8 right-5 md:right-8 z-50 w-12 h-12 rounded-full flex items-center justify-center shadow-2xl backdrop-blur-xl transition-colors group focus-visible:!shadow-[0_0_0_2px_rgba(61,130,246,0.9)] ${
             isDark
               ? 'bg-[#3D82F6]/90 hover:bg-[#3D82F6] shadow-[#3D82F6]/20 text-white'
               : 'bg-[#3D82F6] hover:bg-[#3D82F6]/90 shadow-[#3D82F6]/30 text-white'
@@ -120,7 +121,7 @@ const ScrollToTopButton = () => {
           whileHover={{ scale: 1.1, y: -2 }}
           whileTap={{ scale: 0.95 }}
         >
-          <ChevronUp size={20} className="group-hover:-translate-y-0.5 transition-transform" />
+          <ChevronUp size={20} aria-hidden className="group-hover:-translate-y-0.5 transition-transform" />
         </motion.button>
       )}
     </AnimatePresence>
@@ -135,13 +136,13 @@ const ChallengeRow = ({
       <div className="flex gap-4">
         <span className="text-[#3D82F6] font-mono text-xs flex-shrink-0 mt-0.5">{number}</span>
         <div>
-          <div className={`text-[10px] uppercase tracking-[0.2em] mb-2 ${isDark ? 'text-red-400/70' : 'text-red-500/70'}`}>Challenge</div>
+          <div className={`text-[10px] uppercase tracking-[0.2em] mb-2 ${isDark ? 'text-red-400' : 'text-red-600'}`}>Challenge</div>
           <p className={`text-sm leading-relaxed ${isDark ? 'text-zinc-300' : 'text-zinc-600'}`}>{challenge}</p>
         </div>
       </div>
       <div className={`flex gap-4 pl-0 md:pl-6 md:border-l ${isDark ? 'border-white/[0.06]' : 'border-zinc-200'}`}>
         <div>
-          <div className="text-[10px] uppercase tracking-[0.2em] mb-2 text-[#3D82F6]/70">Solution</div>
+          <div className="text-[10px] uppercase tracking-[0.2em] mb-2 text-[#6BA4FF]">Solution</div>
           <p className={`text-sm leading-relaxed ${isDark ? 'text-zinc-300' : 'text-zinc-600'}`}>{solution}</p>
         </div>
       </div>
@@ -186,7 +187,6 @@ export function UnispaceCaseStudy() {
     <div className={`${bg} min-h-screen transition-colors duration-500 relative`} style={{ fontFamily: BRAND.bodyFont }}>
       <UnispaceSEO />
       <CaseHeroTarget path="/projects/unispace" />
-      <ScrollToTopButton />
       <CaseStudySectionNav accentColor="#3D82F6" sections={SECTIONS} />
 
       {/* Custom blue cursor (desktop only) */}
@@ -203,6 +203,7 @@ export function UnispaceCaseStudy() {
 
       {/* ─── NAV ─────────────────────────────────────────────── */}
       <motion.nav
+        aria-label="Case study"
         initial={{ y: -80 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
@@ -214,7 +215,7 @@ export function UnispaceCaseStudy() {
               onClick={() => navigate('/', { viewTransition: true })}
               whileHover={{ x: -3 }}
               whileTap={{ scale: 0.95 }}
-              className={`flex items-center gap-2 text-sm rounded-lg px-2 py-1.5 min-h-[44px] focus-visible:!shadow-[0_0_0_2px_rgba(61,130,246,0.4)] ${isDark ? 'text-[#9295A6] hover:text-white hover:bg-white/[0.04]' : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100'} transition-colors`}
+              className={`flex items-center gap-2 text-sm rounded-lg px-2 py-1.5 min-h-[44px] focus-visible:!shadow-[0_0_0_2px_rgba(61,130,246,0.9)] ${isDark ? 'text-[#9295A6] hover:text-white hover:bg-white/[0.04]' : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100'} transition-colors`}
             >
               <ArrowLeft size={15} />
               <span className="text-[12px] tracking-wide">Back to Portfolio</span>
@@ -228,7 +229,7 @@ export function UnispaceCaseStudy() {
             >
               <img
                 {...IMG.logo('https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1779887428/241852566_416907023197215_4126473183608966576_n_ecyuw4.png')}
-                alt="Unilab"
+                alt=""
                 width={32}
                 height={32}
                 className={`w-8 h-8 object-contain rounded-md ${isDark ? '' : 'invert'}`}
@@ -238,7 +239,7 @@ export function UnispaceCaseStudy() {
                 <span className={`text-[12px] tracking-wide font-semibold ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont }}>
                   Unilab
                 </span>
-                <span className="text-[9px] uppercase tracking-[0.2em] text-[#6BA4FF]" style={{ fontFamily: BRAND.bodyFont, fontWeight: 600 }}>
+                <span className="text-[10px] uppercase tracking-[0.2em] text-[#6BA4FF]" style={{ fontFamily: BRAND.bodyFont, fontWeight: 600 }}>
                   Unispace
                 </span>
               </div>
@@ -263,6 +264,9 @@ export function UnispaceCaseStudy() {
         </div>
       </motion.nav>
 
+      <main id="main-content" tabIndex={-1} className="outline-none">
+      <ScrollToTopButton />
+
       {/* ─── META BAR ──────────────────────────────────────────── */}
       <div className={`relative z-20 pt-[72px] border-b ${isDark ? 'border-white/[0.06] bg-[#141212]/30 backdrop-blur-xl' : 'border-zinc-200 bg-white/50 backdrop-blur-xl'}`}>
         <div className="max-w-7xl mx-auto px-6 lg:px-12 py-5">
@@ -280,7 +284,7 @@ export function UnispaceCaseStudy() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 * i + 0.3, duration: 0.5 }}
               >
-                <span className={`text-[9px] uppercase tracking-[0.2em] block mb-1 ${mt}`}>{item.label}</span>
+                <span className={`text-[10px] uppercase tracking-[0.2em] block mb-1 ${mt}`}>{item.label}</span>
                 <span className={`text-[13px] ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont }}>{item.value}</span>
               </motion.div>
             ))}
@@ -359,7 +363,7 @@ export function UnispaceCaseStudy() {
                   </div>
                   <div>
                     <div className={`text-[11px] font-semibold ${isDark ? 'text-white' : 'text-zinc-900'}`}>3 User Roles</div>
-                    <div className={`text-[9px] ${mt}`}>Student · Lecturer · Admin</div>
+                    <div className={`text-[10px] ${mt}`}>Student · Lecturer · Admin</div>
                   </div>
                 </div>
               </motion.div>
@@ -370,7 +374,7 @@ export function UnispaceCaseStudy() {
                   </div>
                   <div>
                     <div className={`text-[11px] font-semibold ${isDark ? 'text-white' : 'text-zinc-900'}`}>4 Core Flows</div>
-                    <div className={`text-[9px] ${mt}`}>Registration · Cabinet · Portfolio</div>
+                    <div className={`text-[10px] ${mt}`}>Registration · Cabinet · Portfolio</div>
                   </div>
                 </div>
               </motion.div>
@@ -434,7 +438,7 @@ export function UnispaceCaseStudy() {
                   Read full case study
                 </span>
                 <span className="flex items-center gap-2 text-[#3D82F6] text-[12px]">
-                  <span className="font-mono text-[10px] opacity-60">9 sections</span>
+                  <span className="font-mono text-[10px]">9 sections</span>
                   <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                 </span>
               </a>
@@ -462,7 +466,7 @@ export function UnispaceCaseStudy() {
                 </div>
                 <div className="pb-6">
                   <div className="flex items-center gap-3 mb-3">
-                    <span className="text-[9px] font-mono" style={{ color: item.accent }}>{item.number}</span>
+                    <span className="text-[10px] font-mono" style={{ color: item.accent }}>{item.number}</span>
                     <span className="text-[10px] uppercase tracking-[0.25em]" style={{ color: item.accent }}>{item.step}</span>
                   </div>
                   <p className={`text-fluid-20-24 leading-relaxed tracking-[-0.01em] ${isDark ? 'text-zinc-200' : 'text-zinc-700'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 500 }}>{item.text}</p>
@@ -763,7 +767,7 @@ export function UnispaceCaseStudy() {
                     style={{ background: phase.color }}
                   />
                   <div className="relative mb-5">
-                    <div className="text-[9px] uppercase tracking-[0.25em] mb-1 transition-transform duration-300 group-hover:translate-x-0.5" style={{ color: phase.color }}>{phase.phase}</div>
+                    <div className="text-[10px] uppercase tracking-[0.25em] mb-1 transition-transform duration-300 group-hover:translate-x-0.5" style={{ color: phase.color }}>{phase.phase}</div>
                     <div className={`text-[10px] uppercase tracking-[0.15em] mb-3 ${mt}`}>{phase.weeks}</div>
                     <h3 className="text-2xl tracking-[-0.03em] transition-transform duration-300 group-hover:translate-x-0.5" style={{ fontFamily: BRAND.headingFont, fontWeight: 700, color: phase.color }}>{phase.title}</h3>
                   </div>
@@ -883,12 +887,13 @@ export function UnispaceCaseStudy() {
                   </div>
                 </div>
               </div>
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto" tabIndex={0} role="region" aria-label="Registration fields by status, scrollable table">
                 <table className="w-full text-[12px]">
+                  <caption className="sr-only">Additional registration fields for each status</caption>
                   <thead>
                     <tr className={`border-b ${isDark ? 'border-white/[0.06]' : 'border-zinc-100'}`}>
                       {['Status', 'Additional Fields', 'Count', 'Special Inputs', 'Complexity'].map((h) => (
-                        <th key={h} className={`px-6 py-3 text-left text-[10px] uppercase tracking-[0.2em] font-medium ${mt}`}>{h}</th>
+                        <th key={h} scope="col" className={`px-6 py-3 text-left text-[10px] uppercase tracking-[0.2em] font-medium ${mt}`}>{h}</th>
                       ))}
                     </tr>
                   </thead>
@@ -900,7 +905,7 @@ export function UnispaceCaseStudy() {
                       { status: 'Other',    fields: 'None',                                                    count: '+0', special: '—',                                         complexity: 'Low' },
                     ].map((row) => (
                       <tr key={row.status} className={`border-b ${isDark ? 'border-white/[0.04]' : 'border-zinc-50'} transition-colors`}>
-                        <td className={`px-6 py-4 font-medium ${isDark ? 'text-white' : 'text-zinc-900'}`}>{row.status}</td>
+                        <th scope="row" className={`px-6 py-4 font-medium text-left ${isDark ? 'text-white' : 'text-zinc-900'}`}>{row.status}</th>
                         <td className={`px-6 py-4 ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>{row.fields}</td>
                         <td className="px-6 py-4 font-mono text-[#3D82F6]">{row.count}</td>
                         <td className={`px-6 py-4 ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>{row.special}</td>
@@ -981,8 +986,8 @@ export function UnispaceCaseStudy() {
                 <GlowCard glowColor={d.color} className="h-full">
                   <div className={`rounded-2xl border p-7 h-full ${isDark ? `${cardBg} border-white/[0.06]` : 'bg-white border-zinc-200'}`}>
                     <div className="flex items-start justify-between mb-4">
-                      <span className="text-3xl font-mono tracking-[-0.04em] opacity-20" style={{ fontFamily: BRAND.headingFont, color: d.color }}>{d.n}</span>
-                      <span className="text-[9px] uppercase tracking-[0.2em] px-2.5 py-1 rounded-full" style={{ background: `${d.color}15`, color: d.color }}>{d.principle}</span>
+                      <span className="text-3xl font-mono tracking-[-0.04em] opacity-20 before:content-[attr(data-num)]" data-num={d.n} aria-hidden="true" style={{ fontFamily: BRAND.headingFont, color: d.color }} />
+                      <span className="text-[10px] uppercase tracking-[0.2em] px-2.5 py-1 rounded-full" style={{ background: `${d.color}15`, color: d.color }}>{d.principle}</span>
                     </div>
                     <h3 className={`text-base leading-snug mb-3 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 700 }}>{d.title}</h3>
                     <p className={`text-[13px] leading-relaxed ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>{d.body}</p>
@@ -1102,7 +1107,7 @@ export function UnispaceCaseStudy() {
                 </div>
 
                 {/* Mega display */}
-                <div className="text-[10px] uppercase tracking-[0.15em] text-white/40 mb-2 font-mono">DISPLAY · 72px · 700</div>
+                <div className="text-[10px] uppercase tracking-[0.15em] text-white/60 mb-2 font-mono">DISPLAY · 72px · 700</div>
                 <div className="text-fluid-60-72 text-white mb-10 tracking-[-0.02em]" style={{ fontFamily: F_GE, fontWeight: 700 }}>
                   გამარჯობა
                 </div>
@@ -1116,7 +1121,7 @@ export function UnispaceCaseStudy() {
                     { weight: 400, label: 'Regular · 400',  sample: 'უნილაბის სამართავ პანელი' },
                   ].map((w) => (
                     <div key={w.label}>
-                      <div className="text-[10px] uppercase tracking-[0.15em] text-white/40 mb-1.5 font-mono">{w.label}</div>
+                      <div className="text-[10px] uppercase tracking-[0.15em] text-white/60 mb-1.5 font-mono">{w.label}</div>
                       <div className="text-2xl text-white" style={{ fontFamily: F_GE, fontWeight: w.weight }}>{w.sample}</div>
                     </div>
                   ))}
@@ -1125,13 +1130,13 @@ export function UnispaceCaseStudy() {
                 {/* Latin sample with same typeface */}
                 <div className="border-t border-white/[0.06] pt-6 grid md:grid-cols-2 gap-8">
                   <div>
-                    <div className="text-[10px] uppercase tracking-[0.15em] text-white/40 mb-2 font-mono">GEORGIAN BODY · 14px · 400</div>
+                    <div className="text-[10px] uppercase tracking-[0.15em] text-white/60 mb-2 font-mono">GEORGIAN BODY · 14px · 400</div>
                     <p className="text-[14px] text-white/70 leading-relaxed" style={{ fontFamily: F_GE, fontWeight: 400 }}>
                       ერთიანი ტიპოგრაფიული სისტემა — სათაურები, ფორმის ლეიბლები, სტატუსები და მთავარი ტექსტი. ერთი შრიფტი ანბანის ყველა ფორმისთვის.
                     </p>
                   </div>
                   <div>
-                    <div className="text-[10px] uppercase tracking-[0.15em] text-white/40 mb-2 font-mono">LATIN BODY · 14px · 400</div>
+                    <div className="text-[10px] uppercase tracking-[0.15em] text-white/60 mb-2 font-mono">LATIN BODY · 14px · 400</div>
                     <p className="text-[14px] text-white/70 leading-relaxed" style={{ fontFamily: F_GE, fontWeight: 400 }}>
                       A single typographic system — headings, form labels, statuses, and body text. One typeface for every shape of the alphabet, both scripts.
                     </p>
@@ -1162,7 +1167,11 @@ export function UnispaceCaseStudy() {
               <span className="text-[10px] uppercase tracking-[0.2em] font-mono text-[#3D82F6]">7.3</span>
               <h3 className={`text-sm uppercase tracking-[0.15em] ${mt}`}>Form System — Inputs, Selectors & Actions</h3>
             </div>
-            <div className="rounded-2xl border p-8 lg:p-10 bg-[#090707] border-white/[0.06] mb-16">
+            <p className="sr-only">
+              Specimen of the Unispace form system: text inputs in default, focused, error and dropdown states,
+              checkboxes in four states, and primary, secondary and text buttons.
+            </p>
+            <div className="rounded-2xl border p-8 lg:p-10 bg-[#090707] border-white/[0.06] mb-16" {...({ inert: '' } as object)}>
               <div className="grid md:grid-cols-2 gap-12">
                 {/* INPUTS COLUMN */}
                 <div>
@@ -1170,7 +1179,7 @@ export function UnispaceCaseStudy() {
                   <div className="space-y-5">
                     {/* Default */}
                     <div>
-                      <div className="text-[10px] uppercase tracking-[0.15em] text-white/40 mb-2 font-mono">DEFAULT</div>
+                      <div className="text-[10px] uppercase tracking-[0.15em] text-white/60 mb-2 font-mono">DEFAULT</div>
                       <label className="block text-[12px] mb-2 text-white/70" style={{ fontFamily: F_GE }}>ელ-ფოსტა</label>
                       <div className="w-full h-11 rounded-[10px] bg-white px-4 flex items-center text-[13px] text-zinc-400" style={{ fontFamily: BRAND.bodyFont }}>
                         @unilab.ge
@@ -1178,7 +1187,7 @@ export function UnispaceCaseStudy() {
                     </div>
                     {/* Focused */}
                     <div>
-                      <div className="text-[10px] uppercase tracking-[0.15em] text-white/40 mb-2 font-mono">FOCUSED · WITH ICON</div>
+                      <div className="text-[10px] uppercase tracking-[0.15em] text-white/60 mb-2 font-mono">FOCUSED · WITH ICON</div>
                       <label className="block text-[12px] mb-2 text-white/70" style={{ fontFamily: F_GE }}>პაროლი</label>
                       <div className="w-full h-11 rounded-[10px] bg-white px-4 flex items-center justify-between text-[13px] text-zinc-900 ring-2 ring-[#3D82F6] ring-offset-2 ring-offset-[#090707]" style={{ fontFamily: BRAND.bodyFont }}>
                         <span>••••••••••</span>
@@ -1187,17 +1196,17 @@ export function UnispaceCaseStudy() {
                     </div>
                     {/* Error */}
                     <div>
-                      <div className="text-[10px] uppercase tracking-[0.15em] text-white/40 mb-2 font-mono">ERROR</div>
+                      <div className="text-[10px] uppercase tracking-[0.15em] text-white/60 mb-2 font-mono">ERROR</div>
                       <label className="block text-[12px] mb-2 text-white/70" style={{ fontFamily: F_GE }}>სახელი</label>
                       <div className="w-full h-11 rounded-[10px] bg-white px-4 flex items-center justify-between text-[13px] text-zinc-900 ring-2 ring-[#F87171]" style={{ fontFamily: BRAND.bodyFont }}>
                         <span className="text-zinc-300">........</span>
-                        <span className="w-4 h-4 rounded-full border-2 border-[#F87171] text-[#F87171] text-[9px] flex items-center justify-center font-bold">!</span>
+                        <span className="w-4 h-4 rounded-full border-2 border-[#F87171] text-[#F87171] text-[10px] flex items-center justify-center font-bold">!</span>
                       </div>
                       <p className="text-[11px] mt-2 text-[#F87171]" style={{ fontFamily: F_GE }}>სახელის მითითება აუცილებელია</p>
                     </div>
                     {/* Dropdown */}
                     <div>
-                      <div className="text-[10px] uppercase tracking-[0.15em] text-white/40 mb-2 font-mono">DROPDOWN · CLOSED</div>
+                      <div className="text-[10px] uppercase tracking-[0.15em] text-white/60 mb-2 font-mono">DROPDOWN · CLOSED</div>
                       <label className="block text-[12px] mb-2 text-white/70" style={{ fontFamily: F_GE }}>სტატუსი</label>
                       <div className="w-full h-11 rounded-[10px] bg-white px-4 flex items-center justify-between text-[13px] text-zinc-900" style={{ fontFamily: BRAND.bodyFont }}>
                         <span style={{ fontFamily: F_GE }}>სტუდენტი</span>
@@ -1241,7 +1250,7 @@ export function UnispaceCaseStudy() {
                     <div className="text-[10px] uppercase tracking-[0.2em] mb-5 text-[#9295A6]">Buttons · 3 variants</div>
                     <div className="space-y-5">
                       <div>
-                        <div className="text-[10px] uppercase tracking-[0.15em] text-white/40 mb-2 font-mono">PRIMARY · FILLED</div>
+                        <div className="text-[10px] uppercase tracking-[0.15em] text-white/60 mb-2 font-mono">PRIMARY · FILLED</div>
                         <div className="flex flex-wrap gap-3">
                           <button className="h-11 px-6 rounded-[10px] bg-[#3D82F6] text-white text-[13px] font-medium hover:bg-[#6BA4FF] transition-colors" style={{ fontFamily: F_GE }}>
                             ავტორიზაცია
@@ -1252,7 +1261,7 @@ export function UnispaceCaseStudy() {
                         </div>
                       </div>
                       <div>
-                        <div className="text-[10px] uppercase tracking-[0.15em] text-white/40 mb-2 font-mono">SECONDARY · OUTLINED</div>
+                        <div className="text-[10px] uppercase tracking-[0.15em] text-white/60 mb-2 font-mono">SECONDARY · OUTLINED</div>
                         <div className="flex flex-wrap gap-3">
                           <button className="h-11 px-6 rounded-[10px] border border-white/30 text-white text-[13px] hover:bg-white/[0.04] hover:border-white/50 transition-colors" style={{ fontFamily: F_GE }}>
                             გაუქმება
@@ -1263,7 +1272,7 @@ export function UnispaceCaseStudy() {
                         </div>
                       </div>
                       <div>
-                        <div className="text-[10px] uppercase tracking-[0.15em] text-white/40 mb-2 font-mono">TEXT · LINK</div>
+                        <div className="text-[10px] uppercase tracking-[0.15em] text-white/60 mb-2 font-mono">TEXT · LINK</div>
                         <div className="flex flex-wrap items-center gap-5">
                           <a className="text-[13px] text-white font-semibold underline underline-offset-4 cursor-pointer" style={{ fontFamily: F_GE }}>
                             დარეგისტრირდი
@@ -1303,13 +1312,14 @@ export function UnispaceCaseStudy() {
                         <motion.span
                           whileHover={{ scale: 1.06, y: -1 }}
                           whileTap={{ scale: 0.96 }}
+                          tabIndex={-1}
                           transition={{ type: 'spring', stiffness: 400, damping: 20 }}
                           className="px-3 py-1 rounded-full text-[11px] border flex-shrink-0 transition-shadow duration-200"
                           style={{ background: s.bg, borderColor: s.border, color: s.text, fontFamily: F_GE, fontWeight: 500, boxShadow: `0 0 0 0 ${s.text}00` }}
                         >
                           {s.label}
                         </motion.span>
-                        <span className="text-[10px] font-mono uppercase tracking-[0.15em] text-white/30 transition-colors duration-300 group-hover/pill:text-white/60">{s.en}</span>
+                        <span className="text-[10px] font-mono uppercase tracking-[0.15em] text-white/55 transition-colors duration-300 group-hover/pill:text-white/80">{s.en}</span>
                       </div>
                     ))}
                   </div>
@@ -1445,7 +1455,7 @@ export function UnispaceCaseStudy() {
                   <div className="flex gap-5 items-start">
                     {/* Mini sidebar mockup */}
                     <div className="w-14 rounded-lg bg-white/[0.02] border border-white/[0.06] p-2 flex flex-col gap-1.5">
-                      <motion.div whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.95 }} className="w-10 h-10 rounded-md bg-[#3D82F6] flex items-center justify-center text-white shadow-lg shadow-[#3D82F6]/30 cursor-pointer">
+                      <motion.div tabIndex={-1} whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.95 }} className="w-10 h-10 rounded-md bg-[#3D82F6] flex items-center justify-center text-white shadow-lg shadow-[#3D82F6]/30 cursor-pointer">
                         <LayoutGrid size={15} />
                       </motion.div>
                       {[<PenTool size={14} key="p" />, <BookOpen size={14} key="b" />, <Component size={14} key="c" />].map((icon, idx) => (
@@ -1453,6 +1463,7 @@ export function UnispaceCaseStudy() {
                           key={idx}
                           whileHover={{ scale: 1.08, backgroundColor: 'rgba(255,255,255,0.06)' }}
                           whileTap={{ scale: 0.95 }}
+                          tabIndex={-1}
                           className="w-10 h-10 rounded-md flex items-center justify-center text-white/40 cursor-pointer transition-colors hover:text-white"
                         >
                           {icon}
@@ -1641,6 +1652,7 @@ export function UnispaceCaseStudy() {
 
       {/* ─── NEXT PROJECT ───────────────────────────────────────── */}
       <NextProjectRecommendation currentProject="unispace" />
+      </main>
     </div>
   );
 }

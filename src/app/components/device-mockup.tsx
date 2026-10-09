@@ -20,9 +20,9 @@ export const BrowserMockup = ({
       </div>
       <div className="flex-1 flex justify-center">
         <div className={`rounded-md px-4 py-1 text-[10px] flex items-center gap-1.5 max-w-xs w-full justify-center ${
-          dark ? 'bg-[#080B0F] text-[#9295A6]' : 'bg-white text-zinc-400 border border-zinc-200'
+          dark ? 'bg-[#080B0F] text-[#9295A6]' : 'bg-white text-zinc-500 border border-zinc-200'
         }`}>
-          <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
           </svg>
           {url}

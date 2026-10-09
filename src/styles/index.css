@@ -45,6 +45,24 @@ p, li, figcaption, blockquote {
   }
 }
 
+/* ─── Client logo strip ──────────────────────────────────────────
+   Runs on the compositor; hovering pauses it so names can be read
+   (WCAG 2.2.2), and reduced motion keeps it still.                 */
+.client-marquee {
+  animation: client-marquee 28s linear infinite;
+}
+.client-marquee-wrap:hover .client-marquee {
+  animation-play-state: paused;
+}
+@keyframes client-marquee {
+  to { transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .client-marquee {
+    animation: none !important;
+  }
+}
+
 /* ─── Selection color — brand accent ─────────────────────────── */
 ::selection {
   background-color: rgba(237, 89, 43, 0.20);
@@ -62,7 +80,7 @@ p, li, figcaption, blockquote {
    element's existing border-radius. */
 :focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(237, 89, 43, 0.40);
+  box-shadow: 0 0 0 2px rgba(237, 89, 43, 0.9);
 }
 
 /* Remove focus ring from mouse clicks */

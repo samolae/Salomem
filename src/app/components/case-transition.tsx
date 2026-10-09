@@ -58,7 +58,7 @@ export function CaseLink({
       ref={ref}
       to={to}
       viewTransition
-      className={`block ${className}`}
+      className={`block rounded-2xl ${className}`}
       style={{ ...style, viewTransitionName: named ? caseTransitionName(to) : undefined }}
       onClick={(e) => {
         sourceCard = cardId;

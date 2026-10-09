@@ -53,7 +53,7 @@ export function NotFound() {
   const bg2 = isDark ? 'bg-white/[0.03]' : 'bg-zinc-50';
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-16 relative z-10">
+    <main id="main-content" tabIndex={-1} className="min-h-screen flex items-center justify-center px-4 py-16 relative z-10 outline-none">
       <div className="max-w-lg w-full">
         {/* 404 number */}
         <FadeIn>
@@ -65,6 +65,7 @@ export function NotFound() {
               className="relative inline-block mb-6"
             >
               <span
+                aria-hidden="true"
                 className="text-fluidpx-120-160 tracking-[-0.06em] leading-none"
                 style={{
                   fontFamily: F.heading,
@@ -95,7 +96,7 @@ export function NotFound() {
               className={`text-fluidpx-18-22 tracking-[-0.02em] mb-2 ${isDark ? 'text-white/90' : 'text-zinc-800'}`}
               style={{ fontFamily: F.heading, fontWeight: 600 }}
             >
-              Page not found
+              <span className="sr-only">Error 404: </span>Page not found
             </motion.h1>
 
             <motion.p
@@ -106,7 +107,7 @@ export function NotFound() {
               style={{ fontFamily: F.body }}
             >
               The page{' '}
-              <code className={`text-[11px] px-1.5 py-0.5 rounded ${isDark ? 'bg-white/[0.06] text-white/40' : 'bg-zinc-100 text-zinc-500'}`}>
+              <code className={`text-[11px] px-1.5 py-0.5 rounded ${isDark ? 'bg-white/[0.06] text-white/70' : 'bg-zinc-100 text-zinc-600'}`}>
                 {location.pathname}
               </code>{' '}
               doesn't exist or has been moved.
@@ -119,7 +120,7 @@ export function NotFound() {
           <div className={`rounded-xl ${bg2} border ${border} p-4 mb-4`}>
             <div className="flex items-center gap-2 mb-3">
               <Search size={11} className={mt} />
-              <span className={`text-[9px] uppercase tracking-[0.15em] ${mt}`} style={{ fontFamily: F.body, fontWeight: 600 }}>
+              <span className={`text-[10px] uppercase tracking-[0.15em] ${mt}`} style={{ fontFamily: F.body, fontWeight: 600 }}>
                 Quick navigation
               </span>
             </div>
@@ -127,14 +128,15 @@ export function NotFound() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
               {quickLinks.map((link, i) => (
                 <MagneticWrap key={link.to} strength={0.1}>
-                  <Link to={link.to}>
+                  <Link to={link.to} className="block rounded-lg">
                     <motion.div
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.3 + i * 0.06, ease: [0.22, 1, 0.36, 1] }}
                       whileHover={{ x: 3 }}
                       whileTap={{ scale: 0.97 }}
-                      className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all min-h-[44px] group focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
+                      tabIndex={-1}
+                      className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all min-h-[44px] group focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)] ${
                         isDark
                           ? 'hover:bg-white/[0.04] text-[#7a7d8a] hover:text-white/80'
                           : 'hover:bg-zinc-100 text-zinc-400 hover:text-zinc-700'
@@ -169,7 +171,7 @@ export function NotFound() {
                 onClick={() => window.history.back()}
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
-                className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-[12px] border transition-all min-h-[44px] focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
+                className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-[12px] border transition-all min-h-[44px] focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)] ${
                   isDark
                     ? 'border-white/[0.08] text-white/50 hover:text-white hover:bg-white/[0.04] hover:border-white/[0.12]'
                     : 'border-zinc-200 text-zinc-400 hover:text-zinc-700 hover:bg-zinc-50'
@@ -182,11 +184,12 @@ export function NotFound() {
             </MagneticWrap>
 
             <MagneticWrap strength={0.15}>
-              <Link to="/">
+              <Link to="/" className="inline-block rounded-full">
                 <motion.div
                   whileHover={{ scale: 1.03, boxShadow: '0 4px 24px rgba(237,89,43,0.2)' }}
                   whileTap={{ scale: 0.97 }}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#ed592b] text-white text-[12px] min-h-[44px] focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.5),0_0_0_4px_rgba(237,89,43,0.2)]"
+                  tabIndex={-1}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#c94a20] text-white text-[12px] min-h-[44px] focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9),0_0_0_4px_rgba(237,89,43,0.2)]"
                   style={{ fontFamily: F.body, fontWeight: 500 }}
                 >
                   <Home size={13} />
@@ -200,12 +203,12 @@ export function NotFound() {
         {/* Status */}
         <FadeIn delay={0.5}>
           <div className="text-center mt-8">
-            <span className={`text-[9px] font-mono ${mt}`}>
+            <span className={`text-[10px] font-mono ${mt}`}>
               HTTP 404 · {new Date().toISOString().split('T')[0]}
             </span>
           </div>
         </FadeIn>
       </div>
-    </div>
+    </main>
   );
 }

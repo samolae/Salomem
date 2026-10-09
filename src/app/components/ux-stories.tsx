@@ -65,9 +65,9 @@ const FlowNode = ({
 const FlowArrow = ({ direction = 'right', isDark }: { direction?: 'right' | 'down'; isDark: boolean }) => (
   <div className={`flex items-center justify-center ${direction === 'down' ? 'py-1' : 'px-1'}`}>
     {direction === 'right' ? (
-      <ChevronRight size={14} className={isDark ? 'text-[#9295A6]/40' : 'text-zinc-300'} />
+      <ChevronRight size={14} aria-hidden className={isDark ? 'text-[#9295A6]/75' : 'text-zinc-400'} />
     ) : (
-      <ArrowDown size={14} className={isDark ? 'text-[#9295A6]/40' : 'text-zinc-300'} />
+      <ArrowDown size={14} aria-hidden className={isDark ? 'text-[#9295A6]/75' : 'text-zinc-400'} />
     )}
   </div>
 );
@@ -103,16 +103,19 @@ const StoryWrapper = ({
       <div className="flex flex-col lg:flex-row lg:items-start gap-6">
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-3">
-            <span className="text-4xl text-[#D59A04]/20" style={{ fontFamily: BRAND.headingFont }}>
-              {String(storyNum).padStart(2, '0')}
-            </span>
+            <span
+              className="text-4xl text-[#D59A04]/20 before:content-[attr(data-num)]"
+              data-num={String(storyNum).padStart(2, '0')}
+              aria-hidden="true"
+              style={{ fontFamily: BRAND.headingFont }}
+            />
             <div className="w-6 h-px bg-[#D59A04]/30" />
-            <span className={`text-[9px] uppercase tracking-[0.2em] ${mt}`}>UX Story</span>
+            <span className={`text-[10px] uppercase tracking-[0.2em] ${mt}`}>UX Story</span>
           </div>
           <h3 className="text-fluid-20-24 mb-2" style={{ fontFamily: BRAND.headingFont }}>
             {titleEn}
           </h3>
-          <p className="text-[#D59A04]/60 text-sm mb-3" style={{ fontFamily: BRAND.bodyFont }}>
+          <p className="text-[#D59A04] text-sm mb-3" style={{ fontFamily: BRAND.bodyFont }}>
             {titleGe}
           </p>
           <p className={`text-[13px] ${bt} leading-relaxed max-w-xl`}>
@@ -121,7 +124,7 @@ const StoryWrapper = ({
         </div>
         <div className="flex flex-wrap gap-2 lg:flex-col lg:items-end flex-shrink-0">
           {screens.map((s) => (
-            <span key={s} className={`text-[9px] uppercase tracking-wider px-2.5 py-1 rounded-md ${isDark ? 'bg-[#D59A04]/5 text-[#D59A04]/70 border border-[#D59A04]/10' : 'bg-amber-50 text-amber-600 border border-amber-100'}`}>
+            <span key={s} className={`text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-md ${isDark ? 'bg-[#D59A04]/5 text-[#D59A04] border border-[#D59A04]/15' : 'bg-amber-50 text-amber-600 border border-amber-100'}`}>
               {s}
             </span>
           ))}
@@ -130,7 +133,7 @@ const StoryWrapper = ({
 
       {/* Flow Diagram */}
       <div className={`rounded-2xl border ${cb} ${cardBg} p-4 sm:p-6 lg:p-8`}>
-        <div className={`text-[9px] uppercase tracking-[0.2em] ${mt} mb-6`}>User Flow</div>
+        <div className={`text-[10px] uppercase tracking-[0.2em] ${mt} mb-6`}>User Flow</div>
         {children}
       </div>
 
@@ -193,6 +196,7 @@ export function UXStories() {
               <button
                 key={s.id}
                 onClick={() => setActiveStory(s.id)}
+                aria-pressed={activeStory === s.id}
                 className={`flex-1 px-4 sm:px-5 py-3.5 sm:py-4 rounded-xl border text-left transition-all relative ${
                   activeStory === s.id
                     ? `border-[#D59A04]/40 ${isDark ? 'bg-[#D59A04]/5' : 'bg-amber-50'} shadow-[0_0_20px_rgba(213,154,4,0.08)]`
@@ -211,7 +215,7 @@ export function UXStories() {
                     {i + 1}
                   </span>
                   <div>
-                    <span className={`text-[9px] uppercase tracking-[0.2em] block mb-0.5 ${activeStory === s.id ? 'text-[#D59A04]' : mt}`}>
+                    <span className={`text-[10px] uppercase tracking-[0.2em] block mb-0.5 ${activeStory === s.id ? 'text-[#D59A04]' : mt}`}>
                       {s.tag}
                     </span>
                     <span className={`text-[13px] sm:text-sm ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont }}>
@@ -236,9 +240,9 @@ export function UXStories() {
               : isDark ? 'bg-white/[0.04] text-[#9295A6] hover:bg-white/[0.08]' : 'bg-zinc-100 text-zinc-500 hover:bg-zinc-200'
           }`}
         >
-          ← Previous
+          <span aria-hidden="true">←</span> Previous
         </button>
-        <span className={`text-[10px] ${mt}`}>{activeStory + 1} / {stories.length}</span>
+        <span className={`text-[10px] ${mt}`} aria-live="polite">{activeStory + 1} / {stories.length}</span>
         <button
           onClick={() => setActiveStory(Math.min(stories.length - 1, activeStory + 1))}
           disabled={activeStory === stories.length - 1}
@@ -248,7 +252,7 @@ export function UXStories() {
               : 'bg-[#D59A04]/10 text-[#D59A04] hover:bg-[#D59A04]/20'
           }`}
         >
-          Next →
+          Next <span aria-hidden="true">→</span>
         </button>
       </div>
 
@@ -311,7 +315,7 @@ function Story1({ isDark }: { isDark: boolean }) {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-2xl">
           {/* Individual */}
           <div className="space-y-2">
-            <div className={`text-center text-[9px] uppercase tracking-[0.2em] py-1 rounded-t-lg ${isDark ? 'bg-[#10B981]/5 text-[#10B981]' : 'bg-green-50 text-green-600'}`}>
+            <div className={`text-center text-[10px] uppercase tracking-[0.2em] py-1 rounded-t-lg ${isDark ? 'bg-[#10B981]/5 text-[#10B981]' : 'bg-green-50 text-green-600'}`}>
               Individual Path
             </div>
             <FlowNode icon={<User size={14} />} label="Personal Info" sublabel="Name, ID, DOB" status="default" isDark={isDark} />
@@ -323,7 +327,7 @@ function Story1({ isDark }: { isDark: boolean }) {
 
           {/* Legal Entity */}
           <div className="space-y-2">
-            <div className={`text-center text-[9px] uppercase tracking-[0.2em] py-1 rounded-t-lg ${isDark ? 'bg-[#FFC701]/5 text-[#FFC701]' : 'bg-amber-50 text-amber-600'}`}>
+            <div className={`text-center text-[10px] uppercase tracking-[0.2em] py-1 rounded-t-lg ${isDark ? 'bg-[#FFC701]/5 text-[#FFC701]' : 'bg-amber-50 text-amber-600'}`}>
               Legal Entity Path
             </div>
             <FlowNode icon={<Building2 size={14} />} label="Company Info" sublabel="Name, Tax ID, Registration" status="default" isDark={isDark} />
@@ -371,7 +375,7 @@ function Story2({ isDark }: { isDark: boolean }) {
       {/* Flow Diagram */}
       <div className="space-y-6">
         {/* Verification Tiers */}
-        <div className={`text-[9px] uppercase tracking-[0.2em] ${mt} mb-2`}>Verification Tiers</div>
+        <div className={`text-[10px] uppercase tracking-[0.2em] ${mt} mb-2`}>Verification Tiers</div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
           {[
             { level: 'Tier 0', label: 'Unverified', desc: 'View rates, browse assets, read content', color: 'text-[#9295A6]', bg: isDark ? 'bg-[#121318]' : 'bg-zinc-50', border: cb },
@@ -387,7 +391,7 @@ function Story2({ isDark }: { isDark: boolean }) {
         </div>
 
         {/* Blocked State Flow */}
-        <div className={`text-[9px] uppercase tracking-[0.2em] ${mt} mb-2`}>Blocked Operation Flow</div>
+        <div className={`text-[10px] uppercase tracking-[0.2em] ${mt} mb-2`}>Blocked Operation Flow</div>
         <div className="flex flex-col items-center gap-2 max-w-lg mx-auto">
           <FlowNode icon={<User size={14} />} label="Unverified User" sublabel="Tier 0 — browsing dashboard" status="default" isDark={isDark} className="w-full" />
           <FlowArrow direction="down" isDark={isDark} />
@@ -413,7 +417,7 @@ function Story2({ isDark }: { isDark: boolean }) {
 
           <div className="grid grid-cols-2 gap-3 w-full">
             <div className="space-y-2">
-              <div className={`text-center text-[9px] uppercase tracking-[0.2em] py-1 rounded-t-lg ${isDark ? 'bg-[#10B981]/5 text-[#10B981]' : 'bg-green-50 text-green-600'}`}>
+              <div className={`text-center text-[10px] uppercase tracking-[0.2em] py-1 rounded-t-lg ${isDark ? 'bg-[#10B981]/5 text-[#10B981]' : 'bg-green-50 text-green-600'}`}>
                 Verify Path
               </div>
               <FlowNode icon={<Fingerprint size={14} />} label="KYC Flow" sublabel="ID + Selfie + Proof" status="active" isDark={isDark} />
@@ -421,7 +425,7 @@ function Story2({ isDark }: { isDark: boolean }) {
               <FlowNode icon={<ShieldCheck size={14} />} label="Verified!" sublabel="Returns to exchange" status="success" isDark={isDark} />
             </div>
             <div className="space-y-2">
-              <div className={`text-center text-[9px] uppercase tracking-[0.2em] py-1 rounded-t-lg ${isDark ? 'bg-[#F87171]/5 text-[#F87171]' : 'bg-red-50 text-red-500'}`}>
+              <div className={`text-center text-[10px] uppercase tracking-[0.2em] py-1 rounded-t-lg ${isDark ? 'bg-[#F87171]/5 text-[#F87171]' : 'bg-red-50 text-red-500'}`}>
                 Dismiss Path
               </div>
               <FlowNode icon={<X size={14} />} label="Dismiss" sublabel="Returns to dashboard" status="blocked" isDark={isDark} />
@@ -459,7 +463,7 @@ function Story3({ isDark }: { isDark: boolean }) {
       {/* Flow Diagram */}
       <div className="space-y-6">
         {/* Channel Comparison */}
-        <div className={`text-[9px] uppercase tracking-[0.2em] ${mt} mb-2`}>Channel Comparison</div>
+        <div className={`text-[10px] uppercase tracking-[0.2em] ${mt} mb-2`}>Channel Comparison</div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
           <div className={`p-5 rounded-xl border ${cb} ${isDark ? 'bg-[#121318]' : 'bg-white'}`}>
             <div className="flex items-center gap-2 mb-3">
@@ -502,7 +506,7 @@ function Story3({ isDark }: { isDark: boolean }) {
         </div>
 
         {/* Unified Flow */}
-        <div className={`text-[9px] uppercase tracking-[0.2em] ${mt} mb-2`}>Unified Transaction Flow</div>
+        <div className={`text-[10px] uppercase tracking-[0.2em] ${mt} mb-2`}>Unified Transaction Flow</div>
         <div className="flex flex-col items-center gap-2 max-w-2xl mx-auto">
           <FlowNode icon={<ArrowRight size={14} />} label="Select Currency Pair" sublabel="BTC → GEL, ETH → USD, etc." status="active" isDark={isDark} className="w-full max-w-md" />
           <FlowArrow direction="down" isDark={isDark} />
@@ -535,7 +539,7 @@ function Story3({ isDark }: { isDark: boolean }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-2xl">
             {/* Online */}
             <div className="space-y-2">
-              <div className={`text-center text-[9px] uppercase tracking-[0.2em] py-1 rounded-t-lg ${isDark ? 'bg-[#D59A04]/5 text-[#D59A04]' : 'bg-amber-50 text-amber-600'}`}>
+              <div className={`text-center text-[10px] uppercase tracking-[0.2em] py-1 rounded-t-lg ${isDark ? 'bg-[#D59A04]/5 text-[#D59A04]' : 'bg-amber-50 text-amber-600'}`}>
                 Online Path
               </div>
               <FlowNode icon={<Smartphone size={14} />} label="Wallet Address" sublabel="QR code generated" status="active" isDark={isDark} />
@@ -547,7 +551,7 @@ function Story3({ isDark }: { isDark: boolean }) {
 
             {/* Offline */}
             <div className="space-y-2">
-              <div className={`text-center text-[9px] uppercase tracking-[0.2em] py-1 rounded-t-lg ${isDark ? 'bg-[#D59A04]/5 text-[#D59A04]' : 'bg-amber-50 text-amber-600'}`}>
+              <div className={`text-center text-[10px] uppercase tracking-[0.2em] py-1 rounded-t-lg ${isDark ? 'bg-[#D59A04]/5 text-[#D59A04]' : 'bg-amber-50 text-amber-600'}`}>
                 Offline Path
               </div>
               <FlowNode icon={<MapPin size={14} />} label="Select Branch" sublabel="Map + available slots" status="active" isDark={isDark} />

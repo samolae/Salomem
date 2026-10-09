@@ -89,26 +89,30 @@ export const CaseStudySectionNav = ({ sections, accentColor }: CaseStudySectionN
   return (
     <AnimatePresence>
       {visible && (
-        <motion.div
+        <motion.nav
+          aria-label="Case study sections"
           initial={{ opacity: 0, x: 30 }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: 30 }}
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           className="fixed right-3 sm:right-5 lg:right-8 z-50 flex flex-col items-center gap-2"
-          style={{ top: '50%', transform: 'translateY(-50%)' }}
+          // y goes through motion so it composes with the x animation; a plain
+          // transform string here was overwritten, leaving the nav low on screen
+          style={{ top: '50%', y: '-50%' }}
         >
           {/* Up arrow */}
           <motion.button
             onClick={goPrev}
             whileTap={{ scale: 0.85 }}
             disabled={activeIndex === 0}
-            className={`w-10 h-10 sm:w-8 sm:h-8 rounded-full flex items-center justify-center backdrop-blur-xl transition-all focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
+            aria-label="Previous section"
+            className={`w-10 h-10 sm:w-8 sm:h-8 rounded-full flex items-center justify-center backdrop-blur-xl transition-all focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)] ${
               activeIndex === 0
                 ? 'opacity-20 cursor-not-allowed'
                 : isDark ? 'bg-white/[0.06] text-white/60 hover:bg-white/[0.12] hover:text-white active:bg-white/[0.15]' : 'bg-black/[0.04] text-zinc-500 hover:bg-black/[0.08] hover:text-zinc-900 active:bg-black/[0.12]'
             }`}
           >
-            <ChevronUp size={16} />
+            <ChevronUp size={16} aria-hidden />
           </motion.button>
 
           {/* Section dots + progress track */}
@@ -126,7 +130,7 @@ export const CaseStudySectionNav = ({ sections, accentColor }: CaseStudySectionN
             </div>
 
             {/* Dots */}
-            <div className="relative flex flex-col items-center gap-[10px]">
+            <div className="relative flex flex-col items-center gap-[6px]">
               {sections.map((section, i) => {
                 const isActive = i === activeIndex;
                 const isPast = i < activeIndex;
@@ -134,8 +138,10 @@ export const CaseStudySectionNav = ({ sections, accentColor }: CaseStudySectionN
                   <button
                     key={section.id}
                     onClick={() => scrollToSection(section.id)}
-                    className="relative group flex items-center min-w-[44px] min-h-[20px] sm:min-w-[20px] justify-center focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] rounded-full"
+                    className="relative group flex items-center min-w-[44px] min-h-[24px] sm:min-w-[24px] justify-center focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)] rounded-full"
                     title={section.label}
+                    aria-label={section.label}
+                    aria-current={isActive ? 'true' : undefined}
                   >
                     {/* Dot */}
                     <motion.div
@@ -174,14 +180,17 @@ export const CaseStudySectionNav = ({ sections, accentColor }: CaseStudySectionN
           <motion.button
             onClick={() => setExpanded(!expanded)}
             whileTap={{ scale: 0.9 }}
-            className={`px-2.5 py-1.5 rounded-full text-[10px] tracking-wide backdrop-blur-xl border transition-all min-h-[32px] min-w-[44px] flex items-center justify-center focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
-              isDark ? 'bg-black/60 border-white/[0.06] text-white/50' : 'bg-white/80 border-zinc-200/60 text-zinc-400'
+            aria-expanded={expanded}
+            className={`px-2.5 py-1.5 rounded-full text-[10px] tracking-wide backdrop-blur-xl border transition-all min-h-[32px] min-w-[44px] flex items-center justify-center focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)] ${
+              isDark ? 'bg-black/60 border-white/[0.06] text-white/70' : 'bg-white/80 border-zinc-200/60 text-zinc-500'
             }`}
             style={{ fontFamily: '"Manrope", "Inter", sans-serif' }}
           >
+            <span className="sr-only">Section </span>
             <span style={{ color: accentColor }}>{activeIndex + 1}</span>
             <span className="mx-[2px]">/</span>
             <span>{sections.length}</span>
+            <span className="sr-only">, show all sections</span>
           </motion.button>
 
           {/* Down arrow */}
@@ -189,13 +198,14 @@ export const CaseStudySectionNav = ({ sections, accentColor }: CaseStudySectionN
             onClick={goNext}
             whileTap={{ scale: 0.85 }}
             disabled={activeIndex === sections.length - 1}
-            className={`w-10 h-10 sm:w-8 sm:h-8 rounded-full flex items-center justify-center backdrop-blur-xl transition-all focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${
+            aria-label="Next section"
+            className={`w-10 h-10 sm:w-8 sm:h-8 rounded-full flex items-center justify-center backdrop-blur-xl transition-all focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)] ${
               activeIndex === sections.length - 1
                 ? 'opacity-20 cursor-not-allowed'
                 : isDark ? 'bg-white/[0.06] text-white/60 hover:bg-white/[0.12] hover:text-white active:bg-white/[0.15]' : 'bg-black/[0.04] text-zinc-500 hover:bg-black/[0.08] hover:text-zinc-900 active:bg-black/[0.12]'
             }`}
           >
-            <ChevronDown size={16} />
+            <ChevronDown size={16} aria-hidden />
           </motion.button>
 
           {/* Expanded section list (mobile) */}
@@ -214,6 +224,7 @@ export const CaseStudySectionNav = ({ sections, accentColor }: CaseStudySectionN
                   <button
                     key={section.id}
                     onClick={() => scrollToSection(section.id)}
+                    aria-current={i === activeIndex ? 'true' : undefined}
                     className={`w-full text-left px-4 py-3 text-[12px] flex items-center gap-3 transition-colors min-h-[44px] ${
                       i === activeIndex
                         ? isDark ? 'bg-white/[0.06]' : 'bg-zinc-100'
@@ -227,7 +238,7 @@ export const CaseStudySectionNav = ({ sections, accentColor }: CaseStudySectionN
                         opacity: i === activeIndex ? 1 : i < activeIndex ? 0.4 : 0.3,
                       }}
                     />
-                    <span className={i === activeIndex ? (isDark ? 'text-white' : 'text-zinc-900') : isDark ? 'text-white/40' : 'text-zinc-400'}>
+                    <span className={i === activeIndex ? (isDark ? 'text-white' : 'text-zinc-900') : isDark ? 'text-white/65' : 'text-zinc-500'}>
                       {section.label}
                     </span>
                   </button>
@@ -235,7 +246,7 @@ export const CaseStudySectionNav = ({ sections, accentColor }: CaseStudySectionN
               </motion.div>
             )}
           </AnimatePresence>
-        </motion.div>
+        </motion.nav>
       )}
     </AnimatePresence>
   );

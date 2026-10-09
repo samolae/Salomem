@@ -18,6 +18,17 @@ const brandColors = [
   { name: 'Warning', hex: '#F87171', role: 'Errors & alerts', cssVar: '--aurum-warning' },
 ];
 
+/** Dark or white swatch label, whichever reads better on that colour */
+const labelOn = (hex: string) => {
+  const n = parseInt(hex.slice(1), 16);
+  const [r, g, b] = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => {
+    const c = v / 255;
+    return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  });
+  const L = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  return (L + 0.05) / 0.0533 > 1.05 / (L + 0.05) ? '#080B0F' : '#ffffff';
+};
+
 const typeSystem = [
   { label: 'Display', family: 'BPG LE Studio 02 Caps', fallback: 'Space Grotesk', size: '72px', weight: '500', sample: 'AURUM', use: 'Hero & Page Titles' },
   { label: 'Heading 1', family: 'BPG LE Studio 02 Caps', fallback: 'Space Grotesk', size: '48px', weight: '500', sample: 'Exchange', use: 'Section Headers' },
@@ -82,7 +93,7 @@ export function DesignSystemFull() {
                   style={{ backgroundColor: c.hex }}
                 >
                   <div className="absolute bottom-3 left-3 right-3 flex justify-between items-end">
-                    <span className="text-[9px] font-mono opacity-70" style={{ color: c.hex === '#F3F3F3' || c.hex === '#FFC701' ? '#080B0F' : '#fff' }}>{c.hex}</span>
+                    <span className="text-[10px] font-mono" style={{ color: labelOn(c.hex) }}>{c.hex}</span>
                   </div>
                 </div>
                 <div className={`text-sm mb-0.5 ${isDark ? 'text-white' : 'text-zinc-900'}`}>{c.name}</div>
@@ -131,7 +142,7 @@ export function DesignSystemFull() {
                 BPG LE Studio<br />02 Caps
               </div>
               <div className={`text-[12px] ${mt} mb-4`}>Georgian display typeface for headings and brand elements</div>
-              <div className={`text-lg ${isDark ? 'text-white/30' : 'text-zinc-300'} break-all`} style={{ fontFamily: BRAND.headingFont }}>
+              <div className={`text-lg ${isDark ? 'text-white/60' : 'text-zinc-500'} break-all`} style={{ fontFamily: BRAND.headingFont }}>
                 ABCDEFGHIJKLMNOPQRSTUVWXYZ<br />
                 0123456789
               </div>
@@ -142,7 +153,7 @@ export function DesignSystemFull() {
                 TBC<br />Contractica
               </div>
               <div className={`text-[12px] ${mt} mb-4`}>Georgian body typeface for readable content and UI labels</div>
-              <div className={`text-lg ${isDark ? 'text-white/30' : 'text-zinc-300'} break-all`} style={{ fontFamily: BRAND.bodyFont }}>
+              <div className={`text-lg ${isDark ? 'text-white/60' : 'text-zinc-500'} break-all`} style={{ fontFamily: BRAND.bodyFont }}>
                 abcdefghijklmnopqrstuvwxyz<br />
                 0123456789 !@#$%
               </div>
@@ -157,7 +168,7 @@ export function DesignSystemFull() {
               <div key={t.label} className={`flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-8 py-5 ${i < typeSystem.length - 1 ? `border-b ${cb}` : ''} group hover:bg-white/[0.02] transition-colors`}>
                 <div className="flex items-center gap-4 flex-shrink-0 min-w-[140px]">
                   <span className={`text-[10px] uppercase tracking-wider w-20 ${mt}`}>{t.label}</span>
-                  <span className={`text-[9px] font-mono px-2 py-0.5 rounded ${isDark ? 'bg-[#080B0F] text-[#9295A6]' : 'bg-zinc-100 text-zinc-400'}`}>{t.size}</span>
+                  <span className={`text-[10px] font-mono px-2 py-0.5 rounded ${isDark ? 'bg-[#080B0F] text-[#9295A6]' : 'bg-zinc-100 text-zinc-400'}`}>{t.size}</span>
                 </div>
                 <div className="flex-1 min-w-0">
                   <span
@@ -226,7 +237,7 @@ export function DesignSystemFull() {
                       style={{ borderRadius: r.value }}
                     />
                     <div className={`text-[10px] ${isDark ? 'text-white' : 'text-zinc-900'}`}>{r.name}</div>
-                    <div className={`text-[9px] font-mono ${mt}`}>{r.value}</div>
+                    <div className={`text-[10px] font-mono ${mt}`}>{r.value}</div>
                   </div>
                 ))}
               </div>
@@ -269,7 +280,7 @@ export function DesignSystemFull() {
                   <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${isDark ? 'bg-[#D59A04]/10' : 'bg-amber-50'} group-hover:bg-[#D59A04] transition-colors duration-300`}>
                     <div className={`w-3 h-3 rounded-sm ${isDark ? 'bg-[#D59A04]' : 'bg-[#D59A04]'} group-hover:bg-black transition-colors`} />
                   </div>
-                  <span className={`text-[9px] font-mono ${mt}`}>{comp.count}</span>
+                  <span className={`text-[10px] font-mono ${mt}`}>{comp.count}</span>
                 </div>
                 <div className={`text-sm mb-1 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont }}>{comp.name}</div>
                 <div className={`text-[10px] ${mt} leading-relaxed`}>{comp.desc}</div>
@@ -284,14 +295,15 @@ export function DesignSystemFull() {
         <div className={`p-8 rounded-2xl border ${cb} ${cardBg}`}>
           <div className={`text-[10px] uppercase tracking-[0.2em] ${mt} mb-6`}>Button Styles</div>
           <div className="flex flex-wrap gap-4 items-center">
-            <button className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#D59A04] to-[#FFC701] text-black text-sm">Primary</button>
-            <button className={`px-6 py-2.5 rounded-xl border text-sm ${isDark ? 'border-white/10 text-white' : 'border-zinc-300 text-zinc-900'}`}>Secondary</button>
-            <button className="px-6 py-2.5 rounded-xl text-sm text-[#D59A04]">Ghost</button>
-            <button className="px-6 py-2.5 rounded-xl bg-[#F87171]/10 text-[#F87171] text-sm">Destructive</button>
-            <button className="px-6 py-2.5 rounded-xl bg-[#10B981]/10 text-[#10B981] text-sm">Success</button>
-            <button className={`w-10 h-10 rounded-xl flex items-center justify-center ${isDark ? 'bg-[#121318] border border-white/[0.06]' : 'bg-zinc-100 border border-zinc-200'}`}>
-              <span className="text-[#D59A04]">+</span>
-            </button>
+            <span className="inline-block px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#D59A04] to-[#FFC701] text-black text-sm">Primary</span>
+            <span className={`inline-block px-6 py-2.5 rounded-xl border text-sm ${isDark ? 'border-white/10 text-white' : 'border-zinc-300 text-zinc-900'}`}>Secondary</span>
+            <span className="inline-block px-6 py-2.5 rounded-xl text-sm text-[#D59A04]">Ghost</span>
+            <span className="inline-block px-6 py-2.5 rounded-xl bg-[#F87171]/10 text-[#F87171] text-sm">Destructive</span>
+            <span className="inline-block px-6 py-2.5 rounded-xl bg-[#10B981]/10 text-[#10B981] text-sm">Success</span>
+            <span className={`w-10 h-10 rounded-xl flex items-center justify-center ${isDark ? 'bg-[#121318] border border-white/[0.06]' : 'bg-zinc-100 border border-zinc-200'}`}>
+              <span className="text-[#D59A04]" aria-hidden="true">+</span>
+              <span className="sr-only">Icon button</span>
+            </span>
           </div>
         </div>
       </FadeIn>
@@ -317,7 +329,7 @@ export function DesignSystem() {
             <div key={c.name}>
               <div className="rounded-lg h-14 mb-2 ring-1 ring-white/5" style={{ backgroundColor: c.hex }} />
               <div className={`text-[10px] ${isDark ? 'text-white' : 'text-zinc-900'}`}>{c.name}</div>
-              <div className={`text-[9px] font-mono ${isDark ? 'text-[#9295A6]/60' : 'text-zinc-300'}`}>{c.hex}</div>
+              <div className={`text-[10px] font-mono ${isDark ? 'text-[#9295A6]' : 'text-zinc-500'}`}>{c.hex}</div>
             </div>
           ))}
         </div>
@@ -329,11 +341,11 @@ export function DesignSystem() {
         </h3>
         <div className="grid grid-cols-2 gap-2">
           <div className={`p-3 rounded-lg ${isDark ? 'bg-[#121318]' : 'bg-zinc-50'}`}>
-            <div className={`text-[8px] uppercase tracking-wider mb-1 ${isDark ? 'text-[#9295A6]/50' : 'text-zinc-400'}`}>Headings</div>
+            <div className={`text-[10px] uppercase tracking-wider mb-1 ${isDark ? 'text-[#9295A6]' : 'text-zinc-500'}`}>Headings</div>
             <div className={`text-sm ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont }}>BPG LE Studio</div>
           </div>
           <div className={`p-3 rounded-lg ${isDark ? 'bg-[#121318]' : 'bg-zinc-50'}`}>
-            <div className={`text-[8px] uppercase tracking-wider mb-1 ${isDark ? 'text-[#9295A6]/50' : 'text-zinc-400'}`}>Body</div>
+            <div className={`text-[10px] uppercase tracking-wider mb-1 ${isDark ? 'text-[#9295A6]' : 'text-zinc-500'}`}>Body</div>
             <div className={`text-sm ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.bodyFont }}>TBC Contractica</div>
           </div>
         </div>

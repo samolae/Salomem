@@ -623,10 +623,11 @@ export const TextScramble = ({
 
   useEffect(() => {
     if (!isInView || reduceMotion) return;
+    let interval: ReturnType<typeof setInterval> | undefined;
     const timeout = setTimeout(() => {
       let iteration = 0;
       const totalFrames = text.length * 3;
-      const interval = setInterval(() => {
+      interval = setInterval(() => {
         setDisplayText(
           text
             .split('')
@@ -643,11 +644,14 @@ export const TextScramble = ({
           clearInterval(interval);
         }
       }, (duration * 1000) / totalFrames);
-      return () => clearInterval(interval);
     }, delay * 1000);
-    return () => clearTimeout(timeout);
+    return () => {
+      clearTimeout(timeout);
+      clearInterval(interval);
+    };
   }, [isInView, reduceMotion, text, delay, duration, chars]);
 
+  // Screen readers get the real text once; the scrambling glyphs are visual only
   return (
     <motion.span
       ref={ref}
@@ -657,7 +661,8 @@ export const TextScramble = ({
       animate={isInView ? { opacity: 1 } : {}}
       transition={{ duration: 0.3, delay }}
     >
-      {displayText}
+      <span className="sr-only">{text}</span>
+      <span aria-hidden="true">{displayText}</span>
     </motion.span>
   );
 };
@@ -1087,6 +1092,7 @@ export const SpringBadge = ({
         transition: { type: 'spring', stiffness: 500, damping: 12 },
       }}
       whileTap={{ scale: 0.92, rotate: -2 }}
+      tabIndex={-1}
       className={className}
     >
       {children}

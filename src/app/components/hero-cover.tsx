@@ -42,7 +42,7 @@ const FloatingChip = ({ text, delay, x, y, isDark }: { text: string; delay: numb
     <motion.div
       animate={{ y: [0, -8, 0] }}
       transition={{ repeat: Infinity, duration: 3 + delay, ease: 'easeInOut' }}
-      className={`px-3 py-1.5 rounded-full text-[9px] uppercase tracking-[0.15em] backdrop-blur-xl shadow-lg ${
+      className={`px-3 py-1.5 rounded-full text-[10px] uppercase tracking-[0.15em] backdrop-blur-xl shadow-lg ${
         isDark ? 'bg-white/[0.04] border border-white/[0.08] text-[#9295A6]' : 'bg-black/[0.03] border border-black/[0.06] text-zinc-400'
       }`}
     >
@@ -68,7 +68,7 @@ const FloatingBadge = ({ icon, label, value, delay, x, y, isDark }: { icon: stri
     >
       <span className="text-sm">{icon}</span>
       <div>
-        <div className={`text-[8px] uppercase tracking-wider ${isDark ? 'text-[#9295A6]' : 'text-zinc-400'}`}>{label}</div>
+        <div className={`text-[10px] uppercase tracking-wider ${isDark ? 'text-[#9295A6]' : 'text-zinc-400'}`}>{label}</div>
         <div className={`text-[11px] ${isDark ? 'text-white' : 'text-zinc-900'}`}>{value}</div>
       </div>
     </motion.div>
@@ -295,7 +295,7 @@ export function HeroCover() {
                   </div>
                   <div>
                     <div className="text-fluid-20-24 text-[#D59A04] leading-none" style={{ fontFamily: BRAND.headingFont }}>{s.n}</div>
-                    <div className={`text-[9px] uppercase tracking-[0.15em] ${mt} mt-0.5`}>{s.l}</div>
+                    <div className={`text-[10px] uppercase tracking-[0.15em] ${mt} mt-0.5`}>{s.l}</div>
                   </div>
                 </div>
               </div>
@@ -325,7 +325,7 @@ export function HeroCover() {
               />
             </motion.a>
             <motion.div animate={{ y: [0, 6, 0] }} transition={{ repeat: Infinity, duration: 2 }}>
-              <ChevronDown size={18} className="text-[#D59A04]/40" />
+              <ChevronDown size={18} aria-hidden className="text-[#D59A04]/40" />
             </motion.div>
           </motion.div>
 
@@ -337,7 +337,7 @@ export function HeroCover() {
             className="flex flex-wrap justify-center gap-2 mt-8"
           >
             {['UX Research', 'UI Design', 'Design System', 'Prototyping', 'FinTech', 'Regulated'].map((tag) => (
-              <span key={tag} className={`text-[8px] uppercase tracking-[0.2em] px-3 py-1 rounded-full ${isDark ? 'bg-white/[0.02] text-[#9295A6]/60 border border-white/[0.04]' : 'bg-black/[0.02] text-zinc-400 border border-zinc-200/60'}`}>
+              <span key={tag} className={`text-[10px] uppercase tracking-[0.2em] px-3 py-1 rounded-full ${isDark ? 'bg-white/[0.02] text-[#9295A6] border border-white/[0.04]' : 'bg-black/[0.02] text-zinc-400 border border-zinc-200/60'}`}>
                 {tag}
               </span>
             ))}

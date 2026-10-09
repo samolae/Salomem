@@ -91,7 +91,7 @@ const ScreenCard = ({
           <span className="text-[#6B8E23]">{icon}</span>
         </div>
         <div>
-          <h4 className={`text-sm mb-1 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont }}>{label}</h4>
+          <h3 className={`text-sm mb-1 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont }}>{label}</h3>
           <p className={`text-[12px] leading-relaxed ${isDark ? 'text-[#9295A6]' : 'text-zinc-400'}`}>{description}</p>
         </div>
       </div>
@@ -112,8 +112,8 @@ const ProcessStep = ({
     <div className={`w-12 h-12 rounded-xl mx-auto mb-4 flex items-center justify-center ${isDark ? 'bg-[#6B8E23]/10' : 'bg-lime-50'} text-[#6B8E23] group-hover:bg-[#6B8E23] group-hover:text-white transition-all duration-300`}>
       {icon}
     </div>
-    <div className="text-[#6B8E23]/40 text-[10px] font-mono mb-2">{number}</div>
-    <h4 className={`text-sm mb-2 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont }}>{title}</h4>
+    <div className="text-[#8FBC3B] text-[10px] font-mono mb-2">{number}</div>
+    <h3 className={`text-sm mb-2 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont }}>{title}</h3>
     <p className={`text-[12px] leading-relaxed ${isDark ? 'text-[#9295A6]' : 'text-zinc-400'}`}>{desc}</p>
   </motion.div>
 );
@@ -139,7 +139,8 @@ const ScrollToTopButton = () => {
           exit={{ opacity: 0, scale: 0.8, y: 20 }}
           transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className={`fixed bottom-8 right-8 z-50 w-12 h-12 rounded-full flex items-center justify-center shadow-2xl backdrop-blur-xl transition-colors group focus-visible:!shadow-[0_0_0_2px_rgba(107,142,35,0.5)] ${
+          aria-label="Back to top"
+          className={`fixed bottom-24 md:bottom-8 right-5 md:right-8 z-50 w-12 h-12 rounded-full flex items-center justify-center shadow-2xl backdrop-blur-xl transition-colors group focus-visible:!shadow-[0_0_0_2px_rgba(107,142,35,0.9)] ${
             isDark
               ? 'bg-[#6B8E23]/90 hover:bg-[#6B8E23] shadow-[#6B8E23]/20 text-white'
               : 'bg-[#6B8E23] hover:bg-[#6B8E23]/90 shadow-[#6B8E23]/30 text-white'
@@ -147,7 +148,7 @@ const ScrollToTopButton = () => {
           whileHover={{ scale: 1.1, y: -2 }}
           whileTap={{ scale: 0.95 }}
         >
-          <ChevronUp size={20} className="group-hover:-translate-y-0.5 transition-transform" />
+          <ChevronUp size={20} aria-hidden className="group-hover:-translate-y-0.5 transition-transform" />
         </motion.button>
       )}
     </AnimatePresence>
@@ -197,8 +198,6 @@ export function SchenkerCaseStudy() {
     <div className={`${bg} min-h-screen transition-colors duration-500 relative`} style={{ fontFamily: BRAND.bodyFont }}>
       <SchenkerSEO />
       <CaseHeroTarget path="/projects/schenker" />
-      {/* Scroll to top */}
-      <ScrollToTopButton />
       {/* Section navigator */}
       <CaseStudySectionNav
         accentColor="#6B8E23"
@@ -221,6 +220,7 @@ export function SchenkerCaseStudy() {
 
       {/* ─── NAV ──────────────────────────────────────────────────────── */}
       <motion.nav
+        aria-label="Case study"
         initial={{ y: -80 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
@@ -232,14 +232,14 @@ export function SchenkerCaseStudy() {
                 onClick={() => navigate('/', { viewTransition: true })}
                 whileHover={{ x: -3 }}
                 whileTap={{ scale: 0.95 }}
-                className={`flex items-center gap-2 text-sm rounded-lg px-2 py-1.5 min-h-[44px] focus-visible:!shadow-[0_0_0_2px_rgba(107,142,35,0.4)] ${isDark ? 'text-[#9295A6] hover:text-white hover:bg-white/[0.04]' : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100'} transition-colors`}
+                className={`flex items-center gap-2 text-sm rounded-lg px-2 py-1.5 min-h-[44px] focus-visible:!shadow-[0_0_0_2px_rgba(107,142,35,0.9)] ${isDark ? 'text-[#9295A6] hover:text-white hover:bg-white/[0.04]' : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100'} transition-colors`}
               >
                 <ArrowLeft size={15} />
                 <span className="text-[12px] tracking-wide">Back to Portfolio</span>
               </motion.button>
             <div className={`w-px h-5 ${isDark ? 'bg-white/10' : 'bg-zinc-200'}`} />
             <div className="flex items-center gap-2.5">
-              <svg className="h-[24px] w-auto" fill="none" viewBox="0 0 227.898 36.56">
+              <svg className="h-[24px] w-auto" fill="none" viewBox="0 0 227.898 36.56" role="img" aria-label="SCHENKER">
                 <g clipPath="url(#schenkerNavClip)">
                   <path d={schenkerSvgPaths.p21938980} fill={isDark ? 'white' : '#121212'} />
                   <path d={schenkerSvgPaths.p1fc21500} fill="#FF0000" />
@@ -255,13 +255,16 @@ export function SchenkerCaseStudy() {
           <div className="flex items-center gap-5">
             <div className="hidden md:flex gap-5">
               {['Overview', 'Screens', 'Flow'].map((item) => (
-                <motion.a key={item} href={`#${item.toLowerCase()}`} whileHover={{ y: -1 }} className={`text-[12px] tracking-wide rounded-md px-2 py-1 focus-visible:!shadow-[0_0_0_2px_rgba(107,142,35,0.4)] ${isDark ? 'text-[#9295A6] hover:text-white' : 'text-zinc-500 hover:text-zinc-900'} transition-colors`}>{item}</motion.a>
+                <motion.a key={item} href={`#${item.toLowerCase()}`} whileHover={{ y: -1 }} className={`text-[12px] tracking-wide rounded-md px-2 py-1 focus-visible:!shadow-[0_0_0_2px_rgba(107,142,35,0.9)] ${isDark ? 'text-[#9295A6] hover:text-white' : 'text-zinc-500 hover:text-zinc-900'} transition-colors`}>{item}</motion.a>
               ))}
             </div>
 
           </div>
         </div>
       </motion.nav>
+
+      <main id="main-content" tabIndex={-1} className="outline-none">
+      <ScrollToTopButton />
 
       {/* ══════════════════════════════════════════════════════════════ */}
       {/* ─── HERO ──────────────────────────────────────────────────── */}
@@ -275,9 +278,9 @@ export function SchenkerCaseStudy() {
         <div className="max-w-6xl mx-auto relative z-10">
           <FadeIn>
             <div className="flex items-center gap-3 mb-6">
-              <span className={`text-[9px] uppercase tracking-[0.2em] px-3 py-1.5 rounded-full border ${isDark ? 'border-[#6B8E23]/30 bg-[#6B8E23]/10 text-[#8FBC3B]' : 'border-[#6B8E23]/20 bg-[#6B8E23]/5 text-[#6B8E23]'}`}>Case Study</span>
-              <span className={`text-[9px] uppercase tracking-[0.2em] px-3 py-1.5 rounded-full ${isDark ? 'bg-white/[0.03] text-[#9295A6]' : 'bg-zinc-100 text-zinc-400'}`}>Enterprise UX</span>
-              <span className={`text-[9px] uppercase tracking-[0.2em] px-3 py-1.5 rounded-full ${isDark ? 'bg-white/[0.03] text-[#9295A6]' : 'bg-zinc-100 text-zinc-400'}`}>Desktop</span>
+              <span className={`text-[10px] uppercase tracking-[0.2em] px-3 py-1.5 rounded-full border ${isDark ? 'border-[#6B8E23]/30 bg-[#6B8E23]/10 text-[#8FBC3B]' : 'border-[#6B8E23]/20 bg-[#6B8E23]/5 text-[#6B8E23]'}`}>Case Study</span>
+              <span className={`text-[10px] uppercase tracking-[0.2em] px-3 py-1.5 rounded-full ${isDark ? 'bg-white/[0.03] text-[#9295A6]' : 'bg-zinc-100 text-zinc-400'}`}>Enterprise UX</span>
+              <span className={`text-[10px] uppercase tracking-[0.2em] px-3 py-1.5 rounded-full ${isDark ? 'bg-white/[0.03] text-[#9295A6]' : 'bg-zinc-100 text-zinc-400'}`}>Desktop</span>
             </div>
           </FadeIn>
 
@@ -335,7 +338,7 @@ export function SchenkerCaseStudy() {
         {/* Scroll indicator */}
         <FadeIn delay={0.8}>
           <div className="flex flex-col items-center mt-16 gap-2">
-            <span className={`text-[9px] uppercase tracking-[0.2em] ${mt}`}>Scroll to explore</span>
+            <span className={`text-[10px] uppercase tracking-[0.2em] ${mt}`}>Scroll to explore</span>
             <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>
               <ChevronDown size={14} className={mt} />
             </motion.div>
@@ -392,7 +395,7 @@ export function SchenkerCaseStudy() {
                 <div className="pt-1.5">
                   <div className="flex items-center gap-3 mb-2">
                     <span className="text-[10px] font-mono" style={{ color: item.accent }}>{item.number}</span>
-                    <span className={`text-[9px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-md ${isDark ? 'bg-white/[0.03] text-white/40' : 'bg-zinc-100 text-zinc-400'}`}>{item.step}</span>
+                    <span className={`text-[10px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-md ${isDark ? 'bg-white/[0.03] text-white/60' : 'bg-zinc-100 text-zinc-500'}`}>{item.step}</span>
                   </div>
                   <p className={`text-fluidpx-15-17 leading-relaxed ${i === 0 ? (isDark ? 'text-white' : 'text-zinc-900') : bt}`} style={{ fontFamily: i === 0 ? BRAND.headingFont : BRAND.bodyFont }}>
                     {item.text}
@@ -441,7 +444,7 @@ export function SchenkerCaseStudy() {
                     <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isDark ? 'bg-white/[0.03]' : 'bg-zinc-50'} group-hover:scale-110 transition-transform duration-300`}>
                       <span style={{ color: m.color }}>{m.icon}</span>
                     </div>
-                    <div className={`text-[9px] uppercase tracking-[0.15em] px-2 py-0.5 rounded-md ${isDark ? 'bg-white/[0.03] text-[#9295A6]/60' : 'bg-zinc-100 text-zinc-400'}`}>{m.sub}</div>
+                    <div className={`text-[10px] uppercase tracking-[0.15em] px-2 py-0.5 rounded-md ${isDark ? 'bg-white/[0.03] text-[#9295A6]' : 'bg-zinc-100 text-zinc-500'}`}>{m.sub}</div>
                   </div>
                   <div className="text-fluid-30-36 mb-1 leading-none" style={{ fontFamily: BRAND.headingFont, color: m.color }}>
                     <CountUp target={m.value} suffix={m.suffix} />
@@ -545,7 +548,7 @@ export function SchenkerCaseStudy() {
                     </div>
                     <div className={`text-[14px] mb-2 transition-colors duration-300 group-hover/p:text-[#6B8E23] ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 700 }}>{p.name}</div>
                     <div className={`text-[12px] leading-relaxed mb-3 ${bt}`}>{p.practice}</div>
-                    <div className="text-[10px] uppercase tracking-[0.15em] text-[#6B8E23]/70">{p.outcome}</div>
+                    <div className="text-[10px] uppercase tracking-[0.15em] text-[#8FBC3B]">{p.outcome}</div>
                   </div>
                 ))}
               </div>
@@ -638,7 +641,7 @@ export function SchenkerCaseStudy() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
                   <div className={step.reverse ? 'order-1 lg:order-2' : ''}>
                     <div className="flex items-center gap-3 mb-4">
-                      <span className="text-3xl text-[#6B8E23]/30" style={{ fontFamily: BRAND.headingFont }}>{step.num}</span>
+                      <span className="text-3xl text-[#6B8E23]/30 before:content-[attr(data-num)]" data-num={step.num} aria-hidden="true" style={{ fontFamily: BRAND.headingFont }} />
                       <div className="w-8 h-px bg-[#6B8E23]/20" />
                       {step.icon}
                     </div>
@@ -646,7 +649,7 @@ export function SchenkerCaseStudy() {
                     <p className={`text-[13px] ${bt} leading-relaxed mb-4`}>{step.desc}</p>
                     <div className="flex flex-wrap gap-2">
                       {step.tags.map((t) => (
-                        <span key={t} className={`text-[9px] uppercase tracking-wider px-2 py-1 rounded-md ${isDark ? 'bg-[#121318] text-[#9295A6]' : 'bg-zinc-100 text-zinc-400'}`}>{t}</span>
+                        <span key={t} className={`text-[10px] uppercase tracking-wider px-2 py-1 rounded-md ${isDark ? 'bg-[#121318] text-[#9295A6]' : 'bg-zinc-100 text-zinc-400'}`}>{t}</span>
                       ))}
                     </div>
                   </div>
@@ -692,7 +695,7 @@ export function SchenkerCaseStudy() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
                   <div className={step.reverse ? 'order-1 lg:order-2' : ''}>
                     <div className="flex items-center gap-3 mb-4">
-                      <span className="text-3xl text-[#6B8E23]/30" style={{ fontFamily: BRAND.headingFont }}>{step.num}</span>
+                      <span className="text-3xl text-[#6B8E23]/30 before:content-[attr(data-num)]" data-num={step.num} aria-hidden="true" style={{ fontFamily: BRAND.headingFont }} />
                       <div className="w-8 h-px bg-[#6B8E23]/20" />
                       {step.icon}
                     </div>
@@ -700,7 +703,7 @@ export function SchenkerCaseStudy() {
                     <p className={`text-[13px] ${bt} leading-relaxed mb-4`}>{step.desc}</p>
                     <div className="flex flex-wrap gap-2">
                       {step.tags.map((t) => (
-                        <span key={t} className={`text-[9px] uppercase tracking-wider px-2 py-1 rounded-md ${isDark ? 'bg-[#121318] text-[#b0b3c0]' : 'bg-zinc-100 text-zinc-500'}`}>{t}</span>
+                        <span key={t} className={`text-[10px] uppercase tracking-wider px-2 py-1 rounded-md ${isDark ? 'bg-[#121318] text-[#b0b3c0]' : 'bg-zinc-100 text-zinc-500'}`}>{t}</span>
                       ))}
                     </div>
                   </div>
@@ -832,6 +835,7 @@ export function SchenkerCaseStudy() {
 
       {/* footer removed */}
       <NextProjectRecommendation currentProject="schenker" />
+      </main>
     </div>
   );
 }

@@ -19,6 +19,7 @@ import { FadeIn, StaggerChildren, StaggerItem, ScrollProgress, MagneticWrap, Ani
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { HomeSEO, ServicesSEO, ContactSEO, UxUiSEO, SocialMediaAdsSEO, SocialMediaMotionSEO } from './seo';
 import { scrollContentToTop } from './scroll-to-top';
+import { isHydrating } from '../hydration';
 
 /* ─── Screen imports for AURUM ─────��─────────────���─────────────────����─ */
 const screenExchange = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1774200199/470258954933ae7f3b3615ad0fe2098ae46160f5_2_wvsmro_plhle1.webp';
@@ -605,7 +606,16 @@ const SpotlightCardInner = ({
 }: { sp: SpotlightData; index: number; total: number; isDark: boolean; border: string }) => (
   <div className={`relative w-full h-full rounded-2xl overflow-hidden border ${border} shadow-2xl shadow-black/60 cursor-pointer`}>
     <div className="absolute inset-0">
-      <ImageWithFallback src={sp.img} alt={`${sp.title} — ${sp.tag}`} className="w-full h-full object-cover" style={{ filter: 'blur(1.5px)', transform: 'scale(1.04)' }} />
+      {/* Sized to the card (it sits blurred under a dark overlay) and loaded
+          only when the deck nears the screen */}
+      <ImageWithFallback
+        {...responsive(sp.img, [480, 720, 960, 1280], '(min-width: 768px) 672px, 92vw')}
+        alt={`${sp.title} — ${sp.tag}`}
+        loading="lazy"
+        decoding="async"
+        className="w-full h-full object-cover"
+        style={{ filter: 'blur(1.5px)', transform: 'scale(1.04)' }}
+      />
     </div>
     {/* Dark overlay — tones down brightness */}
     <div className="absolute inset-0 bg-black/65" />
@@ -1338,27 +1348,10 @@ const ServicesContent = ({ isDark }: { isDark: boolean }) => {
 /* ════════════════��═════════════════��═══��════════════════════════════ */
 /*                      CONTACT CONTENT                              */
 /* ═══��════════════════════════════════════════════════════���══════════ */
-const ContactSkeleton = ({ isDark }: { isDark: boolean }) => {
-  const pulse = isDark ? 'bg-white/[0.06] animate-pulse' : 'bg-zinc-200 animate-pulse';
-  return (
-    <div className="space-y-6">
-      <div className="space-y-3 mb-6">
-        <div className={`h-2.5 w-24 rounded-full ${pulse}`} />
-        <div className={`h-5 w-56 rounded-lg ${pulse}`} />
-        <div className={`h-3 w-80 rounded-md ${pulse}`} />
-      </div>
-      {[...Array(5)].map((_, i) => (
-        <div key={i} className={`h-[60px] rounded-xl border ${isDark ? 'border-white/[0.06]' : 'border-zinc-200'} ${pulse}`} />
-      ))}
-    </div>
-  );
-};
-
 const ContactContent = ({ isDark }: { isDark: boolean }) => {
   const mt = isDark ? 'text-[#7a7d8a]' : 'text-zinc-400';
   const border = isDark ? 'border-white/[0.06]' : 'border-zinc-200';
   const bg2 = isDark ? 'bg-white/[0.02]' : 'bg-zinc-50';
-  const [ready, setReady] = useState(false);
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -1367,7 +1360,6 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
   const [formSending, setFormSending] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
-  useEffect(() => { const id = requestAnimationFrame(() => setReady(true)); return () => cancelAnimationFrame(id); }, []);
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -1395,7 +1387,6 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
     setTimeout(() => setFormSent(false), 4000);
   };
 
-  if (!ready) return <ContactSkeleton isDark={isDark} />;
 
   const contactItems = [
     { icon: <Mail size={18} />, label: 'Email', value: 'mosiavasalome@gmail.com', href: 'mailto:mosiavasalome@gmail.com', color: '#ed592b', copyable: true, external: false },
@@ -3263,7 +3254,13 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
 /* Work categories that get their own /work/:category URL */
 const WORK_CATEGORIES = new Set(['ux-ui', 'social-media-ads', 'social-media-motion']);
 
+// The first HomePage mount of a visit is the delivered page itself; only
+// later mounts (section changes, coming back from a case study) animate in.
+let homeMounted = false;
+
 export function HomePage() {
+  const skipEnter = !homeMounted;
+  useEffect(() => { homeMounted = true; }, []);
   const [searchParams, setSearchParams] = useSearchParams();
   const { category } = useParams<{ category?: string }>();
   const navigate = useNavigate();
@@ -3345,6 +3342,8 @@ export function HomePage() {
   /* Scroll to top whenever the active sidebar section changes —
      useLayoutEffect fires before paint so users never see stale scroll position */
   useLayoutEffect(() => {
+    // Not while hydrating: keep wherever the visitor scrolled the static page
+    if (isHydrating()) return;
     scrollContentToTop('instant');
   }, [activeSection]);
 
@@ -3393,7 +3392,9 @@ export function HomePage() {
           <AnimatePresence mode="wait">
             <motion.div
               key={activeSection}
-              initial={{ opacity: 0, y: 18, filter: 'blur(8px)', scale: 0.99 }}
+              // First load shows the page as delivered (prerendered HTML);
+              // later section changes keep the blur-rise transition
+              initial={skipEnter ? false : { opacity: 0, y: 18, filter: 'blur(8px)', scale: 0.99 }}
               animate={{ opacity: 1, y: 0, filter: 'blur(0px)', scale: 1 }}
               exit={{ opacity: 0, y: -10, filter: 'blur(6px)', scale: 0.99 }}
               transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}

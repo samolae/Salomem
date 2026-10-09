@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef } from 'react';
 import { Outlet, useLocation } from 'react-router';
+import { isHydrating } from '../hydration';
 
 /**
  * ScrollToTopLayout — wraps all routes via react-router.
@@ -20,6 +21,12 @@ export function ScrollToTopLayout() {
     // Always reset scroll position before the browser paints
     if (isFirst.current) {
       isFirst.current = false;
+      // Prerendered page: the visitor may already have scrolled the static
+      // HTML before JavaScript arrived, so leave the position alone
+      if (isHydrating()) {
+        prevPathname.current = pathname;
+        return;
+      }
       window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
       // Also reset any scrollable containers
       document.documentElement.scrollTop = 0;

@@ -1,4 +1,6 @@
 @import 'tailwindcss' source(none);
 @source '../**/*.{js,ts,jsx,tsx}';
+/* Unused shadcn/ui kit: scanning it only added CSS nobody loads */
+@source not '../app/components/ui';
 
 @import 'tw-animate-css';

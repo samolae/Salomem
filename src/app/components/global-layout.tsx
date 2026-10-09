@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router';
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import { useTheme } from './theme-provider';
@@ -133,11 +134,14 @@ export function GlobalLayout() {
   const location = useLocation();
   const isContactPage = location.pathname === '/contact' || location.search.includes('section=contact');
 
-  // Detect mobile at render time to skip expensive animations on phones
-  const isMobile = typeof window !== 'undefined' && window.matchMedia('(max-width: 1023px)').matches;
-  // Ambient motion (mesh, glow, particles, blobs) is pure decoration: skip it
-  // for visitors who ask their system for reduced motion
+  // Ambient motion (mesh, glow, particles, blobs) is pure decoration: desktop
+  // only, never for visitors who ask for reduced motion, and mounted after
+  // the first render so prerendered HTML hydrates the same on every screen
   const reduceMotion = useReducedMotion();
+  const [ambient, setAmbient] = useState(false);
+  useEffect(() => {
+    setAmbient(!window.matchMedia('(max-width: 1023px)').matches);
+  }, []);
 
   return (
     <div
@@ -150,7 +154,7 @@ export function GlobalLayout() {
       <ScrollProgress color="#ed592b" />
 
       {/* Desktop-only heavy effects — skipped on mobile to protect INP and LCP */}
-      {!isMobile && !reduceMotion && (
+      {ambient && !reduceMotion && (
         <>
           <LiquidMeshBackground />
           <CursorGlow color="rgba(237,89,43,0.04)" size={700} />

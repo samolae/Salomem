@@ -77,9 +77,9 @@ function readTag(node: Element | null): Tag | null {
 }
 
 function useFinePointer() {
-  const [fine, setFine] = useState(
-    () => typeof window !== 'undefined' && window.matchMedia(FINE_POINTER).matches,
-  );
+  // Starts false everywhere (prerender and hydration agree); the effect
+  // switches the layer on for mouse and trackpad
+  const [fine, setFine] = useState(false);
   useEffect(() => {
     const mq = window.matchMedia(FINE_POINTER);
     const sync = () => setFine(mq.matches);

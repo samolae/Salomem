@@ -18,6 +18,11 @@
   opacity: 0;
 }
 
+/* Prerendered HTML has no data-reveal yet: blocks show as delivered, with
+   no fade. A fade from opacity 0 would hold back Largest Contentful Paint
+   until it finished, and the static page is meant to be readable at once.
+   FadeIn arms scroll reveals for what is below the fold when React takes
+   over. */
 .reveal[data-reveal='intro'] {
   animation: reveal-intro 0.6s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0s) backwards;
 }

@@ -1,6 +1,7 @@
 import { useRef, useEffect, useLayoutEffect, useState, useCallback, useMemo, type ReactNode, type CSSProperties } from 'react';
 import { motion, useScroll, useTransform, useInView, useMotionValue, useSpring, useAnimationFrame, useReducedMotion } from 'motion/react';
 import { IMG } from '../lib/cld';
+import { isHydrating } from '../hydration';
 
 /* ═══════════════════════════════════════════════════════════════════ */
 /*                      FADE IN ON SCROLL                            */
@@ -57,6 +58,9 @@ export const FadeIn = ({
     if (!el) return;
     const r = el.getBoundingClientRect();
     const onScreen = r.top < window.innerHeight && r.bottom > 0 && r.height > 0;
+    // Prerendered HTML: what is on screen is already being read, so leave it
+    // as it is and only arm the reveal for what is below the fold
+    if (onScreen && isHydrating()) return;
     if (onScreen) {
       el.dataset.reveal = 'intro';
     } else if (supportsScrollTimeline() && !insideInnerScroller(el)) {

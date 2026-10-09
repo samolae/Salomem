@@ -84,11 +84,6 @@ export function SEO({
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={absoluteImage} />
 
-      {/* ─── Preconnect ─────────────────────────────────────── */}
-      <link rel="preconnect" href="https://res.cloudinary.com" />
-      <link rel="preconnect" href="https://fonts.googleapis.com" />
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-
       {/* ─── Theme ─────────────────────────────────────────── */}
       <meta name="theme-color" content="#0a0a0c" />
       <meta name="color-scheme" content="dark" />

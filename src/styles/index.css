@@ -4,7 +4,6 @@
 @import './cursor.css';
 @import './view-transitions.css';
 @import './scroll-motion.css';
-@import './kinetic.css';
 
 /* Prevent horizontal scroll on mobile across all pages.
    clip, not hidden: hidden turns body into a scroll container, which

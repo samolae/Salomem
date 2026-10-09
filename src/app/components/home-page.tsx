@@ -15,8 +15,6 @@ import {
 } from 'lucide-react';
 import { useTheme } from './theme-provider';
 import { CaseLink } from './case-transition';
-import { KineticText } from './kinetic-text';
-import { AdsShowcase } from './ads-showcase';
 import { FadeIn, StaggerChildren, StaggerItem, ScrollProgress, MagneticWrap, AnimatedDivider, SplitText, ScaleOnScroll, CursorGlow, FloatingParticles, TextScramble, MorphingBlob, RevealMask, AnimatedLine, LightBeamCard, BentoTiltCard, LiquidMeshBackground, SpringBadge, ParallaxFloat, ScrollRevealScale, MagneticLink, MicroPulse } from './animated-helpers';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { HomeSEO, ServicesSEO, ContactSEO, UxUiSEO, SocialMediaAdsSEO, SocialMediaMotionSEO } from './seo';
@@ -719,23 +717,20 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
         </div>
       </FadeIn>
 
-      {/* Hero statement: eyebrow + kinetic headline (variable Syne 400-800) */}
-      <div className="mb-7">
-        <FadeIn delay={0.05}>
-          <p className="uppercase tracking-[0.15em] mb-4" style={{ fontFamily: F.body, fontWeight: 500, fontSize: '10px' }}>
+      {/* Hero tagline */}
+      <FadeIn delay={0.05}>
+        <div className="mb-6">
+          <p className="uppercase tracking-[0.15em] mb-3" style={{ fontFamily: F.body, fontWeight: 500, fontSize: '10px' }}>
             <span className={isDark ? 'text-white/70' : 'text-zinc-600'}>
               <TextScramble text="80+ projects." delay={0.3} duration={1} style={{ fontFamily: F.body, fontWeight: 500, fontSize: '10px' }} />
             </span>
+            {' '}
+            <span className="bg-gradient-to-r from-[#ed592b] via-[#f47a4d] to-[#ed592b] bg-clip-text text-transparent bg-[length:200%_auto] animate-[shimmer_4s_linear_infinite]">
+              <TextScramble text="Countless sparks." delay={0.8} duration={1} style={{ fontFamily: F.body, fontWeight: 500, fontSize: '10px' }} />
+            </span>
           </p>
-        </FadeIn>
-        <KineticText
-          label="Countless sparks."
-          lines={[{ text: 'Countless' }, { text: 'sparks.' }]}
-          accentLast
-          className={isDark ? 'text-white' : 'text-zinc-900'}
-          style={{ fontFamily: F.heading, fontSize: 'clamp(3rem, 1.96rem + 4.42vw, 5.5rem)', lineHeight: 0.92, letterSpacing: '-0.035em' }}
-        />
-      </div>
+        </div>
+      </FadeIn>
 
       <FadeIn delay={0.1}>
         <div className={`max-w-2xl mb-8 space-y-4 text-[14px] leading-[1.75] ${bt}`} style={{ fontFamily: F.body, fontWeight: 400 }}>
@@ -2183,7 +2178,6 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
     });
   }, []);
   const [activeBrand, setActiveBrand] = useState(0); // -1 = All
-  const brandAnchorRef = useRef<HTMLDivElement>(null);
   const [showStickyBar, setShowStickyBar] = useState(false);
   const brand = activeBrand >= 0 ? adsBrands[activeBrand] : null;
 
@@ -2299,32 +2293,13 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
 
   return (
     <div className="relative">
-      {/* ── Section header ── */}
+      {/* ── Section header + filter chips ── */}
       <FadeIn>
         <div className="flex items-center gap-2.5 mb-5">
           <motion.div className="w-1.5 h-1.5 rounded-full bg-[#ed592b]" animate={{ scale: [1, 1.4, 1] }} transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }} />
           <h1 className="text-[15px] tracking-[-0.02em]" style={{ fontFamily: F.heading, fontWeight: 600 }}>Social Media Ads</h1>
         </div>
-      </FadeIn>
 
-      {/* ── Featured campaigns: vertical scroll slides a horizontal track ── */}
-      <AdsShowcase
-        brands={adsBrands}
-        isDark={isDark}
-        onSelect={(i) => {
-          goTo(i);
-          requestAnimationFrame(() =>
-            brandAnchorRef.current?.scrollIntoView({
-              behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
-              block: 'start',
-            }),
-          );
-        }}
-      />
-
-      {/* ── Filter chips ── */}
-      <div ref={brandAnchorRef} className="scroll-mt-20" />
-      <FadeIn>
         <div className="flex flex-wrap gap-2 mb-6">
           {/* All chip */}
           <button

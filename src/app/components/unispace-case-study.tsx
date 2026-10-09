@@ -15,6 +15,7 @@ import {
 import { NextProjectRecommendation } from './next-project';
 import { CaseStudySectionNav } from './case-study-nav';
 import { UnispaceSEO } from './seo';
+import { IMG, responsive } from '../lib/cld';
 
 /* ─── Real Unispace product screenshots (Cloudinary) ──────────── */
 const imgLogin        = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1779875718/%E1%83%9E%E1%83%98%E1%83%A0%E1%83%95%E1%83%94%E1%83%9A%E1%83%98_%E1%83%92%E1%83%95%E1%83%94%E1%83%A0%E1%83%93%E1%83%98_%E1%83%9B%E1%83%9D%E1%83%9B%E1%83%AE%E1%83%9B%E1%83%90%E1%83%A0%E1%83%94%E1%83%91%E1%83%9A%E1%83%98%E1%83%A1_%E1%83%A8%E1%83%94%E1%83%A1%E1%83%95%E1%83%9A%E1%83%98%E1%83%A1%E1%83%90%E1%83%A1_uaosn1.png';
@@ -75,7 +76,7 @@ const ScreenCard = ({
     <div className="group">
       <div className={`rounded-xl overflow-hidden mb-4 border shadow-lg transition-all duration-500 ease-out group-hover:-translate-y-1 group-hover:shadow-2xl ${isDark ? 'border-white/[0.06] shadow-black/30 group-hover:border-[#3D82F6]/30 group-hover:shadow-[#3D82F6]/20' : 'border-zinc-200 shadow-zinc-200/50 group-hover:border-[#3D82F6]/40'}`}>
         <div className="aspect-[16/10] overflow-hidden">
-          <img src={src} alt={label} className="w-full h-full block object-cover object-top group-hover:scale-[1.04] transition-transform duration-700" />
+          <img {...responsive(src, [480, 720, 960, 1280], '(min-width: 1024px) 560px, 92vw')} alt={label} className="w-full h-full block object-cover object-top group-hover:scale-[1.04] transition-transform duration-700" />
         </div>
       </div>
       <div className="flex items-start gap-3">
@@ -226,7 +227,7 @@ export function UnispaceCaseStudy() {
               transition={{ type: 'spring', stiffness: 400, damping: 25 }}
             >
               <img
-                src="https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1779887428/241852566_416907023197215_4126473183608966576_n_ecyuw4.png"
+                {...IMG.logo('https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1779887428/241852566_416907023197215_4126473183608966576_n_ecyuw4.png')}
                 alt="Unilab"
                 width={32}
                 height={32}
@@ -347,7 +348,7 @@ export function UnispaceCaseStudy() {
                 className={`relative rounded-2xl overflow-hidden border shadow-2xl ${isDark ? 'border-white/[0.06] shadow-black/60' : 'border-zinc-200 shadow-zinc-300/40'}`}
               >
                 <div className="aspect-[4/3] overflow-hidden">
-                  <img src={imgScreen} alt="Unispace platform screenshot" className="w-full h-full block object-cover object-top" />
+                  <img {...IMG.wide(imgScreen)} alt="Unispace platform screenshot" className="w-full h-full block object-cover object-top" />
                 </div>
                 <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, transparent 60%, rgba(61,130,246,0.08) 100%)' }} />
               </motion.div>
@@ -949,7 +950,7 @@ export function UnispaceCaseStudy() {
               className={`group rounded-2xl overflow-hidden border mb-8 transition-shadow duration-500 hover:shadow-2xl ${isDark ? 'border-white/[0.06] hover:border-white/[0.12] hover:shadow-[#3D82F6]/10' : 'border-zinc-200 hover:border-zinc-300'}`}
             >
               <div className="aspect-[21/9] overflow-hidden">
-                <img src={imgSeparator} alt="Unispace UI components overview" className="w-full h-full block object-cover object-top group-hover:scale-[1.02] transition-transform duration-1000" />
+                <img {...IMG.wide(imgSeparator)} alt="Unispace UI components overview" className="w-full h-full block object-cover object-top group-hover:scale-[1.02] transition-transform duration-1000" />
               </div>
             </motion.div>
           </FadeIn>

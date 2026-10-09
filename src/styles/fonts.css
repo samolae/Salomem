@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Syne:wght@400..800&family=Inter:wght@300..700&family=Space+Grotesk:wght@300..700&display=swap');
+/* Google Fonts load asynchronously from index.html (one combined, non-blocking
+   request). The old @import here blocked the first paint by ~200ms. */
 
 /* AURUM Design System Fonts */
 /* BPG LE Studio 02 Caps — Georgian display/heading font */

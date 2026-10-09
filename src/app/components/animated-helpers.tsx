@@ -1,5 +1,6 @@
 import { useRef, useEffect, useLayoutEffect, useState, useCallback, useMemo, type ReactNode, type CSSProperties } from 'react';
 import { motion, useScroll, useTransform, useInView, useMotionValue, useSpring, useAnimationFrame, useReducedMotion } from 'motion/react';
+import { IMG } from '../lib/cld';
 
 /* ═══════════════════════════════════════════════════════════════════ */
 /*                      FADE IN ON SCROLL                            */
@@ -167,7 +168,7 @@ export const ParallaxImage = ({
   return (
     <div ref={ref} className={`relative overflow-hidden rounded-2xl ${className}`}>
       <motion.img
-        src={src}
+        {...IMG.wide(src)}
         alt={alt}
         style={{ y }}
         className="w-full h-full object-cover scale-110"

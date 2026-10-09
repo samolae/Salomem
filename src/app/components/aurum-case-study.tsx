@@ -19,6 +19,7 @@ import { NextProjectRecommendation } from './next-project';
 import { CaseStudySectionNav } from './case-study-nav';
 import { AurumSEO } from './seo';
 import aurumSvgPaths from '../../imports/svg-wj69ey5ojj';
+import { IMG } from '../lib/cld';
 
 // ─── Aurum Screen Imports ───────────────────────────────────
 const screenExchange = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774041357/470258954933ae7f3b3615ad0fe2098ae46160f5_2_wvsmro.webp';
@@ -78,7 +79,7 @@ const ScreenCard = ({
   <FadeIn delay={delay}>
     <div className="group">
       <div className={`rounded-xl overflow-hidden mb-4 border shadow-lg ${isDark ? 'border-white/[0.06] shadow-black/30' : 'border-zinc-200 shadow-zinc-200/50'}`}>
-        <img src={src} alt={label} width="1440" height="900" className="w-full block group-hover:scale-[1.02] transition-transform duration-700" />
+        <img {...IMG.wide(src)} alt={label} width="1440" height="900" className="w-full block group-hover:scale-[1.02] transition-transform duration-700" />
       </div>
       <div className="flex items-start gap-3">
         <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5 ${isDark ? 'bg-[#D59A04]/10' : 'bg-amber-50'}`}>
@@ -569,7 +570,7 @@ export function AurumCaseStudy() {
                   <div className={step.reverse ? 'order-2 lg:order-1' : ''}>
                     <ScrollRevealScale scaleFrom={0.92}>
                       <div className={`rounded-2xl overflow-hidden border shadow-xl ${isDark ? 'border-white/[0.06] shadow-black/40' : 'border-zinc-200 shadow-zinc-200/40'}`}>
-                        <img src={step.src} alt={step.title} width="1440" height="900" className="w-full block" />
+                        <img {...IMG.wide(step.src)} alt={step.title} width="1440" height="900" className="w-full block" />
                       </div>
                     </ScrollRevealScale>
                   </div>
@@ -672,7 +673,7 @@ export function AurumCaseStudy() {
                 </div>
                 <div className={`relative ${isDark ? 'bg-[#0a0c10]' : 'bg-zinc-50'}`}>
                   <div className="overflow-y-auto max-h-[80vh] scrollbar-thin">
-                    <img src={designSystemSheet} alt="AURUM Design System" width="1440" height="1200" className="w-full block" />
+                    <img {...IMG.wide(designSystemSheet)} alt="AURUM Design System" width="1440" height="1200" className="w-full block" />
                   </div>
                   <div className={`absolute bottom-0 left-0 right-0 h-24 pointer-events-none bg-gradient-to-t ${isDark ? 'from-[#0a0c10]' : 'from-zinc-50'} to-transparent`} />
                 </div>

@@ -17,6 +17,7 @@ import { NextProjectRecommendation } from './next-project';
 import { CaseStudySectionNav } from './case-study-nav';
 import { SchenkerSEO } from './seo';
 import schenkerSvgPaths from '../../imports/svg-0abw9z02wj';
+import { IMG, responsive } from '../lib/cld';
 
 // ─── Schenker Screen Imports ───────────────────────────────────
 const screenSettings = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774041604/d4d1e42280872aa3079a1b940b29790994d2b241_jcnrf6.webp';
@@ -83,7 +84,7 @@ const ScreenCard = ({
   <FadeIn delay={delay}>
     <div className="group">
       <div className={`rounded-xl overflow-hidden mb-4 border shadow-lg ${isDark ? 'border-white/[0.06] shadow-black/30' : 'border-zinc-200 shadow-zinc-200/50'}`}>
-        <img src={src} alt={label} width="1440" height="900" className="w-full group-hover:scale-[1.02] transition-transform duration-700" />
+        <img {...IMG.wide(src)} alt={label} width="1440" height="900" className="w-full group-hover:scale-[1.02] transition-transform duration-700" />
       </div>
       <div className="flex items-start gap-3">
         <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5 ${isDark ? 'bg-[#6B8E23]/10' : 'bg-lime-50'}`}>
@@ -308,7 +309,7 @@ export function SchenkerCaseStudy() {
           <FadeIn delay={0.2}>
             <div className="relative">
               <BrowserMockup url="schenkerclient.cubsten.com" dark={false}>
-                <img src={screenSendungEmpfanger} alt="Schenker — Sendung" width="1440" height="900" className="w-full" />
+                <img {...IMG.wide(screenSendungEmpfanger)} alt="Schenker — Sendung" width="1440" height="900" className="w-full" />
               </BrowserMockup>
               {/* Floating secondary screens */}
               <motion.div
@@ -317,7 +318,7 @@ export function SchenkerCaseStudy() {
                 transition={{ delay: 0.6, duration: 0.8 }}
                 className="hidden lg:block absolute -right-6 top-20 w-[35%] rounded-xl overflow-hidden shadow-2xl shadow-black/40 border border-white/10"
               >
-                <img src={screenSettings} alt="Settings" width="1440" height="900" className="w-full" />
+                <img {...responsive(screenSettings, [480, 720, 960], '(min-width: 1024px) 400px, 1px')} alt="Settings" width="1440" height="900" className="w-full" />
               </motion.div>
               <motion.div
                 initial={{ opacity: 0, x: -40, y: 20 }}
@@ -325,7 +326,7 @@ export function SchenkerCaseStudy() {
                 transition={{ delay: 0.8, duration: 0.8 }}
                 className="hidden lg:block absolute -left-4 bottom-10 w-[30%] rounded-xl overflow-hidden shadow-2xl shadow-black/40 border border-white/10"
               >
-                <img src={screenLabels} alt="Labels" width="1440" height="900" className="w-full" />
+                <img {...responsive(screenLabels, [480, 720, 960], '(min-width: 1024px) 340px, 1px')} alt="Labels" width="1440" height="900" className="w-full" />
               </motion.div>
             </div>
           </FadeIn>
@@ -652,7 +653,7 @@ export function SchenkerCaseStudy() {
                   <div className={step.reverse ? 'order-2 lg:order-1' : ''}>
                     <ScrollRevealScale scaleFrom={0.92}>
                       <BrowserMockup url={step.url} dark={false}>
-                        <img src={step.src} alt={step.title} width="1440" height="900" className="w-full" />
+                        <img {...IMG.wide(step.src)} alt={step.title} width="1440" height="900" className="w-full" />
                       </BrowserMockup>
                     </ScrollRevealScale>
                   </div>
@@ -706,7 +707,7 @@ export function SchenkerCaseStudy() {
                   <div className={step.reverse ? 'order-2 lg:order-1' : ''}>
                     <ScrollRevealScale scaleFrom={0.92}>
                       <BrowserMockup url={`schenkerclient/${step.title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}`} dark={false}>
-                        <img src={step.src} alt={step.title} width="1440" height="900" className="w-full block" />
+                        <img {...IMG.wide(step.src)} alt={step.title} width="1440" height="900" className="w-full block" />
                       </BrowserMockup>
                     </ScrollRevealScale>
                   </div>

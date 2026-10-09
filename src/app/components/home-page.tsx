@@ -5,7 +5,7 @@ import type { MotionValue } from 'motion/react';
 import { Link, useSearchParams, useLocation, useParams, useNavigate } from 'react-router';
 import { useActiveSection } from './active-section-context';
 import {
-  ArrowUpRight, ArrowRight, Sun, Moon,
+  ArrowUpRight, ArrowRight, Sun, Moon, Maximize2,
   Home, Mail, Image, Video, Briefcase,
   Instagram, Download, ChevronLeft, ChevronRight, ChevronDown,
   Monitor, Layers, Palette, Smartphone, Copy, Send,
@@ -50,6 +50,7 @@ const logoScope = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339517
 const logoSpar = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339516/eb6337b24e75eee3f8c97c5faffbfb96a7395f90_fu7cjj.jpg';
 const logoUnilab = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339517/f3fdff4d8158dacf0a12b0777c362f22f0cb78c7_vkww33.jpg';
 import logoUpwork from '../../imports/upwork-1.svg';
+import { IMG, responsive } from '../lib/cld';
 const logoRunwayTeam = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339515/7cab6531835c509d1293dc3e519cb8808de775ac_ebqpyf.jpg';
 
 /* ─── Social Media Ads brand images ────────────────────────────────── */
@@ -172,7 +173,7 @@ const Sidebar = ({
       <motion.div variants={SIDEBAR_ITEM} className="px-3 pt-4 pb-4 lg:px-4 lg:pt-5 lg:pb-5">
         <div className="flex items-center gap-3">
           <img
-            src="https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1777841338/fav_ggorfv.png"
+            {...IMG.logo('https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1777841338/fav_ggorfv.png')}
             alt="Salome Mosiava"
             width="80" height="80"
             className="w-10 h-10 rounded-full object-cover flex-shrink-0 ring-1 ring-white/[0.08]"
@@ -488,7 +489,7 @@ const DiscoveryTile = ({
       >
         <div className="relative aspect-[16/10] overflow-hidden">
           <img
-            src={image}
+            {...responsive(image, [320, 480, 720, 960], '(min-width: 640px) 240px, 92vw')}
             alt={alt || label}
             className={`w-full h-full object-cover transition-all duration-500 ${isHovered && videoSrc ? 'opacity-0 scale-105' : 'opacity-100 group-hover:scale-105'}`}
           />
@@ -810,7 +811,7 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
               })().map((client, i) => (
                 <div key={i} className="flex items-center gap-2 flex-shrink-0">
                   <div className={`w-5 h-5 rounded overflow-hidden flex-shrink-0 ${isDark ? 'opacity-35' : 'opacity-50'}`}>
-                    <img src={client.logo} alt={client.name} width="20" height="20" className="w-full h-full object-contain" />
+                    <img {...IMG.logo(client.logo)} alt={client.name} width="20" height="20" className="w-full h-full object-contain" />
                   </div>
                   <span className={`text-[11px] whitespace-nowrap ${isDark ? 'text-white/20' : 'text-zinc-300'}`} style={{ fontFamily: F.body, fontWeight: 500 }}>{client.name}</span>
                 </div>
@@ -848,9 +849,9 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
                 <div className="relative h-full min-h-[220px] sm:min-h-[320px] overflow-hidden bg-gradient-to-br from-[#080B0F] via-[#0d0e14] to-[#0a0c12] img-hover-zoom">
                   <div className="absolute inset-0 opacity-40 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 50% 80%, rgba(213,154,4,0.08) 0%, transparent 60%)' }} />
                   <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/70 via-transparent to-black/10" />
-                  <motion.img src={screenLanding} alt="AURUM crypto platform landing page design" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 0.2, y: 0 }} transition={{ duration: 1, delay: 0.2 }} className="absolute top-[8%] left-[3%] w-[42%] rounded-xl shadow-2xl shadow-black/60" />
-                  <motion.img src={screenProfile} alt="AURUM user profile dashboard" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 0.3, y: 0 }} transition={{ duration: 1, delay: 0.35 }} className="absolute top-[4%] right-[3%] w-[38%] rounded-xl shadow-2xl shadow-black/60" />
-                  <motion.img src={screenExchange} alt="AURUM Crypto Exchange UI/UX Design by Salome Mosiava" initial={{ opacity: 0, y: 50, scale: 0.95 }} whileInView={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 1.2, delay: 0.5, ease: [0.22, 1, 0.36, 1] }} className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[65%] rounded-t-xl shadow-[0_-20px_60px_rgba(0,0,0,0.5)]" />
+                  <motion.img {...IMG.caseSide(screenLanding)} alt="AURUM crypto platform landing page design" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 0.2, y: 0 }} transition={{ duration: 1, delay: 0.2 }} className="absolute top-[8%] left-[3%] w-[42%] rounded-xl shadow-2xl shadow-black/60" />
+                  <motion.img {...IMG.caseSide(screenProfile)} alt="AURUM user profile dashboard" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 0.3, y: 0 }} transition={{ duration: 1, delay: 0.35 }} className="absolute top-[4%] right-[3%] w-[38%] rounded-xl shadow-2xl shadow-black/60" />
+                  <motion.img {...IMG.caseMain(screenExchange)} {...{ fetchpriority: 'high' }} alt="AURUM Crypto Exchange UI/UX Design by Salome Mosiava" initial={{ opacity: 0, y: 50, scale: 0.95 }} whileInView={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 1.2, delay: 0.5, ease: [0.22, 1, 0.36, 1] }} className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[65%] rounded-t-xl shadow-[0_-20px_60px_rgba(0,0,0,0.5)]" />
                   <div className="absolute top-2.5 left-2.5 z-20 flex items-center gap-1.5">
                     <span className="text-[7px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-full bg-[#D59A04]/10 backdrop-blur-xl text-[#D59A04]/80 border border-[#D59A04]/15">Crypto · Fintech</span>
                   </div>
@@ -907,9 +908,9 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
                       </span>
                     </div>
                     <div className="relative h-[140px] sm:h-auto min-h-[160px] overflow-hidden bg-gradient-to-br from-[#e8ecd8] via-[#dfe4cc] to-[#d4dab8] order-1 sm:order-2 rounded-t-2xl sm:rounded-t-none sm:rounded-r-2xl img-hover-zoom">
-                      <img src={schenkerLabels} alt="Schenker label management" loading="lazy" decoding="async" width="1440" height="900" className="absolute top-[10%] left-[4%] w-[44%] rounded-lg shadow-xl shadow-black/30 opacity-25" />
-                      <img src={schenkerSettings} alt="Schenker settings dashboard" loading="lazy" decoding="async" width="1440" height="900" className="absolute top-[6%] right-[4%] w-[40%] rounded-lg shadow-xl shadow-black/30 opacity-30" />
-                      <img src={schenkerSendung} alt="Schenker shipment tracking" loading="lazy" decoding="async" width="1440" height="900" className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[68%] rounded-t-lg shadow-xl shadow-black/40" />
+                      <img {...IMG.caseSide(schenkerLabels)} alt="Schenker label management" loading="lazy" decoding="async" width="1440" height="900" className="absolute top-[10%] left-[4%] w-[44%] rounded-lg shadow-xl shadow-black/30 opacity-25" />
+                      <img {...IMG.caseSide(schenkerSettings)} alt="Schenker settings dashboard" loading="lazy" decoding="async" width="1440" height="900" className="absolute top-[6%] right-[4%] w-[40%] rounded-lg shadow-xl shadow-black/30 opacity-30" />
+                      <img {...IMG.caseMain(schenkerSendung)} alt="Schenker shipment tracking" loading="lazy" decoding="async" width="1440" height="900" className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[68%] rounded-t-lg shadow-xl shadow-black/40" />
                     </div>
                   </div>
                 </BentoTiltCard>
@@ -991,7 +992,7 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
                     style={{ backgroundColor: `${exp.color}15` }}
                   >
                     {exp.logoImg ? (
-                      <img src={exp.logoImg} alt={`${exp.company} logo`} loading="lazy" width="28" height="28" className="w-full h-full object-cover" />
+                      <img {...IMG.logo(exp.logoImg)} alt={`${exp.company} logo`} loading="lazy" width="28" height="28" className="w-full h-full object-cover" />
                     ) : (
                       <span className="text-[9px] font-mono text-white/60" style={{ fontWeight: 600 }}>{exp.company.slice(0, 2).toUpperCase()}</span>
                     )}
@@ -1854,9 +1855,11 @@ const adsBrands: { name: string; logoImg?: string; items: AdsMedia[]; aiContent?
 ];
 
 /* Lightbox for full-size image viewing — rendered via portal to avoid parent transform issues */
-const ImageLightbox = ({ src, alt, onClose, whiteBg, onPrev, onNext, hasPrev, hasNext }: {
+const ImageLightbox = ({ src, alt, onClose, whiteBg, onPrev, onNext, hasPrev, hasNext, video }: {
   src: string; alt: string; onClose: () => void; whiteBg?: boolean;
   onPrev: () => void; onNext: () => void; hasPrev: boolean; hasNext: boolean;
+  /** Reels open here too: with sound and native controls */
+  video?: boolean;
 }) => {
 
   useEffect(() => {
@@ -1883,9 +1886,26 @@ const ImageLightbox = ({ src, alt, onClose, whiteBg, onPrev, onNext, hasPrev, ha
         transition={{ duration: 0.12 }}
       />
       <AnimatePresence mode="wait">
+        {video ? (
+          <motion.video
+            key={src}
+            src={src}
+            aria-label={alt}
+            autoPlay
+            controls
+            playsInline
+            initial={{ opacity: 0, scale: 0.97 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.97 }}
+            transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+            className="relative z-10 max-w-[82vw] max-h-[82vh] rounded-xl shadow-2xl bg-black cursor-default"
+            onClick={(e) => e.stopPropagation()}
+            data-cursor="none"
+          />
+        ) : (
         <motion.img
           key={src}
-          src={src}
+          {...IMG.full(src)}
           alt={alt}
           initial={{ opacity: 0, scale: 0.97 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -1896,6 +1916,7 @@ const ImageLightbox = ({ src, alt, onClose, whiteBg, onPrev, onNext, hasPrev, ha
           data-cursor="none"
           draggable={false}
         />
+        )}
       </AnimatePresence>
       <button
         onClick={onClose}
@@ -1957,13 +1978,14 @@ const MediaShimmer = ({ isDark }: { isDark: boolean }) => (
 );
 
 /* Media with loading state */
-const AdsMediaItem = ({ item, brandName, index, isDark, border, onImageClick, whiteBg, fill }: {
+const AdsMediaItem = ({ item, brandName, index, isDark, border, onImageClick, onVideoClick, whiteBg, fill }: {
   item: { src: string; type: 'image' | 'video'; fullWidth?: boolean };
   brandName: string;
   index: number;
   isDark: boolean;
   border: string;
   onImageClick: () => void;
+  onVideoClick?: () => void;
   whiteBg?: boolean;
   fill?: boolean;
 }) => {
@@ -1972,8 +1994,8 @@ const AdsMediaItem = ({ item, brandName, index, isDark, border, onImageClick, wh
 
   return (
     <TiltCard
-      onClick={() => item.type === 'image' ? onImageClick() : undefined}
-      cursor={item.type === 'image' ? 'expand' : undefined}
+      onClick={() => item.type === 'image' ? onImageClick() : onVideoClick?.()}
+      cursor={item.type === 'image' ? 'expand' : 'play'}
       className={`relative rounded-lg overflow-hidden border ${border} group cursor-pointer ${fill ? 'h-full' : 'break-inside-avoid mb-2.5'} ${whiteBg ? 'bg-white' : ''}`}
     >
       <div className={`relative ${fill ? 'h-full' : ''}`}>
@@ -1990,7 +2012,7 @@ const AdsMediaItem = ({ item, brandName, index, isDark, border, onImageClick, wh
           />
         ) : (
           <img
-            src={item.src}
+            {...IMG.tileLarge(item.src)}
             alt={`${brandName} social media ad design — ${index + 1}`}
             loading={imgLoadCache.has(item.src) ? 'eager' : 'lazy'}
             decoding="async"
@@ -2096,7 +2118,7 @@ const MagneticAdCard = ({ v, border, isDark, cardTilt, index, delayStep, onClick
     <motion.button
       ref={ref}
       onClick={onClick}
-      data-cursor={v.type === 'video' ? undefined : 'expand'}
+      data-cursor={v.type === 'video' ? 'play' : 'expand'}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       initial={{ opacity: 0, y: 16, scale: 0.96 }}
@@ -2112,7 +2134,7 @@ const MagneticAdCard = ({ v, border, isDark, cardTilt, index, delayStep, onClick
           <video src={v.src} autoPlay loop muted playsInline className="w-full h-auto object-cover block" />
         ) : (
           <img
-            src={v.src}
+            {...IMG.tile(v.src)}
             alt={`${v.brandName} social media advertising design`}
             loading="lazy"
             decoding="async"
@@ -2135,7 +2157,7 @@ const MagneticAdCard = ({ v, border, isDark, cardTilt, index, delayStep, onClick
       <div className={`absolute inset-0 bg-gradient-to-t ${isDark ? 'from-black/70' : 'from-black/50'} to-transparent flex items-end p-2 pointer-events-none`}>
         <div className="flex items-center gap-1.5">
           <div className={`w-4 h-4 rounded flex items-center justify-center text-[7px] flex-shrink-0 ${isDark ? 'bg-white/15 text-white/70' : 'bg-white/20 text-white/80'}`} style={{ fontFamily: F.heading, fontWeight: 700 }}>
-            {v.logoImg ? <img src={v.logoImg} alt={`${v.brandName} logo`} loading="lazy" width="16" height="16" className="w-full h-full object-cover rounded" /> : v.brandName.charAt(0)}
+            {v.logoImg ? <img {...IMG.logo(v.logoImg)} alt={`${v.brandName} logo`} loading="lazy" width="16" height="16" className="w-full h-full object-cover rounded" /> : v.brandName.charAt(0)}
           </div>
           <span className="text-[9px] text-white/90 truncate" style={{ fontFamily: F.body, fontWeight: 500 }}>{v.brandName.split(' · ')[0]}</span>
         </div>
@@ -2167,7 +2189,7 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
   const mt = isDark ? 'text-[#7a7d8a]' : 'text-zinc-400';
   const border = isDark ? 'border-white/[0.06]' : 'border-zinc-200';
   const bg2 = isDark ? 'bg-white/[0.03]' : 'bg-zinc-50';
-  const [lightbox, setLightbox] = useState<{ src: string; alt: string; whiteBg?: boolean; images: string[]; index: number } | null>(null);
+  const [lightbox, setLightbox] = useState<{ src: string; alt: string; whiteBg?: boolean; images: string[]; index: number; video?: boolean } | null>(null);
 
   const navigateLightbox = useCallback((delta: number) => {
     setLightbox(prev => {
@@ -2382,7 +2404,7 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
                       delayStep={ITEMS_PER_BATCH}
                       onClick={() => v.type === 'image'
                         ? setLightbox({ src: v.src, alt: v.brandName, whiteBg: v.whiteBg, images: visibleImgSrcs, index: visibleImgSrcs.indexOf(v.src) })
-                        : undefined}
+                        : setLightbox({ src: v.src, alt: `${v.brandName} reel`, images: [], index: 0, video: true })}
                     />
                   ));
                 })()}
@@ -2448,7 +2470,7 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
                     style={{ fontFamily: F.heading, fontWeight: 700 }}
                   >
                     {brand!.logoImg ? (
-                      <img src={brand!.logoImg} alt={`${brand!.name} logo`} loading="lazy" width="32" height="32" className="w-full h-full object-cover" />
+                      <img {...IMG.logo(brand!.logoImg)} alt={`${brand!.name} logo`} loading="lazy" width="32" height="32" className="w-full h-full object-cover" />
                     ) : brand!.name.charAt(0)}
                   </div>
                   <div className="flex items-center gap-2">
@@ -2489,7 +2511,7 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
                           transition={{ type: 'spring', stiffness: 300, damping: 20 }}
                           onClick={() => setLightbox({ src: tallItem.src, alt: brand!.name, whiteBg: brand!.whiteBg, images: imgSrcs, index: imgSrcs.indexOf(tallItem.src) })}
                         >
-                          <img src={tallItem.src} alt={`${brand!.name} visual`} loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover block" />
+                          <img {...IMG.tileLarge(tallItem.src)} alt={`${brand!.name} visual`} loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover block" />
                           {hoverOverlay}
                         </motion.button>
                       )}
@@ -2499,7 +2521,7 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
                             transition={{ type: 'spring', stiffness: 300, damping: 20 }}
                             onClick={() => setLightbox({ src: item.src, alt: brand!.name, whiteBg: brand!.whiteBg, images: imgSrcs, index: imgSrcs.indexOf(item.src) })}
                           >
-                            <img src={item.src} alt={`${brand!.name} visual ${i + 2}`} loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover block" />
+                            <img {...IMG.tileLarge(item.src)} alt={`${brand!.name} visual ${i + 2}`} loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover block" />
                             {hoverOverlay}
                           </motion.button>
                         ))}
@@ -2515,7 +2537,8 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
                       {brand!.items.map((item, i) => (
                         <div key={`${brand!.name}-${i}`} className="aspect-[4/5]">
                           <AdsMediaItem item={item} brandName={brand!.name} index={i} isDark={isDark} border={border} whiteBg={brand!.whiteBg} fill
-                            onImageClick={() => setLightbox({ src: item.src, alt: brand!.name, whiteBg: brand!.whiteBg, images: imgSrcs, index: imgSrcs.indexOf(item.src) })} />
+                            onImageClick={() => setLightbox({ src: item.src, alt: brand!.name, whiteBg: brand!.whiteBg, images: imgSrcs, index: imgSrcs.indexOf(item.src) })}
+                            onVideoClick={() => setLightbox({ src: item.src, alt: `${brand!.name} reel`, images: [], index: 0, video: true })} />
                         </div>
                       ))}
                     </div>
@@ -2535,7 +2558,8 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
                         const imgSrcs = brand!.items.filter(it => it.type === 'image').map(it => it.src);
                         return brand!.items.map((item, i) => (
                           <AdsMediaItem key={`${brand!.name}-${i}`} item={item} brandName={brand!.name} index={i} isDark={isDark} border={border} whiteBg={brand!.whiteBg}
-                            onImageClick={() => setLightbox({ src: item.src, alt: brand!.name, whiteBg: brand!.whiteBg, images: imgSrcs, index: imgSrcs.indexOf(item.src) })} />
+                            onImageClick={() => setLightbox({ src: item.src, alt: brand!.name, whiteBg: brand!.whiteBg, images: imgSrcs, index: imgSrcs.indexOf(item.src) })}
+                            onVideoClick={() => setLightbox({ src: item.src, alt: `${brand!.name} reel`, images: [], index: 0, video: true })} />
                         ));
                       })()}
                     </div>
@@ -2560,13 +2584,15 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
                     {groups.map((g, gi) => g.fullWidth ? (
                       g.items.map(({ item, idx }) => (
                         <AdsMediaItem key={`${brand!.name}-${idx}`} item={item} brandName={brand!.name} index={idx} isDark={isDark} border={border} whiteBg={brand!.whiteBg}
-                          onImageClick={() => setLightbox({ src: item.src, alt: brand!.name, whiteBg: brand!.whiteBg, images: imgSrcsGroups, index: imgSrcsGroups.indexOf(item.src) })} />
+                          onImageClick={() => setLightbox({ src: item.src, alt: brand!.name, whiteBg: brand!.whiteBg, images: imgSrcsGroups, index: imgSrcsGroups.indexOf(item.src) })}
+                            onVideoClick={() => setLightbox({ src: item.src, alt: `${brand!.name} reel`, images: [], index: 0, video: true })} />
                       ))
                     ) : (
                       <div key={`grp-${gi}`} className={regColsClass} style={isRegGrid ? undefined : { columnGap: '0.625rem' }}>
                         {g.items.map(({ item, idx }) => (
                           <AdsMediaItem key={`${brand!.name}-${idx}`} item={item} brandName={brand!.name} index={idx} isDark={isDark} border={border} whiteBg={brand!.whiteBg}
-                            onImageClick={() => setLightbox({ src: item.src, alt: brand!.name, whiteBg: brand!.whiteBg, images: imgSrcsGroups, index: imgSrcsGroups.indexOf(item.src) })} />
+                            onImageClick={() => setLightbox({ src: item.src, alt: brand!.name, whiteBg: brand!.whiteBg, images: imgSrcsGroups, index: imgSrcsGroups.indexOf(item.src) })}
+                            onVideoClick={() => setLightbox({ src: item.src, alt: `${brand!.name} reel`, images: [], index: 0, video: true })} />
                         ))}
                       </div>
                     ))}
@@ -2601,7 +2627,7 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
                     className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] tracking-[0.04em] transition-colors focus-visible:shadow-[0_0_0_2px_rgba(237,89,43,0.4)] ${active ? 'bg-[#ed592b]/10 text-[#ed592b] border border-[#ed592b]/30' : isDark ? 'text-[#5a5d6a] border border-transparent hover:text-white/70' : 'text-zinc-500 border border-transparent hover:text-zinc-700'}`}
                     style={{ fontFamily: F.body, fontWeight: 500 }}
                   >
-                    {b.logoImg && <img src={b.logoImg} alt="" aria-hidden="true" loading="lazy" width="12" height="12" className="w-3 h-3 rounded object-cover flex-shrink-0" />}
+                    {b.logoImg && <img {...IMG.logo(b.logoImg)} alt="" aria-hidden="true" loading="lazy" width="12" height="12" className="w-3 h-3 rounded object-cover flex-shrink-0" />}
                     <span>{b.name.split(' · ')[0]}</span>
                   </button>
                 );
@@ -2613,7 +2639,7 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
 
       {/* Lightbox */}
       <AnimatePresence>
-        {lightbox && <ImageLightbox src={lightbox.src} alt={lightbox.alt} whiteBg={lightbox.whiteBg} onClose={() => setLightbox(null)}
+        {lightbox && <ImageLightbox src={lightbox.src} alt={lightbox.alt} whiteBg={lightbox.whiteBg} video={lightbox.video} onClose={() => setLightbox(null)}
           onPrev={() => navigateLightbox(-1)} onNext={() => navigateLightbox(+1)}
           hasPrev={lightbox.index > 0} hasNext={lightbox.index < lightbox.images.length - 1} />}
       </AnimatePresence>
@@ -2720,6 +2746,7 @@ const MotionReelCard = ({
   border,
   activeUnmutedIdx,
   onUnmute,
+  onOpen,
 }: {
   reel: typeof motionReels[number];
   idx: number;
@@ -2729,6 +2756,8 @@ const MotionReelCard = ({
   border: string;
   activeUnmutedIdx: number | null;
   onUnmute: (idx: number | null) => void;
+  /** Watch this reel large, with sound */
+  onOpen: () => void;
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const isMuted = activeUnmutedIdx !== idx;
@@ -2762,7 +2791,7 @@ const MotionReelCard = ({
           style={{ fontFamily: F.heading, fontWeight: 700 }}
         >
           {reel.logoImg ? (
-            <img src={reel.logoImg} alt={`${reel.brand} logo`} loading="lazy" width="40" height="40" className="w-full h-full object-cover" />
+            <img {...IMG.logo(reel.logoImg)} alt={`${reel.brand} logo`} loading="lazy" width="40" height="40" className="w-full h-full object-cover" />
           ) : (
             reel.brandInitial
           )}
@@ -2791,9 +2820,24 @@ const MotionReelCard = ({
           loop
           muted
           playsInline
-          className="w-full h-auto block"
+          onClick={onOpen}
+          data-cursor="play"
+          data-cursor-label="Play with sound"
+          className="w-full h-auto block cursor-pointer"
         />
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-all duration-400 pointer-events-none" />
+
+        {/* Expand: the keyboard and screen-reader route to the large player */}
+        <button
+          type="button"
+          onClick={onOpen}
+          data-cursor="play"
+          data-cursor-label="Play with sound"
+          className="absolute bottom-2 left-2 z-20 w-10 h-10 md:w-7 md:h-7 rounded-full flex items-center justify-center backdrop-blur-md bg-black/50 border border-white/10 text-white/70 hover:text-white hover:bg-black/70 transition-colors focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.5)]"
+          aria-label={`Watch ${reel.brand} reel with sound`}
+        >
+          <Maximize2 size={12} />
+        </button>
 
         {/* Mute / Unmute button */}
         <motion.button
@@ -2828,9 +2872,23 @@ const SocialMediaMotionContent = ({ isDark }: { isDark: boolean }) => {
   const border = isDark ? 'border-white/[0.06]' : 'border-zinc-200';
   const bg2 = isDark ? 'bg-white/[0.03]' : 'bg-zinc-50';
   const [activeUnmutedIdx, setActiveUnmutedIdx] = useState<number | null>(null);
+  const [openReel, setOpenReel] = useState<{ src: string; alt: string } | null>(null);
+
+  useEffect(() => {
+    if (!openReel) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpenReel(null); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [openReel]);
 
   return (
     <div>
+      <AnimatePresence>
+        {openReel && (
+          <ImageLightbox src={openReel.src} alt={openReel.alt} video onClose={() => setOpenReel(null)}
+            onPrev={() => {}} onNext={() => {}} hasPrev={false} hasNext={false} />
+        )}
+      </AnimatePresence>
       <FadeIn>
         <div className="flex items-center gap-2.5 mb-1">
           <motion.div className="w-1.5 h-1.5 rounded-full bg-[#ed592b]" animate={{ scale: [1, 1.4, 1] }} transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }} />
@@ -2863,7 +2921,8 @@ const SocialMediaMotionContent = ({ isDark }: { isDark: boolean }) => {
               style={{ transformPerspective: 1200, transformOrigin: dir > 0 ? 'left center' : 'right center' }}
               className="w-full"
             >
-              <MotionReelCard reel={reel} idx={idx} isDark={isDark} mt={mt} bg2={bg2} border={border} activeUnmutedIdx={activeUnmutedIdx} onUnmute={setActiveUnmutedIdx} />
+              <MotionReelCard reel={reel} idx={idx} isDark={isDark} mt={mt} bg2={bg2} border={border} activeUnmutedIdx={activeUnmutedIdx} onUnmute={setActiveUnmutedIdx}
+                onOpen={() => { setActiveUnmutedIdx(null); setOpenReel({ src: reel.src, alt: `${reel.brand} reel` }); }} />
             </motion.div>
           );
         })}
@@ -2917,9 +2976,9 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
                 className="absolute inset-0 z-[15] pointer-events-none"
                 style={{ background: 'linear-gradient(115deg, transparent 38%, rgba(255,255,255,0.10) 50%, transparent 62%)' }}
               />
-              <img src={screenLanding} alt="AURUM crypto landing page UX design" loading="lazy" decoding="async" width="1440" height="900" className="absolute top-4 left-4 w-[50%] rounded-lg shadow-2xl shadow-black/50 opacity-25" />
-              <img src={screenProfile} alt="AURUM user profile UX design" loading="lazy" decoding="async" width="1440" height="900" className="absolute top-8 right-4 w-[45%] rounded-lg shadow-2xl shadow-black/50 opacity-35" />
-              <img src={screenAurumMainHQ} alt="AURUM exchange dashboard — cryptocurrency trading platform case study" loading="lazy" decoding="async" width="1440" height="900" className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[70%] rounded-t-lg shadow-2xl shadow-black/60 group-hover:-translate-y-2 group-hover:scale-[1.02] transition-all duration-500" />
+              <img {...IMG.caseSide(screenLanding)} alt="AURUM crypto landing page UX design" loading="lazy" decoding="async" width="1440" height="900" className="absolute top-4 left-4 w-[50%] rounded-lg shadow-2xl shadow-black/50 opacity-25" />
+              <img {...IMG.caseSide(screenProfile)} alt="AURUM user profile UX design" loading="lazy" decoding="async" width="1440" height="900" className="absolute top-8 right-4 w-[45%] rounded-lg shadow-2xl shadow-black/50 opacity-35" />
+              <img {...IMG.caseMain(screenAurumMainHQ)} alt="AURUM exchange dashboard — cryptocurrency trading platform case study" loading="lazy" decoding="async" width="1440" height="900" className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[70%] rounded-t-lg shadow-2xl shadow-black/60 group-hover:-translate-y-2 group-hover:scale-[1.02] transition-all duration-500" />
               <div className="absolute top-4 left-4 z-20 flex items-center gap-2">
                 <span className="text-[9px] uppercase tracking-[0.15em] px-2.5 py-1 rounded-full bg-[#ed592b]/20 backdrop-blur-md text-[#ed592b] border border-[#ed592b]/30">Featured</span>
                 <span className="text-[9px] uppercase tracking-[0.15em] px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-md text-white/50 border border-white/10">2025</span>
@@ -2981,9 +3040,9 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
                 className="absolute inset-0 z-[15] pointer-events-none"
                 style={{ background: 'linear-gradient(115deg, transparent 38%, rgba(255,255,255,0.12) 50%, transparent 62%)' }}
               />
-              <img src={schenkerLabels} alt="Schenker logistics label tracking interface" loading="lazy" decoding="async" width="1440" height="900" className="absolute top-4 left-4 w-[50%] rounded-lg shadow-2xl shadow-black/50 opacity-30" />
-              <img src={schenkerSettings} alt="Schenker enterprise settings panel" loading="lazy" decoding="async" width="1440" height="900" className="absolute top-8 right-4 w-[45%] rounded-lg shadow-2xl shadow-black/50 opacity-35" />
-              <img src={schenkerMainHQ} alt="Schenker Sendung Empfänger — sender & recipient form, enterprise logistics platform case study" loading="lazy" decoding="async" width="1440" height="900" className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[70%] rounded-t-lg shadow-2xl shadow-black/60 group-hover:-translate-y-2 group-hover:scale-[1.02] transition-all duration-500" />
+              <img {...IMG.caseSide(schenkerLabels)} alt="Schenker logistics label tracking interface" loading="lazy" decoding="async" width="1440" height="900" className="absolute top-4 left-4 w-[50%] rounded-lg shadow-2xl shadow-black/50 opacity-30" />
+              <img {...IMG.caseSide(schenkerSettings)} alt="Schenker enterprise settings panel" loading="lazy" decoding="async" width="1440" height="900" className="absolute top-8 right-4 w-[45%] rounded-lg shadow-2xl shadow-black/50 opacity-35" />
+              <img {...IMG.caseMain(schenkerMainHQ)} alt="Schenker Sendung Empfänger — sender & recipient form, enterprise logistics platform case study" loading="lazy" decoding="async" width="1440" height="900" className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[70%] rounded-t-lg shadow-2xl shadow-black/60 group-hover:-translate-y-2 group-hover:scale-[1.02] transition-all duration-500" />
               <div className="absolute top-4 left-4 z-20 flex items-center gap-2">
                 <span className="text-[9px] uppercase tracking-[0.15em] px-2.5 py-1 rounded-full bg-[#6B8E23]/20 backdrop-blur-md text-[#8FBC3B] border border-[#6B8E23]/30">Enterprise</span>
                 <span className="text-[9px] uppercase tracking-[0.15em] px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-md text-white/70 border border-white/15">Desktop</span>
@@ -3045,9 +3104,9 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
                 className="absolute inset-0 z-[15] pointer-events-none"
                 style={{ background: 'linear-gradient(115deg, transparent 38%, rgba(107,164,255,0.14) 50%, transparent 62%)' }}
               />
-              <img src={unispaceRegister} alt="Unispace registration form — multi-role student platform" loading="lazy" decoding="async" width="1440" height="900" className="absolute top-4 left-4 w-[50%] rounded-lg shadow-2xl shadow-black/50 opacity-30" />
-              <img src={unispaceTable} alt="Unispace submitted forms table — dashboard view" loading="lazy" decoding="async" width="1440" height="900" className="absolute top-8 right-4 w-[45%] rounded-lg shadow-2xl shadow-black/50 opacity-40" />
-              <img src={unispaceLogin} alt="Unispace student management platform — Unilab / Ilia State University case study" loading="lazy" decoding="async" width="1440" height="900" className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[70%] rounded-t-lg shadow-2xl shadow-black/60 group-hover:-translate-y-2 group-hover:scale-[1.02] transition-all duration-500" />
+              <img {...IMG.caseSide(unispaceRegister)} alt="Unispace registration form — multi-role student platform" loading="lazy" decoding="async" width="1440" height="900" className="absolute top-4 left-4 w-[50%] rounded-lg shadow-2xl shadow-black/50 opacity-30" />
+              <img {...IMG.caseSide(unispaceTable)} alt="Unispace submitted forms table — dashboard view" loading="lazy" decoding="async" width="1440" height="900" className="absolute top-8 right-4 w-[45%] rounded-lg shadow-2xl shadow-black/50 opacity-40" />
+              <img {...IMG.caseMain(unispaceLogin)} alt="Unispace student management platform — Unilab / Ilia State University case study" loading="lazy" decoding="async" width="1440" height="900" className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[70%] rounded-t-lg shadow-2xl shadow-black/60 group-hover:-translate-y-2 group-hover:scale-[1.02] transition-all duration-500" />
               <div className="absolute top-4 left-4 z-20 flex items-center gap-2">
                 <span className="text-[9px] uppercase tracking-[0.15em] px-2.5 py-1 rounded-full bg-[#3D82F6]/20 backdrop-blur-md text-[#6BA4FF] border border-[#3D82F6]/30">EdTech</span>
                 <span className="text-[9px] uppercase tracking-[0.15em] px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-md text-white/70 border border-white/15">Web · Responsive</span>

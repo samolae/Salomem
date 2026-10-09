@@ -17,17 +17,11 @@
   <link rel="preconnect" href="https://res.cloudinary.com" crossorigin />
   <link rel="dns-prefetch" href="https://res.cloudinary.com" />
 
-  <!-- Manrope (primary body font) — non-blocking -->
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
-  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" /></noscript>
-
-  <!-- Syne (heading font, variable 400-800 for kinetic type) — non-blocking -->
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Syne:wght@400..800&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
-  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400..800&display=swap" /></noscript>
-
-  <!-- Inter (fallback body font) — non-blocking -->
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
-  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&display=swap" /></noscript>
+  <!-- Fonts: one combined, non-blocking request. Variable weight ranges, and a
+       browser only downloads a family's files once text actually uses it, so
+       Inter / Space Grotesk (case-study fallbacks) cost nothing on other pages. -->
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Syne:wght@400..800&family=Inter:wght@300..700&family=Space+Grotesk:wght@300..700&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Syne:wght@400..800&family=Inter:wght@300..700&family=Space+Grotesk:wght@300..700&display=swap" /></noscript>
 
   <!-- Fallback Open Graph (overridden by React Helmet per page) -->
   <meta property="og:title" content="Salome Mosiava — Art Director & Senior Product Designer" />

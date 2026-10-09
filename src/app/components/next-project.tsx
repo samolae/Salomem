@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 import { CaseLink } from './case-transition';
 import { useTheme } from './theme-provider';
 import { FadeIn, MagneticWrap, AnimatedDivider } from './animated-helpers';
+import { IMG, responsive } from '../lib/cld';
 
 /* ─── Screen imports ──────────────────────────────────────────────── */
 const screenExchange = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774041357/470258954933ae7f3b3615ad0fe2098ae46160f5_2_wvsmro.webp';
@@ -150,7 +151,7 @@ export function NextProjectRecommendation({ currentProject }: { currentProject: 
 
                         {/* Background screen */}
                         <motion.img
-                          src={p.images.bg}
+                          {...IMG.caseSide(p.images.bg)}
                           alt=""
                           loading="lazy"
                           decoding="async"
@@ -159,7 +160,7 @@ export function NextProjectRecommendation({ currentProject }: { currentProject: 
 
                         {/* Main screen */}
                         <motion.img
-                          src={p.images.main}
+                          {...IMG.caseMain(p.images.main)}
                           alt={p.title}
                           loading="lazy"
                           decoding="async"
@@ -254,7 +255,7 @@ export function NextProjectRecommendation({ currentProject }: { currentProject: 
                       {/* Preview image */}
                       <div className="relative h-24 overflow-hidden img-hover-zoom">
                         <img
-                          src={rec.image}
+                          {...responsive(rec.image, [360, 540, 720], '(min-width: 640px) 340px, 92vw')}
                           alt={rec.title}
                           className="w-full h-full object-cover opacity-40 group-hover:opacity-60 group-hover:scale-105 transition-all duration-700"
                         />

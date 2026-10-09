@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'moti
 import { ArrowRight, ChevronDown, Monitor, Clock, Smartphone, BookOpen } from 'lucide-react';
 import { useTheme } from './theme-provider';
 import { ShineText } from './animated-helpers';
+import { IMG } from '../lib/cld';
 
 /* ─── AURUM Screen Imports ─────────────────────────────────────────── */
 const screenExchange = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774041357/470258954933ae7f3b3615ad0fe2098ae46160f5_2_wvsmro.webp';
@@ -124,7 +125,7 @@ const PerspectiveCard = ({
       className={className}
     >
       <div className="rounded-2xl overflow-hidden shadow-2xl shadow-black/40 border border-white/[0.08] bg-[#080B0F]">
-        <img src={src} alt={alt} className="w-full block" loading="eager" fetchpriority="high" />
+        <img {...IMG.wide(src)} alt={alt} className="w-full block" loading="eager" fetchpriority="high" />
       </div>
     </motion.div>
   );

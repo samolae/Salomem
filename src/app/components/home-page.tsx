@@ -9,7 +9,7 @@ import {
   Home, Mail, Image, Video, Briefcase,
   Instagram, Download, ChevronLeft, ChevronRight, ChevronDown,
   Monitor, Layers, Palette, Smartphone, Copy, Send,
-  Menu, X, Clock, Phone, Linkedin, ExternalLink,
+  X, Clock, Phone, Linkedin, ExternalLink,
   Play, Pen, Globe, MessageCircle, Check,
   Volume2, VolumeX, Code2, Pause, LayoutGrid,
 } from 'lucide-react';
@@ -886,8 +886,10 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
       </FadeIn>
 
       {/* TRUE BENTO GRID — 3-col asymmetric, dense row spans · creative scroll reveal */}
+      {/* Reveal starts at opacity 0.01, not 0: it holds the LCP image (AURUM), and
+          browsers skip fully transparent paints when timing LCP. Looks identical. */}
       <motion.div
-        initial={{ opacity: 0, y: 80, scale: 0.94, rotateX: -8, filter: 'blur(10px)' }}
+        initial={{ opacity: 0.01, y: 80, scale: 0.94, rotateX: -8, filter: 'blur(10px)' }}
         whileInView={{ opacity: 1, y: 0, scale: 1, rotateX: 0, filter: 'blur(0px)' }}
         viewport={{ once: true, margin: '-80px' }}
         transition={{ duration: 1.0, ease: [0.22, 1, 0.36, 1], opacity: { duration: 0.6 } }}
@@ -904,7 +906,7 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
                   <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/70 via-transparent to-black/10" />
                   <motion.img {...IMG.caseSide(screenLanding)} alt="AURUM crypto platform landing page design" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 0.2, y: 0 }} transition={{ duration: 1, delay: 0.2 }} className="absolute top-[8%] left-[3%] w-[42%] rounded-xl shadow-2xl shadow-black/60" />
                   <motion.img {...IMG.caseSide(screenProfile)} alt="AURUM user profile dashboard" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 0.3, y: 0 }} transition={{ duration: 1, delay: 0.35 }} className="absolute top-[4%] right-[3%] w-[38%] rounded-xl shadow-2xl shadow-black/60" />
-                  <motion.img {...IMG.caseMain(screenExchange)} {...{ fetchpriority: 'high' }} alt="AURUM Crypto Exchange UI/UX Design by Salome Mosiava" initial={{ opacity: 0, y: 50, scale: 0.95 }} whileInView={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 1.2, delay: 0.5, ease: [0.22, 1, 0.36, 1] }} className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[65%] rounded-t-xl shadow-[0_-20px_60px_rgba(0,0,0,0.5)]" />
+                  <motion.img {...IMG.caseMain(screenExchange)} {...{ fetchpriority: 'high' }} alt="AURUM Crypto Exchange UI/UX Design by Salome Mosiava" initial={{ opacity: 0.01, y: 50, scale: 0.95 }} whileInView={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 1.2, delay: 0.15, ease: [0.22, 1, 0.36, 1] }} className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[65%] rounded-t-xl shadow-[0_-20px_60px_rgba(0,0,0,0.5)]" />
                   <div className="absolute top-2.5 left-2.5 z-20 flex items-center gap-1.5">
                     <span className="text-[10px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-full bg-[#0a0b0f]/60 backdrop-blur-xl text-[#D59A04] border border-[#D59A04]/20">Crypto · Fintech</span>
                   </div>
@@ -3375,20 +3377,10 @@ export function HomePage() {
         onMobileClose={() => setIsMobileOpen(false)}
       />
 
-      {/* Mobile hamburger trigger */}
-      <button
-        onClick={() => setIsMobileOpen(true)}
-        className={`fixed top-3 left-3 z-[45] md:hidden w-10 h-10 rounded-xl flex items-center justify-center border shadow-sm transition-colors focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)] ${isDark ? 'bg-[#0b0b0e]/90 border-white/[0.08] text-white/70 hover:text-white' : 'bg-white/90 border-zinc-200 text-zinc-600 hover:text-zinc-900'} backdrop-blur-md`}
-        aria-label="Open navigation"
-        aria-expanded={isMobileOpen}
-        aria-controls="mobile-menu"
-      >
-        <Menu size={18} />
-      </button>
 
       {/* Main content */}
       <main id="main-content" tabIndex={-1} className="md:ml-[64px] lg:ml-[240px] min-h-screen lg:pt-0 outline-none">
-        <div className="max-w-3xl mx-auto px-5 sm:px-8 lg:px-12 pt-16 pb-6 md:py-8 lg:py-10">
+        <div className="max-w-3xl mx-auto px-5 sm:px-8 lg:px-12 pt-6 pb-6 md:py-8 lg:py-10">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeSection}

@@ -2,12 +2,12 @@ import { lazy } from 'react';
 import type { RouteObject } from 'react-router';
 import { ScrollToTopLayout } from './components/scroll-to-top';
 import { GlobalLayout } from './components/global-layout';
-import { HomePage } from './components/home-page';
-import { caseRoutes } from './case-routes';
+import { caseRoutes, homeRoute } from './case-routes';
 
-// HomePage serves /, /work/*, /services and /contact, so it ships in the
-// main bundle: no second request before the first paint, and nothing to
-// suspend on while a prerendered page hydrates.
+// HomePage (/, /work/*, /services, /contact) is a lazy route like the case
+// studies, so a case study no longer downloads the whole home page. Static
+// pages modulepreload their route chunk (scripts/prerender.mjs) and main.tsx
+// loads it before hydrating, so first paint and hydration are unchanged.
 const PixelManager = lazy(() =>
   import('./components/pixel-manager').then((m) => ({ default: m.PixelManager }))
 );
@@ -28,10 +28,10 @@ export const routes: RouteObject[] = [
       {
         Component: GlobalLayout,
         children: [
-          { path: '/',                         Component: HomePage },
-          { path: '/work/:category',           Component: HomePage },
-          { path: '/contact',                  Component: HomePage },
-          { path: '/services',                 Component: HomePage },
+          { path: '/',                         lazy: homeRoute },
+          { path: '/work/:category',           lazy: homeRoute },
+          { path: '/contact',                  lazy: homeRoute },
+          { path: '/services',                 lazy: homeRoute },
           { path: '/projects/aurum',           lazy: caseRoutes['/projects/aurum'] },
           { path: '/projects/schenker',        lazy: caseRoutes['/projects/schenker'] },
           { path: '/projects/unispace',        lazy: caseRoutes['/projects/unispace'] },

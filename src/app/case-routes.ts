@@ -14,6 +14,10 @@ export const caseRoutes = {
     import('./components/unispace-case-study').then((m) => ({ Component: m.UnispaceCaseStudy })),
 } as const;
 
+/** Home, work galleries, services and contact all share one page module */
+export const homeRoute = () =>
+  import('./components/home-page').then((m) => ({ Component: m.HomePage }));
+
 export type CasePath = keyof typeof caseRoutes;
 
 /** Warm the case-study chunk ahead of a click. Safe to call repeatedly. */

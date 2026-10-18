@@ -3,7 +3,7 @@ import { Link, Outlet, useLocation, useNavigate } from 'react-router';
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import { useTheme } from './theme-provider';
 import { useActiveSection } from './active-section-context';
-import { Home, Mail, Layers, Image, Video } from 'lucide-react';
+import { Home, Mail, Layers, Image, Video, Briefcase } from 'lucide-react';
 import {
   ScrollProgress,
   LiquidMeshBackground,
@@ -19,6 +19,7 @@ const F = {
 
 const bottomNavItems = [
   { id: 'home', label: 'Home', icon: Home, path: '/' },
+  { id: 'services', label: 'Services', icon: Briefcase, path: '/services' },
   { id: 'ux-ui', label: 'UX/UI', icon: Layers, path: '/work/ux-ui' },
   { id: 'ads', label: 'Ads', icon: Image, path: '/work/social-media-ads' },
   { id: 'motion', label: 'Motion', icon: Video, path: '/work/social-media-motion' },
@@ -32,12 +33,14 @@ function MobileBottomBar() {
   const navigate = useNavigate();
   const { activeSection, mobileDrawerOpen } = useActiveSection();
 
-  const isHomePage = location.pathname === '/' || location.pathname.startsWith('/work/') || location.pathname === '/contact';
+  const isHomePage = location.pathname === '/' || location.pathname.startsWith('/work/') || location.pathname === '/contact' || location.pathname === '/services';
 
   const getActive = (item: typeof bottomNavItems[0]) => {
     if (item.id === 'contact' && location.pathname === '/contact') return true;
+    if (item.id === 'services' && location.pathname === '/services') return true;
     if (isHomePage) {
-      if (item.id === 'home') return activeSection === 'home' || activeSection === 'services';
+      if (item.id === 'home') return activeSection === 'home';
+      if (item.id === 'services') return activeSection === 'services';
       if (item.id === 'contact') return activeSection === 'contact';
       if (item.id === 'ux-ui') return activeSection === 'ux-ui';
       if (item.id === 'ads') return activeSection === 'social-media-ads';
@@ -77,7 +80,7 @@ function MobileBottomBar() {
                   key={item.id}
                   to={item.path}
                   aria-current={active ? 'page' : undefined}
-                  className="relative flex flex-col items-center justify-center gap-1 py-2.5 px-3 min-w-[60px] transition-colors duration-200 focus-visible:!shadow-[inset_0_0_0_2px_rgba(237,89,43,0.9)] rounded-lg"
+                  className="relative flex flex-col items-center justify-center gap-1 py-2.5 px-1 min-w-[52px] flex-1 transition-colors duration-200 focus-visible:!shadow-[inset_0_0_0_2px_rgba(237,89,43,0.9)] rounded-lg"
                   style={{ color: active ? '#ed592b' : isDark ? '#8a8d9a' : '#71717a' }}
                 >
                   {active && (

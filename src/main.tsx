@@ -3,6 +3,7 @@ import { createBrowserRouter, matchRoutes } from 'react-router';
 import App from './app/App.tsx';
 import { routes } from './app/routes';
 import { startHydration } from './app/hydration';
+import { homeRoute } from './app/case-routes';
 import './styles/index.css';
 
 /*
@@ -43,6 +44,11 @@ async function boot() {
   } else {
     createRoot(container).render(<App router={router} />);
   }
+
+  // Warm the home page chunk once the browser is idle, so "Back to
+  // portfolio" from a case study opens instantly
+  const idle = window.requestIdleCallback ?? ((cb: () => void) => setTimeout(cb, 2000));
+  idle(() => { homeRoute().catch(() => { /* retried on navigation */ }); });
 }
 
 boot();

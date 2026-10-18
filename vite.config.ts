@@ -34,6 +34,8 @@ export default defineConfig({
   assetsInclude: ['**/*.svg', '**/*.csv'],
 
   build: {
+    // scripts/prerender.mjs reads it to modulepreload each page's route chunk
+    manifest: true,
     // Raise the warning threshold to avoid noise (default 500kB)
     chunkSizeWarningLimit: 1000,
   },

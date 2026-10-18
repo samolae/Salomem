@@ -95,7 +95,8 @@ export const CaseStudySectionNav = ({ sections, accentColor }: CaseStudySectionN
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: 30 }}
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          className="fixed right-3 sm:right-5 lg:right-8 z-50 flex flex-col items-center gap-2"
+          // Hidden below md: on phones the rail sat on top of the body copy
+          className="fixed right-3 sm:right-5 lg:right-8 z-50 hidden md:flex flex-col items-center gap-2"
           // y goes through motion so it composes with the x animation; a plain
           // transform string here was overwritten, leaving the nav low on screen
           style={{ top: '50%', y: '-50%' }}

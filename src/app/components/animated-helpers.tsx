@@ -352,7 +352,7 @@ export const MagneticWrap = ({
 /* ═══════════════════════════════════════════════════════════════════ */
 /*             SCROLL PROGRESS INDICATOR                             */
 /* ═══════════════════════════════════════════════════════════════════ */
-export const ScrollProgress = ({ color = '#ed592b' }: { color?: string }) =>
+export const ScrollProgress = ({ color = '#ff4306' }: { color?: string }) =>
   supportsScrollTimeline() ? (
     <div aria-hidden className="scroll-progress" style={{ backgroundColor: color }} />
   ) : (
@@ -515,7 +515,7 @@ export const SmoothSection = ({
 /*             CURSOR REACTIVE GLOW                                  */
 /* ═══════════════════════════════════════════════════════════════════ */
 export const CursorGlow = ({
-  color = 'rgba(237,89,43,0.06)',
+  color = 'rgba(255,67,6,0.06)',
   size = 600,
 }: {
   color?: string;
@@ -554,7 +554,7 @@ export const CursorGlow = ({
 /* ═══════════════════════════════════════════════════════════════════ */
 export const FloatingParticles = ({
   count = 30,
-  color = 'rgba(237,89,43,0.15)',
+  color = 'rgba(255,67,6,0.15)',
   className = '',
 }: {
   count?: number;
@@ -712,7 +712,7 @@ export const InfiniteMarquee = ({
 /*             MORPHING BLOB BACKGROUND                              */
 /* ═══════════════════════════════════════════════════════════════════ */
 export const MorphingBlob = ({
-  color = 'rgba(237,89,43,0.04)',
+  color = 'rgba(255,67,6,0.04)',
   className = '',
 }: {
   color?: string;
@@ -858,7 +858,7 @@ export const RevealMask = ({
 /* ═══════════════════════════════════════════════════════════════════ */
 export const AnimatedLine = ({
   className = '',
-  color = '#ed592b',
+  color = '#ff4306',
   vertical = true,
 }: {
   className?: string;
@@ -929,7 +929,7 @@ export const LightBeamCard = ({
           background: useTransform(
             [mouseX, mouseY],
             ([x, y]: number[]) =>
-              `radial-gradient(250px circle at ${x}px ${y}px, rgba(237,89,43,0.08), transparent 60%)`
+              `radial-gradient(250px circle at ${x}px ${y}px, rgba(255,67,6,0.08), transparent 60%)`
           ),
         }}
       />
@@ -1052,7 +1052,7 @@ export const LiquidMeshBackground = ({
             const x2 = 75 - mx * 10;
             const y2 = 80 - my * 15;
             return `
-              radial-gradient(ellipse at ${x1}% ${y1}%, rgba(237,89,43,0.03) 0%, transparent 50%),
+              radial-gradient(ellipse at ${x1}% ${y1}%, rgba(255,67,6,0.03) 0%, transparent 50%),
               radial-gradient(ellipse at ${x2}% ${y2}%, rgba(99,102,241,0.02) 0%, transparent 50%),
               radial-gradient(ellipse at ${50 + mx * 8}% ${50 + my * 8}%, rgba(213,154,4,0.015) 0%, transparent 40%)
             `;
@@ -1170,7 +1170,7 @@ export const MagneticLink = ({
   children,
   className = '',
   strength = 0.35,
-  accentColor = '#ed592b',
+  accentColor = '#ff4306',
 }: {
   children: ReactNode;
   className?: string;

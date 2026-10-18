@@ -40,11 +40,11 @@ const NEAR = 8; // gap when the tag flips to the other side of the cursor
 const EDGE = 8; // breathing room from the viewport edge
 const H = 28;
 
-const ACCENT = '#ed592b';
+const ACCENT = '#ff4306';
 const INK = '#0a0a0c'; // 6:1 on the accent, readable at 12px
 const FONT = '"Manrope", "Inter", sans-serif';
 const SHADOW =
-  '0 10px 24px -10px rgba(237,89,43,0.65), 0 2px 6px rgba(0,0,0,0.18), inset 0 0 0 1px rgba(255,255,255,0.2)';
+  '0 10px 24px -10px rgba(255,67,6,0.65), 0 2px 6px rgba(0,0,0,0.18), inset 0 0 0 1px rgba(255,255,255,0.2)';
 
 type Tag = { kind: string; label: string };
 /** Which corner of the tag sits next to the cursor */

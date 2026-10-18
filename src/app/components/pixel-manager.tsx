@@ -53,13 +53,13 @@ const appleGlassSubtle = (isDark: boolean) => ({
 
 const appleGlassAccent = (isDark: boolean) => ({
   className: `backdrop-blur-[32px] border ${isDark
-    ? 'bg-[#ed592b]/[0.06] border-[#ed592b]/[0.12]'
-    : 'bg-[#ed592b]/[0.04] border-[#ed592b]/[0.18]'
+    ? 'bg-[#ff4306]/[0.06] border-[#ff4306]/[0.12]'
+    : 'bg-[#ff4306]/[0.04] border-[#ff4306]/[0.18]'
   }`,
   style: {
     boxShadow: isDark
-      ? 'inset 0 1px 0 0 rgba(237,89,43,0.08), 0 4px 24px rgba(237,89,43,0.08)'
-      : 'inset 0 1px 0 0 rgba(255,255,255,0.6), 0 4px 24px rgba(237,89,43,0.06)',
+      ? 'inset 0 1px 0 0 rgba(255,67,6,0.08), 0 4px 24px rgba(255,67,6,0.08)'
+      : 'inset 0 1px 0 0 rgba(255,255,255,0.6), 0 4px 24px rgba(255,67,6,0.06)',
   },
 });
 
@@ -363,8 +363,8 @@ export const PixelManager = () => {
           className="absolute -top-[25%] -right-[15%] w-[70vw] h-[70vw] rounded-full"
           style={{
             background: isDark
-              ? 'radial-gradient(circle, rgba(237,89,43,0.06) 0%, transparent 65%)'
-              : 'radial-gradient(circle, rgba(237,89,43,0.08) 0%, transparent 65%)',
+              ? 'radial-gradient(circle, rgba(255,67,6,0.06) 0%, transparent 65%)'
+              : 'radial-gradient(circle, rgba(255,67,6,0.08) 0%, transparent 65%)',
           }}
         />
         <motion.div
@@ -422,8 +422,8 @@ export const PixelManager = () => {
               style={{ ...ga.style, gap: GR.xs + 1, padding: `${GR.xs + 1}px ${GR.md}px` }}
             >
               <SpecularHighlight isDark={isDark} />
-              <div className="w-1.5 h-1.5 rounded-full bg-[#ed592b] animate-pulse" />
-              <span className="text-[10px] text-[#ed592b]" style={{ fontFamily: F.body, fontWeight: 600 }}>
+              <div className="w-1.5 h-1.5 rounded-full bg-[#ff4306] animate-pulse" />
+              <span className="text-[10px] text-[#ff4306]" style={{ fontFamily: F.body, fontWeight: 600 }}>
                 {savedPixels.filter(p => p.active).length} active
               </span>
             </motion.div>
@@ -479,7 +479,7 @@ export const PixelManager = () => {
                 style={{ ...gs.style, padding: `${GR.md}px ${GR.sm}px`, gap: GR.xs }}
               >
                 <SpecularHighlight isDark={isDark} />
-                <div className="text-[#ed592b]">{b.icon}</div>
+                <div className="text-[#ff4306]">{b.icon}</div>
                 <span className={`text-[10px] ${isDark ? 'text-white/70' : 'text-zinc-600'}`} style={{ fontFamily: F.body, fontWeight: 600 }}>{b.label}</span>
                 <span className={`text-[8px] ${mt}`} style={{ fontFamily: F.body }}>{b.sub}</span>
               </div>
@@ -504,9 +504,9 @@ export const PixelManager = () => {
               style={{ ...ga.style, minHeight: GR['2xl'], gap: GR.sm, marginBottom: GR.md, fontFamily: F.body, fontWeight: 600 }}
             >
               <SpecularHighlight isDark={isDark} />
-              <Code2 size={16} className="text-[#ed592b]" />
+              <Code2 size={16} className="text-[#ff4306]" />
               <span className={`text-[13px] ${isDark ? 'text-white/90' : 'text-zinc-800'}`}>Copy All Pixel Code</span>
-              <span className={`text-[10px] px-2 py-0.5 rounded-full ${isDark ? 'bg-[#ed592b]/15 text-[#ed592b]' : 'bg-[#ed592b]/10 text-[#ed592b]'}`}>
+              <span className={`text-[10px] px-2 py-0.5 rounded-full ${isDark ? 'bg-[#ff4306]/15 text-[#ff4306]' : 'bg-[#ff4306]/10 text-[#ff4306]'}`}>
                 {savedPixels.filter(p => p.active).length}
               </span>
             </motion.button>
@@ -571,13 +571,13 @@ export const PixelManager = () => {
                           <motion.button
                             whileTap={{ scale: 0.85 }}
                             onClick={() => handleToggle(pixel.id)}
-                            className={`relative rounded-full transition-colors duration-300 flex-shrink-0 ${pixel.active ? 'bg-[#ed592b]' : isDark ? 'bg-white/[0.06]' : 'bg-zinc-200'}`}
+                            className={`relative rounded-full transition-colors duration-300 flex-shrink-0 ${pixel.active ? 'bg-[#ff4306]' : isDark ? 'bg-white/[0.06]' : 'bg-zinc-200'}`}
                             style={{
                               width: GR['2xl'] - 3,
                               height: GR.xl - 4,
                               minWidth: GR['2xl'] - 3,
                               boxShadow: pixel.active
-                                ? 'inset 0 1px 0 rgba(255,255,255,0.15), 0 4px 16px rgba(237,89,43,0.3)'
+                                ? 'inset 0 1px 0 rgba(255,255,255,0.15), 0 4px 16px rgba(255,67,6,0.3)'
                                 : isDark ? 'inset 0 1px 2px rgba(0,0,0,0.3)' : 'inset 0 1px 2px rgba(0,0,0,0.08)',
                             }}
                           >
@@ -600,7 +600,7 @@ export const PixelManager = () => {
                               isShowingCode
                                 ? ga.className
                                 : gs.className
-                            } ${isShowingCode ? 'text-[#ed592b]' : isDark ? 'text-white/60 active:text-white/90' : 'text-zinc-500 active:text-zinc-800'}`}
+                            } ${isShowingCode ? 'text-[#ff4306]' : isDark ? 'text-white/60 active:text-white/90' : 'text-zinc-500 active:text-zinc-800'}`}
                             style={{
                               ...(isShowingCode ? ga.style : gs.style),
                               minHeight: GR.xl + GR.md,
@@ -625,7 +625,7 @@ export const PixelManager = () => {
                               isShowingEvents
                                 ? ga.className
                                 : gs.className
-                            } ${isShowingEvents ? 'text-[#ed592b]' : isDark ? 'text-white/60 active:text-white/90' : 'text-zinc-500 active:text-zinc-800'}`}
+                            } ${isShowingEvents ? 'text-[#ff4306]' : isDark ? 'text-white/60 active:text-white/90' : 'text-zinc-500 active:text-zinc-800'}`}
                             style={{
                               ...(isShowingEvents ? ga.style : gs.style),
                               minHeight: GR.xl + GR.md,
@@ -716,14 +716,14 @@ export const PixelManager = () => {
                               <motion.button
                                 whileTap={{ scale: 0.97 }}
                                 onClick={() => handleCopy(platform.codeTemplate(pixel.pixelId))}
-                                className="relative w-full flex items-center justify-center rounded-2xl bg-[#ed592b] text-white text-[13px] active:scale-[0.98] transition-all overflow-hidden"
+                                className="relative w-full flex items-center justify-center rounded-2xl bg-[#ff4306] text-white text-[13px] active:scale-[0.98] transition-all overflow-hidden"
                                 style={{
                                   minHeight: GR.xl + GR.md,
                                   gap: GR.sm,
                                   fontFamily: F.body,
                                   fontWeight: 600,
                                   marginBottom: GR.md,
-                                  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.2), 0 8px 32px rgba(237,89,43,0.25)',
+                                  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.2), 0 8px 32px rgba(255,67,6,0.25)',
                                 }}
                               >
                                 <SpecularHighlight isDark={false} />
@@ -745,7 +745,7 @@ export const PixelManager = () => {
                                 style={{ ...gs.style, padding: GR.md, marginTop: GR.md, gap: GR.sm }}
                               >
                                 <SpecularHighlight isDark={isDark} />
-                                <Info size={13} className="text-[#ed592b] flex-shrink-0 mt-0.5" />
+                                <Info size={13} className="text-[#ff4306] flex-shrink-0 mt-0.5" />
                                 <p className={`text-[10px] leading-[1.6] ${mt}`} style={{ fontFamily: F.body }}>
                                   Paste this code inside your website's <code className={`px-1 py-0.5 rounded ${isDark ? 'bg-white/[0.04]' : 'bg-zinc-100'}`}>{'<head>'}</code> tag.
                                 </p>
@@ -775,7 +775,7 @@ export const PixelManager = () => {
                                   href={platform.docUrl}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="flex items-center gap-1 text-[10px] text-[#ed592b] min-h-[36px] px-2"
+                                  className="flex items-center gap-1 text-[10px] text-[#ff4306] min-h-[36px] px-2"
                                   style={{ fontFamily: F.body, fontWeight: 600 }}
                                 >
                                   Docs <ExternalLink size={10} />
@@ -801,7 +801,7 @@ export const PixelManager = () => {
                                   >
                                     <SpecularHighlight isDark={isDark} />
                                     <div className="flex items-center gap-2">
-                                      <Zap size={11} className="text-[#ed592b]" />
+                                      <Zap size={11} className="text-[#ff4306]" />
                                       <span className="font-mono text-[11px]">{event}</span>
                                     </div>
                                     <Copy size={11} className="opacity-20" />
@@ -830,7 +830,7 @@ export const PixelManager = () => {
             style={{ ...g.style, padding: `${GR['2xl']}px ${GR.xl}px`, marginBottom: GR.xl, borderRadius: GR.lg }}
           >
             <SpecularHighlight isDark={isDark} />
-            <div className="absolute inset-0 pointer-events-none opacity-[0.025]" style={{ background: 'radial-gradient(circle at 50% 38.2%, #ed592b 0%, transparent 55%)' }} />
+            <div className="absolute inset-0 pointer-events-none opacity-[0.025]" style={{ background: 'radial-gradient(circle at 50% 38.2%, #ff4306 0%, transparent 55%)' }} />
 
             <motion.div
               animate={{ y: [0, -GR.sm, 0] }}
@@ -839,7 +839,7 @@ export const PixelManager = () => {
               style={{ ...ga.style, width: GR['3xl'] - GR.sm, height: GR['3xl'] - GR.sm, marginBottom: GR.xl }}
             >
               <SpecularHighlight isDark={isDark} />
-              <Code2 size={GR.xl} className="text-[#ed592b]" />
+              <Code2 size={GR.xl} className="text-[#ff4306]" />
             </motion.div>
 
             <h3 className={`text-[18px] tracking-[-0.02em] ${isDark ? 'text-white' : 'text-zinc-800'}`} style={{ fontFamily: F.heading, fontWeight: 700, marginBottom: GR.sm }}>
@@ -852,13 +852,13 @@ export const PixelManager = () => {
             <motion.button
               whileTap={{ scale: 0.96 }}
               onClick={() => setShowAddPanel(true)}
-              className="relative w-full flex items-center justify-center rounded-2xl bg-[#ed592b] text-white text-[14px] active:scale-[0.98] transition-all overflow-hidden"
+              className="relative w-full flex items-center justify-center rounded-2xl bg-[#ff4306] text-white text-[14px] active:scale-[0.98] transition-all overflow-hidden"
               style={{
                 minHeight: GR['2xl'] + 1,
                 gap: GR.sm + 2,
                 fontFamily: F.body,
                 fontWeight: 600,
-                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.2), 0 8px 32px rgba(237,89,43,0.3)',
+                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.2), 0 8px 32px rgba(255,67,6,0.3)',
               }}
             >
               <SpecularHighlight isDark={false} />
@@ -905,7 +905,7 @@ export const PixelManager = () => {
                     style={{ ...ga.style, width: 40, height: 40 }}
                   >
                     <SpecularHighlight isDark={isDark} />
-                    <Sparkles size={17} className="text-[#ed592b]" />
+                    <Sparkles size={17} className="text-[#ff4306]" />
                   </div>
                   <div>
                     <span className={`text-[14px] block ${isDark ? 'text-white' : 'text-zinc-800'}`} style={{ fontFamily: F.heading, fontWeight: 700 }}>
@@ -937,7 +937,7 @@ export const PixelManager = () => {
                       key={p.id}
                       whileTap={{ scale: 0.97 }}
                       onClick={() => setSelectedPlatform(isSelected ? null : p)}
-                      className={`relative w-full flex items-center overflow-hidden rounded-2xl transition-all active:scale-[0.98] ${gStyle.className} ${isSelected ? 'ring-1 ring-[#ed592b]/20' : ''}`}
+                      className={`relative w-full flex items-center overflow-hidden rounded-2xl transition-all active:scale-[0.98] ${gStyle.className} ${isSelected ? 'ring-1 ring-[#ff4306]/20' : ''}`}
                       style={{ ...gStyle.style, padding: `${GR.md}px ${GR.md + 3}px`, minHeight: GR['2xl'] + GR.sm, gap: GR.md }}
                     >
                       <SpecularHighlight isDark={isDark} />
@@ -965,10 +965,10 @@ export const PixelManager = () => {
                       </div>
                       <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all ${
                         isSelected
-                          ? 'border-[#ed592b] bg-[#ed592b]'
+                          ? 'border-[#ff4306] bg-[#ff4306]'
                           : isDark ? 'border-white/[0.08]' : 'border-zinc-200'
                       }`}
-                      style={isSelected ? { boxShadow: '0 2px 8px rgba(237,89,43,0.3)' } : {}}
+                      style={isSelected ? { boxShadow: '0 2px 8px rgba(255,67,6,0.3)' } : {}}
                       >
                         {isSelected && <Check size={12} className="text-white" />}
                       </div>
@@ -994,7 +994,7 @@ export const PixelManager = () => {
                         style={{ ...gs.style, padding: GR.md, marginTop: GR.sm, marginBottom: GR.lg, gap: GR.sm }}
                       >
                         <SpecularHighlight isDark={isDark} />
-                        <Info size={13} className="text-[#ed592b] flex-shrink-0 mt-0.5" />
+                        <Info size={13} className="text-[#ff4306] flex-shrink-0 mt-0.5" />
                         <p className={`text-[10px] leading-[1.618] ${mt}`} style={{ fontFamily: F.body }}>
                           {selectedPlatform.friendlyTip}
                         </p>
@@ -1011,8 +1011,8 @@ export const PixelManager = () => {
                         placeholder={selectedPlatform.placeholder}
                         className={`w-full font-mono transition-all outline-none ${
                           isDark
-                            ? 'border-white/[0.06] bg-white/[0.02] text-white/90 placeholder:text-white/10 focus:border-[#ed592b]/30 focus:bg-white/[0.04] focus:ring-2 focus:ring-[#ed592b]/8'
-                            : 'border-zinc-200 bg-white/60 text-zinc-800 placeholder:text-zinc-300 focus:border-[#ed592b]/35 focus:ring-2 focus:ring-[#ed592b]/8'
+                            ? 'border-white/[0.06] bg-white/[0.02] text-white/90 placeholder:text-white/10 focus:border-[#ff4306]/30 focus:bg-white/[0.04] focus:ring-2 focus:ring-[#ff4306]/8'
+                            : 'border-zinc-200 bg-white/60 text-zinc-800 placeholder:text-zinc-300 focus:border-[#ff4306]/35 focus:ring-2 focus:ring-[#ff4306]/8'
                         } border backdrop-blur-md`}
                         style={{
                           minHeight: GR['2xl'] - 3,
@@ -1036,8 +1036,8 @@ export const PixelManager = () => {
                         placeholder={`e.g. ${selectedPlatform.name} — Main Website`}
                         className={`w-full transition-all outline-none ${
                           isDark
-                            ? 'border-white/[0.06] bg-white/[0.02] text-white/90 placeholder:text-white/10 focus:border-[#ed592b]/30 focus:bg-white/[0.04] focus:ring-2 focus:ring-[#ed592b]/8'
-                            : 'border-zinc-200 bg-white/60 text-zinc-800 placeholder:text-zinc-300 focus:border-[#ed592b]/35 focus:ring-2 focus:ring-[#ed592b]/8'
+                            ? 'border-white/[0.06] bg-white/[0.02] text-white/90 placeholder:text-white/10 focus:border-[#ff4306]/30 focus:bg-white/[0.04] focus:ring-2 focus:ring-[#ff4306]/8'
+                            : 'border-zinc-200 bg-white/60 text-zinc-800 placeholder:text-zinc-300 focus:border-[#ff4306]/35 focus:ring-2 focus:ring-[#ff4306]/8'
                         } border backdrop-blur-md`}
                         style={{
                           minHeight: GR['2xl'] - 3,
@@ -1058,7 +1058,7 @@ export const PixelManager = () => {
                         disabled={!pixelIdInput.trim()}
                         className={`relative w-full flex items-center justify-center rounded-2xl text-[14px] transition-all active:scale-[0.98] overflow-hidden ${
                           pixelIdInput.trim()
-                            ? 'bg-[#ed592b] text-white'
+                            ? 'bg-[#ff4306] text-white'
                             : isDark
                             ? 'bg-white/[0.02] text-white/12 cursor-not-allowed border border-white/[0.04]'
                             : 'bg-zinc-100/60 text-zinc-300 cursor-not-allowed border border-zinc-200'
@@ -1070,7 +1070,7 @@ export const PixelManager = () => {
                           fontFamily: F.body,
                           fontWeight: 600,
                           boxShadow: pixelIdInput.trim()
-                            ? 'inset 0 1px 0 rgba(255,255,255,0.2), 0 8px 32px rgba(237,89,43,0.25)'
+                            ? 'inset 0 1px 0 rgba(255,255,255,0.2), 0 8px 32px rgba(255,67,6,0.25)'
                             : 'none',
                         }}
                       >
@@ -1097,7 +1097,7 @@ export const PixelManager = () => {
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: GR.sm }}>
             {[
-              { step: '1', title: 'Choose your ad platform', desc: 'Select Meta, Google, TikTok, or LinkedIn from the list above.', icon: <Sparkles size={15} />, color: '#ed592b' },
+              { step: '1', title: 'Choose your ad platform', desc: 'Select Meta, Google, TikTok, or LinkedIn from the list above.', icon: <Sparkles size={15} />, color: '#ff4306' },
               { step: '2', title: 'Enter your Pixel ID', desc: 'Paste the ID from your ad platform\'s dashboard. We\'ll show you exactly where to find it.', icon: <Code2 size={15} />, color: '#4285F4' },
               { step: '3', title: 'Copy the code', desc: 'We generate the full tracking code. One tap to copy it to your clipboard.', icon: <Copy size={15} />, color: '#22c55e' },
               { step: '4', title: 'Test it works', desc: 'Run a quick validation to make sure everything fires correctly before going live.', icon: <CheckCircle2 size={15} />, color: '#a855f7' },
@@ -1165,7 +1165,7 @@ export const PixelManager = () => {
         >
           <SpecularHighlight isDark={isDark} />
           <div className="flex items-center justify-center mb-2" style={{ gap: GR.xs + 1 }}>
-            <Heart size={12} className="text-[#ed592b]" />
+            <Heart size={12} className="text-[#ff4306]" />
             <span className={`text-[11px] ${isDark ? 'text-white/45' : 'text-zinc-500'}`} style={{ fontFamily: F.body, fontWeight: 500 }}>
               Built with care for marketers & developers
             </span>
@@ -1173,7 +1173,7 @@ export const PixelManager = () => {
           <div className="flex items-center justify-center flex-wrap" style={{ gap: GR.md }}>
             {[
               { icon: <Shield size={10} />, text: 'No data stored', color: 'text-emerald-500' },
-              { icon: <Zap size={10} />, text: 'Instant generation', color: 'text-[#ed592b]' },
+              { icon: <Zap size={10} />, text: 'Instant generation', color: 'text-[#ff4306]' },
               { icon: <Lock size={10} />, text: '100% client-side', color: 'text-blue-500' },
             ].map(t => (
               <div key={t.text} className="flex items-center gap-1">

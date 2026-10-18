@@ -82,7 +82,7 @@ const adsCarmall4 = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_
 const F = {
   heading: '"Syne", "Space Grotesk", sans-serif',
   body: '"Manrope", "Inter", sans-serif',
-  accent: '#ed592b',
+  accent: '#ff4306',
   gold: '#D59A04',
   yellow: '#FFC701',
   green: '#22c55e',
@@ -219,7 +219,7 @@ const Sidebar = ({
             <p className={`text-[13px] font-semibold truncate leading-[1.15] ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: F.heading, letterSpacing: '-0.02em' }}>
               Salome Mosiava
             </p>
-            <p className="text-[10px] leading-[1.2]" style={{ fontFamily: F.body, fontWeight: 500, color: '#ed592b' }}>Senior Product Designer</p>
+            <p className="text-[10px] leading-[1.2]" style={{ fontFamily: F.body, fontWeight: 500, color: '#ff4306' }}>Senior Product Designer</p>
             <p className="text-[10px] leading-[1.2]" style={{ fontFamily: F.body, fontWeight: 400, color: isDark ? 'rgba(255,255,255,0.55)' : '#71717a' }}>& Art Direction</p>
           </div>
         </div>
@@ -237,7 +237,7 @@ const Sidebar = ({
                   whileTap={{ scale: 0.97 }}
                   tabIndex={-1}
                   title={item.label}
-                  className={`group relative w-full flex items-center ${inDrawer ? 'justify-start' : 'md:justify-center lg:justify-start'} gap-2.5 px-3 py-2 lg:py-[5px] rounded-[10px] text-[13px] whitespace-nowrap transition-colors overflow-hidden min-h-[44px] md:min-h-[36px] lg:min-h-0 focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)] ${
+                  className={`group relative w-full flex items-center ${inDrawer ? 'justify-start' : 'md:justify-center lg:justify-start'} gap-2.5 px-3 py-2 lg:py-[5px] rounded-[10px] text-[13px] whitespace-nowrap transition-colors overflow-hidden min-h-[44px] md:min-h-[36px] lg:min-h-0 focus-visible:!shadow-[0_0_0_2px_rgba(255,67,6,0.9)] ${
                     active
                       ? isDark ? 'bg-white/[0.06] text-white' : 'bg-zinc-200/70 text-zinc-900'
                       : isDark ? 'text-[#7a7d8a]' : 'text-zinc-400'
@@ -246,7 +246,7 @@ const Sidebar = ({
                   {active && (
                     <motion.div
                       layoutId="sidebarActiveNav"
-                      className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-4 rounded-r-full bg-[#ed592b]"
+                      className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-4 rounded-r-full bg-[#ff4306]"
                       transition={{ type: 'spring', stiffness: 500, damping: 35 }}
                     />
                   )}
@@ -261,7 +261,7 @@ const Sidebar = ({
                   <motion.span
                     variants={{ rest: { x: 0 }, hover: { x: 2 } }}
                     transition={{ type: 'spring', stiffness: 400, damping: 35 }}
-                    className={`relative z-10 flex-shrink-0 transition-opacity duration-150 ${active ? 'text-[#ed592b]' : 'opacity-50 group-hover:opacity-100'}`}
+                    className={`relative z-10 flex-shrink-0 transition-opacity duration-150 ${active ? 'text-[#ff4306]' : 'opacity-50 group-hover:opacity-100'}`}
                   >
                     {item.icon}
                   </motion.span>
@@ -294,7 +294,7 @@ const Sidebar = ({
                   whileTap={{ scale: 0.97 }}
                   tabIndex={-1}
                   title={cat.label}
-                  className={`group relative w-full flex items-center ${inDrawer ? 'justify-start' : 'md:justify-center lg:justify-start'} gap-2.5 px-3 py-2 lg:py-[5px] rounded-[10px] text-[13px] transition-colors overflow-hidden min-h-[36px] focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)] ${
+                  className={`group relative w-full flex items-center ${inDrawer ? 'justify-start' : 'md:justify-center lg:justify-start'} gap-2.5 px-3 py-2 lg:py-[5px] rounded-[10px] text-[13px] transition-colors overflow-hidden min-h-[36px] focus-visible:!shadow-[0_0_0_2px_rgba(255,67,6,0.9)] ${
                     active
                       ? isDark ? 'bg-white/[0.06] text-white' : 'bg-zinc-200/70 text-zinc-900'
                       : isDark ? 'text-[#7a7d8a]' : 'text-zinc-400'
@@ -303,7 +303,7 @@ const Sidebar = ({
                   {active && (
                     <motion.div
                       layoutId="sidebarActiveCat"
-                      className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-4 rounded-r-full bg-[#ed592b]"
+                      className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-4 rounded-r-full bg-[#ff4306]"
                       transition={{ type: 'spring', stiffness: 500, damping: 35 }}
                     />
                   )}
@@ -318,7 +318,7 @@ const Sidebar = ({
                   <motion.span
                     variants={{ rest: { x: 0 }, hover: { x: 2 } }}
                     transition={{ type: 'spring', stiffness: 400, damping: 35 }}
-                    className={`flex-shrink-0 relative z-10 transition-opacity duration-150 ${active ? 'text-[#ed592b]' : 'opacity-50 group-hover:opacity-100'}`}
+                    className={`flex-shrink-0 relative z-10 transition-opacity duration-150 ${active ? 'text-[#ff4306]' : 'opacity-50 group-hover:opacity-100'}`}
                   >
                     {cat.icon}
                   </motion.span>
@@ -349,7 +349,7 @@ const Sidebar = ({
                   whileTap={{ scale: 0.97 }}
                   tabIndex={-1}
                   title={cat.label}
-                  className={`group relative w-full flex items-center ${inDrawer ? 'justify-start' : 'md:justify-center lg:justify-start'} gap-2.5 px-3 py-2 lg:py-[5px] rounded-[10px] text-[13px] transition-colors overflow-hidden min-h-[36px] focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)] ${
+                  className={`group relative w-full flex items-center ${inDrawer ? 'justify-start' : 'md:justify-center lg:justify-start'} gap-2.5 px-3 py-2 lg:py-[5px] rounded-[10px] text-[13px] transition-colors overflow-hidden min-h-[36px] focus-visible:!shadow-[0_0_0_2px_rgba(255,67,6,0.9)] ${
                     active
                       ? isDark ? 'bg-white/[0.06] text-white' : 'bg-zinc-200/70 text-zinc-900'
                       : isDark ? 'text-[#7a7d8a]' : 'text-zinc-400'
@@ -358,7 +358,7 @@ const Sidebar = ({
                   {active && (
                     <motion.div
                       layoutId="sidebarActiveCat"
-                      className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-4 rounded-r-full bg-[#ed592b]"
+                      className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-4 rounded-r-full bg-[#ff4306]"
                       transition={{ type: 'spring', stiffness: 500, damping: 35 }}
                     />
                   )}
@@ -373,7 +373,7 @@ const Sidebar = ({
                   <motion.span
                     variants={{ rest: { x: 0 }, hover: { x: 2 } }}
                     transition={{ type: 'spring', stiffness: 400, damping: 35 }}
-                    className={`flex-shrink-0 relative z-10 transition-opacity duration-150 ${active ? 'text-[#ed592b]' : 'opacity-40 group-hover:opacity-100'}`}
+                    className={`flex-shrink-0 relative z-10 transition-opacity duration-150 ${active ? 'text-[#ff4306]' : 'opacity-40 group-hover:opacity-100'}`}
                   >
                     {cat.icon}
                   </motion.span>
@@ -397,7 +397,7 @@ const Sidebar = ({
           <Link
             to="/contact"
             aria-label="Available for new projects — go to contact page"
-            className={`group flex items-center gap-2 px-3.5 py-2 ${inDrawer ? 'min-h-[44px]' : ''} rounded-full border text-[11px] no-underline cursor-pointer ${border} ${isDark ? 'text-[#7a7d8a] hover:text-white hover:bg-white/[0.04] hover:border-white/[0.12]' : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 hover:border-zinc-300'} transition-[background-color,border-color,color,transform] duration-200 hover:translate-x-[1px] focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)]`}
+            className={`group flex items-center gap-2 px-3.5 py-2 ${inDrawer ? 'min-h-[44px]' : ''} rounded-full border text-[11px] no-underline cursor-pointer ${border} ${isDark ? 'text-[#7a7d8a] hover:text-white hover:bg-white/[0.04] hover:border-white/[0.12]' : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 hover:border-zinc-300'} transition-[background-color,border-color,color,transform] duration-200 hover:translate-x-[1px] focus-visible:!shadow-[0_0_0_2px_rgba(255,67,6,0.9)]`}
             style={{ fontFamily: F.body }}
           >
             <span className="relative flex h-2 w-2 flex-shrink-0">
@@ -422,7 +422,7 @@ const Sidebar = ({
               href={item.href}
               target="_blank"
               rel="noopener noreferrer"
-              className={`group flex items-center justify-center gap-1.5 px-3 ${inDrawer ? 'min-h-[44px] flex-1' : 'py-[7px] flex-1'} rounded-[10px] text-[11px] whitespace-nowrap border no-underline transition-[background-color,border-color,color,transform] duration-200 hover:-translate-y-[1px] focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)] ${
+              className={`group flex items-center justify-center gap-1.5 px-3 ${inDrawer ? 'min-h-[44px] flex-1' : 'py-[7px] flex-1'} rounded-[10px] text-[11px] whitespace-nowrap border no-underline transition-[background-color,border-color,color,transform] duration-200 hover:-translate-y-[1px] focus-visible:!shadow-[0_0_0_2px_rgba(255,67,6,0.9)] ${
                 isDark
                   ? `${border} text-[#7a7d8a] hover:text-white hover:bg-white/[0.04] hover:border-white/[0.12]`
                   : `${border} text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 hover:border-zinc-300`
@@ -451,7 +451,7 @@ const Sidebar = ({
           <>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 md:hidden" onClick={onMobileClose} />
             <motion.aside ref={drawerRef} id="mobile-menu" role="dialog" aria-modal="true" aria-label="Menu" initial={{ x: -300 }} animate={{ x: 0 }} exit={{ x: -300 }} transition={{ type: 'spring', damping: 30, stiffness: 300 }} className={`fixed left-0 top-0 bottom-0 w-[80vw] max-w-[300px] z-50 md:hidden border-r ${isDark ? 'bg-[#0b0b0e] border-white/[0.05]' : 'bg-white border-zinc-200'}`}>
-              <button ref={closeRef} onClick={onMobileClose} className="absolute top-3 right-3 p-2.5 rounded-xl text-[#7a7d8a] hover:text-white hover:bg-white/[0.06] min-w-[44px] min-h-[44px] flex items-center justify-center focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)] z-10" aria-label="Close menu"><X size={20} /></button>
+              <button ref={closeRef} onClick={onMobileClose} className="absolute top-3 right-3 p-2.5 rounded-xl text-[#7a7d8a] hover:text-white hover:bg-white/[0.06] min-w-[44px] min-h-[44px] flex items-center justify-center focus-visible:!shadow-[0_0_0_2px_rgba(255,67,6,0.9)] z-10" aria-label="Close menu"><X size={20} /></button>
               {sidebarContent(true)}
             </motion.aside>
           </>
@@ -669,7 +669,7 @@ const SpotlightDeckSection = ({ isDark, border }: { isDark: boolean; border: str
   const spotlights: SpotlightData[] = [
     {
       img: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773320797/0101_yqkpg2.webp',
-      tag: 'Business', tagColor: '#ed592b',
+      tag: 'Business', tagColor: '#ff4306',
       title: 'Driving Real Impact',
       desc: 'At Scope, we started from zero and, in less than two years, grew the team, collaborated with 50+ businesses, and delivered measurable results.',
     },
@@ -736,7 +736,7 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
   const experiences = [
     { company: 'RunwayTeam', type: 'Contract', role: 'Visual Designer', start: 'JAN 2026', end: 'NOW', color: '#00d26a', logoImg: logoRunwayTeam },
     { company: 'UniLab · უნილაბი', type: 'Part-time', role: 'Head of UI/UX & Graphic Design', start: 'AUG 2024', end: 'JUL 2026', color: '#22c55e', logoImg: logoUnilab },
-    { company: 'Scope · სქოუფი', type: 'Full-time', role: 'Art Director', start: 'MAY 2024', end: 'DEC 2025', color: '#ed592b', logoImg: logoScope },
+    { company: 'Scope · სქოუფი', type: 'Full-time', role: 'Art Director', start: 'MAY 2024', end: 'DEC 2025', color: '#ff4306', logoImg: logoScope },
     { company: 'Upwork', type: '', role: 'Freelance Graphic Designer', start: '2021', end: '2024', color: '#14a800', logoImg: logoUpwork },
     { company: 'Cubisten', type: 'Full-time', role: 'Graphic Designer → Creative Director', start: 'JAN 2019', end: 'DEC 2024', color: '#6366f1', logoImg: logoCubisten },
     { company: 'Spar', type: 'Contract', role: 'Graphic Designer', start: '2020', end: '2022', color: '#a855f7', logoImg: logoSpar },
@@ -777,7 +777,7 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
               <TextScramble text="80+ projects." delay={0.3} duration={1} style={{ fontFamily: F.body, fontWeight: 500, fontSize: '10px' }} />
             </span>
             {' '}
-            <span className="bg-gradient-to-r from-[#ed592b] via-[#f47a4d] to-[#ed592b] bg-clip-text text-transparent bg-[length:200%_auto] animate-[shimmer_4s_linear_infinite]">
+            <span className="bg-gradient-to-r from-[#ff4306] via-[#f47a4d] to-[#ff4306] bg-clip-text text-transparent bg-[length:200%_auto] animate-[shimmer_4s_linear_infinite]">
               <TextScramble text="Countless sparks." delay={0.8} duration={1} style={{ fontFamily: F.body, fontWeight: 500, fontSize: '10px' }} />
             </span>
           </p>
@@ -802,11 +802,11 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
           <MagneticWrap strength={0.25}>
             <Link to="/contact" className="inline-block rounded-full">
               <motion.div
-                whileHover={{ scale: 1.06, boxShadow: '0 6px 30px rgba(237,89,43,0.3)' }}
+                whileHover={{ scale: 1.06, boxShadow: '0 6px 30px rgba(255,67,6,0.3)' }}
                 whileTap={{ scale: 0.93, y: 2 }}
                 tabIndex={-1}
                 transition={{ type: 'spring', stiffness: 500, damping: 15 }}
-                className="relative inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#c94a20] text-white text-[13px] whitespace-nowrap shadow-[0_2px_16px_rgba(237,89,43,0.2)] overflow-hidden group"
+                className="relative inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#d93905] text-white text-[13px] whitespace-nowrap shadow-[0_2px_16px_rgba(255,67,6,0.2)] overflow-hidden group"
                 style={{ fontFamily: F.body, fontWeight: 500 }}
               >
                 <motion.div
@@ -877,7 +877,7 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
       {/* ═══ FEATURED WORK — Compact Bento Grid ═══ */}
       <FadeIn delay={0.2}>
         <div className="flex items-center gap-3 mb-5">
-          <div className="w-1.5 h-1.5 rounded-full bg-[#ed592b]" />
+          <div className="w-1.5 h-1.5 rounded-full bg-[#ff4306]" />
           <h2 className={`text-[11px] uppercase tracking-[0.15em] ${mt}`} style={{ fontFamily: F.body, fontWeight: 500 }}>
             Featured Work
           </h2>
@@ -924,7 +924,7 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
 
           {/* Terminal — col 3, row 1 */}
           <div className="sm:col-start-3 sm:row-start-1">
-            <DiscoveryTile image={adsTerminal1} label="Terminal" category="Social Media Ads" categoryColor="#ed592b" isDark={isDark} border={border} link="/work/social-media-ads" alt="Terminal Social Media Ads Design by Salome Mosiava" typeBadge="Gallery · 16 Brands" ctaLabel="View Gallery" />
+            <DiscoveryTile image={adsTerminal1} label="Terminal" category="Social Media Ads" categoryColor="#ff4306" isDark={isDark} border={border} link="/work/social-media-ads" alt="Terminal Social Media Ads Design by Salome Mosiava" typeBadge="Gallery · 16 Brands" ctaLabel="View Gallery" />
           </div>
 
           {/* Carmall — col 3, row 2 */}
@@ -989,7 +989,7 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
               whileHover={{ scale: 1.04, y: -1 }}
               whileTap={{ scale: 0.96 }}
               onClick={() => onSectionNavigate?.(cta.section)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] border transition-all focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)] ${isDark ? 'border-white/[0.06] text-white/60 hover:text-white hover:bg-white/[0.04] hover:border-white/[0.1]' : 'border-zinc-200 text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100'}`}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] border transition-all focus-visible:!shadow-[0_0_0_2px_rgba(255,67,6,0.9)] ${isDark ? 'border-white/[0.06] text-white/60 hover:text-white hover:bg-white/[0.04] hover:border-white/[0.1]' : 'border-zinc-200 text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100'}`}
               style={{ fontFamily: F.body, fontWeight: 500 }}
             >
               {cta.icon}
@@ -1015,20 +1015,20 @@ const HomeContent = ({ isDark, onSectionNavigate }: { isDark: boolean; onSection
               I work across design, direction, and digital culture, turning the small signals and habits we often miss into ideas that create real business impact.
             </p>
             <p className="mt-3">
-              At <a href="https://www.facebook.com/Scopegeorgia" target="_blank" rel="noopener noreferrer" className={`${isDark ? 'text-white/90 hover:text-[#ed592b]' : 'text-zinc-800 hover:text-[#ed592b]'} transition-colors underline decoration-[#ed592b]/20 hover:decoration-[#ed592b]/60 underline-offset-2`} style={{ fontWeight: 500 }}>Scope</a>, we started from zero, and in less than two years, I've helped grow the team, led design team leads, worked with 50+ businesses, managed $70,000+ in monthly ad spend, and delivered real results. Before that, at <a href="https://www.facebook.com/cubisten" target="_blank" rel="noopener noreferrer" className={`${isDark ? 'text-white/90 hover:text-[#ed592b]' : 'text-zinc-800 hover:text-[#ed592b]'} transition-colors underline decoration-[#ed592b]/20 hover:decoration-[#ed592b]/60 underline-offset-2`} style={{ fontWeight: 500 }}>Cubisten</a>, I built design systems and lifted brand aesthetics across B2B and B2C projects.
+              At <a href="https://www.facebook.com/Scopegeorgia" target="_blank" rel="noopener noreferrer" className={`${isDark ? 'text-white/90 hover:text-[#ff4306]' : 'text-zinc-800 hover:text-[#ff4306]'} transition-colors underline decoration-[#ff4306]/20 hover:decoration-[#ff4306]/60 underline-offset-2`} style={{ fontWeight: 500 }}>Scope</a>, we started from zero, and in less than two years, I've helped grow the team, led design team leads, worked with 50+ businesses, managed $70,000+ in monthly ad spend, and delivered real results. Before that, at <a href="https://www.facebook.com/cubisten" target="_blank" rel="noopener noreferrer" className={`${isDark ? 'text-white/90 hover:text-[#ff4306]' : 'text-zinc-800 hover:text-[#ff4306]'} transition-colors underline decoration-[#ff4306]/20 hover:decoration-[#ff4306]/60 underline-offset-2`} style={{ fontWeight: 500 }}>Cubisten</a>, I built design systems and lifted brand aesthetics across B2B and B2C projects.
             </p>
             <p className="mt-3">
-              I've mentored designers at <a href="https://unilab.iliauni.edu.ge/" target="_blank" rel="noopener noreferrer" className={`${isDark ? 'text-white/90 hover:text-[#ed592b]' : 'text-zinc-800 hover:text-[#ed592b]'} transition-colors underline decoration-[#ed592b]/20 hover:decoration-[#ed592b]/60 underline-offset-2`} style={{ fontWeight: 500 }}>UniLab</a> and <a href="https://tbcbank.ge/ka/tbc-education/tech-school" target="_blank" rel="noopener noreferrer" className={`${isDark ? 'text-white/90 hover:text-[#ed592b]' : 'text-zinc-800 hover:text-[#ed592b]'} transition-colors underline decoration-[#ed592b]/20 hover:decoration-[#ed592b]/60 underline-offset-2`} style={{ fontWeight: 500 }}>TBC Tech School</a>, including in the <a href="https://btu.edu.ge/en/women-mentorship-in-tech-programmes/" target="_blank" rel="noopener noreferrer" className={`${isDark ? 'text-white/90 hover:text-[#ed592b]' : 'text-zinc-800 hover:text-[#ed592b]'} transition-colors underline decoration-[#ed592b]/20 hover:decoration-[#ed592b]/60 underline-offset-2`} style={{ fontWeight: 500 }}>Women in Tech</a> program, helping people put theory into practice and guiding the next generation of creatives.
+              I've mentored designers at <a href="https://unilab.iliauni.edu.ge/" target="_blank" rel="noopener noreferrer" className={`${isDark ? 'text-white/90 hover:text-[#ff4306]' : 'text-zinc-800 hover:text-[#ff4306]'} transition-colors underline decoration-[#ff4306]/20 hover:decoration-[#ff4306]/60 underline-offset-2`} style={{ fontWeight: 500 }}>UniLab</a> and <a href="https://tbcbank.ge/ka/tbc-education/tech-school" target="_blank" rel="noopener noreferrer" className={`${isDark ? 'text-white/90 hover:text-[#ff4306]' : 'text-zinc-800 hover:text-[#ff4306]'} transition-colors underline decoration-[#ff4306]/20 hover:decoration-[#ff4306]/60 underline-offset-2`} style={{ fontWeight: 500 }}>TBC Tech School</a>, including in the <a href="https://btu.edu.ge/en/women-mentorship-in-tech-programmes/" target="_blank" rel="noopener noreferrer" className={`${isDark ? 'text-white/90 hover:text-[#ff4306]' : 'text-zinc-800 hover:text-[#ff4306]'} transition-colors underline decoration-[#ff4306]/20 hover:decoration-[#ff4306]/60 underline-offset-2`} style={{ fontWeight: 500 }}>Women in Tech</a> program, helping people put theory into practice and guiding the next generation of creatives.
             </p>
             <p className="mt-3">
-              As a <span className={isDark ? 'text-white/90' : 'text-zinc-800'} style={{ fontWeight: 500 }}>Top-Rated Plus</span> freelancer on <a href="https://www.upwork.com/freelancers/~0163986e2d8967d783" target="_blank" rel="noopener noreferrer" className={`${isDark ? 'text-white/90 hover:text-[#ed592b]' : 'text-zinc-800 hover:text-[#ed592b]'} transition-colors underline decoration-[#ed592b]/20 hover:decoration-[#ed592b]/60 underline-offset-2`} style={{ fontWeight: 500 }}>Upwork</a>, I'm in the top 3% of performers, delivering high-quality work across a variety of clients.
+              As a <span className={isDark ? 'text-white/90' : 'text-zinc-800'} style={{ fontWeight: 500 }}>Top-Rated Plus</span> freelancer on <a href="https://www.upwork.com/freelancers/~0163986e2d8967d783" target="_blank" rel="noopener noreferrer" className={`${isDark ? 'text-white/90 hover:text-[#ff4306]' : 'text-zinc-800 hover:text-[#ff4306]'} transition-colors underline decoration-[#ff4306]/20 hover:decoration-[#ff4306]/60 underline-offset-2`} style={{ fontWeight: 500 }}>Upwork</a>, I'm in the top 3% of performers, delivering high-quality work across a variety of clients.
             </p>
           </div>
         </FadeIn>
 
         {/* Experience timeline */}
         <div className="relative">
-          <AnimatedLine className="absolute left-[14px] sm:left-[14px] top-2 bottom-2 z-0" color="#ed592b" />
+          <AnimatedLine className="absolute left-[14px] sm:left-[14px] top-2 bottom-2 z-0" color="#ff4306" />
         <StaggerChildren className="space-y-0 relative z-10" stagger={0.06}>
           {experiences.map((exp, i) => (
             <StaggerItem key={exp.company + exp.start}>
@@ -1159,11 +1159,11 @@ const ServicesContent = ({ isDark }: { isDark: boolean }) => {
       <FadeIn>
         <div>
           <p className={`text-[10px] uppercase tracking-[0.25em] ${mt} mb-5 flex items-center gap-3`} style={{ fontFamily: F.body, fontWeight: 500 }}>
-            <span className="inline-block w-8 h-px bg-[#ed592b]" />
+            <span className="inline-block w-8 h-px bg-[#ff4306]" />
             What I do
           </p>
           <h1 className={`text-fluid-30-48 tracking-[-0.035em] leading-[1.05] mb-5 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: F.heading, fontWeight: 700 }}>
-            Design <span className="text-[#ed592b]">Services</span><span className={isDark ? 'text-white/15' : 'text-zinc-200'}>.</span>
+            Design <span className="text-[#ff4306]">Services</span><span className={isDark ? 'text-white/15' : 'text-zinc-200'}>.</span>
           </h1>
           <p className={`text-[14px] sm:text-[15px] leading-[1.55] max-w-md ${isDark ? 'text-white/55' : 'text-zinc-500'}`} style={{ fontFamily: F.body }}>
             Four focused engagements — from end-to-end product design to art direction, social, and motion. Pick one or combine them.
@@ -1187,11 +1187,11 @@ const ServicesContent = ({ isDark }: { isDark: boolean }) => {
                 <div
                   className={`rounded-2xl overflow-hidden border transition-colors duration-300 ${
                     isOpen
-                      ? isDark ? 'border-[#ed592b]/25 bg-[#0d0e13]' : 'border-[#ed592b]/25 bg-white'
+                      ? isDark ? 'border-[#ff4306]/25 bg-[#0d0e13]' : 'border-[#ff4306]/25 bg-white'
                       : isDark ? 'border-white/[0.05] bg-[#0c0d11] hover:border-white/[0.10]' : `${border} bg-white hover:border-zinc-300`
                   }`}
                 >
-                  <div className={`h-[2px] transition-all duration-500 ${isOpen ? 'bg-gradient-to-r from-[#ed592b] via-[#ed592b]/60 to-transparent' : 'bg-transparent'}`} />
+                  <div className={`h-[2px] transition-all duration-500 ${isOpen ? 'bg-gradient-to-r from-[#ff4306] via-[#ff4306]/60 to-transparent' : 'bg-transparent'}`} />
 
                   <h3>
                     <button
@@ -1199,9 +1199,9 @@ const ServicesContent = ({ isDark }: { isDark: boolean }) => {
                       onClick={() => setOpenIndex(isOpen ? null : i)}
                       aria-expanded={isOpen}
                       aria-controls={`service-panel-${i}`}
-                      className="w-full px-6 py-5 flex items-center gap-4 text-left cursor-pointer rounded-2xl focus-visible:!shadow-[inset_0_0_0_2px_rgba(237,89,43,0.9)]"
+                      className="w-full px-6 py-5 flex items-center gap-4 text-left cursor-pointer rounded-2xl focus-visible:!shadow-[inset_0_0_0_2px_rgba(255,67,6,0.9)]"
                     >
-                      <span aria-hidden="true" className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-300 ${isOpen ? 'bg-[#ed592b]/15 text-[#ed592b] scale-105' : isDark ? 'bg-white/[0.04] text-white/45' : 'bg-zinc-100 text-zinc-500'}`}>{s.icon}</span>
+                      <span aria-hidden="true" className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-300 ${isOpen ? 'bg-[#ff4306]/15 text-[#ff4306] scale-105' : isDark ? 'bg-white/[0.04] text-white/45' : 'bg-zinc-100 text-zinc-500'}`}>{s.icon}</span>
                       <span className="block flex-1 min-w-0">
                         <span className="flex items-center gap-2.5 flex-wrap mb-1">
                           <span id={`service-title-${i}`} className={`text-[16px] tracking-[-0.02em] transition-colors duration-300 ${isOpen ? (isDark ? 'text-white' : 'text-zinc-900') : isDark ? 'text-white/70' : 'text-zinc-600'}`} style={{ fontFamily: F.heading, fontWeight: 600 }}>{s.title}</span>
@@ -1209,7 +1209,7 @@ const ServicesContent = ({ isDark }: { isDark: boolean }) => {
                         </span>
                         <span id={`service-tagline-${i}`} className={`block text-[12px] leading-[1.5] ${isDark ? 'text-white/55' : 'text-zinc-500'}`} style={{ fontFamily: F.body }}>{s.tagline}</span>
                       </span>
-                      <span aria-hidden="true" className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-300 ${isOpen ? 'rotate-180 bg-[#ed592b]/15 text-[#ed592b]' : isDark ? 'bg-white/[0.03] text-white/45' : 'bg-zinc-100 text-zinc-500'}`}>
+                      <span aria-hidden="true" className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-300 ${isOpen ? 'rotate-180 bg-[#ff4306]/15 text-[#ff4306]' : isDark ? 'bg-white/[0.03] text-white/45' : 'bg-zinc-100 text-zinc-500'}`}>
                         <ChevronDown size={13} />
                       </span>
                     </button>
@@ -1233,13 +1233,13 @@ const ServicesContent = ({ isDark }: { isDark: boolean }) => {
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-2.5 mb-5">
                             {s.deliverables.map((d) => (
                               <div key={d} className="flex items-start gap-2.5">
-                                <Check size={12} className="text-[#ed592b]/70 flex-shrink-0 mt-[3px]" strokeWidth={2.5} />
+                                <Check size={12} className="text-[#ff4306]/70 flex-shrink-0 mt-[3px]" strokeWidth={2.5} />
                                 <span className={`text-[12px] leading-[1.45] ${isDark ? 'text-white/55' : 'text-zinc-600'}`} style={{ fontFamily: F.body }}>{d}</span>
                               </div>
                             ))}
                           </div>
-                          <div className={`flex items-start gap-2.5 px-4 py-3 rounded-xl border ${isDark ? 'bg-[#ed592b]/[0.06] border-[#ed592b]/15' : 'bg-[#ed592b]/[0.05] border-[#ed592b]/15'}`}>
-                            <span className="text-[#ed592b] text-[10px] uppercase tracking-[0.15em] flex-shrink-0 mt-0.5" style={{ fontFamily: F.body, fontWeight: 600 }}>Proof</span>
+                          <div className={`flex items-start gap-2.5 px-4 py-3 rounded-xl border ${isDark ? 'bg-[#ff4306]/[0.06] border-[#ff4306]/15' : 'bg-[#ff4306]/[0.05] border-[#ff4306]/15'}`}>
+                            <span className="text-[#ff4306] text-[10px] uppercase tracking-[0.15em] flex-shrink-0 mt-0.5" style={{ fontFamily: F.body, fontWeight: 600 }}>Proof</span>
                             <span className={`text-[11px] leading-[1.45] ${isDark ? 'text-white/55' : 'text-zinc-600'}`} style={{ fontFamily: F.body }}>{s.outcome}</span>
                           </div>
                         </div>
@@ -1272,7 +1272,7 @@ const ServicesContent = ({ isDark }: { isDark: boolean }) => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x lg:divide-y-0 lg:divide-x divide-white/[0.05]">
               {process.map((p) => (
                 <div key={p.step} className="p-5 lg:p-6 relative">
-                  <div className={`text-[11px] mb-3 font-mono ${isDark ? 'text-[#ed592b]' : 'text-[#c94a20]'}`}>{p.step}</div>
+                  <div className={`text-[11px] mb-3 font-mono ${isDark ? 'text-[#ff4306]' : 'text-[#d93905]'}`}>{p.step}</div>
                   <h3 className={`text-[15px] mb-1.5 tracking-[-0.01em] ${isDark ? 'text-white/85' : 'text-zinc-800'}`} style={{ fontFamily: F.heading, fontWeight: 600 }}>{p.title}</h3>
                   <p className={`text-[11px] leading-[1.55] ${mt}`} style={{ fontFamily: F.body }}>{p.desc}</p>
                 </div>
@@ -1328,7 +1328,7 @@ const ServicesContent = ({ isDark }: { isDark: boolean }) => {
             whileTap={{ scale: 0.995 }}
             tabIndex={-1}
             transition={{ type: 'spring', stiffness: 400, damping: 28 }}
-            className="relative flex items-center justify-between px-6 py-6 lg:px-8 lg:py-7 rounded-2xl bg-[#c94a20] cursor-pointer group overflow-hidden shadow-lg shadow-[#ed592b]/20 hover:shadow-xl hover:shadow-[#ed592b]/30 transition-shadow"
+            className="relative flex items-center justify-between px-6 py-6 lg:px-8 lg:py-7 rounded-2xl bg-[#d93905] cursor-pointer group overflow-hidden shadow-lg shadow-[#ff4306]/20 hover:shadow-xl hover:shadow-[#ff4306]/30 transition-shadow"
           >
             {/* Subtle moving glow */}
             <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ background: 'radial-gradient(circle at 30% 50%, rgba(255,255,255,0.12), transparent 60%)' }} />
@@ -1391,7 +1391,7 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
 
 
   const contactItems = [
-    { icon: <Mail size={18} />, label: 'Email', value: 'mosiavasalome@gmail.com', href: 'mailto:mosiavasalome@gmail.com', color: '#ed592b', copyable: true, external: false },
+    { icon: <Mail size={18} />, label: 'Email', value: 'mosiavasalome@gmail.com', href: 'mailto:mosiavasalome@gmail.com', color: '#ff4306', copyable: true, external: false },
     { icon: <Phone size={18} />, label: 'Phone', value: '598 67 14 16', href: 'tel:+995598671416', color: '#22c55e', copyable: true, external: false },
     { icon: <Linkedin size={18} />, label: 'Linkedin', value: '@samole', href: 'https://www.linkedin.com/in/samole/', color: '#0077b5', copyable: false, external: true },
     { icon: <BehanceIcon size={18} />, label: 'Behance', value: '@samole', href: 'https://www.behance.net/samole', color: '#1769ff', copyable: false, external: true },
@@ -1411,7 +1411,7 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
         <div className="relative mb-6">
           <motion.div
             className="absolute -top-16 -right-16 w-48 h-48 rounded-full pointer-events-none"
-            style={{ background: 'radial-gradient(circle, rgba(237,89,43,0.06) 0%, transparent 70%)' }}
+            style={{ background: 'radial-gradient(circle, rgba(255,67,6,0.06) 0%, transparent 70%)' }}
             animate={{ x: [0, 15, 0], y: [0, -10, 0] }}
             transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
           />
@@ -1425,7 +1425,7 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
               className="flex items-center gap-2.5 mb-3"
             >
               <motion.span
-                className="inline-block w-6 h-px bg-[#ed592b] origin-left"
+                className="inline-block w-6 h-px bg-[#ff4306] origin-left"
                 initial={{ scaleX: 0 }}
                 animate={{ scaleX: 1 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
@@ -1454,7 +1454,7 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
                 className={`text-fluidpx-16-18 tracking-[-0.02em] leading-[1.2] ${isDark ? 'text-white' : 'text-zinc-900'}`}
                 style={{ fontFamily: F.heading, fontWeight: 600 }}
               >
-                Let's create <span className="text-[#ed592b]">something amazing.</span>
+                Let's create <span className="text-[#ff4306]">something amazing.</span>
               </motion.h1>
             </div>
 
@@ -1545,7 +1545,7 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
                       onClick={(e) => { e.preventDefault(); handleCopy(item.value, item.label); }}
                       data-cursor={copied === item.label ? 'copied' : 'copy'}
                       data-cursor-label={copied === item.label ? undefined : `Copy ${item.label.toLowerCase()}`}
-                      className={`w-10 h-10 sm:w-8 sm:h-8 rounded-xl sm:rounded-lg flex items-center justify-center sm:opacity-0 sm:group-hover:opacity-100 transition-all duration-300 focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)] focus-visible:!opacity-100 ${
+                      className={`w-10 h-10 sm:w-8 sm:h-8 rounded-xl sm:rounded-lg flex items-center justify-center sm:opacity-0 sm:group-hover:opacity-100 transition-all duration-300 focus-visible:!shadow-[0_0_0_2px_rgba(255,67,6,0.9)] focus-visible:!opacity-100 ${
                         copied === item.label
                           ? 'bg-[#22c55e]/15 text-[#22c55e]'
                           : isDark ? 'bg-white/[0.05] text-white/60 hover:text-white/90' : 'bg-zinc-100 text-zinc-500 hover:text-zinc-700'
@@ -1567,9 +1567,9 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
                     rel={item.external ? 'noopener noreferrer' : undefined}
                     whileHover={{ scale: 1.15, rotate: 8 }}
                     whileTap={{ scale: 0.85 }}
-                    className={`w-10 h-10 sm:w-8 sm:h-8 rounded-xl sm:rounded-lg flex items-center justify-center transition-all duration-300 focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)] ${
+                    className={`w-10 h-10 sm:w-8 sm:h-8 rounded-xl sm:rounded-lg flex items-center justify-center transition-all duration-300 focus-visible:!shadow-[0_0_0_2px_rgba(255,67,6,0.9)] ${
                       hoveredIdx === i
-                        ? 'bg-[#ed592b]/15 text-[#ed592b]'
+                        ? 'bg-[#ff4306]/15 text-[#ff4306]'
                         : isDark ? 'bg-white/[0.03] text-white/50' : 'bg-zinc-50 text-zinc-500'
                     }`}
                     title={item.label === 'Email' ? 'Send email' : item.label === 'Phone' ? 'Call' : `Open ${item.label}`}
@@ -1618,7 +1618,7 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
               ]).map(({ field, label, placeholder, type, required }) => (
                 <div key={field}>
                   <label htmlFor={`contact-${field}`} className={`text-[10px] uppercase tracking-[0.1em] ${mt} block mb-1.5`} style={{ fontFamily: F.body, fontWeight: 500 }}>
-                    {label}{required && <span className="text-[#ed592b] ml-0.5" aria-hidden="true">*</span>}
+                    {label}{required && <span className="text-[#ff4306] ml-0.5" aria-hidden="true">*</span>}
                   </label>
                   <input
                     id={`contact-${field}`}
@@ -1720,7 +1720,7 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
                             {selected?.label ?? placeholder}
                           </span>
                           <motion.span animate={{ rotate: isOpen ? 180 : 0 }} transition={{ duration: 0.2 }} className="flex-shrink-0 ml-2">
-                            <ChevronDown size={13} aria-hidden className={isOpen ? 'text-[#ed592b]' : isDark ? 'text-white/45' : 'text-zinc-400'} />
+                            <ChevronDown size={13} aria-hidden className={isOpen ? 'text-[#ff4306]' : isDark ? 'text-white/45' : 'text-zinc-400'} />
                           </motion.span>
                         </button>
 
@@ -1756,12 +1756,12 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
                                     }}
                                     className={`w-full flex items-center gap-2.5 px-3.5 py-2 text-[12px] transition-colors duration-100 ${
                                       isSel
-                                        ? isDark ? 'text-[#ed592b] bg-[#ed592b]/[0.08]' : 'text-[#ed592b] bg-[#ed592b]/[0.05]'
+                                        ? isDark ? 'text-[#ff4306] bg-[#ff4306]/[0.08]' : 'text-[#ff4306] bg-[#ff4306]/[0.05]'
                                         : isDark ? 'text-white/50 hover:text-white/90 hover:bg-white/[0.04]' : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50'
                                     }`}
                                     style={{ fontFamily: F.body }}
                                   >
-                                    <span aria-hidden="true" className={`w-3.5 h-3.5 rounded-full border flex-shrink-0 flex items-center justify-center ${isSel ? 'bg-[#ed592b] border-[#ed592b]' : isDark ? 'border-white/[0.15]' : 'border-zinc-300'}`}>
+                                    <span aria-hidden="true" className={`w-3.5 h-3.5 rounded-full border flex-shrink-0 flex items-center justify-center ${isSel ? 'bg-[#ff4306] border-[#ff4306]' : isDark ? 'border-white/[0.15]' : 'border-zinc-300'}`}>
                                       {isSel && <span className="w-1.5 h-1.5 rounded-full bg-white block" />}
                                     </span>
                                     {opt.label}
@@ -1800,8 +1800,8 @@ const ContactContent = ({ isDark }: { isDark: boolean }) => {
                 formSent
                   ? 'bg-[#15803d] text-white'
                   : formSending
-                  ? 'bg-[#c94a20]/70 text-white'
-                  : 'bg-[#c94a20] text-white hover:shadow-[0_4px_20px_rgba(237,89,43,0.35)] focus-visible:!shadow-[0_0_0_2px_rgba(255,255,255,0.6)]'
+                  ? 'bg-[#d93905]/70 text-white'
+                  : 'bg-[#d93905] text-white hover:shadow-[0_4px_20px_rgba(255,67,6,0.35)] focus-visible:!shadow-[0_0_0_2px_rgba(255,255,255,0.6)]'
               }`}
               style={{ fontFamily: F.body, fontWeight: 500 }}
             >
@@ -2009,7 +2009,7 @@ const ImageLightbox = ({ src, alt, onClose, whiteBg, onPrev, onNext, hasPrev, ha
       </AnimatePresence>
       <button
         onClick={onClose}
-        className="absolute top-4 right-4 z-20 w-11 h-11 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white/70 hover:text-white hover:bg-white/20 active:bg-white/30 transition-colors focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)]"
+        className="absolute top-4 right-4 z-20 w-11 h-11 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white/70 hover:text-white hover:bg-white/20 active:bg-white/30 transition-colors focus-visible:!shadow-[0_0_0_2px_rgba(255,67,6,0.9)]"
         aria-label="Close lightbox"
       >
         <X size={20} />
@@ -2212,7 +2212,7 @@ const MagneticAdCard = ({ v, border, isDark, cardTilt, index, delayStep, onClick
   };
 
   // Cursor-tracked spotlight — gives "fluid" feel without WebGL
-  const spotlightBg = useMotionTemplate`radial-gradient(220px circle at ${spotX} ${spotY}, rgba(237,89,43,0.22), rgba(255,255,255,0.05) 35%, transparent 65%)`;
+  const spotlightBg = useMotionTemplate`radial-gradient(220px circle at ${spotX} ${spotY}, rgba(255,67,6,0.22), rgba(255,255,255,0.05) 35%, transparent 65%)`;
 
   return (
     <motion.button
@@ -2418,7 +2418,7 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
       {/* ── Section header + filter chips ── */}
       <FadeIn>
         <div className="flex items-center gap-2.5 mb-5">
-          <motion.div className="w-1.5 h-1.5 rounded-full bg-[#ed592b]" animate={{ scale: [1, 1.4, 1] }} transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }} />
+          <motion.div className="w-1.5 h-1.5 rounded-full bg-[#ff4306]" animate={{ scale: [1, 1.4, 1] }} transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }} />
           <h1 className="text-[15px] tracking-[-0.02em]" style={{ fontFamily: F.heading, fontWeight: 600 }}>Social Media Ads</h1>
         </div>
 
@@ -2427,9 +2427,9 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
           <button
             onClick={() => goTo(-1)}
             aria-pressed={activeBrand === -1}
-            className={`flex items-center gap-1.5 px-3.5 py-2 min-h-[40px] md:min-h-0 rounded-full border text-[10px] tracking-[0.04em] transition-colors duration-200 focus-visible:shadow-[0_0_0_2px_rgba(237,89,43,0.9)] ${
+            className={`flex items-center gap-1.5 px-3.5 py-2 min-h-[40px] md:min-h-0 rounded-full border text-[10px] tracking-[0.04em] transition-colors duration-200 focus-visible:shadow-[0_0_0_2px_rgba(255,67,6,0.9)] ${
               activeBrand === -1
-                ? 'border-[#ed592b] bg-[#ed592b]/10 text-[#ed592b]'
+                ? 'border-[#ff4306] bg-[#ff4306]/10 text-[#ff4306]'
                 : isDark ? 'border-white/[0.06] bg-white/[0.03] text-[#7a7d8a] hover:border-white/[0.12] hover:text-white/80' : 'border-zinc-200 bg-zinc-50 text-zinc-500 hover:border-zinc-300 hover:text-zinc-700'
             }`}
             style={{ fontFamily: F.body, fontWeight: 500 }}
@@ -2445,9 +2445,9 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
                 key={b.name}
                 onClick={() => goTo(i)}
                 aria-pressed={active}
-                className={`flex items-center px-3.5 py-2 min-h-[40px] md:min-h-0 rounded-full border text-[10px] tracking-[0.04em] transition-colors duration-200 focus-visible:shadow-[0_0_0_2px_rgba(237,89,43,0.9)] ${
+                className={`flex items-center px-3.5 py-2 min-h-[40px] md:min-h-0 rounded-full border text-[10px] tracking-[0.04em] transition-colors duration-200 focus-visible:shadow-[0_0_0_2px_rgba(255,67,6,0.9)] ${
                   active
-                    ? 'border-[#ed592b] bg-[#ed592b]/10 text-[#ed592b]'
+                    ? 'border-[#ff4306] bg-[#ff4306]/10 text-[#ff4306]'
                     : isDark ? 'border-white/[0.06] bg-white/[0.03] text-[#7a7d8a] hover:border-white/[0.12] hover:text-white/80' : 'border-zinc-200 bg-zinc-50 text-zinc-500 hover:border-zinc-300 hover:text-zinc-700'
                 }`}
                 style={{ fontFamily: F.body, fontWeight: 500 }}
@@ -2481,7 +2481,7 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
                 <div className={`flex-1 h-px max-w-[160px] ${isDark ? 'bg-white/[0.04]' : 'bg-zinc-200'} rounded-full overflow-hidden`}>
                   <motion.div
                     className="h-full"
-                    style={{ background: hasMore ? 'linear-gradient(90deg, #ed592b, #ff8252)' : 'rgb(52,211,153)' }}
+                    style={{ background: hasMore ? 'linear-gradient(90deg, #ff4306, #ff8252)' : 'rgb(52,211,153)' }}
                     initial={false}
                     animate={{ width: `${(visibleCount / allVisuals.length) * 100}%` }}
                     transition={{ type: 'spring', stiffness: 90, damping: 22 }}
@@ -2520,12 +2520,12 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
                     <motion.span
                       animate={{ y: [0, 4, 0], opacity: [0.5, 1, 0.5] }}
                       transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
-                      className="text-[#ed592b]"
+                      className="text-[#ff4306]"
                     >
                       <ChevronDown size={13} />
                     </motion.span>
                     <span className="text-[10px] font-mono uppercase tracking-[0.2em]">
-                      <span className="text-[#ed592b]">{allVisuals.length - visibleCount}</span>
+                      <span className="text-[#ff4306]">{allVisuals.length - visibleCount}</span>
                       <span className={`ml-1.5 ${mt}`}>more · keep scrolling</span>
                     </span>
                   </div>
@@ -2533,7 +2533,7 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
                   <div className={`h-[2px] ${isDark ? 'bg-white/[0.04]' : 'bg-zinc-200'} rounded-full overflow-hidden`}>
                     <motion.div
                       className="h-full rounded-full"
-                      style={{ background: 'linear-gradient(90deg, #ed592b, #ff8252)' }}
+                      style={{ background: 'linear-gradient(90deg, #ff4306, #ff8252)' }}
                       initial={false}
                       animate={{ width: `${(visibleCount / allVisuals.length) * 100}%` }}
                       transition={{ type: 'spring', stiffness: 90, damping: 22 }}
@@ -2563,12 +2563,12 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
             style={{ transformPerspective: 1400, transformOrigin: 'center center' }}
           >
             <div className={`rounded-xl ${bg2} border ${border} p-3 relative overflow-hidden`}>
-              <div className="absolute top-0 left-0 w-32 h-32 opacity-[0.04] pointer-events-none" style={{ background: 'radial-gradient(circle, #ed592b 0%, transparent 70%)' }} />
+              <div className="absolute top-0 left-0 w-32 h-32 opacity-[0.04] pointer-events-none" style={{ background: 'radial-gradient(circle, #ff4306 0%, transparent 70%)' }} />
 
               {/* Brand info */}
               <div className="flex items-center justify-between mb-3 relative z-10">
                 <div className="flex items-center gap-2.5">
-                  <div className={`w-7 h-7 rounded-lg flex items-center justify-center overflow-hidden text-[10px] tracking-wider ${isDark ? 'bg-[#ed592b]/15 text-[#ed592b]' : 'bg-[#ed592b]/10 text-[#ed592b]'}`}
+                  <div className={`w-7 h-7 rounded-lg flex items-center justify-center overflow-hidden text-[10px] tracking-wider ${isDark ? 'bg-[#ff4306]/15 text-[#ff4306]' : 'bg-[#ff4306]/10 text-[#ff4306]'}`}
                     style={{ fontFamily: F.heading, fontWeight: 700 }}
                   >
                     {brand!.logoImg ? (
@@ -2578,7 +2578,7 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
                   <div className="flex items-center gap-2">
                     <span className={`text-[12px] ${isDark ? 'text-white/90' : 'text-zinc-800'}`} style={{ fontFamily: F.body, fontWeight: 500 }}>{brand!.name}</span>
                     {brand!.aiContent && (
-                      <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] uppercase tracking-[0.1em] ${isDark ? 'bg-[#ed592b]/10 text-[#ed592b] border border-[#ed592b]/20' : 'bg-[#ed592b]/8 text-[#ed592b] border border-[#ed592b]/15'}`}
+                      <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] uppercase tracking-[0.1em] ${isDark ? 'bg-[#ff4306]/10 text-[#ff4306] border border-[#ff4306]/20' : 'bg-[#ff4306]/8 text-[#ff4306] border border-[#ff4306]/15'}`}
                         style={{ fontFamily: F.body, fontWeight: 600 }}
                       >
                         <svg width="9" height="9" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 1l2.2 4.4L15 6.3l-3.5 3.4.8 4.9L8 12.4l-4.3 2.2.8-4.9L1 6.3l4.8-.9L8 1z"/></svg>
@@ -2720,14 +2720,14 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
               <button
                 onClick={() => goTo(-1)}
                 aria-pressed={activeBrand === -1}
-                className={`flex-shrink-0 px-3 py-1.5 rounded-full text-[10px] tracking-[0.04em] transition-colors focus-visible:shadow-[0_0_0_2px_rgba(237,89,43,0.9)] ${activeBrand === -1 ? 'bg-[#ed592b]/10 text-[#ed592b] border border-[#ed592b]/30' : isDark ? 'text-[#8a8d9a] border border-transparent hover:text-white/80' : 'text-zinc-500 border border-transparent hover:text-zinc-700'}`}
+                className={`flex-shrink-0 px-3 py-1.5 rounded-full text-[10px] tracking-[0.04em] transition-colors focus-visible:shadow-[0_0_0_2px_rgba(255,67,6,0.9)] ${activeBrand === -1 ? 'bg-[#ff4306]/10 text-[#ff4306] border border-[#ff4306]/30' : isDark ? 'text-[#8a8d9a] border border-transparent hover:text-white/80' : 'text-zinc-500 border border-transparent hover:text-zinc-700'}`}
                 style={{ fontFamily: F.body, fontWeight: 500 }}
               >All</button>
               {adsBrands.map((b, i) => {
                 const active = activeBrand === i;
                 return (
                   <button key={b.name} onClick={() => goTo(i)} aria-pressed={active}
-                    className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] tracking-[0.04em] transition-colors focus-visible:shadow-[0_0_0_2px_rgba(237,89,43,0.9)] ${active ? 'bg-[#ed592b]/10 text-[#ed592b] border border-[#ed592b]/30' : isDark ? 'text-[#8a8d9a] border border-transparent hover:text-white/80' : 'text-zinc-500 border border-transparent hover:text-zinc-700'}`}
+                    className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] tracking-[0.04em] transition-colors focus-visible:shadow-[0_0_0_2px_rgba(255,67,6,0.9)] ${active ? 'bg-[#ff4306]/10 text-[#ff4306] border border-[#ff4306]/30' : isDark ? 'text-[#8a8d9a] border border-transparent hover:text-white/80' : 'text-zinc-500 border border-transparent hover:text-zinc-700'}`}
                     style={{ fontFamily: F.body, fontWeight: 500 }}
                   >
                     {b.logoImg && <img {...IMG.logo(b.logoImg)} alt="" aria-hidden="true" loading="lazy" width="12" height="12" className="w-3 h-3 rounded object-cover flex-shrink-0" />}
@@ -2882,7 +2882,7 @@ const MotionReelCard = ({
 
   return (
     <LightBeamCard className={`rounded-xl ${bg2} border ${border} p-3`}>
-      <div className="absolute top-0 left-0 w-32 h-32 opacity-[0.04] pointer-events-none" style={{ background: `radial-gradient(circle, #ed592b 0%, transparent 70%)` }} />
+      <div className="absolute top-0 left-0 w-32 h-32 opacity-[0.04] pointer-events-none" style={{ background: `radial-gradient(circle, #ff4306 0%, transparent 70%)` }} />
 
       {/* Brand info header */}
       <div className="flex items-center gap-2.5 mb-3 relative z-10">
@@ -2890,7 +2890,7 @@ const MotionReelCard = ({
           initial={{ scale: 0, rotate: -90 }}
           animate={{ scale: 1, rotate: 0 }}
           transition={{ type: 'spring', stiffness: 400, damping: 20, delay: idx * 0.06 }}
-          className={`w-7 h-7 rounded-lg flex-shrink-0 flex items-center justify-center overflow-hidden text-[10px] tracking-wider ${isDark ? 'bg-[#ed592b]/15 text-[#ed592b]' : 'bg-[#ed592b]/10 text-[#ed592b]'}`}
+          className={`w-7 h-7 rounded-lg flex-shrink-0 flex items-center justify-center overflow-hidden text-[10px] tracking-wider ${isDark ? 'bg-[#ff4306]/15 text-[#ff4306]' : 'bg-[#ff4306]/10 text-[#ff4306]'}`}
           style={{ fontFamily: F.heading, fontWeight: 700 }}
         >
           {reel.logoImg ? (
@@ -2936,7 +2936,7 @@ const MotionReelCard = ({
           onClick={onOpen}
           data-cursor="play"
           data-cursor-label="Play with sound"
-          className="absolute bottom-2 left-2 z-20 w-10 h-10 md:w-7 md:h-7 rounded-full flex items-center justify-center backdrop-blur-md bg-black/50 border border-white/10 text-white/70 hover:text-white hover:bg-black/70 transition-colors focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)]"
+          className="absolute bottom-2 left-2 z-20 w-10 h-10 md:w-7 md:h-7 rounded-full flex items-center justify-center backdrop-blur-md bg-black/50 border border-white/10 text-white/70 hover:text-white hover:bg-black/70 transition-colors focus-visible:!shadow-[0_0_0_2px_rgba(255,67,6,0.9)]"
           aria-label={`Watch ${reel.brand} reel with sound`}
         >
           <Maximize2 size={12} />
@@ -2950,7 +2950,7 @@ const MotionReelCard = ({
           animate={{ opacity: 1 }}
           whileHover={{ scale: 1.15 }}
           whileTap={{ scale: 0.9 }}
-          className="absolute bottom-2 right-2 z-20 w-10 h-10 md:w-7 md:h-7 rounded-full flex items-center justify-center backdrop-blur-md bg-black/50 border border-white/10 text-white/70 hover:text-white hover:bg-black/70 transition-colors cursor-pointer focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)]"
+          className="absolute bottom-2 right-2 z-20 w-10 h-10 md:w-7 md:h-7 rounded-full flex items-center justify-center backdrop-blur-md bg-black/50 border border-white/10 text-white/70 hover:text-white hover:bg-black/70 transition-colors cursor-pointer focus-visible:!shadow-[0_0_0_2px_rgba(255,67,6,0.9)]"
           aria-label={isMuted ? 'Unmute' : 'Mute'}
         >
           <AnimatePresence mode="wait">
@@ -2994,7 +2994,7 @@ const SocialMediaMotionContent = ({ isDark }: { isDark: boolean }) => {
       </AnimatePresence>
       <FadeIn>
         <div className="flex items-center gap-2.5 mb-1">
-          <motion.div className="w-1.5 h-1.5 rounded-full bg-[#ed592b]" animate={{ scale: [1, 1.4, 1] }} transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }} />
+          <motion.div className="w-1.5 h-1.5 rounded-full bg-[#ff4306]" animate={{ scale: [1, 1.4, 1] }} transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }} />
           <h1 className="text-[15px] tracking-[-0.02em]" style={{ fontFamily: F.heading, fontWeight: 600 }}>Social Media Motion</h1>
         </div>
         <div className="relative h-[1px] mb-5 ml-4">
@@ -3083,7 +3083,7 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
               <img {...IMG.caseSide(screenProfile)} alt="AURUM user profile UX design" loading="lazy" decoding="async" width="1440" height="900" className="absolute top-8 right-4 w-[45%] rounded-lg shadow-2xl shadow-black/50 opacity-35" />
               <img {...IMG.caseMain(screenAurumMainHQ)} alt="AURUM exchange dashboard — cryptocurrency trading platform case study" loading="lazy" decoding="async" width="1440" height="900" className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[70%] rounded-t-lg shadow-2xl shadow-black/60 group-hover:-translate-y-2 group-hover:scale-[1.02] transition-all duration-500" />
               <div className="absolute top-4 left-4 z-20 flex items-center gap-2">
-                <span className="text-[10px] uppercase tracking-[0.15em] px-2.5 py-1 rounded-full bg-[#ed592b]/20 backdrop-blur-md text-[#ed592b] border border-[#ed592b]/30">Featured</span>
+                <span className="text-[10px] uppercase tracking-[0.15em] px-2.5 py-1 rounded-full bg-[#ff4306]/20 backdrop-blur-md text-[#ff4306] border border-[#ff4306]/30">Featured</span>
                 <span className="text-[10px] uppercase tracking-[0.15em] px-2.5 py-1 rounded-full bg-black/50 backdrop-blur-md text-white/80 border border-white/10">2025</span>
               </div>
               <div className="absolute top-4 right-4 z-20">
@@ -3097,7 +3097,7 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
                     <h2 className="text-fluidpx-22-28 text-white mb-1.5 tracking-[0] leading-none" style={{ fontFamily: F.heading, fontWeight: 600, letterSpacing: 0 }}>AURUM</h2>
                     <p className="text-white/65 text-[11.5px] uppercase tracking-[0.18em]" style={{ fontFamily: F.body, fontWeight: 500 }}>Crypto Exchange · B2C Fintech</p>
                   </div>
-                  <div className="w-10 h-10 rounded-full bg-[#ed592b] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all group-hover:shadow-[0_0_30px_rgba(237,89,43,0.3)]">
+                  <div className="w-10 h-10 rounded-full bg-[#ff4306] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all group-hover:shadow-[0_0_30px_rgba(255,67,6,0.3)]">
                     <ArrowUpRight size={18} className="text-black" />
                   </div>
                 </div>
@@ -3109,7 +3109,7 @@ const UxUiContent = ({ isDark }: { isDark: boolean }) => {
                   <span key={t} className={`text-[10px] uppercase tracking-[0.14em] px-2.5 py-1 rounded-md whitespace-nowrap border ${isDark ? 'bg-white/[0.025] text-[#9094a3] border-white/[0.05]' : 'bg-zinc-50 text-zinc-500 border-zinc-200'}`} style={{ fontFamily: F.body, fontWeight: 500 }}>{t}</span>
                 ))}
               </div>
-              <span className="text-[12px] whitespace-nowrap text-[#ed592b] flex items-center justify-center gap-2 px-3 py-1.5 rounded-full border border-[#ed592b]/15 group-hover:border-[#ed592b]/30 group-hover:bg-[#ed592b]/5 group-hover:text-[#ed592b] transition-all duration-300 w-full sm:w-auto" style={{ fontFamily: F.body, fontWeight: 500 }}>
+              <span className="text-[12px] whitespace-nowrap text-[#ff4306] flex items-center justify-center gap-2 px-3 py-1.5 rounded-full border border-[#ff4306]/15 group-hover:border-[#ff4306]/30 group-hover:bg-[#ff4306]/5 group-hover:text-[#ff4306] transition-all duration-300 w-full sm:w-auto" style={{ fontFamily: F.body, fontWeight: 500 }}>
                 View Case Study <ArrowRight size={12} />
               </span>
             </div>

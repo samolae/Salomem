@@ -80,13 +80,13 @@ function MobileBottomBar() {
                   key={item.id}
                   to={item.path}
                   aria-current={active ? 'page' : undefined}
-                  className="relative flex flex-col items-center justify-center gap-1 py-2.5 px-1 min-w-[52px] flex-1 transition-colors duration-200 focus-visible:!shadow-[inset_0_0_0_2px_rgba(237,89,43,0.9)] rounded-lg"
-                  style={{ color: active ? '#ed592b' : isDark ? '#8a8d9a' : '#71717a' }}
+                  className="relative flex flex-col items-center justify-center gap-1 py-2.5 px-1 min-w-[52px] flex-1 transition-colors duration-200 focus-visible:!shadow-[inset_0_0_0_2px_rgba(255,67,6,0.9)] rounded-lg"
+                  style={{ color: active ? '#ff4306' : isDark ? '#8a8d9a' : '#71717a' }}
                 >
                   {active && (
                     <motion.span
                       layoutId="bottomBarActive"
-                      className="absolute top-0 left-1/2 -translate-x-1/2 w-5 h-[2px] rounded-b-full bg-[#ed592b]"
+                      className="absolute top-0 left-1/2 -translate-x-1/2 w-5 h-[2px] rounded-b-full bg-[#ff4306]"
                       transition={{ type: 'spring', stiffness: 500, damping: 35 }}
                     />
                   )}
@@ -118,7 +118,7 @@ function SkipLink() {
         main.focus({ preventScroll: true });
         main.scrollIntoView({ block: 'start' });
       }}
-      className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[10000] focus:inline-flex focus:items-center focus:rounded-full focus:bg-[#c94a20] focus:px-4 focus:py-2.5 focus:text-[13px] focus:font-medium focus:text-white focus:shadow-[0_0_0_2px_rgba(255,255,255,0.7),0_8px_24px_rgba(0,0,0,0.4)] focus:outline-none"
+      className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[10000] focus:inline-flex focus:items-center focus:rounded-full focus:bg-[#d93905] focus:px-4 focus:py-2.5 focus:text-[13px] focus:font-medium focus:text-white focus:shadow-[0_0_0_2px_rgba(255,255,255,0.7),0_8px_24px_rgba(0,0,0,0.4)] focus:outline-none"
       style={{ fontFamily: F.body }}
     >
       Skip to content
@@ -154,15 +154,15 @@ export function GlobalLayout() {
       <SkipLink />
 
       {/* Scroll progress */}
-      <ScrollProgress color="#ed592b" />
+      <ScrollProgress color="#ff4306" />
 
       {/* Desktop-only heavy effects — skipped on mobile to protect INP and LCP */}
       {ambient && !reduceMotion && (
         <>
           <LiquidMeshBackground />
-          <CursorGlow color="rgba(237,89,43,0.04)" size={700} />
-          <FloatingParticles count={15} color="rgba(237,89,43,0.06)" />
-          <MorphingBlob color="rgba(237,89,43,0.02)" className="-top-40 -right-40 z-[0]" />
+          <CursorGlow color="rgba(255,67,6,0.04)" size={700} />
+          <FloatingParticles count={15} color="rgba(255,67,6,0.06)" />
+          <MorphingBlob color="rgba(255,67,6,0.02)" className="-top-40 -right-40 z-[0]" />
           <MorphingBlob color="rgba(99,102,241,0.015)" className="top-[60%] -left-60 z-[0]" />
         </>
       )}

@@ -36,7 +36,7 @@ const GlitchText = ({ text }: { text: string }) => {
       <span className={glitch ? 'opacity-0' : 'opacity-100'}>{text}</span>
       {glitch && (
         <>
-          <span className="absolute inset-0 text-[#ed592b] translate-x-[2px] translate-y-[-2px] opacity-70">{text}</span>
+          <span className="absolute inset-0 text-[#ff4306] translate-x-[2px] translate-y-[-2px] opacity-70">{text}</span>
           <span className="absolute inset-0 text-[#3b82f6] translate-x-[-2px] translate-y-[2px] opacity-50">{text}</span>
         </>
       )}
@@ -83,7 +83,7 @@ export function NotFound() {
 
               {/* Accent dot */}
               <motion.div
-                className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-[#ed592b]"
+                className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-[#ff4306]"
                 animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
                 transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
               />
@@ -136,14 +136,14 @@ export function NotFound() {
                       whileHover={{ x: 3 }}
                       whileTap={{ scale: 0.97 }}
                       tabIndex={-1}
-                      className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all min-h-[44px] group focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)] ${
+                      className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all min-h-[44px] group focus-visible:!shadow-[0_0_0_2px_rgba(255,67,6,0.9)] ${
                         isDark
                           ? 'hover:bg-white/[0.04] text-[#7a7d8a] hover:text-white/80'
                           : 'hover:bg-zinc-100 text-zinc-400 hover:text-zinc-700'
                       }`}
                     >
                       <div className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors ${
-                        isDark ? 'bg-white/[0.04] group-hover:bg-[#ed592b]/15 group-hover:text-[#ed592b]' : 'bg-zinc-100 group-hover:bg-[#ed592b]/10 group-hover:text-[#ed592b]'
+                        isDark ? 'bg-white/[0.04] group-hover:bg-[#ff4306]/15 group-hover:text-[#ff4306]' : 'bg-zinc-100 group-hover:bg-[#ff4306]/10 group-hover:text-[#ff4306]'
                       }`}>
                         {link.icon}
                       </div>
@@ -171,7 +171,7 @@ export function NotFound() {
                 onClick={() => window.history.back()}
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
-                className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-[12px] border transition-all min-h-[44px] focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)] ${
+                className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-[12px] border transition-all min-h-[44px] focus-visible:!shadow-[0_0_0_2px_rgba(255,67,6,0.9)] ${
                   isDark
                     ? 'border-white/[0.08] text-white/50 hover:text-white hover:bg-white/[0.04] hover:border-white/[0.12]'
                     : 'border-zinc-200 text-zinc-400 hover:text-zinc-700 hover:bg-zinc-50'
@@ -186,10 +186,10 @@ export function NotFound() {
             <MagneticWrap strength={0.15}>
               <Link to="/" className="inline-block rounded-full">
                 <motion.div
-                  whileHover={{ scale: 1.03, boxShadow: '0 4px 24px rgba(237,89,43,0.2)' }}
+                  whileHover={{ scale: 1.03, boxShadow: '0 4px 24px rgba(255,67,6,0.2)' }}
                   whileTap={{ scale: 0.97 }}
                   tabIndex={-1}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#c94a20] text-white text-[12px] min-h-[44px] focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9),0_0_0_4px_rgba(237,89,43,0.2)]"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#d93905] text-white text-[12px] min-h-[44px] focus-visible:!shadow-[0_0_0_2px_rgba(255,67,6,0.9),0_0_0_4px_rgba(255,67,6,0.2)]"
                   style={{ fontFamily: F.body, fontWeight: 500 }}
                 >
                   <Home size={13} />

@@ -54,7 +54,7 @@ const BRAND = {
   neutral: '#9295A6',
   headingFont: '"Syne", "Space Grotesk", sans-serif',
   bodyFont: '"Manrope", "Inter", sans-serif',
-  portfolioAccent: '#ed592b',
+  portfolioAccent: '#ff4306',
 };
 
 /* ─── Shared Components ────────────────────────────────────────── */

@@ -22,7 +22,7 @@ const adsMardi1 = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339520
 const F = {
   heading: '"Syne", "Space Grotesk", sans-serif',
   body: '"Manrope", "Inter", sans-serif',
-  accent: '#ed592b',
+  accent: '#ff4306',
 };
 
 /* ─── Project data ─────────────────────���─────────────────────── */
@@ -72,7 +72,7 @@ const crossRecommendations = [
     icon: <Image size={14} />,
     section: 'social-media-ads',
     image: adsTerminal6,
-    color: '#ed592b',
+    color: '#ff4306',
   },
   {
     title: 'Motion Design',
@@ -80,7 +80,7 @@ const crossRecommendations = [
     icon: <Video size={14} />,
     section: 'social-media-motion',
     image: adsMardi1,
-    color: '#ed592b',
+    color: '#ff4306',
   },
 ];
 
@@ -113,7 +113,7 @@ export function NextProjectRecommendation({ currentProject }: { currentProject: 
           <FadeIn>
             <div className="flex items-center gap-3 mb-3">
               <motion.div
-                className="w-1.5 h-1.5 rounded-full bg-[#ed592b]"
+                className="w-1.5 h-1.5 rounded-full bg-[#ff4306]"
                 animate={{ scale: [1, 1.5, 1] }}
                 transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
               />
@@ -306,7 +306,7 @@ export function NextProjectRecommendation({ currentProject }: { currentProject: 
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                   tabIndex={-1}
-                  className={`inline-flex items-center gap-2.5 px-6 py-3 rounded-full border text-[12px] group focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)] ${isDark ? 'border-white/[0.08] text-white/60 hover:text-white hover:border-white/[0.15]' : 'border-zinc-200 text-zinc-500 hover:text-zinc-800 hover:border-zinc-300'}`}
+                  className={`inline-flex items-center gap-2.5 px-6 py-3 rounded-full border text-[12px] group focus-visible:!shadow-[0_0_0_2px_rgba(255,67,6,0.9)] ${isDark ? 'border-white/[0.08] text-white/60 hover:text-white hover:border-white/[0.15]' : 'border-zinc-200 text-zinc-500 hover:text-zinc-800 hover:border-zinc-300'}`}
                   style={{ fontFamily: F.body, fontWeight: 500 }}
                 >
                   <ArrowLeft size={13} />
@@ -316,10 +316,10 @@ export function NextProjectRecommendation({ currentProject }: { currentProject: 
               <MagneticWrap strength={0.2}>
                 <Link to="/contact" viewTransition className="inline-block rounded-full">
                   <motion.div
-                    whileHover={{ scale: 1.03, boxShadow: '0 4px 24px rgba(237,89,43,0.2)' }}
+                    whileHover={{ scale: 1.03, boxShadow: '0 4px 24px rgba(255,67,6,0.2)' }}
                     whileTap={{ scale: 0.97 }}
                     tabIndex={-1}
-                    className="inline-flex items-center gap-2.5 px-6 py-3 rounded-full bg-[#c94a20] text-white text-[12px] group focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9),0_0_0_4px_rgba(237,89,43,0.2)]"
+                    className="inline-flex items-center gap-2.5 px-6 py-3 rounded-full bg-[#d93905] text-white text-[12px] group focus-visible:!shadow-[0_0_0_2px_rgba(255,67,6,0.9),0_0_0_4px_rgba(255,67,6,0.2)]"
                     style={{ fontFamily: F.body, fontWeight: 500 }}
                   >
                     <Mail size={13} />

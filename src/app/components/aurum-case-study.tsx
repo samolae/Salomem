@@ -49,7 +49,7 @@ const BRAND = {
   neutral: '#9295A6',
   headingFont: '"Syne", "Space Grotesk", sans-serif',
   bodyFont: '"Manrope", "Inter", sans-serif',
-  portfolioAccent: '#ed592b',
+  portfolioAccent: '#ff4306',
 };
 
 /* ─── Shared Components ────────────────────────────────────────── */
@@ -116,7 +116,7 @@ const ScrollToTopButton = () => {
           transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           aria-label="Back to top"
-          className={`fixed bottom-24 md:bottom-8 right-5 md:right-8 z-50 w-12 h-12 rounded-full flex items-center justify-center shadow-2xl backdrop-blur-xl transition-colors group focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)] ${
+          className={`fixed bottom-24 md:bottom-8 right-5 md:right-8 z-50 w-12 h-12 rounded-full flex items-center justify-center shadow-2xl backdrop-blur-xl transition-colors group focus-visible:!shadow-[0_0_0_2px_rgba(255,67,6,0.9)] ${
             isDark
               ? 'bg-[#D59A04]/90 hover:bg-[#D59A04] shadow-[#D59A04]/20 text-black'
               : 'bg-[#D59A04] hover:bg-[#D59A04]/90 shadow-[#D59A04]/30 text-white'
@@ -189,7 +189,7 @@ export function AurumCaseStudy() {
               onClick={() => navigate('/', { viewTransition: true })}
               whileHover={{ x: -3 }}
               whileTap={{ scale: 0.95 }}
-              className={`flex items-center gap-2 text-sm rounded-lg px-2 py-1.5 min-h-[44px] focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)] ${isDark ? 'text-[#9295A6] hover:text-white hover:bg-white/[0.04]' : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100'} transition-colors`}
+              className={`flex items-center gap-2 text-sm rounded-lg px-2 py-1.5 min-h-[44px] focus-visible:!shadow-[0_0_0_2px_rgba(255,67,6,0.9)] ${isDark ? 'text-[#9295A6] hover:text-white hover:bg-white/[0.04]' : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100'} transition-colors`}
             >
               <ArrowLeft size={15} />
               <span className="text-[12px] tracking-wide">Back to Portfolio</span>

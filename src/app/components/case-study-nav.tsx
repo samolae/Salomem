@@ -107,7 +107,7 @@ export const CaseStudySectionNav = ({ sections, accentColor }: CaseStudySectionN
             whileTap={{ scale: 0.85 }}
             disabled={activeIndex === 0}
             aria-label="Previous section"
-            className={`w-10 h-10 sm:w-8 sm:h-8 rounded-full flex items-center justify-center backdrop-blur-xl transition-all focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)] ${
+            className={`w-10 h-10 sm:w-8 sm:h-8 rounded-full flex items-center justify-center backdrop-blur-xl transition-all focus-visible:!shadow-[0_0_0_2px_rgba(255,67,6,0.9)] ${
               activeIndex === 0
                 ? 'opacity-20 cursor-not-allowed'
                 : isDark ? 'bg-white/[0.06] text-white/60 hover:bg-white/[0.12] hover:text-white active:bg-white/[0.15]' : 'bg-black/[0.04] text-zinc-500 hover:bg-black/[0.08] hover:text-zinc-900 active:bg-black/[0.12]'
@@ -139,7 +139,7 @@ export const CaseStudySectionNav = ({ sections, accentColor }: CaseStudySectionN
                   <button
                     key={section.id}
                     onClick={() => scrollToSection(section.id)}
-                    className="relative group flex items-center min-w-[44px] min-h-[24px] sm:min-w-[24px] justify-center focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)] rounded-full"
+                    className="relative group flex items-center min-w-[44px] min-h-[24px] sm:min-w-[24px] justify-center focus-visible:!shadow-[0_0_0_2px_rgba(255,67,6,0.9)] rounded-full"
                     title={section.label}
                     aria-label={section.label}
                     aria-current={isActive ? 'true' : undefined}
@@ -182,7 +182,7 @@ export const CaseStudySectionNav = ({ sections, accentColor }: CaseStudySectionN
             onClick={() => setExpanded(!expanded)}
             whileTap={{ scale: 0.9 }}
             aria-expanded={expanded}
-            className={`px-2.5 py-1.5 rounded-full text-[10px] tracking-wide backdrop-blur-xl border transition-all min-h-[32px] min-w-[44px] flex items-center justify-center focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)] ${
+            className={`px-2.5 py-1.5 rounded-full text-[10px] tracking-wide backdrop-blur-xl border transition-all min-h-[32px] min-w-[44px] flex items-center justify-center focus-visible:!shadow-[0_0_0_2px_rgba(255,67,6,0.9)] ${
               isDark ? 'bg-black/60 border-white/[0.06] text-white/70' : 'bg-white/80 border-zinc-200/60 text-zinc-500'
             }`}
             style={{ fontFamily: '"Manrope", "Inter", sans-serif' }}
@@ -200,7 +200,7 @@ export const CaseStudySectionNav = ({ sections, accentColor }: CaseStudySectionN
             whileTap={{ scale: 0.85 }}
             disabled={activeIndex === sections.length - 1}
             aria-label="Next section"
-            className={`w-10 h-10 sm:w-8 sm:h-8 rounded-full flex items-center justify-center backdrop-blur-xl transition-all focus-visible:!shadow-[0_0_0_2px_rgba(237,89,43,0.9)] ${
+            className={`w-10 h-10 sm:w-8 sm:h-8 rounded-full flex items-center justify-center backdrop-blur-xl transition-all focus-visible:!shadow-[0_0_0_2px_rgba(255,67,6,0.9)] ${
               activeIndex === sections.length - 1
                 ? 'opacity-20 cursor-not-allowed'
                 : isDark ? 'bg-white/[0.06] text-white/60 hover:bg-white/[0.12] hover:text-white active:bg-white/[0.15]' : 'bg-black/[0.04] text-zinc-500 hover:bg-black/[0.08] hover:text-zinc-900 active:bg-black/[0.12]'

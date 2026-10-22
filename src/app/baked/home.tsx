@@ -15,13 +15,13 @@ const AVATAR = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto,
 /* A screenshot set on a coloured stage, for the UX/UI case tiles */
 function ScreenStage({ src, bg, alt, eager }: { src: string; bg: string; alt: string; eager?: boolean }) {
   return (
-    <div className="relative aspect-[4/3] overflow-hidden rounded-md" style={{ background: bg }}>
+    <div className="relative overflow-hidden rounded-md p-[8%]" style={{ background: bg }}>
       <img
         {...IMG.caseMain(src)}
         alt={alt}
         loading={eager ? 'eager' : 'lazy'}
         decoding="async"
-        className="absolute left-1/2 top-[14%] w-[74%] -translate-x-1/2 rounded-md shadow-[0_24px_60px_rgba(0,0,0,0.35)] transition-transform duration-700 ease-out group-hover:scale-[1.02]"
+        className="block w-full h-auto rounded-md shadow-[0_24px_60px_rgba(0,0,0,0.35)] transition-transform duration-700 ease-out group-hover:scale-[1.02]"
       />
     </div>
   );
@@ -41,12 +41,12 @@ export function HomeContent() {
       <Caption title="AURUM" sub="Crypto exchange · 196 screens, 64+ components" tag="Case study" />
     </CaseLink>,
     <Link key="motion" to="/work/social-media-motion" className="group block">
-      <div className="relative aspect-[4/5] overflow-hidden rounded-md bg-[#f2f2f2]">
+      <div className="relative overflow-hidden rounded-md bg-[#f2f2f2]">
         <video
           src="https://res.cloudinary.com/dgfn598qb/video/upload/f_auto,q_auto/carmall-ne_1_u5ewuz.mp4"
           autoPlay={!paused} loop muted playsInline preload="metadata"
           ref={(v) => { if (v) { paused ? v.pause() : v.play().catch(() => {}); } }}
-          className="absolute inset-0 h-full w-full object-cover"
+          className="block w-full h-auto"
         />
       </div>
       <Caption title="Social Media Motion" sub="Reels and brand animations for Carmall, Saloni and more" tag="12 reels" />
@@ -61,10 +61,10 @@ export function HomeContent() {
       </div>
     </div>,
     <Link key="fitmeal" to="/work/social-media-ads" className="group block">
-      <div className="grid grid-cols-2 gap-1.5">
+      <div className="grid grid-cols-2 gap-1.5 items-start">
         {fitmeal.items.slice(0, 4).map((it, i) => (
-          <div key={i} className="relative aspect-square overflow-hidden rounded-md bg-[#f2f2f2]">
-            <FadeImg src={it.src} sizes="tile" className="absolute inset-0 h-full w-full transition-transform duration-700 group-hover:scale-[1.03]" />
+          <div key={i} className="relative overflow-hidden rounded-md bg-[#f2f2f2]">
+            <FadeImg src={it.src} sizes="tile" className="block w-full h-auto transition-transform duration-700 group-hover:scale-[1.03]" />
           </div>
         ))}
       </div>
@@ -78,8 +78,8 @@ export function HomeContent() {
 
   const right: ReactNode[] = [
     <Link key="ads" to="/work/social-media-ads" className="group block">
-      <div className="relative aspect-[4/5] overflow-hidden rounded-md bg-[#f2f2f2]">
-        <FadeImg src={adsTerminal1} eager className="absolute inset-0 h-full w-full transition-transform duration-700 group-hover:scale-[1.02]" alt="Terminal social media ads" />
+      <div className="relative overflow-hidden rounded-md bg-[#f2f2f2]">
+        <FadeImg src={adsTerminal1} eager className="block w-full h-auto transition-transform duration-700 group-hover:scale-[1.02]" alt="Terminal social media ads" />
       </div>
       <Caption title="Social Media Ads" sub="Campaigns for Terminal, Mardi, Crystal Leasing and 13 more" tag="16 brands" />
     </Link>,
@@ -88,8 +88,8 @@ export function HomeContent() {
       <Caption title="Schenker" sub="Enterprise logistics · form systems & tracking" tag="Case study" />
     </CaseLink>,
     <Link key="carmall" to="/work/social-media-ads" className="group block">
-      <div className="relative aspect-square overflow-hidden rounded-md bg-[#f2f2f2]">
-        <FadeImg src={adsCarmall1} className="absolute inset-0 h-full w-full transition-transform duration-700 group-hover:scale-[1.02]" alt="Carmall ad" />
+      <div className="relative overflow-hidden rounded-md bg-[#f2f2f2]">
+        <FadeImg src={adsCarmall1} className="block w-full h-auto transition-transform duration-700 group-hover:scale-[1.02]" alt="Carmall ad" />
       </div>
       <Caption title="Carmall" sub="Campaign visuals" tag="Ads" />
     </Link>,
@@ -109,8 +109,8 @@ export function HomeContent() {
       </ul>
     </div>,
     <Link key="gino" to="/work/social-media-ads" className="group block">
-      <div className="relative aspect-[4/5] overflow-hidden rounded-md bg-[#f2f2f2]">
-        <FadeImg src={adsGino4} className="absolute inset-0 h-full w-full transition-transform duration-700 group-hover:scale-[1.02]" alt="Gino Aquapark ad" />
+      <div className="relative overflow-hidden rounded-md bg-[#f2f2f2]">
+        <FadeImg src={adsGino4} className="block w-full h-auto transition-transform duration-700 group-hover:scale-[1.02]" alt="Gino Aquapark ad" />
       </div>
       <Caption title="Gino Aquapark" sub="Seasonal campaign" tag="Ads" />
     </Link>,
@@ -155,8 +155,8 @@ export function HomeContent() {
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
           {spotlights.map((s) => (
             <Reveal key={s.title}>
-              <div className="relative aspect-[4/5] overflow-hidden rounded-md bg-[#f2f2f2]">
-                <FadeImg src={s.img} alt={s.title} className="absolute inset-0 h-full w-full" />
+              <div className="relative overflow-hidden rounded-md bg-[#f2f2f2]">
+                <FadeImg src={s.img} alt={s.title} className="block w-full h-auto" />
               </div>
               <Caption title={s.title} sub={s.desc} tag={s.tag} />
             </Reveal>

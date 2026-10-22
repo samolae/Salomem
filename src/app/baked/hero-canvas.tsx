@@ -120,14 +120,14 @@ export function HeroCanvas() {
                 {[0, 1].map((dup) => (
                   <div key={dup} className="flex flex-col gap-2.5 sm:gap-3 pb-2.5 sm:pb-3" aria-hidden={dup === 1 || undefined}>
                     {col.tiles.map((t, ti) => (
-                      <div key={ti} className="relative w-full overflow-hidden rounded-[10px] bg-[#f2f2f2] shadow-[0_1px_2px_rgba(0,0,0,0.04)]" style={{ aspectRatio: `1 / ${t.ratio}` }}>
+                      <div key={ti} className="relative w-full overflow-hidden rounded-[10px] bg-[#f2f2f2] shadow-[0_1px_2px_rgba(0,0,0,0.04)]" style={{ minHeight: 60 }}>
                         <img
                           {...(t.frame ? { src: t.src } : IMG.tile(t.src))}
                           alt=""
                           loading={ti < 2 && dup === 0 ? 'eager' : 'lazy'}
                           decoding="async"
                           draggable={false}
-                          className="absolute inset-0 h-full w-full object-cover"
+                          className="block w-full h-auto"
                         />
                       </div>
                     ))}

@@ -73,11 +73,11 @@ export function MotionContent() {
         {motionReels.map((r, i) => (
           <Reveal key={r.src}>
             <button type="button" onClick={() => setOpen(i)} className="group block w-full text-left outline-none focus-visible:shadow-[0_0_0_2px_#111] rounded-md" aria-label={`Watch ${short(r.brand)} reel with sound`}>
-              <div className="relative aspect-[9/16] overflow-hidden rounded-md bg-[#f2f2f2]">
+              <div className="relative overflow-hidden rounded-md bg-[#f2f2f2]">
                 <video
                   src={r.src} loop muted playsInline preload="metadata" autoPlay={!paused}
                   ref={(v) => { if (v) { paused ? v.pause() : v.play().catch(() => {}); } }}
-                  className="absolute inset-0 h-full w-full object-cover"
+                  className="block w-full h-auto"
                 />
                 <span className="absolute bottom-2 left-2 rounded-md bg-white/85 px-2 py-1 text-[12px] text-[#111] opacity-0 backdrop-blur-md transition-opacity group-hover:opacity-100">Play with sound</span>
               </div>
@@ -108,9 +108,9 @@ export function UxUiContent() {
         {CASES.map((c, i) => (
           <Reveal key={c.to}>
             <CaseLink to={c.to} cardId={`ux-${c.title.toLowerCase()}`} className="group block">
-              <div className="relative aspect-[4/3] overflow-hidden rounded-md" style={{ background: c.bg }}>
+              <div className="relative overflow-hidden rounded-md p-[8%]" style={{ background: c.bg }}>
                 <img {...IMG.caseMain(c.img)} alt={`${c.title} interface`} loading={i < 2 ? 'eager' : 'lazy'} decoding="async"
-                  className="absolute left-1/2 top-[14%] w-[74%] -translate-x-1/2 rounded-md shadow-[0_24px_60px_rgba(0,0,0,0.35)] transition-transform duration-700 ease-out group-hover:scale-[1.02]" />
+                  className="block w-full h-auto rounded-md shadow-[0_24px_60px_rgba(0,0,0,0.35)] transition-transform duration-700 ease-out group-hover:scale-[1.02]" />
               </div>
               <Caption title={c.title} sub={c.sub} tag={c.tag} />
             </CaseLink>

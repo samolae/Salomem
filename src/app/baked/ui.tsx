@@ -20,7 +20,7 @@ export const T = {
 
 /* ── Pills ────────────────────────────────────────────────────────── */
 export const pillCls = (active = false) =>
-  `inline-flex items-center gap-1.5 h-8 px-2.5 rounded-md text-[14px] leading-none whitespace-nowrap transition-colors outline-none focus-visible:shadow-[0_0_0_2px_#ff4306] ${
+  `inline-flex items-center gap-1.5 h-8 px-2.5 pb-[2px] rounded-md text-[14px] leading-none whitespace-nowrap transition-colors outline-none focus-visible:shadow-[0_0_0_2px_#ff4306] ${
     active ? 'bg-[#d93905] text-white hover:bg-[#c23304]' : 'bg-[#f0f0f0]/90 text-[#111] hover:bg-[#ffe7de] hover:text-[#b52f03] backdrop-blur-md'
   }`;
 

@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import { Link, useLocation } from 'react-router';
 import { AnimatePresence, motion } from 'motion/react';
-import { Pause, Play } from 'lucide-react';
+import { ArrowUp, Pause, Play } from 'lucide-react';
 import { T, pillCls, darkPillCls } from './ui';
 import { EMAIL } from './content';
 import { useI18n } from './i18n';
@@ -139,6 +139,37 @@ function FloatingCta() {
   );
 }
 
+function BackToTop() {
+  const { tx } = useI18n();
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setShow(window.scrollY > window.innerHeight * 1.5);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+  return (
+    <AnimatePresence>
+      {show && (
+        <motion.button
+          type="button"
+          initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 12 }}
+          transition={{ duration: 0.2 }}
+          onClick={() => {
+            const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+          }}
+          aria-label={tx('Back to top', 'ზემოთ დაბრუნება')}
+          className="fixed bottom-4 right-4 z-[65] h-11 w-11 rounded-full bg-white text-[#111] border border-[#ececec] shadow-[0_8px_24px_rgba(0,0,0,0.12)] flex items-center justify-center hover:bg-[#ffe7de] hover:text-[#b52f03] transition-colors outline-none focus-visible:shadow-[0_0_0_2px_#ff4306]"
+          style={{ marginBottom: 'env(safe-area-inset-bottom, 0px)' }}
+        >
+          <ArrowUp size={18} />
+        </motion.button>
+      )}
+    </AnimatePresence>
+  );
+}
+
 function Footer() {
   const { tx, to } = useI18n();
   const groups = [
@@ -228,6 +259,7 @@ export function BakedShell({ children }: { children: ReactNode }) {
         </main>
         <Footer />
         <FloatingCta />
+        <BackToTop />
         <style>{`
           @font-face { font-family: 'Avenir Next Georgian'; src: url('/fonts/avenir-next-georgian-regular-v2.woff2') format('woff2'); font-weight: 100 700; font-style: normal; font-display: swap; }
           @font-face { font-family: 'Loos Wide Black'; src: url('/fonts/loos-wide-black-v2.woff2') format('woff2'); font-weight: 800 900; font-style: normal; font-display: swap; }

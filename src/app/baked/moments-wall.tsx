@@ -64,7 +64,9 @@ export const MomentsWall = ({ items, isDark, onOpen }: Props) => {
     ro.observe(el);
     return () => ro.disconnect();
   }, []);
-  useEffect(() => { setCols(baseCols.current); }, [items]);
+  // A new set of visuals (another brand) starts the fit again
+  const itemsKey = `${items.length}:${items[0]?.src ?? ''}`;
+  useEffect(() => { setCols(baseCols.current); }, [itemsKey]);
   useEffect(() => {
     const el = wallRef.current;
     if (!el) return;
@@ -76,8 +78,9 @@ export const MomentsWall = ({ items, isDark, onOpen }: Props) => {
     fit();
     el.addEventListener('load', fit, true);
     window.addEventListener('resize', fit);
-    return () => { el.removeEventListener('load', fit, true); window.removeEventListener('resize', fit); };
-  }, [cols, items]);
+    const t = setTimeout(fit, 400);
+    return () => { clearTimeout(t); el.removeEventListener('load', fit, true); window.removeEventListener('resize', fit); };
+  }, [cols, itemsKey]);
 
   // Tile centres, measured from layout (offsets ignore our transforms)
   const measure = () => {

@@ -39,7 +39,7 @@ const manifest = JSON.parse(
 const ROUTE_SOURCE = (url) =>
   url.startsWith('/projects/')
     ? `src/app/components/${url.split('/')[2]}-case-study.tsx`
-    : 'src/app/components/home-page.tsx';
+    : 'src/app/baked/page.tsx';
 
 function preloadsFor(url) {
   const files = new Set();

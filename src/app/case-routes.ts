@@ -16,7 +16,7 @@ export const caseRoutes = {
 
 /** Home, work galleries, services and contact all share one page module */
 export const homeRoute = () =>
-  import('./components/home-page').then((m) => ({ Component: m.HomePage }));
+  import('./baked/page').then((m) => ({ Component: m.BakedPage }));
 
 export type CasePath = keyof typeof caseRoutes;
 

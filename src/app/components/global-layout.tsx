@@ -17,6 +17,8 @@ const F = {
   body: '"Manrope", "Inter", sans-serif',
 };
 
+const BAKED_PATHS = new Set(['/', '/services', '/contact']);
+
 const bottomNavItems = [
   { id: 'home', label: 'Home', icon: Home, path: '/' },
   { id: 'services', label: 'Services', icon: Briefcase, path: '/services' },
@@ -145,6 +147,18 @@ export function GlobalLayout() {
   useEffect(() => {
     setAmbient(!window.matchMedia('(max-width: 1023px)').matches);
   }, []);
+
+  // The redesigned pages bring their own light shell (src/app/baked)
+  const isBaked = BAKED_PATHS.has(location.pathname) || location.pathname.startsWith('/work/');
+  if (isBaked) {
+    return (
+      <>
+        <SkipLink />
+        <Outlet />
+        <CursorTag />
+      </>
+    );
+  }
 
   return (
     <div

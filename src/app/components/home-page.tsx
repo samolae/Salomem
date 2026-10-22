@@ -52,6 +52,8 @@ const logoSpar = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339516/
 const logoUnilab = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339517/f3fdff4d8158dacf0a12b0777c362f22f0cb78c7_vkww33.jpg';
 import logoUpwork from '../../imports/upwork-1.svg';
 import { IMG, responsive } from '../lib/cld';
+import { MomentsWall, type WallItem } from './moments-wall';
+import { HeartWall } from './heart-wall';
 const logoRunwayTeam = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339515/7cab6531835c509d1293dc3e519cb8808de775ac_ebqpyf.jpg';
 
 /* ─── Social Media Ads brand images ────────────────────────────────── */
@@ -2299,96 +2301,17 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
       return { ...prev, src: prev.images[newIdx], index: newIdx };
     });
   }, []);
-  const [activeBrand, setActiveBrand] = useState(0); // -1 = All
+  const [activeBrand, setActiveBrand] = useState(-1); // -1 = All (the full wall)
   const [showStickyBar, setShowStickyBar] = useState(false);
   const brand = activeBrand >= 0 ? adsBrands[activeBrand] : null;
 
-  // Infinite scroll for "All" tab
-  const INITIAL_BATCH = 18;
-  const ITEMS_PER_BATCH = 18;
-  const [visibleCount, setVisibleCount] = useState(INITIAL_BATCH);
-  const sentinelRef = useRef<HTMLDivElement>(null);
-
   const allVisuals = useMemo(() =>
-    adsBrands.flatMap((b) => b.items.map((item) => ({ ...item, brandName: b.name, brandIdx: adsBrands.indexOf(b), logoImg: b.logoImg, whiteBg: b.whiteBg }))),
+    adsBrands.flatMap((b) => b.items.map((item) => ({ ...item, brandName: b.name, logoImg: b.logoImg, whiteBg: b.whiteBg }))),
     []
   );
-  const visibleVisuals = allVisuals.slice(0, visibleCount);
-  const hasMore = visibleCount < allVisuals.length;
-
-  // Reset visible count when toggling tabs
-  useEffect(() => {
-    setVisibleCount(INITIAL_BATCH);
-  }, [activeBrand]);
-
-  // Shared scroll-velocity → tilt for ALL cards (cheap, computed once)
-  const { scrollY } = useScroll();
-  const scrollVelocity = useVelocity(scrollY);
-  const smoothVelocity = useSpring(scrollVelocity, { stiffness: 90, damping: 28, mass: 1 });
-  const cardTilt = useTransform(smoothVelocity, [-2500, 2500], [-2, 2]);
-
-  // Robust infinite scroll — listener attached ONCE per tab change.
-  // Using document scroll distance (window.scrollY + window.innerHeight vs
-  // document.documentElement.scrollHeight) is unaffected by parent
-  // transforms/filters, unlike sentinel.getBoundingClientRect().
-  useEffect(() => {
-    if (activeBrand !== -1) return;
-
-    let raf: number | null = null;
-    let mounted = true;
-
-    const tryLoad = () => {
-      if (!mounted) return;
-      const scrolled = window.scrollY + window.innerHeight;
-      const docHeight = document.documentElement.scrollHeight;
-      const fromBottom = docHeight - scrolled;
-      // Sentinel as backup signal
-      let sentinelInZone = false;
-      const sentinel = sentinelRef.current;
-      if (sentinel) {
-        const r = sentinel.getBoundingClientRect();
-        sentinelInZone = r.top < window.innerHeight + 1000;
-      }
-      if (fromBottom < 1400 || sentinelInZone) {
-        // setVisibleCount with functional form reads current state — no
-        // closure-staleness issues. The clamp inside is a no-op once done.
-        setVisibleCount((c) => {
-          if (c >= allVisuals.length) return c;
-          return Math.min(c + ITEMS_PER_BATCH, allVisuals.length);
-        });
-      }
-    };
-
-    const onScroll = () => {
-      if (raf !== null) return;
-      raf = requestAnimationFrame(() => {
-        raf = null;
-        tryLoad();
-      });
-    };
-
-    // Initial check — handles short pages where sentinel is already in view
-    raf = requestAnimationFrame(() => {
-      raf = null;
-      tryLoad();
-    });
-    // Cascade check after layout settles from each batch
-    const cascadeInterval = setInterval(() => {
-      if (!mounted) return;
-      tryLoad();
-    }, 200);
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll, { passive: true });
-
-    return () => {
-      mounted = false;
-      if (raf !== null) cancelAnimationFrame(raf);
-      clearInterval(cascadeInterval);
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
-    };
-  }, [activeBrand, allVisuals.length]);
+  const wallItems: WallItem[] = useMemo(() => brand
+    ? brand.items.map((it) => ({ ...it, brandName: brand.name, logoImg: brand.logoImg, whiteBg: brand.whiteBg }))
+    : allVisuals, [brand, allVisuals]);
 
   const goTo = (idx: number) => { setActiveBrand(idx); };
   const goPrev = () => setActiveBrand(p => p <= 0 ? adsBrands.length - 1 : p - 1);
@@ -2459,251 +2382,47 @@ const SocialMediaAdsContent = ({ isDark }: { isDark: boolean }) => {
         </div>
       </FadeIn>
 
-      {/* ── Content area ── */}
+      {/* ── Content area: Moments wall (parts under the cursor) ── */}
       <AnimatePresence mode="wait">
-        {activeBrand === -1 ? (
-          /* All visuals — paginated */
-          <motion.div
-            key="all"
-            initial={{ opacity: 0, x: -50, rotateY: 8, scale: 0.97, filter: 'blur(10px)' }}
-            animate={{ opacity: 1, x: 0, rotateY: 0, scale: 1, filter: 'blur(0px)' }}
-            exit={{ opacity: 0, x: 50, rotateY: -8, scale: 0.97, filter: 'blur(10px)' }}
-            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], opacity: { duration: 0.35 } }}
-            style={{ transformPerspective: 1400, transformOrigin: 'center center' }}
-          >
-            <div className={`rounded-xl ${bg2} border ${border} p-3`}>
-              <div className="flex items-center justify-between gap-4 mb-3">
-                <span className={`text-[10px] font-mono whitespace-nowrap ${mt}`}>
-                  <span className={isDark ? 'text-white/70' : 'text-zinc-700'}>{visibleVisuals.length}</span>
-                  <span className="opacity-50"> / {allVisuals.length}</span> visuals
-                </span>
-                {/* Inline mini progress */}
-                <div className={`flex-1 h-px max-w-[160px] ${isDark ? 'bg-white/[0.04]' : 'bg-zinc-200'} rounded-full overflow-hidden`}>
-                  <motion.div
-                    className="h-full"
-                    style={{ background: hasMore ? 'linear-gradient(90deg, #ff4306, #ff8252)' : 'rgb(52,211,153)' }}
-                    initial={false}
-                    animate={{ width: `${(visibleCount / allVisuals.length) * 100}%` }}
-                    transition={{ type: 'spring', stiffness: 90, damping: 22 }}
-                  />
-                </div>
-                <span className={`text-[10px] font-mono uppercase tracking-[0.15em] whitespace-nowrap ${hasMore ? mt : isDark ? 'text-emerald-400' : 'text-emerald-700'}`}>
-                  {hasMore ? `${Math.round((visibleCount / allVisuals.length) * 100)}%` : 'Complete'}
-                </span>
-              </div>
-
-              <div className="columns-2 md:columns-3" style={{ columnGap: '0.375rem' }}>
-                {(() => {
-                  const visibleImgSrcs = visibleVisuals.filter(v => v.type === 'image').map(v => v.src);
-                  return visibleVisuals.map((v, i) => (
-                    <MagneticAdCard
-                      key={`${v.brandName}-${v.src}`}
-                      v={v}
-                      border={border}
-                      isDark={isDark}
-                      cardTilt={cardTilt}
-                      index={i}
-                      delayStep={ITEMS_PER_BATCH}
-                      onClick={() => v.type === 'image'
-                        ? setLightbox({ src: v.src, alt: v.brandName, whiteBg: v.whiteBg, images: visibleImgSrcs, index: visibleImgSrcs.indexOf(v.src) })
-                        : setLightbox({ src: v.src, alt: `${v.brandName} reel`, images: [], index: 0, video: true })}
-                    />
-                  ));
-                })()}
-              </div>
-
-              {/* Continuation indicator — clear visual cue that more content follows */}
-              {hasMore && (
-                <div ref={sentinelRef} className="mt-5">
-                  {/* Animated hint */}
-                  <div className="flex items-center justify-center gap-2.5 py-3">
-                    <motion.span
-                      animate={{ y: [0, 4, 0], opacity: [0.5, 1, 0.5] }}
-                      transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
-                      className="text-[#ff4306]"
-                    >
-                      <ChevronDown size={13} />
-                    </motion.span>
-                    <span className="text-[10px] font-mono uppercase tracking-[0.2em]">
-                      <span className="text-[#ff4306]">{allVisuals.length - visibleCount}</span>
-                      <span className={`ml-1.5 ${mt}`}>more · keep scrolling</span>
-                    </span>
+        <motion.div
+          key={activeBrand}
+          initial={{ opacity: 0, y: 12, filter: 'blur(8px)' }}
+          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+          exit={{ opacity: 0, y: -8, filter: 'blur(8px)' }}
+          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1], opacity: { duration: 0.3 } }}
+        >
+          <div className={`rounded-xl ${bg2} border ${border} p-3`}>
+            <div className="flex items-center justify-between gap-3 mb-3">
+              {brand ? (
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className={`w-7 h-7 rounded-lg flex-shrink-0 flex items-center justify-center overflow-hidden text-[10px] ${isDark ? 'bg-[#ff4306]/15 text-[#ff4306]' : 'bg-[#ff4306]/10 text-[#ff4306]'}`} style={{ fontFamily: F.heading, fontWeight: 700 }}>
+                    {brand.logoImg ? <img {...IMG.logo(brand.logoImg)} alt={`${brand.name} logo`} loading="lazy" width="32" height="32" className="w-full h-full object-cover" /> : brand.name.charAt(0)}
                   </div>
-                  {/* Progress strip */}
-                  <div className={`h-[2px] ${isDark ? 'bg-white/[0.04]' : 'bg-zinc-200'} rounded-full overflow-hidden`}>
-                    <motion.div
-                      className="h-full rounded-full"
-                      style={{ background: 'linear-gradient(90deg, #ff4306, #ff8252)' }}
-                      initial={false}
-                      animate={{ width: `${(visibleCount / allVisuals.length) * 100}%` }}
-                      transition={{ type: 'spring', stiffness: 90, damping: 22 }}
-                    />
-                  </div>
+                  <span className={`text-[12px] truncate ${isDark ? 'text-white/90' : 'text-zinc-800'}`} style={{ fontFamily: F.body, fontWeight: 500 }}>{brand.name}</span>
+                  {brand.aiContent && (
+                    <span className="inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] uppercase tracking-[0.1em] bg-[#ff4306]/10 text-[#ff4306] border border-[#ff4306]/20 flex-shrink-0" style={{ fontFamily: F.body, fontWeight: 600 }}>AI Content</span>
+                  )}
                 </div>
+              ) : (
+                <span className={`text-[10px] font-mono uppercase tracking-[0.15em] ${mt}`}>Move through the wall · click to open</span>
               )}
-              {!hasMore && allVisuals.length > INITIAL_BATCH && (
-                <div className="flex items-center justify-center gap-2 py-5 mt-3">
-                  <span className="text-emerald-400/70" aria-hidden="true">●</span>
-                  <span className={`text-[10px] font-mono uppercase tracking-[0.2em] ${mt}`}>
-                    <span className={isDark ? 'text-emerald-400' : 'text-emerald-700'}>All {allVisuals.length} visuals</span>
-                    <span className="ml-1.5">— end reached</span>
-                  </span>
-                </div>
-              )}
+              <span className={`text-[10px] font-mono whitespace-nowrap ${mt}`}>{wallItems.length} {wallItems.length === 1 ? 'visual' : 'visuals'}</span>
             </div>
-          </motion.div>
-        ) : (
-          /* Selected brand visuals */
-          <motion.div
-            key={activeBrand}
-            initial={{ opacity: 0, x: 50, rotateY: -8, scale: 0.97, filter: 'blur(10px)' }}
-            animate={{ opacity: 1, x: 0, rotateY: 0, scale: 1, filter: 'blur(0px)' }}
-            exit={{ opacity: 0, x: -50, rotateY: 8, scale: 0.97, filter: 'blur(10px)' }}
-            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], opacity: { duration: 0.35 } }}
-            style={{ transformPerspective: 1400, transformOrigin: 'center center' }}
-          >
-            <div className={`rounded-xl ${bg2} border ${border} p-3 relative overflow-hidden`}>
-              <div className="absolute top-0 left-0 w-32 h-32 opacity-[0.04] pointer-events-none" style={{ background: 'radial-gradient(circle, #ff4306 0%, transparent 70%)' }} />
-
-              {/* Brand info */}
-              <div className="flex items-center justify-between mb-3 relative z-10">
-                <div className="flex items-center gap-2.5">
-                  <div className={`w-7 h-7 rounded-lg flex items-center justify-center overflow-hidden text-[10px] tracking-wider ${isDark ? 'bg-[#ff4306]/15 text-[#ff4306]' : 'bg-[#ff4306]/10 text-[#ff4306]'}`}
-                    style={{ fontFamily: F.heading, fontWeight: 700 }}
-                  >
-                    {brand!.logoImg ? (
-                      <img {...IMG.logo(brand!.logoImg)} alt={`${brand!.name} logo`} loading="lazy" width="32" height="32" className="w-full h-full object-cover" />
-                    ) : brand!.name.charAt(0)}
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className={`text-[12px] ${isDark ? 'text-white/90' : 'text-zinc-800'}`} style={{ fontFamily: F.body, fontWeight: 500 }}>{brand!.name}</span>
-                    {brand!.aiContent && (
-                      <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] uppercase tracking-[0.1em] ${isDark ? 'bg-[#ff4306]/10 text-[#ff4306] border border-[#ff4306]/20' : 'bg-[#ff4306]/8 text-[#ff4306] border border-[#ff4306]/15'}`}
-                        style={{ fontFamily: F.body, fontWeight: 600 }}
-                      >
-                        <svg width="9" height="9" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 1l2.2 4.4L15 6.3l-3.5 3.4.8 4.9L8 12.4l-4.3 2.2.8-4.9L1 6.3l4.8-.9L8 1z"/></svg>
-                        AI Content
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <span className={`text-[10px] font-mono ${mt}`}>{brand!.items.length} {brand!.items.length === 1 ? 'visual' : 'visuals'}</span>
-              </div>
-
-              {/* Grid layout */}
-              {(() => {
-                if (brand!.bentoGrid) {
-                  const tallItem = brand!.items.find(it => it.tall);
-                  const regularItems = brand!.items.filter(it => !it.tall);
-                  const imgSrcs = brand!.items.filter(it => it.type === 'image').map(it => it.src);
-                  const btnCls = `relative rounded-lg overflow-hidden border ${border} group cursor-pointer`;
-                  const hoverOverlay = (
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center pointer-events-none">
-                      <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 scale-75 group-hover:scale-100 pointer-fine:hidden">
-                        <div className="w-7 h-7 rounded-full bg-white/15 backdrop-blur-xl flex items-center justify-center border border-white/10">
-                          <ArrowUpRight size={11} className="text-white" />
-                        </div>
-                      </div>
-                    </div>
-                  );
-                  return (
-                    <div className="relative z-10 flex gap-2.5 items-stretch">
-                      {tallItem && (
-                        <motion.button data-cursor="expand" className={`flex-1 ${btnCls}`} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                          onClick={() => setLightbox({ src: tallItem.src, alt: brand!.name, whiteBg: brand!.whiteBg, images: imgSrcs, index: imgSrcs.indexOf(tallItem.src) })}
-                        >
-                          <img {...IMG.tileLarge(tallItem.src)} alt={`${brand!.name} visual`} loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover block" />
-                          {hoverOverlay}
-                        </motion.button>
-                      )}
-                      <div className="flex-1 flex flex-col gap-2.5">
-                        {regularItems.slice(0, 2).map((item, i) => (
-                          <motion.button key={i} data-cursor="expand" className={`flex-1 aspect-square ${btnCls}`} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                            onClick={() => setLightbox({ src: item.src, alt: brand!.name, whiteBg: brand!.whiteBg, images: imgSrcs, index: imgSrcs.indexOf(item.src) })}
-                          >
-                            <img {...IMG.tileLarge(item.src)} alt={`${brand!.name} visual ${i + 2}`} loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover block" />
-                            {hoverOverlay}
-                          </motion.button>
-                        ))}
-                      </div>
-                    </div>
-                  );
+            <MomentsWall
+              items={wallItems}
+              isDark={isDark}
+              onOpen={(i) => {
+                const v = wallItems[i];
+                if (v.type === 'video') {
+                  setLightbox({ src: v.src, alt: `${v.brandName} reel`, images: [], index: 0, video: true });
+                } else {
+                  const imgs = wallItems.filter((w) => w.type === 'image').map((w) => w.src);
+                  setLightbox({ src: v.src, alt: v.brandName, whiteBg: v.whiteBg, images: imgs, index: imgs.indexOf(v.src) });
                 }
-                if (brand!.squareGrid) {
-                  const cols = brand!.threeCol ? 'grid-cols-3' : 'grid-cols-2';
-                  const imgSrcs = brand!.items.filter(it => it.type === 'image').map(it => it.src);
-                  return (
-                    <div className={`relative z-10 grid ${cols} gap-2`}>
-                      {brand!.items.map((item, i) => (
-                        <div key={`${brand!.name}-${i}`} className="aspect-[4/5]">
-                          <AdsMediaItem item={item} brandName={brand!.name} index={i} isDark={isDark} border={border} whiteBg={brand!.whiteBg} fill
-                            onImageClick={() => setLightbox({ src: item.src, alt: brand!.name, whiteBg: brand!.whiteBg, images: imgSrcs, index: imgSrcs.indexOf(item.src) })}
-                            onVideoClick={() => setLightbox({ src: item.src, alt: `${brand!.name} reel`, images: [], index: 0, video: true })} />
-                        </div>
-                      ))}
-                    </div>
-                  );
-                }
-                const hasFullWidth = brand!.items.some(it => it.fullWidth);
-                if (!hasFullWidth) {
-                  const colsClass = brand!.whiteBg
-                    ? `grid ${brand!.twoCol ? 'grid-cols-2' : brand!.threeCol ? 'grid-cols-3' : 'grid-cols-2 md:grid-cols-3'} gap-2.5`
-                    : brand!.twoCol ? 'columns-2'
-                    : brand!.threeCol ? 'grid grid-cols-3 gap-2.5'
-                    : brand!.items.length <= 2 ? 'columns-2' : 'columns-2 md:columns-3';
-                  const isGrid = brand!.whiteBg || brand!.threeCol;
-                  return (
-                    <div className={`relative z-10 ${colsClass}`} style={isGrid ? undefined : { columnGap: '0.625rem' }}>
-                      {(() => {
-                        const imgSrcs = brand!.items.filter(it => it.type === 'image').map(it => it.src);
-                        return brand!.items.map((item, i) => (
-                          <AdsMediaItem key={`${brand!.name}-${i}`} item={item} brandName={brand!.name} index={i} isDark={isDark} border={border} whiteBg={brand!.whiteBg}
-                            onImageClick={() => setLightbox({ src: item.src, alt: brand!.name, whiteBg: brand!.whiteBg, images: imgSrcs, index: imgSrcs.indexOf(item.src) })}
-                            onVideoClick={() => setLightbox({ src: item.src, alt: `${brand!.name} reel`, images: [], index: 0, video: true })} />
-                        ));
-                      })()}
-                    </div>
-                  );
-                }
-                const groups: { fullWidth: boolean; items: { item: AdsMedia; idx: number }[] }[] = [];
-                brand!.items.forEach((item, i) => {
-                  const fw = !!item.fullWidth;
-                  const last = groups[groups.length - 1];
-                  if (last && last.fullWidth === fw) { last.items.push({ item, idx: i }); }
-                  else { groups.push({ fullWidth: fw, items: [{ item, idx: i }] }); }
-                });
-                const regColsClass = brand!.whiteBg
-                  ? `grid ${brand!.twoCol ? 'grid-cols-2' : brand!.threeCol ? 'grid-cols-3' : 'grid-cols-2 md:grid-cols-3'} gap-2.5`
-                  : brand!.twoCol ? 'columns-2'
-                  : brand!.threeCol ? 'grid grid-cols-3 gap-2.5'
-                  : 'columns-2 md:columns-3';
-                const isRegGrid = brand!.whiteBg || brand!.threeCol;
-                const imgSrcsGroups = brand!.items.filter(it => it.type === 'image').map(it => it.src);
-                return (
-                  <div className="relative z-10 flex flex-col gap-2.5">
-                    {groups.map((g, gi) => g.fullWidth ? (
-                      g.items.map(({ item, idx }) => (
-                        <AdsMediaItem key={`${brand!.name}-${idx}`} item={item} brandName={brand!.name} index={idx} isDark={isDark} border={border} whiteBg={brand!.whiteBg}
-                          onImageClick={() => setLightbox({ src: item.src, alt: brand!.name, whiteBg: brand!.whiteBg, images: imgSrcsGroups, index: imgSrcsGroups.indexOf(item.src) })}
-                            onVideoClick={() => setLightbox({ src: item.src, alt: `${brand!.name} reel`, images: [], index: 0, video: true })} />
-                      ))
-                    ) : (
-                      <div key={`grp-${gi}`} className={regColsClass} style={isRegGrid ? undefined : { columnGap: '0.625rem' }}>
-                        {g.items.map(({ item, idx }) => (
-                          <AdsMediaItem key={`${brand!.name}-${idx}`} item={item} brandName={brand!.name} index={idx} isDark={isDark} border={border} whiteBg={brand!.whiteBg}
-                            onImageClick={() => setLightbox({ src: item.src, alt: brand!.name, whiteBg: brand!.whiteBg, images: imgSrcsGroups, index: imgSrcsGroups.indexOf(item.src) })}
-                            onVideoClick={() => setLightbox({ src: item.src, alt: `${brand!.name} reel`, images: [], index: 0, video: true })} />
-                        ))}
-                      </div>
-                    ))}
-                  </div>
-                );
-              })()}
-            </div>
-          </motion.div>
-        )}
+              }}
+            />
+          </div>
+        </motion.div>
       </AnimatePresence>
 
       {/* ── Sticky mini-filter bar ── */}
@@ -3004,6 +2723,15 @@ const SocialMediaMotionContent = ({ isDark }: { isDark: boolean }) => {
           Animated social media content, reels, and motion graphics for brands and campaigns.
         </p>
       </FadeIn>
+
+      {/* Heart wall — frames from every reel gather into a heart, then burst into a wall */}
+      <div className="mb-10">
+        <HeartWall
+          reels={motionReels}
+          isDark={isDark}
+          onOpen={(i) => { setActiveUnmutedIdx(null); setOpenReel({ src: motionReels[i].src, alt: `${motionReels[i].brand} reel` }); }}
+        />
+      </div>
 
       {/* Reels Grid — row-major flow, left-aligned (reads top-left → bottom-right) */}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3 items-start justify-items-start">

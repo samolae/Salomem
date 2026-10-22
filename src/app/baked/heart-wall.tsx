@@ -197,7 +197,7 @@ export const HeartWall = ({ reels, isDark, onOpen, replayLabel = 'Replay' }: Pro
               <span
                 aria-hidden
                 className="pointer-events-none absolute inset-0 bg-black transition-opacity duration-500 group-hover:opacity-0"
-                style={{ opacity: phase === 'wall' ? (1 - depth) * 3 : 0 }}
+                style={{ opacity: isDark && phase === 'wall' ? (1 - depth) * 3 : 0 }}
               />
             </motion.button>
           );

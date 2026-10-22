@@ -173,12 +173,12 @@ export function LogoStrip({ logos, paused }: { logos: { name: string; logo: stri
             key={i}
             role={i < logos.length ? 'listitem' : undefined}
             aria-hidden={i >= logos.length || undefined}
-            className="relative h-[120px] w-[220px] sm:h-[136px] sm:w-[240px] flex-shrink-0 rounded-md bg-[#f3f3f3] flex items-center justify-center gap-2.5"
+            className="relative h-[120px] w-[230px] sm:h-[136px] sm:w-[250px] flex-shrink-0 rounded-md bg-[#f3f3f3] flex items-center justify-center gap-3"
             style={{ transform: `rotate(${((i * 37) % 7 - 3) * 0.25}deg)` }}
           >
             <span className="absolute top-3 right-3 h-1.5 w-1.5 rounded-full bg-[#c9c9c9]" aria-hidden />
-            <img {...IMG.logo(c.logo)} alt="" width="28" height="28" loading="lazy" className="h-7 w-7 rounded object-contain grayscale opacity-60" />
-            <span className="text-[17px] text-[#8a8a8a] tracking-[-0.01em]" style={{ fontWeight: 500 }}>{c.name}</span>
+            <img {...IMG.logo(c.logo)} alt="" width="40" height="40" loading="lazy" className="h-10 w-10 rounded-lg object-contain bg-white shadow-[0_1px_3px_rgba(0,0,0,0.08)]" />
+            <span className="text-[17px] text-[#111] tracking-[-0.01em]" style={{ fontWeight: 500 }}>{c.name}</span>
           </div>
         ))}
       </div>

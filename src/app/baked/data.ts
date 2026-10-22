@@ -157,14 +157,6 @@ export const adsBrands: { name: string; logoImg?: string; items: AdsMedia[]; aiC
     { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773436456/fmepbqewulixfvqdohme_eyvpsf.webp', type: 'image' },
     { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773436457/u2tfvzpttg0lj5cstpw6_x8oklv.webp', type: 'image' },
   ]},
-  { name: 'BORDO', logoImg: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773916798/bordo_zti82j.webp', items: [
-    { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773436835/qvfr9gim6yny9wf0nvmp_nvtljn.webp', type: 'image' },
-    { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773436836/utueqfyuvx5czb4xberv_xomlrg.webp', type: 'image' },
-    { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773436836/o2yjvifvas7icnj6nfyf_oepl6o.webp', type: 'image' },
-    { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773436836/xrr21mdxwoyjrby3oxxe_x3qnhl.webp', type: 'image' },
-    { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773436836/zgzezo2aubimywxpo9zq_oiuama.webp', type: 'image' },
-    { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773436837/zyhlbbnsefsnopaul3un_ew25rm.webp', type: 'image' },
-  ]},
   { name: "DrBrown's Georgia", twoCol: true, logoImg: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773917410/drbrowns_wdyytm.webp', items: [
     { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773437123/ktblhmxptaigpkewk8qy_vutvcx.webp', type: 'image' },
     { src: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773437123/vbt7g1pii5omcqg3dbsr_jzzk57.webp', type: 'image' },

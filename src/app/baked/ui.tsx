@@ -186,7 +186,6 @@ export function LogoStrip({ logos, paused }: { logos: { name: string; logo: stri
             className="relative h-[120px] w-[230px] sm:h-[136px] sm:w-[250px] flex-shrink-0 rounded-md bg-[#f3f3f3] flex items-center justify-center gap-3"
             style={{ transform: `rotate(${((i * 37) % 7 - 3) * 0.25}deg)` }}
           >
-            <span className="absolute top-3 right-3 h-1.5 w-1.5 rounded-full bg-[#ff4306]" aria-hidden />
             <img {...IMG.logo(c.logo)} alt="" width="40" height="40" loading="lazy" className="h-10 w-10 rounded-lg object-contain bg-white shadow-[0_1px_3px_rgba(0,0,0,0.08)]" />
             <span className="text-[17px] text-[#111] tracking-[-0.01em]" style={{ fontWeight: 500 }}>{c.name}</span>
           </div>

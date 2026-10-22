@@ -8,6 +8,8 @@ import { useMotionPause } from './shell';
 import { adsBrands, motionReels, screenAurumMainHQ, schenkerSendung, unispaceLogin } from './data';
 import { contactLabelsKa, contactLinks, formOptions, formOptionsKa, processSteps, processStepsKa, reelLabelsKa, services, servicesKa, stats, statsKa, EMAIL } from './content';
 import { brandName, useI18n } from './i18n';
+import { MomentsWall } from './moments-wall';
+import { HeartWall } from './heart-wall';
 
 const short = (name: string) => name.split(' · ')[0];
 
@@ -42,21 +44,13 @@ export function AdsContent() {
         </div>
       </div>
 
-      <section aria-label={tx('Ads', 'რეკლამები')} className="px-1.5 columns-2 md:columns-3 lg:columns-4 2xl:columns-5 gap-1.5" key={brand}>
-        {items.map((v, i) => (
-          <Reveal key={`${v.brand}-${v.src}`} className="break-inside-avoid">
-            <button type="button" onClick={() => setOpen(i)} className="group block w-full text-left outline-none focus-visible:shadow-[0_0_0_2px_#ff4306] rounded-md" aria-label={`${tx('Open', 'გახსენი')} ${bn(v.brand)} ${v.n}`}>
-              <div className={`relative overflow-hidden rounded-md ${v.whiteBg ? 'bg-white border border-[#eee]' : 'bg-[#f2f2f2]'}`}>
-                {v.type === 'video' ? (
-                  <video src={v.src} autoPlay loop muted playsInline className="block w-full h-auto" />
-                ) : (
-                  <FadeImg src={v.src} sizes="tileLarge" alt="" className="block w-full h-auto transition-transform duration-700 ease-out group-hover:scale-[1.02]" />
-                )}
-              </div>
-              <Caption title={bn(v.brand)} tag={v.ai ? tx('AI content', 'AI კონტენტი') : String(v.n).padStart(2, '0')} />
-            </button>
-          </Reveal>
-        ))}
+      {/* Moments wall: the visuals part under the cursor; click to open */}
+      <section aria-label={tx('Ads', 'რეკლამები')} className="px-1.5" key={brand}>
+        <MomentsWall
+          isDark={false}
+          items={items.map((v) => ({ src: v.src, type: v.type, brandName: bn(v.brand), logoImg: adsBrands.find((b) => b.name === v.brand)?.logoImg, whiteBg: v.whiteBg }))}
+          onOpen={setOpen}
+        />
       </section>
 
       <Lightbox items={lightbox} index={open} onClose={() => setOpen(null)} onIndex={setOpen} />
@@ -77,6 +71,11 @@ export function MotionContent() {
       <PageIntro title={tx('Social Media Motion', 'სოც. მედიის მოუშენი')}>
         {tx('Reels, logo reveals and animated ads. Click any reel to watch it with sound.', 'რილსები, ლოგოს ანიმაციები და ანიმირებული რეკლამები. დააჭირე ნებისმიერ რილსს, რომ ხმით ნახო.')}
       </PageIntro>
+      {/* Frames from every reel gather into a heart, then burst into a wall */}
+      <section aria-label={tx('All reels as a heart', 'ყველა რილსი გულად')} className="px-1.5 pb-1.5">
+        <HeartWall reels={motionReels} isDark={false} onOpen={setOpen} replayLabel={tx('Replay', 'თავიდან')} />
+      </section>
+
       <section aria-label={tx('Reels', 'რილსები')} className="px-1.5 columns-2 sm:columns-3 lg:columns-4 xl:columns-6 gap-1.5">
         {motionReels.map((r, i) => (
           <Reveal key={r.src} className="break-inside-avoid">

@@ -42,7 +42,7 @@ function TopNav() {
         <div className="hidden sm:flex items-center gap-1 pointer-events-auto">
           {NAV.map((n) => (
             <Link key={n.to} to={n.to} aria-current={pathname === n.to ? 'page' : undefined} className={pillCls(false)}
-              style={pathname === n.to ? { background: '#e2e2e2' } : undefined}>
+              style={pathname === n.to ? { background: '#ffe7de', color: '#b52f03' } : undefined}>
               {n.label}
             </Link>
           ))}
@@ -66,7 +66,7 @@ function TopNav() {
                 className="flex flex-col items-end gap-1"
               >
                 {[{ label: 'home', to: '/' }, ...NAV].map((n) => (
-                  <Link key={n.to} to={n.to} className={pillCls(false)} style={pathname === n.to ? { background: '#e2e2e2' } : undefined}>{n.label}</Link>
+                  <Link key={n.to} to={n.to} className={pillCls(false)} style={pathname === n.to ? { background: '#ffe7de', color: '#b52f03' } : undefined}>{n.label}</Link>
                 ))}
               </motion.div>
             )}
@@ -97,7 +97,7 @@ function FloatingCta() {
           style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
         >
           <Link to="/contact" className={darkPillCls}>
-            <span className="h-1.5 w-1.5 rounded-full bg-[#22c55e]" aria-hidden />
+            <span className="h-1.5 w-1.5 rounded-full bg-white" aria-hidden />
             Contact me
           </Link>
         </motion.div>
@@ -124,19 +124,19 @@ function Footer() {
           <div key={g.title}>
             <div className="text-[#9a9a9a] mb-3">{g.title}</div>
             <ul className="space-y-1.5">
-              {g.links.map((x) => <li key={x.to}><Link to={x.to} className="text-[#111] hover:text-[#6f6f6f] transition-colors">{x.l}</Link></li>)}
+              {g.links.map((x) => <li key={x.to}><Link to={x.to} className="text-[#111] hover:text-[#d93905] transition-colors">{x.l}</Link></li>)}
             </ul>
           </div>
         ))}
         <div>
           <div className="text-[#9a9a9a] mb-3">Elsewhere</div>
           <ul className="space-y-1.5">
-            {ext.map((x) => <li key={x.l}><a href={x.href} target="_blank" rel="noopener noreferrer" className="text-[#111] hover:text-[#6f6f6f] transition-colors">{x.l} ↗</a></li>)}
+            {ext.map((x) => <li key={x.l}><a href={x.href} target="_blank" rel="noopener noreferrer" className="text-[#111] hover:text-[#d93905] transition-colors">{x.l} ↗</a></li>)}
           </ul>
         </div>
         <div>
           <div className="text-[#9a9a9a] mb-3">Say hello</div>
-          <a href={`mailto:${EMAIL}`} className="text-[#111] hover:text-[#6f6f6f] transition-colors break-all">{EMAIL}</a>
+          <a href={`mailto:${EMAIL}`} className="text-[#111] hover:text-[#d93905] transition-colors break-all">{EMAIL}</a>
           <div className="text-[#6f6f6f] mt-1.5">Tbilisi, Georgia</div>
         </div>
       </div>
@@ -169,7 +169,7 @@ export function BakedShell({ children }: { children: ReactNode }) {
           @font-face { font-family: 'Avenir Next Georgian'; src: url('/fonts/avenir-next-georgian-regular-v2.woff2') format('woff2'); font-weight: 100 700; font-style: normal; font-display: swap; }
           @font-face { font-family: 'Loos Wide Black'; src: url('/fonts/loos-wide-black-v2.woff2') format('woff2'); font-weight: 800 900; font-style: normal; font-display: swap; }
           html:has(.baked), html:has(.baked) body { background: #fff; color-scheme: light; }
-          .baked ::selection { background: #111; color: #fff; }
+          .baked ::selection { background: #ff4306; color: #fff; }
           @keyframes baked-marquee { to { transform: translateX(-50%); } }
           .baked-marquee { animation: baked-marquee 60s linear infinite; }
           @keyframes baked-up { to { transform: translateY(-50%); } }

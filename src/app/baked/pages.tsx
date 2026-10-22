@@ -39,7 +39,7 @@ export function AdsContent() {
       <section aria-label="Ads" className="px-1.5 columns-2 md:columns-3 lg:columns-4 2xl:columns-5 gap-1.5" key={brand}>
         {items.map((v, i) => (
           <Reveal key={`${v.brand}-${v.src}`} className="break-inside-avoid">
-            <button type="button" onClick={() => setOpen(i)} className="group block w-full text-left outline-none focus-visible:shadow-[0_0_0_2px_#111] rounded-md" aria-label={`Open ${short(v.brand)} ad ${v.n}`}>
+            <button type="button" onClick={() => setOpen(i)} className="group block w-full text-left outline-none focus-visible:shadow-[0_0_0_2px_#ff4306] rounded-md" aria-label={`Open ${short(v.brand)} ad ${v.n}`}>
               <div className={`relative overflow-hidden rounded-md ${v.whiteBg ? 'bg-white border border-[#eee]' : 'bg-[#f2f2f2]'}`}>
                 {v.type === 'video' ? (
                   <video src={v.src} autoPlay loop muted playsInline className="block w-full h-auto" />
@@ -72,7 +72,7 @@ export function MotionContent() {
       <section aria-label="Reels" className="px-1.5 columns-2 sm:columns-3 lg:columns-4 xl:columns-6 gap-1.5">
         {motionReels.map((r, i) => (
           <Reveal key={r.src} className="break-inside-avoid">
-            <button type="button" onClick={() => setOpen(i)} className="group block w-full text-left outline-none focus-visible:shadow-[0_0_0_2px_#111] rounded-md" aria-label={`Watch ${short(r.brand)} reel with sound`}>
+            <button type="button" onClick={() => setOpen(i)} className="group block w-full text-left outline-none focus-visible:shadow-[0_0_0_2px_#ff4306] rounded-md" aria-label={`Watch ${short(r.brand)} reel with sound`}>
               <div className="relative overflow-hidden rounded-md bg-[#f2f2f2]">
                 <video
                   src={r.src} loop muted playsInline preload="metadata" autoPlay={!paused}
@@ -146,7 +146,7 @@ export function ServicesContent() {
               <p className="mt-2 text-[15px] leading-[1.5] text-[#6f6f6f] max-w-[420px]">{s.tagline}</p>
               <ul className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 text-[14px] text-[#111]">
                 {s.deliverables.map((d) => (
-                  <li key={d} className="flex items-start gap-2"><Check size={14} className="mt-[3px] flex-shrink-0 text-[#9a9a9a]" />{d}</li>
+                  <li key={d} className="flex items-start gap-2"><Check size={14} className="mt-[3px] flex-shrink-0 text-[#ff4306]" />{d}</li>
                 ))}
               </ul>
               <p className="mt-auto pt-8 text-[13px] text-[#6f6f6f]">{s.outcome}</p>
@@ -161,7 +161,7 @@ export function ServicesContent() {
           {processSteps.map((p) => (
             <Reveal key={p.step}>
               <div className="h-full rounded-md bg-[#f2f2f2] p-6">
-                <div className="text-[13px] text-[#9a9a9a] tabular-nums">{p.step}</div>
+                <div className="text-[13px] text-[#d93905] tabular-nums">{p.step}</div>
                 <div className="mt-8 text-[15px] text-[#111]" style={{ fontWeight: 500 }}>{p.title}</div>
                 <p className="mt-1 text-[14px] leading-[1.45] text-[#6f6f6f]">{p.desc}</p>
               </div>
@@ -174,7 +174,7 @@ export function ServicesContent() {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-1.5">
           {stats.map((s) => (
             <div key={s.label} className="rounded-md border border-[#ececec] p-6">
-              <div className="text-[30px] leading-none text-[#111]" style={{ fontFamily: T.display, fontWeight: 900 }}>{s.num}</div>
+              <div className="text-[30px] leading-none text-[#ff4306]" style={{ fontFamily: T.display, fontWeight: 900 }}>{s.num}</div>
               <div className="mt-1 text-[14px] text-[#6f6f6f]">{s.label}</div>
             </div>
           ))}
@@ -190,7 +190,7 @@ export function ServicesContent() {
 }
 
 /* ══ Contact ════════════════════════════════════════════════════════ */
-const fieldCls = 'w-full rounded-md bg-[#f2f2f2] px-3.5 py-3 text-[15px] text-[#111] placeholder-[#9a9a9a] outline-none border border-transparent focus:border-[#111] transition-colors';
+const fieldCls = 'w-full rounded-md bg-[#f2f2f2] px-3.5 py-3 text-[15px] text-[#111] placeholder-[#9a9a9a] outline-none border border-transparent focus:border-[#ff4306] transition-colors';
 
 export function ContactContent() {
   const [form, setForm] = useState({ name: '', email: '', type: '', budget: '', timeline: '', message: '' });

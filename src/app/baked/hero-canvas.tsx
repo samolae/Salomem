@@ -160,7 +160,7 @@ export function HeroCanvas() {
       {/* Centre call to action, sitting on the canvas */}
       <motion.div className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2" style={{ opacity }}>
         <CtaLink>
-          <span className="h-1.5 w-1.5 rounded-full bg-[#22c55e]" aria-hidden />
+          <span className="h-1.5 w-1.5 rounded-full bg-white" aria-hidden />
           Contact me
         </CtaLink>
       </motion.div>

@@ -19,12 +19,12 @@ export const T = {
 
 /* ── Pills ────────────────────────────────────────────────────────── */
 export const pillCls = (active = false) =>
-  `inline-flex items-center gap-1.5 h-8 px-2.5 rounded-md text-[14px] leading-none whitespace-nowrap transition-colors outline-none focus-visible:shadow-[0_0_0_2px_#111] ${
-    active ? 'bg-[#111] text-white' : 'bg-[#f0f0f0]/90 text-[#111] hover:bg-[#e4e4e4] backdrop-blur-md'
+  `inline-flex items-center gap-1.5 h-8 px-2.5 rounded-md text-[14px] leading-none whitespace-nowrap transition-colors outline-none focus-visible:shadow-[0_0_0_2px_#ff4306] ${
+    active ? 'bg-[#d93905] text-white hover:bg-[#c23304]' : 'bg-[#f0f0f0]/90 text-[#111] hover:bg-[#ffe7de] hover:text-[#b52f03] backdrop-blur-md'
   }`;
 
 export const darkPillCls =
-  'inline-flex items-center justify-center gap-2 h-12 px-6 rounded-full bg-[#111] text-white text-[15px] whitespace-nowrap shadow-[0_8px_24px_rgba(0,0,0,0.18)] hover:bg-black transition-colors outline-none focus-visible:shadow-[0_0_0_3px_rgba(255,67,6,0.8)]';
+  'inline-flex items-center justify-center gap-2 h-12 px-6 rounded-full bg-[#d93905] text-white text-[15px] whitespace-nowrap shadow-[0_10px_30px_rgba(255,67,6,0.35)] hover:bg-[#c23304] transition-colors outline-none focus-visible:shadow-[0_0_0_3px_rgba(255,67,6,0.8)]';
 
 export function CtaLink({ to = '/contact', children = 'Contact me' }: { to?: string; children?: ReactNode }) {
   return (
@@ -57,7 +57,7 @@ export function PageIntro({ title, children, icon }: { title: string; children?:
   return (
     <header className="px-5 pt-32 pb-16 sm:pt-40 sm:pb-20 flex flex-col items-center text-center">
       {icon && <div className="mb-6">{icon}</div>}
-      <h1 className="text-[30px] sm:text-[44px] leading-[1.05] tracking-[-0.01em] text-[#111] max-w-[720px]" style={{ fontFamily: T.display, fontWeight: 900 }}>{title}</h1>
+      <h1 className="text-[30px] sm:text-[44px] leading-[1.05] tracking-[-0.01em] text-[#111] max-w-[720px]" style={{ fontFamily: T.display, fontWeight: 900 }}>{title}<span className="text-[#ff4306]">.</span></h1>
       {children && <div className="mt-5 text-[15px] leading-[1.5] text-[#6f6f6f] max-w-[380px]">{children}</div>}
     </header>
   );
@@ -71,7 +71,7 @@ export function Caption({ title, sub, tag }: { title: string; sub?: string; tag?
         <div className="text-[#111] truncate">{title}</div>
         {sub && <div className="text-[#6f6f6f]">{sub}</div>}
       </div>
-      {tag && <div className="text-[#6f6f6f] whitespace-nowrap flex-shrink-0">{tag}</div>}
+      {tag && <div className="text-[#d93905] whitespace-nowrap flex-shrink-0">{tag}</div>}
     </div>
   );
 }
@@ -177,7 +177,7 @@ export function LogoStrip({ logos, paused }: { logos: { name: string; logo: stri
             className="relative h-[120px] w-[230px] sm:h-[136px] sm:w-[250px] flex-shrink-0 rounded-md bg-[#f3f3f3] flex items-center justify-center gap-3"
             style={{ transform: `rotate(${((i * 37) % 7 - 3) * 0.25}deg)` }}
           >
-            <span className="absolute top-3 right-3 h-1.5 w-1.5 rounded-full bg-[#c9c9c9]" aria-hidden />
+            <span className="absolute top-3 right-3 h-1.5 w-1.5 rounded-full bg-[#ff4306]" aria-hidden />
             <img {...IMG.logo(c.logo)} alt="" width="40" height="40" loading="lazy" className="h-10 w-10 rounded-lg object-contain bg-white shadow-[0_1px_3px_rgba(0,0,0,0.08)]" />
             <span className="text-[17px] text-[#111] tracking-[-0.01em]" style={{ fontWeight: 500 }}>{c.name}</span>
           </div>

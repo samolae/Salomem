@@ -5,7 +5,7 @@ import { CaseLink } from '../components/case-transition';
 import { IMG } from '../lib/cld';
 import { Caption, CtaLink, FadeImg, Lightbox, PageIntro, Reveal, T, pillCls, darkPillCls, type LightboxItem } from './ui';
 import { useMotionPause } from './shell';
-import { adsBrands, motionReels, screenExchange, schenkerSendung, unispaceLogin } from './data';
+import { adsBrands, motionReels, screenAurumMainHQ, schenkerSendung, unispaceLogin } from './data';
 import { contactLinks, formOptions, processSteps, services, stats, EMAIL } from './content';
 
 const short = (name: string) => name.split(' · ')[0];
@@ -27,7 +27,7 @@ export function AdsContent() {
         Campaign visuals and ad creatives for {adsBrands.length} brands, from leasing and real estate to food, health and retail.
       </PageIntro>
 
-      <div className="sticky top-12 sm:top-14 z-[40] px-1.5 pb-3">
+      <div className="px-1.5 pb-6">
         <div className="flex gap-1 overflow-x-auto sm:flex-wrap sm:justify-center" style={{ scrollbarWidth: 'none' }}>
           <button type="button" onClick={() => setBrand(-1)} aria-pressed={brand === -1} className={pillCls(brand === -1)}>All</button>
           {adsBrands.map((b, i) => (
@@ -69,7 +69,7 @@ export function MotionContent() {
       <PageIntro title="Social Media Motion">
         Reels, logo reveals and animated ads. Click any reel to watch it with sound.
       </PageIntro>
-      <section aria-label="Reels" className="px-1.5 grid grid-cols-2 lg:grid-cols-3 gap-x-1.5">
+      <section aria-label="Reels" className="px-1.5 grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-1.5">
         {motionReels.map((r, i) => (
           <Reveal key={r.src}>
             <button type="button" onClick={() => setOpen(i)} className="group block w-full text-left outline-none focus-visible:shadow-[0_0_0_2px_#111] rounded-md" aria-label={`Watch ${short(r.brand)} reel with sound`}>
@@ -93,7 +93,7 @@ export function MotionContent() {
 
 /* ══ UX/UI ══════════════════════════════════════════════════════════ */
 const CASES = [
-  { to: '/projects/aurum', title: 'AURUM', sub: 'Crypto exchange · B2C fintech', tag: '196 screens', img: screenExchange, bg: 'linear-gradient(160deg,#16130b,#0b0b0f 70%)' },
+  { to: '/projects/aurum', title: 'AURUM', sub: 'Crypto exchange · B2C fintech', tag: '196 screens', img: screenAurumMainHQ, bg: 'linear-gradient(160deg,#16130b,#0b0b0f 70%)' },
   { to: '/projects/schenker', title: 'Schenker', sub: 'Logistics platform · enterprise UX', tag: '9+ screens', img: schenkerSendung, bg: 'linear-gradient(160deg,#e8ecd8,#d4dab8)' },
   { to: '/projects/unispace', title: 'Unispace', sub: 'Student management · multi-role EdTech', tag: 'Web · responsive', img: unispaceLogin, bg: 'linear-gradient(160deg,#dfe6ff,#eef1ff)' },
 ];

@@ -7,7 +7,7 @@ import { useMotionPause } from './shell';
 import { Caption, CtaLink, FadeImg, LogoStrip, Reveal } from './ui';
 import { clients, experiences, spotlights } from './content';
 import {
-  adsBrands, adsCarmall1, adsGino4, adsTerminal1, screenExchange, schenkerSendung, unispaceLogin,
+  adsBrands, adsCarmall1, adsGino4, adsTerminal1, screenAurumMainHQ, schenkerSendung, unispaceLogin,
 } from './data';
 
 const AVATAR = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto,w_160,c_limit/v1777841338/fav_ggorfv.png';
@@ -37,7 +37,7 @@ export function HomeContent() {
 
   const left: ReactNode[] = [
     <CaseLink key="aurum" to="/projects/aurum" cardId="home-aurum" className="group block">
-      <ScreenStage src={screenExchange} bg="linear-gradient(160deg,#16130b,#0b0b0f 70%)" alt="AURUM crypto exchange dashboard" eager />
+      <ScreenStage src={screenAurumMainHQ} bg="linear-gradient(160deg,#16130b,#0b0b0f 70%)" alt="AURUM crypto exchange dashboard" eager />
       <Caption title="AURUM" sub="Crypto exchange · 196 screens, 64+ components" tag="Case study" />
     </CaseLink>,
     <Link key="motion" to="/work/social-media-motion" className="group block">

@@ -4,7 +4,6 @@ import { AnimatePresence, motion } from 'motion/react';
 import { Pause, Play } from 'lucide-react';
 import { T, pillCls, darkPillCls } from './ui';
 import { EMAIL } from './content';
-import { BookButton, BookingProvider } from './booking';
 
 /* ── Shared "pause motion" switch ─────────────────────────────────── */
 const PauseCtx = createContext<{ paused: boolean; toggle: () => void }>({ paused: false, toggle: () => {} });
@@ -97,10 +96,10 @@ function FloatingCta() {
           className="fixed bottom-4 left-1/2 -translate-x-1/2 z-[65]"
           style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
         >
-          <BookButton className={darkPillCls}>
+          <Link to="/contact" className={darkPillCls}>
             <span className="h-1.5 w-1.5 rounded-full bg-[#22c55e]" aria-hidden />
-            Book a call
-          </BookButton>
+            Contact me
+          </Link>
         </motion.div>
       )}
     </AnimatePresence>
@@ -159,7 +158,6 @@ export function BakedShell({ children }: { children: ReactNode }) {
 
   return (
     <PauseCtx.Provider value={{ paused, toggle: () => setPaused((p) => !p) }}>
-    <BookingProvider>
       <div className="baked min-h-screen bg-white text-[#111] antialiased" style={{ fontFamily: T.font, colorScheme: 'light' }}>
         <TopNav />
         <main id="main-content" tabIndex={-1} className="outline-none">
@@ -183,7 +181,6 @@ export function BakedShell({ children }: { children: ReactNode }) {
           }
         `}</style>
       </div>
-    </BookingProvider>
     </PauseCtx.Provider>
   );
 }

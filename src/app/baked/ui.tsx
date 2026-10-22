@@ -4,7 +4,6 @@ import { Link } from 'react-router';
 import { AnimatePresence, motion, useInView, useReducedMotion } from 'motion/react';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { IMG } from '../lib/cld';
-import { BookButton } from './booking';
 
 /* ── Tokens ───────────────────────────────────────────────────────── */
 export const T = {
@@ -27,8 +26,7 @@ export const pillCls = (active = false) =>
 export const darkPillCls =
   'inline-flex items-center justify-center gap-2 h-12 px-6 rounded-full bg-[#111] text-white text-[15px] whitespace-nowrap shadow-[0_8px_24px_rgba(0,0,0,0.18)] hover:bg-black transition-colors outline-none focus-visible:shadow-[0_0_0_3px_rgba(255,67,6,0.8)]';
 
-export function CtaLink({ to = '/contact', children = 'Contact me', book = false }: { to?: string; children?: ReactNode; book?: boolean }) {
-  if (book) return <BookButton className={darkPillCls}>{children}</BookButton>;
+export function CtaLink({ to = '/contact', children = 'Contact me' }: { to?: string; children?: ReactNode }) {
   return (
     <Link to={to} className={darkPillCls}>
       {children}

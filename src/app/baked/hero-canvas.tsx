@@ -27,11 +27,11 @@ type Tile = { src: string; ratio: number; frame?: boolean };
 function usePool(): Tile[] {
   return useMemo(() => {
     const ads: Tile[] = adsBrands.flatMap((b) =>
-      b.items.filter((it) => it.type === 'image' && !it.fullWidth).slice(0, 3).map((it, i) => ({ src: it.src, ratio: i % 3 === 1 ? 1 : 1.25 }))
+      b.items.filter((it) => it.type === 'image' && !it.fullWidth).slice(0, 5).map((it, i) => ({ src: it.src, ratio: i % 3 === 1 ? 1 : 1.25 }))
     );
     const ux: Tile[] = [screenExchange, screenProfile, screenLanding, schenkerSendung, schenkerSettings].map((s) => ({ src: s, ratio: 0.66 }));
     const spots: Tile[] = spotlights.map((s) => ({ src: s.img, ratio: 0.75 }));
-    const frames: Tile[] = motionReels.slice(0, 8).map((r, i) => ({ src: videoFrame(r.src, i % 2 ? '35p' : '60p'), ratio: 1.6, frame: true }));
+    const frames: Tile[] = motionReels.map((r, i) => ({ src: videoFrame(r.src, i % 2 ? '35p' : '60p'), ratio: 1.6, frame: true }));
     // Interleave so neighbouring tiles differ in kind
     const out: Tile[] = [];
     const lists = [ads, frames, ux, spots];
@@ -54,10 +54,10 @@ export function HeroCanvas() {
   const reduce = useReducedMotion();
   const wrapRef = useRef<HTMLDivElement>(null);
   const planeRef = useRef<HTMLDivElement>(null);
-  const [cols, setCols] = useState(7);
+  const [cols, setCols] = useState(10);
 
   useEffect(() => {
-    const set = () => setCols(window.innerWidth < 640 ? 5 : window.innerWidth < 1100 ? 6 : 7);
+    const set = () => setCols(window.innerWidth < 640 ? 6 : window.innerWidth < 1100 ? 8 : window.innerWidth < 1600 ? 10 : 12);
     set();
     window.addEventListener('resize', set);
     return () => window.removeEventListener('resize', set);
@@ -105,10 +105,10 @@ export function HeroCanvas() {
       <motion.div className="absolute inset-0" style={{ scale, opacity }}>
         <div
           ref={planeRef}
-          className="absolute left-1/2 top-1/2 flex gap-3 sm:gap-4"
+          className="absolute left-1/2 top-1/2 flex gap-2.5 sm:gap-3"
           style={{
-            width: cols * (cols === 5 ? 125 : 210),
-            transform: 'translate(-50%, -50%) perspective(1800px) rotateX(14deg) rotateZ(-8deg) scale(1.25)',
+            width: cols * (cols === 6 ? 92 : 150),
+            transform: 'translate(-50%, -50%) perspective(1800px) rotateX(14deg) rotateZ(-8deg) scale(1.12)',
           }}
         >
           {columns.map((col, ci) => (
@@ -118,7 +118,7 @@ export function HeroCanvas() {
                 style={{ ['--dur' as string]: `${col.dur}s`, animationPlayState: stopped ? 'paused' : 'running' }}
               >
                 {[0, 1].map((dup) => (
-                  <div key={dup} className="flex flex-col gap-3 sm:gap-4 pb-3 sm:pb-4" aria-hidden={dup === 1 || undefined}>
+                  <div key={dup} className="flex flex-col gap-2.5 sm:gap-3 pb-2.5 sm:pb-3" aria-hidden={dup === 1 || undefined}>
                     {col.tiles.map((t, ti) => (
                       <div key={ti} className="relative w-full overflow-hidden rounded-[10px] bg-[#f2f2f2] shadow-[0_1px_2px_rgba(0,0,0,0.04)]" style={{ aspectRatio: `1 / ${t.ratio}` }}>
                         <img

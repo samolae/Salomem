@@ -36,7 +36,7 @@ export function AdsContent() {
         </div>
       </div>
 
-      <section aria-label="Ads" className="px-1.5 columns-2 lg:columns-3 gap-1.5" key={brand}>
+      <section aria-label="Ads" className="px-1.5 columns-2 md:columns-3 lg:columns-4 2xl:columns-5 gap-1.5" key={brand}>
         {items.map((v, i) => (
           <Reveal key={`${v.brand}-${v.src}`} className="break-inside-avoid">
             <button type="button" onClick={() => setOpen(i)} className="group block w-full text-left outline-none focus-visible:shadow-[0_0_0_2px_#111] rounded-md" aria-label={`Open ${short(v.brand)} ad ${v.n}`}>
@@ -69,7 +69,7 @@ export function MotionContent() {
       <PageIntro title="Social Media Motion">
         Reels, logo reveals and animated ads. Click any reel to watch it with sound.
       </PageIntro>
-      <section aria-label="Reels" className="px-1.5 grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-1.5">
+      <section aria-label="Reels" className="px-1.5 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-x-1.5">
         {motionReels.map((r, i) => (
           <Reveal key={r.src}>
             <button type="button" onClick={() => setOpen(i)} className="group block w-full text-left outline-none focus-visible:shadow-[0_0_0_2px_#111] rounded-md" aria-label={`Watch ${short(r.brand)} reel with sound`}>

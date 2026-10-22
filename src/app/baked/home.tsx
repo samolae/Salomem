@@ -142,16 +142,17 @@ export function HomeContent() {
       {/* Selected work */}
       <section aria-labelledby="work-title" className="px-1.5 pt-24 sm:pt-32">
         <h2 id="work-title" className="sr-only">Selected work</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-1.5">
-          <div>{left.map((n, i) => <Tile key={i}>{n}</Tile>)}</div>
-          <div>{right.map((n, i) => <Tile key={i}>{n}</Tile>)}</div>
+        <div className="columns-1 md:columns-2 xl:columns-3 gap-x-1.5">
+          {left.flatMap((n, i) => [n, right[i]]).filter(Boolean).map((n, i) => (
+            <div key={i} className="break-inside-avoid"><Tile>{n}</Tile></div>
+          ))}
         </div>
       </section>
 
       {/* Spotlights */}
       <section aria-labelledby="spot-title" className="px-1.5 pt-16">
         <h2 id="spot-title" className="px-0.5 pb-3 text-[14px] text-[#6f6f6f]">Spotlights of 2025</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-1.5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
           {spotlights.map((s) => (
             <Reveal key={s.title}>
               <div className="relative aspect-[4/5] overflow-hidden rounded-md bg-[#f2f2f2]">

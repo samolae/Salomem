@@ -189,6 +189,19 @@ export function BakedShell({ children }: { children: ReactNode }) {
   const [paused, setPaused] = useState(false);
   const { lang } = useI18n();
   useEffect(() => { document.documentElement.lang = lang; }, [lang]);
+  // Text on the site is not for copying; form fields still work as usual
+  useEffect(() => {
+    const isField = (t: EventTarget | null) => t instanceof HTMLElement && !!t.closest('input, textarea, select, [contenteditable="true"]');
+    const block = (e: Event) => { if (!isField(e.target)) e.preventDefault(); };
+    document.addEventListener('copy', block);
+    document.addEventListener('cut', block);
+    document.addEventListener('dragstart', block);
+    return () => {
+      document.removeEventListener('copy', block);
+      document.removeEventListener('cut', block);
+      document.removeEventListener('dragstart', block);
+    };
+  }, []);
   // Honour the system setting as the starting point
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) setPaused(true);
@@ -208,6 +221,9 @@ export function BakedShell({ children }: { children: ReactNode }) {
           @font-face { font-family: 'Loos Wide Black'; src: url('/fonts/loos-wide-black-v2.woff2') format('woff2'); font-weight: 800 900; font-style: normal; font-display: swap; }
           html:has(.baked), html:has(.baked) body { background: #fff; color-scheme: light; }
           .baked ::selection { background: #ff4306; color: #fff; }
+          .baked { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+          .baked input, .baked textarea, .baked select { -webkit-user-select: text; user-select: text; }
+          .baked img, .baked video { -webkit-user-drag: none; }
           @keyframes baked-marquee { to { transform: translateX(-50%); } }
           .baked-marquee { animation: baked-marquee 60s linear infinite; }
           @keyframes baked-up { to { transform: translateY(-50%); } }

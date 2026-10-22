@@ -50,17 +50,34 @@ export const MomentsWall = ({ items, isDark, onOpen }: Props) => {
     raf: 0 as number,
   });
 
-  // Column count follows the wall's own width, not the viewport
+  // The wall fits one screen: start from a width-based column count and add
+  // columns until the masonry is no taller than the viewport (less the nav)
+  const baseCols = useRef(4);
   useLayoutEffect(() => {
     const el = wallRef.current;
     if (!el) return;
     const ro = new ResizeObserver(([entry]) => {
       const w = entry.contentRect.width;
-      setCols(Math.max(3, Math.min(9, Math.round(w / 112))));
+      baseCols.current = Math.max(3, Math.min(9, Math.round(w / 112)));
+      setCols(baseCols.current);
     });
     ro.observe(el);
     return () => ro.disconnect();
   }, []);
+  useEffect(() => { setCols(baseCols.current); }, [items]);
+  useEffect(() => {
+    const el = wallRef.current;
+    if (!el) return;
+    const fit = () => {
+      const target = window.innerHeight - 72;
+      const maxCols = Math.max(3, Math.floor(el.clientWidth / 56));
+      if (el.offsetHeight > target) setCols((c) => (c < maxCols ? c + 1 : c));
+    };
+    fit();
+    el.addEventListener('load', fit, true);
+    window.addEventListener('resize', fit);
+    return () => { el.removeEventListener('load', fit, true); window.removeEventListener('resize', fit); };
+  }, [cols, items]);
 
   // Tile centres, measured from layout (offsets ignore our transforms)
   const measure = () => {
@@ -224,7 +241,7 @@ export const MomentsWall = ({ items, isDark, onOpen }: Props) => {
             <img
               {...IMG.tile(v.src)}
               alt=""
-              loading="lazy"
+              loading="eager"
               decoding="async"
               draggable={false}
               className={`block w-full h-auto transition-transform duration-500 ease-out group-hover:scale-[1.04]`}

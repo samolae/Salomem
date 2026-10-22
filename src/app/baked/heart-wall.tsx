@@ -94,12 +94,27 @@ export const HeartWall = ({ reels, isDark, onOpen, replayLabel = 'Replay' }: Pro
 
   // ── Layouts ────────────────────────────────────────────────────────
   const W = width || 720;
-  const wallCols = W >= 640 ? 9 : 6;
+  // The whole piece fits one screen: the stage is the viewport height (less
+  // the nav), and the wall picks the fewest columns whose rows fit inside it
+  const [vh, setVh] = useState(800);
+  useEffect(() => {
+    const set = () => setVh(window.innerHeight);
+    set();
+    window.addEventListener('resize', set);
+    return () => window.removeEventListener('resize', set);
+  }, []);
+  const stageH = Math.max(380, vh - 72);
   const gap = W >= 640 ? 6 : 4;
+  let wallCols = W >= 640 ? 9 : 6;
+  const fits = (c: number) => {
+    const w = (W - gap * (c - 1)) / c;
+    return Math.ceil(tiles.length / c) * (w * 1.25 + gap) - gap <= stageH;
+  };
+  while (!fits(wallCols) && wallCols < 24) wallCols++;
   const wallW = (W - gap * (wallCols - 1)) / wallCols;
   const wallH = wallW * 1.25;
   const wallRows = Math.ceil(tiles.length / wallCols);
-  const stageH = Math.max(wallRows * (wallH + gap) - gap, 360);
+  const wallTop = Math.max(0, (stageH - (wallRows * (wallH + gap) - gap)) / 2);
 
   const heartCell = Math.min((stageH * 0.82) / HR, (W * 0.82) / HC);
   const heartGap = Math.max(2, heartCell * 0.06);
@@ -111,11 +126,11 @@ export const HeartWall = ({ reels, isDark, onOpen, replayLabel = 'Replay' }: Pro
     const s: { x: number; y: number; d: number }[] = [];
     for (let r = 0; r < wallRows; r++) for (let c = 0; c < wallCols; c++) {
       const x = c * (wallW + gap);
-      const y = r * (wallH + gap);
+      const y = wallTop + r * (wallH + gap);
       s.push({ x, y, d: Math.hypot(x + wallW / 2 - W / 2, y + wallH / 2 - stageH / 2) });
     }
     return s.sort((a, b) => a.d - b.d);
-  }, [wallRows, wallCols, wallW, wallH, gap, W, stageH]);
+  }, [wallRows, wallCols, wallW, wallH, gap, W, stageH, wallTop]);
 
   // Tiles nearest the heart's centre take the slots nearest the stage centre
   const order = useMemo(() => {

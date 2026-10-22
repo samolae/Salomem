@@ -5,6 +5,7 @@ import { CaseLink } from '../components/case-transition';
 import { IMG } from '../lib/cld';
 import { Caption, CtaLink, FadeImg, Lightbox, PageIntro, Reveal, T, pillCls, darkPillCls, type LightboxItem } from './ui';
 import { useMotionPause } from './shell';
+import { BookButton } from './booking';
 import { adsBrands, motionReels, screenAurumMainHQ, schenkerSendung, unispaceLogin } from './data';
 import { contactLinks, formOptions, processSteps, services, stats, EMAIL } from './content';
 
@@ -119,7 +120,7 @@ export function UxUiContent() {
         <Reveal>
           <div className="aspect-[4/3] rounded-md bg-[#f2f2f2] flex flex-col items-center justify-center text-center px-8">
             <p className="text-[15px] leading-[1.5] text-[#111] max-w-[300px]">Have a product that needs a sharper interface or a design system?</p>
-            <div className="mt-6"><CtaLink>Contact me</CtaLink></div>
+            <div className="mt-6"><CtaLink book>Book a call</CtaLink></div>
           </div>
         </Reveal>
       </section>
@@ -183,7 +184,7 @@ export function ServicesContent() {
 
       <section className="px-5 pt-24 flex flex-col items-center text-center">
         <p className="text-[15px] leading-[1.5] text-[#111] max-w-[340px]" style={{ fontWeight: 500 }}>Tell me about your goals. I reply within 24 hours.</p>
-        <div className="mt-8"><CtaLink>Start a project</CtaLink></div>
+        <div className="mt-8"><CtaLink book>Book a call</CtaLink></div>
       </section>
     </>
   );
@@ -237,7 +238,15 @@ export function ContactContent() {
       </PageIntro>
 
       <section className="px-1.5 grid grid-cols-1 md:grid-cols-2 gap-1.5 max-w-6xl mx-auto">
-        <div className="rounded-md bg-[#f2f2f2] p-3 sm:p-4 self-start">
+        <div className="self-start space-y-1.5">
+        <div className="rounded-md bg-[#111] text-white p-6 sm:p-7 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <div className="text-[15px]" style={{ fontWeight: 500 }}>Prefer to talk?</div>
+            <div className="text-[14px] text-white/60 mt-0.5">Pick a time for a 30 min intro call.</div>
+          </div>
+          <BookButton className="inline-flex items-center justify-center h-11 px-5 rounded-full bg-white text-[#111] text-[15px] whitespace-nowrap hover:bg-[#ececec] transition-colors outline-none focus-visible:shadow-[0_0_0_3px_rgba(255,67,6,0.8)]">Book a call</BookButton>
+        </div>
+        <div className="rounded-md bg-[#f2f2f2] p-3 sm:p-4">
           <ul>
             {contactLinks.map((c) => (
               <li key={c.label} className="flex items-center justify-between gap-3 rounded-md px-3 py-3.5 hover:bg-[#e8e8e8] transition-colors">
@@ -257,6 +266,7 @@ export function ContactContent() {
           <div className="px-3 pt-4 pb-2 flex items-center gap-2 text-[13px] text-[#6f6f6f]">
             <span className="h-1.5 w-1.5 rounded-full bg-[#22c55e]" /> Available for new projects · Tbilisi, GMT+4
           </div>
+        </div>
         </div>
 
         <form onSubmit={submit} className="rounded-md border border-[#ececec] p-5 sm:p-7 space-y-4">

@@ -130,7 +130,10 @@ export function HomeContent() {
           <p className="mt-5 text-[15px] leading-[1.5] text-[#6f6f6f] max-w-[370px]">
             80+ projects across fintech, logistics, edtech, retail, healthcare and hospitality. Top-Rated Plus on Upwork.
           </p>
-          <div className="mt-9"><CtaLink>Contact me</CtaLink></div>
+          <div className="mt-9 flex flex-col items-center gap-3">
+            <CtaLink book>Book a call</CtaLink>
+            <Link to="/contact" className="text-[14px] text-[#6f6f6f] hover:text-[#111] transition-colors">or send a message</Link>
+          </div>
           <div className="mt-5 flex items-center gap-2 text-[13px] text-[#6f6f6f]">
             <span className="h-1.5 w-1.5 rounded-full bg-[#22c55e]" /> Available for new projects
           </div>
@@ -169,7 +172,7 @@ export function HomeContent() {
         <p className="text-[15px] leading-[1.5] text-[#111] max-w-[360px]" style={{ fontWeight: 500 }}>
           If you want to spark ideas that turn into business value, let's do it together.
         </p>
-        <div className="mt-8"><CtaLink>Start a project</CtaLink></div>
+        <div className="mt-8"><CtaLink book>Book a call</CtaLink></div>
       </section>
     </>
   );

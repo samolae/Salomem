@@ -159,9 +159,9 @@ export function HeroCanvas() {
       <h1 className="sr-only">Salome Mosiava, Senior Product Designer and Art Director</h1>
       {/* Centre call to action, sitting on the canvas */}
       <motion.div className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2" style={{ opacity }}>
-        <CtaLink>
+        <CtaLink book>
           <span className="h-1.5 w-1.5 rounded-full bg-[#22c55e]" aria-hidden />
-          Contact me
+          Book a call
         </CtaLink>
       </motion.div>
       <PauseButton className="absolute left-2 bottom-24 sm:bottom-24 z-10" />

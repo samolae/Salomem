@@ -1,18 +1,6 @@
 {
   "rewrites": [
     {
-      "source": "/ka",
-      "destination": "/ka/index.html"
-    },
-    {
-      "source": "/ka/work/:slug(ux-ui|social-media-ads|social-media-motion)",
-      "destination": "/ka/work/:slug/index.html"
-    },
-    {
-      "source": "/ka/:page(services|contact)",
-      "destination": "/ka/:page/index.html"
-    },
-    {
       "source": "/",
       "destination": "/index.html"
     },

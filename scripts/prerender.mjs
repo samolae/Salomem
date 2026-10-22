@@ -90,7 +90,8 @@ for (const url of PRERENDER_PATHS) {
   // language versions announced to search engines on every bilingual page
   const isKa = url === '/ka' || url.startsWith('/ka/');
   const enPath = isKa ? url.replace(/^\/ka/, '') || '/' : url;
-  const bilingual = !enPath.startsWith('/projects/');
+  // Georgian is built but not published yet: flip to true with the /ka routes
+  const bilingual = false && !enPath.startsWith('/projects/');
   if (isKa) {
     page = page
       .replace(/<html lang="[^"]*"/, '<html lang="ka"')

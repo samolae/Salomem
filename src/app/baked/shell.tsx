@@ -31,8 +31,11 @@ const NAV = [
 const ACTIVE = { background: '#ffe7de', color: '#b52f03' };
 
 /** EN / ქა switch, to the same page in the other language */
+const GEORGIAN_LIVE = false; // the /ka pages are ready but not published yet
+
 function LangSwitch() {
   const { ka, other } = useI18n();
+  if (!GEORGIAN_LIVE) return null;
   return (
     <Link to={other} hrefLang={ka ? 'en' : 'ka'} lang={ka ? 'en' : 'ka'} className={pillCls(false)} aria-label={ka ? 'English version' : 'ქართული ვერსია'}>
       {ka ? 'EN' : 'ქა'}

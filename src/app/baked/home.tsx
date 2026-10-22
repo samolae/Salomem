@@ -11,7 +11,7 @@ import {
   adsBrands, adsCarmall1, adsGino4, adsTerminal1, screenAurumMainHQ, schenkerSendung, unispaceLogin,
 } from './data';
 
-const AVATAR = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto,w_160,c_limit/v1777841338/fav_ggorfv.png';
+const AVATAR = '/avatar.jpg';
 
 /* A screenshot set on a coloured stage, for the UX/UI case tiles */
 function ScreenStage({ src, bg, alt, eager }: { src: string; bg: string; alt: string; eager?: boolean }) {

@@ -101,11 +101,23 @@ function FloatingCta() {
   const { pathname } = useLocation();
   const { tx, to, bare } = useI18n();
   const [show, setShow] = useState(false);
+  // Only one "Contact me" on screen: the floating one steps aside whenever
+  // a CTA in the page itself is visible
   useEffect(() => {
-    const onScroll = () => setShow(window.scrollY > window.innerHeight * 0.6);
+    let pastHero = false;
+    const visible = new Set<Element>();
+    const update = () => setShow(pastHero && visible.size === 0);
+    const onScroll = () => { pastHero = window.scrollY > window.innerHeight * 0.6; update(); };
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => (e.isIntersecting ? visible.add(e.target) : visible.delete(e.target)));
+      update();
+    });
+    const watch = () => document.querySelectorAll('main [data-cta]').forEach((el) => io.observe(el));
+    watch();
+    const t = setTimeout(watch, 800);
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    return () => { clearTimeout(t); io.disconnect(); window.removeEventListener('scroll', onScroll); };
   }, [pathname]);
   if (bare === '/contact') return null;
   return (

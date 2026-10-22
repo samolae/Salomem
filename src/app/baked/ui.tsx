@@ -30,7 +30,7 @@ export const darkPillCls =
 export function CtaLink({ to = '/contact', children }: { to?: string; children?: ReactNode }) {
   const { tx, to: lp } = useI18n();
   return (
-    <Link to={lp(to)} className={darkPillCls}>
+    <Link to={lp(to)} className={darkPillCls} data-cta>
       {children ?? tx('Contact me', 'დამიკავშირდი')}
     </Link>
   );

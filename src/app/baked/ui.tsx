@@ -98,7 +98,7 @@ export function FadeImg({ src, alt = '', className = '', sizes = 'tileLarge', ea
 }
 
 /* ── Lightbox (light) ─────────────────────────────────────────────── */
-export type LightboxItem = { src: string; alt: string; video?: boolean; whiteBg?: boolean };
+export type LightboxItem = { src: string; alt: string; video?: boolean; whiteBg?: boolean; brand?: string; logo?: string };
 
 export function Lightbox({ items, index, onClose, onIndex }: {
   items: LightboxItem[]; index: number | null; onClose: () => void; onIndex: (i: number) => void;
@@ -149,6 +149,12 @@ export function Lightbox({ items, index, onClose, onIndex }: {
               />
             )}
           </AnimatePresence>
+          {item.brand && (
+            <div className="absolute top-3 left-3 z-10 flex items-center gap-2.5 rounded-lg bg-white/95 pl-1.5 pr-3.5 py-1.5 shadow-[0_6px_24px_rgba(0,0,0,0.10)]" onClick={(e) => e.stopPropagation()}>
+              {item.logo && <img {...IMG.logo(item.logo)} alt="" width="36" height="36" className="h-9 w-9 rounded-md object-cover" />}
+              <span className="text-[16px] text-[#111]" style={{ fontWeight: 500 }}>{item.brand}</span>
+            </div>
+          )}
           <button onClick={onClose} aria-label={tx("Close", "დახურვა")} className={`${pillCls()} absolute top-3 right-3 z-10`}>
             <X size={14} /> {tx('close', 'დახურვა')}
           </button>

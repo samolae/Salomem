@@ -24,7 +24,7 @@ export function AdsContent() {
     const list = brand >= 0 ? [adsBrands[brand]] : adsBrands;
     return list.flatMap((b) => b.items.map((it, i) => ({ ...it, brand: b.name, n: i + 1, ai: b.aiContent, whiteBg: b.whiteBg })));
   }, [brand]);
-  const lightbox: LightboxItem[] = items.map((v) => ({ src: v.src, alt: `${bn(v.brand)} ${tx('ad', 'რეკლამა')} ${v.n}`, video: v.type === 'video', whiteBg: v.whiteBg }));
+  const lightbox: LightboxItem[] = items.map((v) => ({ src: v.src, alt: `${bn(v.brand)} ${tx('ad', 'რეკლამა')} ${v.n}`, video: v.type === 'video', whiteBg: v.whiteBg, brand: bn(v.brand), logo: adsBrands.find((b) => b.name === v.brand)?.logoImg }));
 
   return (
     <>
@@ -64,7 +64,7 @@ export function MotionContent() {
   const bn = (n: string) => brandName(n, ka);
   const [open, setOpen] = useState<number | null>(null);
   const { paused } = useMotionPause();
-  const lightbox: LightboxItem[] = motionReels.map((r) => ({ src: r.src, alt: `${bn(r.brand)} ${tx('reel', 'რილსი')}`, video: true }));
+  const lightbox: LightboxItem[] = motionReels.map((r) => ({ src: r.src, alt: `${bn(r.brand)} ${tx('reel', 'რილსი')}`, video: true, brand: bn(r.brand), logo: (r as { logoImg?: string }).logoImg }));
 
   return (
     <>

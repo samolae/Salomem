@@ -76,10 +76,11 @@ export const MomentsWall = ({ items, isDark, onOpen }: Props) => {
       if (el.offsetHeight > target) setCols((c) => (c < maxCols ? c + 1 : c));
     };
     fit();
-    el.addEventListener('load', fit, true);
+    // Images landing change the height; re-check whenever it does
+    const ro = new ResizeObserver(fit);
+    ro.observe(el);
     window.addEventListener('resize', fit);
-    const t = setTimeout(fit, 400);
-    return () => { clearTimeout(t); el.removeEventListener('load', fit, true); window.removeEventListener('resize', fit); };
+    return () => { ro.disconnect(); window.removeEventListener('resize', fit); };
   }, [cols, itemsKey]);
 
   // Tile centres, measured from layout (offsets ignore our transforms)

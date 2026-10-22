@@ -149,7 +149,7 @@ export function GlobalLayout() {
   }, []);
 
   // The redesigned pages bring their own light shell (src/app/baked)
-  const isBaked = BAKED_PATHS.has(location.pathname) || location.pathname.startsWith('/work/');
+  const isBaked = BAKED_PATHS.has(location.pathname) || location.pathname.startsWith('/work/') || location.pathname === '/ka' || location.pathname.startsWith('/ka/');
   if (isBaked) {
     return (
       <>

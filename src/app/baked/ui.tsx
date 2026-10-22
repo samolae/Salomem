@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 import { AnimatePresence, motion, useInView, useReducedMotion } from 'motion/react';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { IMG } from '../lib/cld';
+import { useI18n } from './i18n';
 
 /* ── Tokens ───────────────────────────────────────────────────────── */
 export const T = {
@@ -26,10 +27,11 @@ export const pillCls = (active = false) =>
 export const darkPillCls =
   'inline-flex items-center justify-center gap-2 h-12 px-6 rounded-full bg-[#d93905] text-white text-[15px] whitespace-nowrap shadow-[0_10px_30px_rgba(255,67,6,0.35)] hover:bg-[#c23304] transition-colors outline-none focus-visible:shadow-[0_0_0_3px_rgba(255,67,6,0.8)]';
 
-export function CtaLink({ to = '/contact', children = 'Contact me' }: { to?: string; children?: ReactNode }) {
+export function CtaLink({ to = '/contact', children }: { to?: string; children?: ReactNode }) {
+  const { tx, to: lp } = useI18n();
   return (
-    <Link to={to} className={darkPillCls}>
-      {children}
+    <Link to={lp(to)} className={darkPillCls}>
+      {children ?? tx('Contact me', 'დამიკავშირდი')}
     </Link>
   );
 }
@@ -102,6 +104,7 @@ export function Lightbox({ items, index, onClose, onIndex }: {
   items: LightboxItem[]; index: number | null; onClose: () => void; onIndex: (i: number) => void;
 }) {
   const open = index !== null;
+  const { tx } = useI18n();
   useEffect(() => {
     if (!open) return;
     document.body.style.overflow = 'hidden';
@@ -146,14 +149,14 @@ export function Lightbox({ items, index, onClose, onIndex }: {
               />
             )}
           </AnimatePresence>
-          <button onClick={onClose} aria-label="Close" className={`${pillCls()} absolute top-3 right-3 z-10`}>
-            <X size={14} /> close
+          <button onClick={onClose} aria-label={tx("Close", "დახურვა")} className={`${pillCls()} absolute top-3 right-3 z-10`}>
+            <X size={14} /> {tx('close', 'დახურვა')}
           </button>
           {items.length > 1 && (
             <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
-              <button aria-label="Previous" disabled={index === 0} onClick={() => onIndex(index! - 1)} className={`${pillCls()} disabled:opacity-40`}><ChevronLeft size={15} /></button>
+              <button aria-label={tx("Previous", "წინა")} disabled={index === 0} onClick={() => onIndex(index! - 1)} className={`${pillCls()} disabled:opacity-40`}><ChevronLeft size={15} /></button>
               <span className="text-[13px] text-[#6f6f6f] tabular-nums px-2">{index! + 1} / {items.length}</span>
-              <button aria-label="Next" disabled={index === items.length - 1} onClick={() => onIndex(index! + 1)} className={`${pillCls()} disabled:opacity-40`}><ChevronRight size={15} /></button>
+              <button aria-label={tx("Next", "შემდეგი")} disabled={index === items.length - 1} onClick={() => onIndex(index! + 1)} className={`${pillCls()} disabled:opacity-40`}><ChevronRight size={15} /></button>
             </div>
           )}
         </motion.div>
@@ -167,7 +170,7 @@ export function Lightbox({ items, index, onClose, onIndex }: {
 export function LogoStrip({ logos, paused }: { logos: { name: string; logo: string }[]; paused: boolean }) {
   const row = [...logos, ...logos];
   return (
-    <div className="overflow-hidden py-2" role="list" aria-label="Selected clients">
+    <div className="overflow-hidden py-2" role="list" aria-label="Clients">
       <div className="baked-marquee flex w-max gap-2.5" style={{ animationPlayState: paused ? 'paused' : 'running' }}>
         {row.map((c, i) => (
           <div
@@ -184,5 +187,35 @@ export function LogoStrip({ logos, paused }: { logos: { name: string; logo: stri
         ))}
       </div>
     </div>
+  );
+}
+
+/* ── areuli.design: Salome's own brand, given its own stage ──────── */
+export function AreuliBlock({ compact = false }: { compact?: boolean }) {
+  const { tx } = useI18n();
+  return (
+    <a
+      href="https://www.instagram.com/areuli.design/"
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`group grid ${compact ? 'grid-cols-[112px_1fr] sm:grid-cols-[150px_1fr]' : 'grid-cols-1 md:grid-cols-2'} overflow-hidden rounded-md bg-[#111] text-white outline-none focus-visible:shadow-[0_0_0_3px_#ff4306]`}
+    >
+      <div className="relative overflow-hidden">
+        <img src="/areuli.jpg" alt="areuli.design" loading="lazy" decoding="async" width="960" height="960"
+          className="block w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]" />
+      </div>
+      <div className={`flex flex-col justify-center ${compact ? 'p-5 sm:p-6' : 'p-8 sm:p-14'}`}>
+        <div className="text-[13px] text-[#ff8a5c] mb-3">{tx('My brand', 'ჩემი ბრენდი')}</div>
+        <div className={`${compact ? 'text-[24px] sm:text-[30px]' : 'text-[36px] sm:text-[56px]'} leading-[0.95] tracking-[-0.01em]`} style={{ fontFamily: T.display, fontWeight: 900 }}>
+          areuli<span className="text-[#ff4306]">.</span>design
+        </div>
+        <p className={`${compact ? 'mt-3 text-[14px]' : 'mt-5 text-[16px]'} leading-[1.5] text-white/70 max-w-[380px]`}>
+          {tx('Brand identities. Digital design. Visual experiments.', 'ბრენდის იდენტობები. ციფრული დიზაინი. ვიზუალური ექსპერიმენტები.')}
+        </p>
+        <span className={`${compact ? 'mt-4' : 'mt-8'} inline-flex w-fit items-center gap-2 h-11 px-5 rounded-full bg-[#d93905] text-white text-[15px] transition-colors group-hover:bg-[#c23304]`}>
+          {tx('Follow on Instagram', 'გამოიწერე Instagram-ზე')} ↗
+        </span>
+      </div>
+    </a>
   );
 }

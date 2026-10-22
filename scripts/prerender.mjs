@@ -86,6 +86,21 @@ for (const url of PRERENDER_PATHS) {
       .replace(/\s*<link rel="canonical"[^>]*>/, '')
       .replace('</head>', `  ${head}\n</head>`);
   }
+  // Georgian pages (/ka…): Georgian lang, their own canonical, and both
+  // language versions announced to search engines on every bilingual page
+  const isKa = url === '/ka' || url.startsWith('/ka/');
+  const enPath = isKa ? url.replace(/^\/ka/, '') || '/' : url;
+  const bilingual = !enPath.startsWith('/projects/');
+  if (isKa) {
+    page = page
+      .replace(/<html lang="[^"]*"/, '<html lang="ka"')
+      .replace(/(<link rel="canonical" href="https:\/\/samole\.ge)([^"]*)"/, (_m, a, p) => `${a}${p === '/' || p === '' ? '/ka' : '/ka' + p}"`);
+  }
+  if (bilingual) {
+    const enUrl = `https://samole.ge${enPath === '/' ? '/' : enPath}`;
+    const kaUrl = `https://samole.ge${enPath === '/' ? '/ka' : '/ka' + enPath}`;
+    page = page.replace('</head>', `  <link rel="alternate" hreflang="en" href="${enUrl}" />\n  <link rel="alternate" hreflang="ka" href="${kaUrl}" />\n  <link rel="alternate" hreflang="x-default" href="${enUrl}" />\n</head>`);
+  }
   const file = url === '/' ? path.join(dist, 'index.html') : path.join(dist, url, 'index.html');
   await fs.mkdir(path.dirname(file), { recursive: true });
   await fs.writeFile(file, page);

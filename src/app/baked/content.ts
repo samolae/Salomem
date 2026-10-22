@@ -7,6 +7,9 @@ import {
 
 export const EMAIL = 'mosiavasalome@gmail.com';
 
+/* Salome's own brand on Instagram, shown on its own rather than in the list */
+export const AREULI = { handle: '@areuli.design', href: 'https://www.instagram.com/areuli.design/', img: '/areuli.jpg' };
+
 export const clients: { name: string; logo: string }[] = [
   { name: 'Terminal', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773916799/terminal_hcftru.webp' },
   { name: 'Mardi Holding', logo: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773916799/mardi_dzhmgm.webp' },
@@ -31,12 +34,12 @@ export const clients: { name: string; logo: string }[] = [
 ];
 
 export const experiences = [
-  { company: 'RunwayTeam', type: 'Contract', role: 'Visual Designer', start: 'Jan 2026', end: 'Now', logo: logoRunwayTeam },
-  { company: 'UniLab', type: 'Part-time', role: 'Head of UI/UX & Graphic Design', start: 'Aug 2024', end: 'Jul 2026', logo: logoUnilab },
-  { company: 'Scope', type: 'Full-time', role: 'Art Director', start: 'May 2024', end: 'Dec 2025', logo: logoScope },
-  { company: 'Upwork', type: 'Freelance', role: 'Graphic Designer', start: '2021', end: '2024', logo: logoUpwork },
-  { company: 'Cubisten', type: 'Full-time', role: 'Graphic Designer → Creative Director', start: 'Jan 2019', end: 'Dec 2024', logo: logoCubisten },
-  { company: 'Spar', type: 'Contract', role: 'Graphic Designer', start: '2020', end: '2022', logo: logoSpar },
+  { company: 'RunwayTeam', type: 'Contract', role: 'Visual Designer', roleKa: 'ვიზუალ დიზაინერი', start: 'Jan 2026', end: 'Now', startKa: 'იან 2026', endKa: 'დღემდე', logo: logoRunwayTeam },
+  { company: 'UniLab', type: 'Part-time', role: 'Head of UI/UX & Graphic Design', roleKa: 'UI/UX და გრაფიკული დიზაინის ხელმძღვანელი', start: 'Aug 2024', end: 'Jul 2026', startKa: 'აგვ 2024', endKa: 'ივლ 2026', logo: logoUnilab },
+  { company: 'Scope', type: 'Full-time', role: 'Art Director', roleKa: 'არტ დირექტორი', start: 'May 2024', end: 'Dec 2025', startKa: 'მაი 2024', endKa: 'დეკ 2025', logo: logoScope },
+  { company: 'Upwork', type: 'Freelance', role: 'Graphic Designer', roleKa: 'გრაფიკული დიზაინერი', start: '2021', end: '2024', startKa: '2021', endKa: '2024', logo: logoUpwork },
+  { company: 'Cubisten', type: 'Full-time', role: 'Graphic Designer → Creative Director', roleKa: 'გრაფიკული დიზაინერი → კრეატიული დირექტორი', start: 'Jan 2019', end: 'Dec 2024', startKa: 'იან 2019', endKa: 'დეკ 2024', logo: logoCubisten },
+  { company: 'Spar', type: 'Contract', role: 'Graphic Designer', roleKa: 'გრაფიკული დიზაინერი', start: '2020', end: '2022', startKa: '2020', endKa: '2022', logo: logoSpar },
 ];
 
 export const spotlights = [
@@ -107,11 +110,79 @@ export const contactLinks = [
   { label: 'Phone', value: '598 67 14 16', href: 'tel:+995598671416', copy: true },
   { label: 'LinkedIn', value: '@samole', href: 'https://www.linkedin.com/in/samole/', external: true },
   { label: 'Behance', value: '@samole', href: 'https://www.behance.net/samole', external: true },
-  { label: 'Instagram', value: '@areuli.design', href: 'https://www.instagram.com/areuli.design/', external: true },
 ];
 
 export const formOptions = {
   type: ['UX/UI Design', 'Art Direction', 'Social Media', 'Motion Design', 'Other'],
   budget: ['Under ₾500', '₾500–₾2,000', '₾2,000–₾6,000', '₾6,000–₾15,000', '₾15,000+', "Let's discuss"],
   timeline: ['ASAP', 'Within 1 month', '1–3 months', '3+ months', 'Flexible'],
+};
+
+/* ── Georgian ─────────────────────────────────────────────────────── */
+export const spotlightsKa = [
+  { tag: 'ბიზნესი', title: 'რეალური შედეგები', desc: 'Scope-ში ნულიდან დავიწყეთ და ორ წელზე ნაკლებ დროში გავზარდეთ გუნდი, ვითანამშრომლეთ 50+ ბიზნესთან და მივაღწიეთ გაზომვად შედეგებს.' },
+  { tag: 'განათლება', title: 'After Effects სერტიფიკატი', desc: 'მოუშენ დიზაინისა და რეკლამის უნარების გაღრმავება.' },
+  { tag: 'მენტორობა', title: 'მენტორობა', desc: 'მოზარდები, ქალები და სხვები დიზაინში: თეორიის რეალურ პრაქტიკად ქცევა პროფესიული აქსელერაციის პროგრამებით.' },
+];
+
+export const servicesKa = [
+  {
+    title: 'UX/UI პროდუქტის დიზაინი',
+    tagline: 'პროდუქტის დიზაინი სრულად, კვლევიდან ზუსტ, დეტალებამდე დახვეწილ შედეგამდე.',
+    timeline: '4–12 კვირა',
+    deliverables: ['მომხმარებლის კვლევა და ინტერვიუები', 'ინფორმაციული არქიტექტურა', 'მომხმარებლის გზები და wireframe-ები', 'დეტალური UI დიზაინი', 'დიზაინ სისტემა და კომპონენტები', 'ინტერაქტიული პროტოტიპები', 'დეველოპერებისთვის გადაცემა (Figma)'],
+    outcome: 'AURUM — 196 ეკრანი, 64+ კომპონენტი',
+  },
+  {
+    title: 'არტ დირექცია',
+    tagline: 'ვიზუალური სტრატეგია და კრეატიული მიმართულება ბრენდებისა და კამპანიებისთვის.',
+    timeline: '2–6 კვირა',
+    deliverables: ['ბრენდის ვიზუალური იდენტობა', 'კამპანიის კონცეფცია და მუდბორდი', 'კრეატიული მიმართულება', 'ვიზუალური გაიდლაინები', 'ქი ვიზუალების წარმოება', 'არტ ზედამხედველობა'],
+    outcome: 'Scope, Terminal, Carmall — არაერთი კამპანიის არტ დირექცია',
+  },
+  {
+    title: 'სოციალური მედიის დიზაინი',
+    tagline: 'თვალში საცემი ვიზუალები და კამპანიის მასალები სოციალური პლატფორმებისთვის.',
+    timeline: 'მუდმივად ან 1–4 კვირა',
+    deliverables: ['სტატიკური პოსტები', 'კარუსელისა და სთორის შაბლონები', 'სარეკლამო კრეატივები (Meta, TikTok)', 'ბრენდის ერთიანი ვიზუალური სისტემა', 'ტექსტის მიმართულება და განლაგება', 'ყოველთვიური კონტენტ პაკეტები'],
+    outcome: '10+ ბრენდი — Terminal, Mardi, Crystal Leasing, GTCC',
+  },
+  {
+    title: 'მოუშენ დიზაინი',
+    tagline: 'ანიმირებული კონტენტი, რომელიც ბრენდს ყველა პლატფორმაზე აცოცხლებს.',
+    timeline: '1–3 კვირა',
+    deliverables: ['ლოგოს ანიმაციები და ბრენდის მოუშენი', 'სოციალური მედიის რილსები და სთორები', 'ანიმირებული სარეკლამო კრეატივები', 'UI მიკროინტერაქციები', 'მოუშენის სტილის გაიდი'],
+    outcome: 'Carmall, Scope, Saloni — რილსები და ბრენდის ანიმაციები',
+  },
+];
+
+export const processStepsKa = [
+  { step: '01', title: 'კვლევა', desc: 'ვთანხმდებით მიზნებზე, შეზღუდვებსა და წარმატების საზომებზე.' },
+  { step: '02', title: 'დიზაინი', desc: 'იტერაციული რაუნდები რეგულარული უკუკავშირით.' },
+  { step: '03', title: 'გადაცემა', desc: 'სუფთა სპეციფიკაციები, ასეტები და დოკუმენტაცია დეველოპერებისთვის.' },
+  { step: '04', title: 'მხარდაჭერა', desc: 'გაშვების შემდგომი დახვეწა და სისტემის განვითარება.' },
+];
+
+export const statsKa = [
+  { num: '80+', label: 'დასრულებული პროექტი' },
+  { num: '50+', label: 'კლიენტი' },
+  { num: '6+', label: 'წელი დიზაინში' },
+  { num: 'ტოპ 3%', label: 'Upwork-ის რეიტინგი' },
+];
+
+export const contactLabelsKa: Record<string, string> = { Email: 'ელფოსტა', Phone: 'ტელეფონი' };
+
+export const formOptionsKa = {
+  type: ['UX/UI დიზაინი', 'არტ დირექცია', 'სოციალური მედია', 'მოუშენ დიზაინი', 'სხვა'],
+  budget: ['₾500-მდე', '₾500–₾2,000', '₾2,000–₾6,000', '₾6,000–₾15,000', '₾15,000+', 'განვიხილოთ'],
+  timeline: ['რაც შეიძლება მალე', 'ერთი თვის განმავლობაში', '1–3 თვე', '3+ თვე', 'მოქნილი'],
+};
+
+export const reelLabelsKa: Record<string, string> = {
+  'Social Media Reel': 'სოც. მედიის რილსი',
+  'Motion Reel': 'მოუშენ რილსი',
+  'Logo Reveal': 'ლოგოს ანიმაცია',
+  'Saloni Furniture Reel': 'Saloni-ს რილსი',
+  'Scope Partner': 'Scope-ის პარტნიორები',
+  'BOG × Scope': 'BOG × Scope',
 };

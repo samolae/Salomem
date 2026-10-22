@@ -1,17 +1,18 @@
 import { useEffect } from 'react';
-import { useLocation, useParams } from 'react-router';
+import { useParams } from 'react-router';
 import { HomeSEO, ServicesSEO, ContactSEO, UxUiSEO, SocialMediaAdsSEO, SocialMediaMotionSEO } from '../components/seo';
 import { useActiveSection } from '../components/active-section-context';
 import { BakedShell } from './shell';
 import { HomeContent } from './home';
 import { AdsContent, ContactContent, MotionContent, ServicesContent, UxUiContent } from './pages';
+import { useI18n } from './i18n';
 
 /**
  * Home, the three work pages, services and contact. One module so a visit
  * between them never waits on another download.
  */
 export function BakedPage() {
-  const { pathname } = useLocation();
+  const { bare: pathname } = useI18n();
   const { category } = useParams<{ category?: string }>();
   const { setActiveSection } = useActiveSection();
 

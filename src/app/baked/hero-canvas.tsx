@@ -5,6 +5,7 @@ import { adsBrands, motionReels } from './data';
 import { spotlights } from './content';
 import { useMotionPause, PauseButton } from './shell';
 import { CtaLink } from './ui';
+import { useI18n } from './i18n';
 
 /*
  * The opening canvas: every kind of work laid out as tilted columns that
@@ -31,7 +32,7 @@ type Tile = { src: string; ratio: number; frame?: boolean; video?: string };
 function usePool(): Tile[] {
   return useMemo(() => {
     const ads: Tile[] = adsBrands.flatMap((b) =>
-      b.items.filter((it) => it.type === 'image' && !it.fullWidth).slice(0, 5).map((it, i) => ({ src: it.src, ratio: i % 3 === 1 ? 1 : 1.25 }))
+      b.items.filter((it) => it.type === 'image' && !it.fullWidth).map((it, i) => ({ src: it.src, ratio: i % 3 === 1 ? 1 : 1.25 }))
     );
     const spots: Tile[] = spotlights.map((s) => ({ src: s.img, ratio: 0.75 }));
     const frames: Tile[] = motionReels.map((r, i) => ({ src: videoFrame(r.src, i % 2 ? '35p' : '60p'), ratio: 1.6, frame: true, video: smallVideo(r.src) }));
@@ -52,15 +53,16 @@ function usePool(): Tile[] {
 }
 
 export function HeroCanvas() {
+  const { tx } = useI18n();
   const pool = usePool();
   const { paused } = useMotionPause();
   const reduce = useReducedMotion();
   const wrapRef = useRef<HTMLDivElement>(null);
   const planeRef = useRef<HTMLDivElement>(null);
-  const [cols, setCols] = useState(10);
+  const [cols, setCols] = useState(13);
 
   useEffect(() => {
-    const set = () => setCols(window.innerWidth < 640 ? 6 : window.innerWidth < 1100 ? 8 : window.innerWidth < 1600 ? 10 : 12);
+    const set = () => setCols(window.innerWidth < 640 ? 7 : window.innerWidth < 1100 ? 10 : window.innerWidth < 1600 ? 13 : 15);
     set();
     window.addEventListener('resize', set);
     return () => window.removeEventListener('resize', set);
@@ -104,14 +106,14 @@ export function HeroCanvas() {
   const stopped = paused || !!reduce;
 
   return (
-    <section ref={wrapRef} aria-label="Selected work, moving canvas" className="relative h-[100svh] min-h-[560px] overflow-hidden bg-white">
+    <section ref={wrapRef} aria-label={tx('Selected work, moving canvas', 'ნამუშევრები, მოძრავი კანვასი')} className="relative h-[100svh] min-h-[560px] overflow-hidden bg-white">
       <motion.div className="absolute inset-0" style={{ scale, opacity }}>
         <div
           ref={planeRef}
-          className="absolute left-1/2 top-1/2 flex gap-2.5 sm:gap-3"
+          className="absolute left-1/2 top-1/2 flex gap-2 sm:gap-2.5"
           style={{
-            width: cols * (cols === 6 ? 92 : 150),
-            transform: 'translate(-50%, -50%) perspective(1800px) rotateX(14deg) rotateZ(-8deg) scale(1.12)',
+            width: cols * (cols === 7 ? 78 : 118),
+            transform: 'translate(-50%, -50%) perspective(1800px) rotateX(14deg) rotateZ(-8deg) scale(1.08)',
           }}
         >
           {columns.map((col, ci) => (
@@ -121,9 +123,9 @@ export function HeroCanvas() {
                 style={{ ['--dur' as string]: `${col.dur}s`, animationPlayState: stopped ? 'paused' : 'running' }}
               >
                 {[0, 1].map((dup) => (
-                  <div key={dup} className="flex flex-col gap-2.5 sm:gap-3 pb-2.5 sm:pb-3" aria-hidden={dup === 1 || undefined}>
+                  <div key={dup} className="flex flex-col gap-2 sm:gap-2.5 pb-2 sm:pb-2.5" aria-hidden={dup === 1 || undefined}>
                     {col.tiles.map((t, ti) => (
-                      <div key={ti} className="relative w-full overflow-hidden rounded-[10px] bg-[#f2f2f2] shadow-[0_1px_2px_rgba(0,0,0,0.04)]" style={{ minHeight: 60 }}>
+                      <div key={ti} className="relative w-full overflow-hidden rounded-md bg-[#f2f2f2] shadow-[0_1px_2px_rgba(0,0,0,0.04)]" style={{ minHeight: 60 }}>
                         {t.video ? (
                           <video
                             src={t.video}
@@ -156,18 +158,18 @@ export function HeroCanvas() {
       {/* Soft fade into the page below */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-white" />
 
-      <h1 className="sr-only">Salome Mosiava, Senior Product Designer and Art Director</h1>
+      <h1 className="sr-only">{tx('Salome Mosiava, Senior Product Designer and Art Director', 'სალომე მოსიავა, სენიორ პროდაქტ დიზაინერი და არტ დირექტორი')}</h1>
       {/* Centre call to action, sitting on the canvas */}
       <motion.div className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2" style={{ opacity }}>
         <CtaLink>
           <span className="h-1.5 w-1.5 rounded-full bg-white" aria-hidden />
-          Contact me
+          {tx('Contact me', 'დამიკავშირდი')}
         </CtaLink>
       </motion.div>
       <PauseButton className="absolute left-2 bottom-24 sm:bottom-24 z-10" />
       <div className="pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 z-10 rounded-md bg-white/80 px-3 py-1.5 text-[13px] text-[#6f6f6f] backdrop-blur-md whitespace-nowrap">
-        <span className="hidden sm:inline">Move to look around, scroll to open</span>
-        <span className="sm:hidden">Scroll to open</span>
+        <span className="hidden sm:inline">{tx('Move to look around, scroll to open', 'კურსორით დაათვალიერე, სქროლით გახსენი')}</span>
+        <span className="sm:hidden">{tx('Scroll to open', 'სქროლით გახსენი')}</span>
       </div>
     </section>
   );

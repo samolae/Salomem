@@ -4,8 +4,8 @@ import { IMG } from '../lib/cld';
 import { adsBrands, motionReels } from './data';
 import { spotlights } from './content';
 import { useMotionPause, PauseButton } from './shell';
-import { CtaLink } from './ui';
-import { useI18n } from './i18n';
+import { CtaLink, Lightbox, type LightboxItem } from './ui';
+import { brandName, useI18n } from './i18n';
 
 /*
  * The opening canvas: every kind of work laid out as tilted columns that
@@ -27,15 +27,19 @@ export const videoFrame = (src: string, offset = '40p', width = 480) => {
 /** The same reel, scaled down for a small tile */
 const smallVideo = (src: string) => src.replace('/video/upload/f_auto,q_auto/', '/video/upload/w_360,c_limit,q_auto,f_auto/');
 
-type Tile = { src: string; ratio: number; frame?: boolean; video?: string };
+/** full: what opens large; brand/logo: shown in the enlarged view */
+type Tile = { src: string; ratio: number; frame?: boolean; video?: string; full: string; fullVideo?: boolean; brand: string; logo?: string; n: number };
 
 function usePool(): Tile[] {
   return useMemo(() => {
     const ads: Tile[] = adsBrands.flatMap((b) =>
-      b.items.filter((it) => it.type === 'image' && !it.fullWidth).map((it, i) => ({ src: it.src, ratio: i % 3 === 1 ? 1 : 1.25 }))
+      b.items.filter((it) => it.type === 'image' && !it.fullWidth).map((it, i) => ({ src: it.src, ratio: i % 3 === 1 ? 1 : 1.25, full: it.src, brand: b.name, logo: b.logoImg, n: 0 }))
     );
-    const spots: Tile[] = spotlights.map((s) => ({ src: s.img, ratio: 0.75 }));
-    const frames: Tile[] = motionReels.map((r, i) => ({ src: videoFrame(r.src, i % 2 ? '35p' : '60p'), ratio: 1.6, frame: true, video: smallVideo(r.src) }));
+    const spots: Tile[] = spotlights.map((s) => ({ src: s.img, ratio: 0.75, full: s.img, brand: s.title, n: 0 }));
+    const frames: Tile[] = motionReels.map((r, i) => ({
+      src: videoFrame(r.src, i % 2 ? '35p' : '60p'), ratio: 1.6, frame: true, video: smallVideo(r.src),
+      full: r.src, fullVideo: true, brand: r.brand, logo: (r as { logoImg?: string }).logoImg, n: 0,
+    }));
     // Interleave so neighbouring tiles differ in kind
     const out: Tile[] = [];
     const lists = [ads, frames, spots];
@@ -45,7 +49,7 @@ function usePool(): Tile[] {
       for (const l of lists) {
         // ads are plentiful: take two per round
         const take = l === ads ? [l[k * 2], l[k * 2 + 1]] : [l[k]];
-        for (const t of take) if (t) { out.push(t); added = true; }
+        for (const t of take) if (t) { out.push({ ...t, n: out.length }); added = true; }
       }
     }
     return out;
@@ -53,8 +57,12 @@ function usePool(): Tile[] {
 }
 
 export function HeroCanvas() {
-  const { tx } = useI18n();
+  const { tx, ka } = useI18n();
   const pool = usePool();
+  const [open, setOpen] = useState<number | null>(null);
+  const lightbox: LightboxItem[] = useMemo(() => pool.map((t) => ({
+    src: t.full, video: t.fullVideo, alt: brandName(t.brand, ka), brand: brandName(t.brand, ka), logo: t.logo,
+  })), [pool, ka]);
   const { paused } = useMotionPause();
   const reduce = useReducedMotion();
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -125,7 +133,15 @@ export function HeroCanvas() {
                 {[0, 1].map((dup) => (
                   <div key={dup} className="flex flex-col gap-2 sm:gap-2.5 pb-2 sm:pb-2.5" aria-hidden={dup === 1 || undefined}>
                     {col.tiles.map((t, ti) => (
-                      <div key={ti} className="relative w-full overflow-hidden rounded-md bg-[#f2f2f2] shadow-[0_1px_2px_rgba(0,0,0,0.04)]" style={{ minHeight: 60 }}>
+                      <button
+                        key={ti}
+                        type="button"
+                        tabIndex={dup === 1 ? -1 : 0}
+                        onClick={() => setOpen(t.n)}
+                        aria-label={`${tx('Open', 'გახსენი')} ${brandName(t.brand, ka)}`}
+                        className="relative block w-full overflow-hidden rounded-md bg-[#f2f2f2] shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-transform duration-300 hover:scale-[1.04] hover:z-10 outline-none focus-visible:shadow-[0_0_0_2px_#ff4306]"
+                        style={{ minHeight: 60 }}
+                      >
                         {t.video ? (
                           <video
                             src={t.video}
@@ -145,7 +161,7 @@ export function HeroCanvas() {
                             className="block w-full h-auto"
                           />
                         )}
-                      </div>
+                      </button>
                     ))}
                   </div>
                 ))}
@@ -154,6 +170,8 @@ export function HeroCanvas() {
           ))}
         </div>
       </motion.div>
+
+      <Lightbox items={lightbox} index={open} onClose={() => setOpen(null)} onIndex={setOpen} />
 
       {/* Soft fade into the page below */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-white" />

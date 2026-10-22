@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react';
 import { IMG } from '../lib/cld';
-import { adsBrands, motionReels, screenExchange, screenProfile, screenLanding, schenkerSendung, schenkerSettings } from './data';
+import { adsBrands, motionReels } from './data';
 import { spotlights } from './content';
 import { useMotionPause, PauseButton } from './shell';
 import { CtaLink } from './ui';
@@ -23,19 +23,21 @@ export const videoFrame = (src: string, offset = '40p', width = 480) => {
   return `${src.slice(0, at + mark.length)}so_${offset},w_${width},c_limit,q_auto,f_auto/${rest.replace(/\.(mp4|mov|webm)$/i, '.jpg')}`;
 };
 
-type Tile = { src: string; ratio: number; frame?: boolean };
+/** The same reel, scaled down for a small tile */
+const smallVideo = (src: string) => src.replace('/video/upload/f_auto,q_auto/', '/video/upload/w_360,c_limit,q_auto,f_auto/');
+
+type Tile = { src: string; ratio: number; frame?: boolean; video?: string };
 
 function usePool(): Tile[] {
   return useMemo(() => {
     const ads: Tile[] = adsBrands.flatMap((b) =>
       b.items.filter((it) => it.type === 'image' && !it.fullWidth).slice(0, 5).map((it, i) => ({ src: it.src, ratio: i % 3 === 1 ? 1 : 1.25 }))
     );
-    const ux: Tile[] = [screenExchange, screenProfile, screenLanding, schenkerSendung, schenkerSettings].map((s) => ({ src: s, ratio: 0.66 }));
     const spots: Tile[] = spotlights.map((s) => ({ src: s.img, ratio: 0.75 }));
-    const frames: Tile[] = motionReels.map((r, i) => ({ src: videoFrame(r.src, i % 2 ? '35p' : '60p'), ratio: 1.6, frame: true }));
+    const frames: Tile[] = motionReels.map((r, i) => ({ src: videoFrame(r.src, i % 2 ? '35p' : '60p'), ratio: 1.6, frame: true, video: smallVideo(r.src) }));
     // Interleave so neighbouring tiles differ in kind
     const out: Tile[] = [];
-    const lists = [ads, frames, ux, spots];
+    const lists = [ads, frames, spots];
     let added = true;
     for (let k = 0; added; k++) {
       added = false;
@@ -122,14 +124,25 @@ export function HeroCanvas() {
                   <div key={dup} className="flex flex-col gap-2.5 sm:gap-3 pb-2.5 sm:pb-3" aria-hidden={dup === 1 || undefined}>
                     {col.tiles.map((t, ti) => (
                       <div key={ti} className="relative w-full overflow-hidden rounded-[10px] bg-[#f2f2f2] shadow-[0_1px_2px_rgba(0,0,0,0.04)]" style={{ minHeight: 60 }}>
-                        <img
-                          {...(t.frame ? { src: t.src } : IMG.tile(t.src))}
-                          alt=""
-                          loading={ti < 2 && dup === 0 ? 'eager' : 'lazy'}
-                          decoding="async"
-                          draggable={false}
-                          className="block w-full h-auto"
-                        />
+                        {t.video ? (
+                          <video
+                            src={t.video}
+                            poster={t.src}
+                            muted loop playsInline autoPlay={!stopped}
+                            preload="metadata"
+                            ref={(v) => { if (v) { stopped ? v.pause() : v.play().catch(() => {}); } }}
+                            className="block w-full h-auto"
+                          />
+                        ) : (
+                          <img
+                            {...IMG.tile(t.src)}
+                            alt=""
+                            loading={ti < 2 && dup === 0 ? 'eager' : 'lazy'}
+                            decoding="async"
+                            draggable={false}
+                            className="block w-full h-auto"
+                          />
+                        )}
                       </div>
                     ))}
                   </div>

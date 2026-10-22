@@ -56,7 +56,7 @@ export const MomentsWall = ({ items, isDark, onOpen }: Props) => {
     if (!el) return;
     const ro = new ResizeObserver(([entry]) => {
       const w = entry.contentRect.width;
-      setCols(Math.max(3, Math.min(7, Math.round(w / 165))));
+      setCols(Math.max(3, Math.min(9, Math.round(w / 112))));
     });
     ro.observe(el);
     return () => ro.disconnect();
@@ -91,7 +91,7 @@ export const MomentsWall = ({ items, isDark, onOpen }: Props) => {
     const px = s.pointer.x - rect.left;
     const py = s.pointer.y - rect.top;
 
-    const R = s.cell * 1.15;          // reach of the void
+    const R = s.cell * 1.5;          // reach of the void
     const hold = R * 0.55;            // cursor can roam this far without dragging it
 
     // Void follows only when the cursor pushes past its hold radius
@@ -109,7 +109,7 @@ export const MomentsWall = ({ items, isDark, onOpen }: Props) => {
     s.strength += (target - s.strength) * (target ? 0.12 : 0.08);
     if (Math.abs(target - s.strength) < 0.002) s.strength = target;
 
-    const push = R * 0.6;
+    const push = R * 0.5;
     let moving = s.strength > 0 && s.strength < 1;
     for (let i = 0; i < s.centers.length; i++) {
       const c = s.centers[i];

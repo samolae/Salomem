@@ -60,6 +60,7 @@ export function HeroCanvas() {
   const { tx, ka } = useI18n();
   const pool = usePool();
   const [open, setOpen] = useState<number | null>(null);
+  const downAt = useRef<{ x: number; y: number; t: number } | null>(null);
   const lightbox: LightboxItem[] = useMemo(() => pool.map((t) => ({
     src: t.full, video: t.fullVideo, alt: brandName(t.brand, ka), brand: brandName(t.brand, ka), logo: t.logo,
   })), [pool, ka]);
@@ -114,7 +115,16 @@ export function HeroCanvas() {
   const stopped = paused || !!reduce;
 
   return (
-    <section ref={wrapRef} aria-label={tx('Selected work, moving canvas', 'ნამუშევრები, მოძრავი კანვასი')} className="relative h-[100svh] min-h-[560px] overflow-hidden bg-white">
+    <section
+      onPointerDown={(e) => { downAt.current = { x: e.clientX, y: e.clientY, t: Date.now() }; }}
+      onPointerUp={(e) => {
+        const d = downAt.current;
+        downAt.current = null;
+        if (!d || Math.hypot(e.clientX - d.x, e.clientY - d.y) > 8 || Date.now() - d.t > 700) return;
+        const tile = (document.elementFromPoint(e.clientX, e.clientY) as HTMLElement | null)?.closest<HTMLElement>('[data-tile]');
+        if (tile) setOpen(Number(tile.dataset.tile));
+      }}
+      ref={wrapRef} aria-label={tx('Selected work, moving canvas', 'ნამუშევრები, მოძრავი კანვასი')} className="relative h-[100svh] min-h-[560px] overflow-hidden bg-white">
       <motion.div className="absolute inset-0" style={{ scale, opacity }}>
         <div
           ref={planeRef}
@@ -137,7 +147,10 @@ export function HeroCanvas() {
                         key={ti}
                         type="button"
                         tabIndex={dup === 1 ? -1 : 0}
-                        onClick={() => setOpen(t.n)}
+                        data-tile={t.n}
+                        // Keyboard activation; pointer taps are handled on the section,
+                        // since the canvas drifts between press and release
+                        onClick={(e) => { if (e.detail === 0) setOpen(t.n); }}
                         aria-label={`${tx('Open', 'გახსენი')} ${brandName(t.brand, ka)}`}
                         className="relative block w-full overflow-hidden rounded-md bg-[#f2f2f2] shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-transform duration-300 hover:scale-[1.04] hover:z-10 outline-none focus-visible:shadow-[0_0_0_2px_#ff4306]"
                         style={{ minHeight: 60 }}

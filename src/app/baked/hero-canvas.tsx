@@ -67,10 +67,10 @@ export function HeroCanvas() {
   const reduce = useReducedMotion();
   const wrapRef = useRef<HTMLDivElement>(null);
   const planeRef = useRef<HTMLDivElement>(null);
-  const [cols, setCols] = useState(13);
+  const [cols, setCols] = useState(9);
 
   useEffect(() => {
-    const set = () => setCols(window.innerWidth < 640 ? 7 : window.innerWidth < 1100 ? 10 : window.innerWidth < 1600 ? 13 : 15);
+    const set = () => setCols(window.innerWidth < 640 ? 5 : window.innerWidth < 1100 ? 7 : window.innerWidth < 1600 ? 9 : 11);
     set();
     window.addEventListener('resize', set);
     return () => window.removeEventListener('resize', set);
@@ -120,7 +120,7 @@ export function HeroCanvas() {
           ref={planeRef}
           className="absolute left-1/2 top-1/2 flex gap-2 sm:gap-2.5"
           style={{
-            width: cols * (cols === 7 ? 78 : 118),
+            width: cols * (cols === 5 ? 110 : 175),
             transform: 'translate(-50%, -50%) perspective(1800px) rotateX(14deg) rotateZ(-8deg) scale(1.08)',
           }}
         >

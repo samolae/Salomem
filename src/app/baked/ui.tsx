@@ -8,7 +8,8 @@ import { BookButton } from './booking';
 
 /* ── Tokens ───────────────────────────────────────────────────────── */
 export const T = {
-  font: '"Inter", "Manrope", system-ui, sans-serif',
+  font: '"Avenir Next Georgian", "Inter", system-ui, sans-serif',
+  display: '"Loos Wide Black", "Avenir Next Georgian", system-ui, sans-serif',
   ink: '#111111',
   muted: '#6f6f6f',
   faint: '#9a9a9a',
@@ -58,7 +59,7 @@ export function PageIntro({ title, children, icon }: { title: string; children?:
   return (
     <header className="px-5 pt-32 pb-16 sm:pt-40 sm:pb-20 flex flex-col items-center text-center">
       {icon && <div className="mb-6">{icon}</div>}
-      <h1 className="text-[15px] leading-[1.45] text-[#111] max-w-[380px]" style={{ fontWeight: 500 }}>{title}</h1>
+      <h1 className="text-[30px] sm:text-[44px] leading-[1.05] tracking-[-0.01em] text-[#111] max-w-[720px]" style={{ fontFamily: T.display, fontWeight: 900 }}>{title}</h1>
       {children && <div className="mt-5 text-[15px] leading-[1.5] text-[#6f6f6f] max-w-[380px]">{children}</div>}
     </header>
   );

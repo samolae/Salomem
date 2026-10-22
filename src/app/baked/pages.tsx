@@ -141,7 +141,7 @@ export function ServicesContent() {
           <Reveal key={s.title}>
             <article className="h-full rounded-md bg-[#f2f2f2] p-6 sm:p-9 flex flex-col">
               <div className="flex items-start justify-between gap-4">
-                <h2 className="text-[17px] text-[#111]" style={{ fontWeight: 500 }}>{s.title}</h2>
+                <h2 className="text-[18px] leading-tight text-[#111]" style={{ fontFamily: T.display, fontWeight: 900 }}>{s.title}</h2>
                 <span className="text-[13px] text-[#6f6f6f] whitespace-nowrap">{s.timeline}</span>
               </div>
               <p className="mt-2 text-[15px] leading-[1.5] text-[#6f6f6f] max-w-[420px]">{s.tagline}</p>
@@ -175,7 +175,7 @@ export function ServicesContent() {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-1.5">
           {stats.map((s) => (
             <div key={s.label} className="rounded-md border border-[#ececec] p-6">
-              <div className="text-[28px] tracking-[-0.03em] text-[#111]" style={{ fontWeight: 500 }}>{s.num}</div>
+              <div className="text-[30px] leading-none text-[#111]" style={{ fontFamily: T.display, fontWeight: 900 }}>{s.num}</div>
               <div className="mt-1 text-[14px] text-[#6f6f6f]">{s.label}</div>
             </div>
           ))}

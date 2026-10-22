@@ -4,7 +4,7 @@ import { CaseLink } from '../components/case-transition';
 import { IMG } from '../lib/cld';
 import { HeroCanvas } from './hero-canvas';
 import { useMotionPause } from './shell';
-import { Caption, CtaLink, FadeImg, LogoStrip, Reveal } from './ui';
+import { Caption, CtaLink, FadeImg, LogoStrip, Reveal, T } from './ui';
 import { clients, experiences, spotlights } from './content';
 import {
   adsBrands, adsCarmall1, adsGino4, adsTerminal1, screenAurumMainHQ, schenkerSendung, unispaceLogin,
@@ -124,11 +124,14 @@ export function HomeContent() {
       <section className="px-5 pt-16 pb-20 sm:pt-24 sm:pb-28 flex flex-col items-center text-center">
         <Reveal className="flex flex-col items-center">
           <img src={AVATAR} alt="Salome Mosiava" width="52" height="52" className="h-[52px] w-[52px] rounded-xl bg-[#f2f2f2] object-cover mb-7" />
+          <h2 className="text-[34px] sm:text-[52px] leading-[1] text-[#111] mb-8 max-w-[760px]" style={{ fontFamily: T.display, fontWeight: 900 }}>
+            80+ projects. <span className="text-[#ff4306]">Countless sparks.</span>
+          </h2>
           <p className="text-[15px] leading-[1.5] text-[#111] max-w-[370px]" style={{ fontWeight: 500 }}>
             I'm Salome, senior product designer & art director in Tbilisi. I turn the small signals and habits we often miss into ideas that create real business impact.
           </p>
           <p className="mt-5 text-[15px] leading-[1.5] text-[#6f6f6f] max-w-[370px]">
-            80+ projects across fintech, logistics, edtech, retail, healthcare and hospitality. Top-Rated Plus on Upwork.
+            Work across fintech, logistics, edtech, retail, healthcare and hospitality. Top-Rated Plus on Upwork.
           </p>
           <div className="mt-9 flex flex-col items-center gap-3">
             <CtaLink book>Book a call</CtaLink>

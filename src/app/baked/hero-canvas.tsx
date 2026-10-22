@@ -4,6 +4,7 @@ import { IMG } from '../lib/cld';
 import { adsBrands, motionReels, screenExchange, screenProfile, screenLanding, schenkerSendung, schenkerSettings } from './data';
 import { spotlights } from './content';
 import { useMotionPause, PauseButton } from './shell';
+import { CtaLink } from './ui';
 
 /*
  * The opening canvas: every kind of work laid out as tilted columns that
@@ -143,6 +144,13 @@ export function HeroCanvas() {
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-white" />
 
       <h1 className="sr-only">Salome Mosiava, Senior Product Designer and Art Director</h1>
+      {/* Centre call to action, sitting on the canvas */}
+      <motion.div className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2" style={{ opacity }}>
+        <CtaLink>
+          <span className="h-1.5 w-1.5 rounded-full bg-[#22c55e]" aria-hidden />
+          Contact me
+        </CtaLink>
+      </motion.div>
       <PauseButton className="absolute left-2 bottom-24 sm:bottom-24 z-10" />
       <div className="pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 z-10 rounded-md bg-white/80 px-3 py-1.5 text-[13px] text-[#6f6f6f] backdrop-blur-md whitespace-nowrap">
         <span className="hidden sm:inline">Move to look around, scroll to open</span>

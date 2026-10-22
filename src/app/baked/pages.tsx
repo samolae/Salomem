@@ -241,9 +241,9 @@ export function ContactContent() {
           <ul>
             {contactLinks.map((c) => (
               <li key={c.label} className="flex items-center justify-between gap-3 rounded-md px-3 py-3.5 hover:bg-[#e8e8e8] transition-colors">
-                <a href={c.href} {...(c.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})} className="min-w-0 flex-1 text-[15px] outline-none focus-visible:underline">
-                  <span className="text-[#6f6f6f] mr-3">{c.label}</span>
-                  <span className="text-[#111] break-all">{c.value}</span>
+                <a href={c.href} {...(c.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})} className="min-w-0 flex-1 text-[15px] outline-none focus-visible:underline flex flex-col sm:flex-row sm:gap-3">
+                  <span className="text-[#6f6f6f]">{c.label}</span>
+                  <span className="text-[#111] truncate">{c.value}</span>
                 </a>
                 {c.copy ? (
                   <button type="button" onClick={() => copy(c.value, c.label)} className={pillCls()} aria-label={`Copy ${c.label.toLowerCase()}`}>

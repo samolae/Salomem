@@ -57,7 +57,7 @@ export function HeroCanvas() {
   const [cols, setCols] = useState(7);
 
   useEffect(() => {
-    const set = () => setCols(window.innerWidth < 640 ? 4 : window.innerWidth < 1100 ? 6 : 7);
+    const set = () => setCols(window.innerWidth < 640 ? 5 : window.innerWidth < 1100 ? 6 : 7);
     set();
     window.addEventListener('resize', set);
     return () => window.removeEventListener('resize', set);
@@ -107,7 +107,7 @@ export function HeroCanvas() {
           ref={planeRef}
           className="absolute left-1/2 top-1/2 flex gap-3 sm:gap-4"
           style={{
-            width: cols * (cols < 5 ? 150 : 210),
+            width: cols * (cols === 5 ? 125 : 210),
             transform: 'translate(-50%, -50%) perspective(1800px) rotateX(14deg) rotateZ(-8deg) scale(1.25)',
           }}
         >

@@ -4,7 +4,7 @@ import { Play } from 'lucide-react';
 import { IMG } from '../lib/cld';
 
 /*
- * Moments wall — a wall of visuals that parts under the cursor.
+ * Moments wall, a wall of visuals that parts under the cursor.
  *
  * A soft "void" sits under the pointer and pushes nearby tiles outward,
  * shrinking them a little. The void holds still while the cursor moves
@@ -235,7 +235,7 @@ export const MomentsWall = ({ items, isDark, onOpen }: Props) => {
           ref={(el) => { tileRefs.current[i] = el; }}
           onClick={() => onOpen(i)}
           data-cursor={v.type === 'video' ? 'play' : 'expand'}
-          aria-label={`${v.brandName.split(' · ')[0]} — ${v.type === 'video' ? 'play reel' : `open visual ${i + 1}`}`}
+          aria-label={`${v.brandName.split(' · ')[0]}, ${v.type === 'video' ? 'play reel' : `open visual ${i + 1}`}`}
           className={`group relative block w-full mb-[6px] break-inside-avoid overflow-hidden rounded-md ${v.whiteBg ? 'bg-white border border-[#eee]' : tileBg} focus-visible:shadow-[0_0_0_2px_rgba(255,67,6,0.9)] outline-none`}
           style={{ willChange: 'transform', transformOrigin: 'center' }}
         >

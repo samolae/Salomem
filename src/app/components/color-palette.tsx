@@ -127,7 +127,7 @@ export function DesignSystemFull() {
               <h3 className="text-fluid-24-30 mb-2" style={{ fontFamily: BRAND.headingFont }}>
                 Typo<span className="text-[#D59A04]">graphy</span>
               </h3>
-              <p className={`text-sm ${mt}`}>Two typeface families — display and body</p>
+              <p className={`text-sm ${mt}`}>Two typeface families, display and body</p>
             </div>
             <span className={`text-[10px] font-mono uppercase tracking-wider ${mt}`}>2 Families</span>
           </div>

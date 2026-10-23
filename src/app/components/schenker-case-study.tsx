@@ -160,7 +160,7 @@ const ScrollToTopButton = () => {
 /* ═════════════════════════════════════════════════════════════════ */
 export function SchenkerCaseStudy() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  // Tab state removed — key screens now use side-by-side layout
+  // Tab state removed, key screens now use side-by-side layout
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const navigate = useNavigate();
@@ -178,17 +178,17 @@ export function SchenkerCaseStudy() {
   const cardBg = isDark ? 'bg-[#121318]' : 'bg-white';
 
   const screenTabs = [
-    { label: 'Sendung — Empfänger', src: screenSendungEmpfanger, desc: 'Receiver data entry with structured form fields for address, contact info, and shipment details', icon: <Users size={14} /> },
-    { label: 'Sendung — Informationen', src: screenSendungInfo, desc: 'Shipment settings with delivery options, notification toggles, and transport notes', icon: <FileText size={14} /> },
-    { label: 'Sendung — Versender', src: screenSendungVersender, desc: 'Sender information form with company details, address, and contact fields', icon: <Send size={14} /> },
-    { label: 'Sendung — Pakete', src: screenSendungPakete, desc: 'Package management with dimensions, weight, volume, and pallet configuration', icon: <Package size={14} /> },
+    { label: 'Sendung, Empfänger', src: screenSendungEmpfanger, desc: 'Receiver data entry with structured form fields for address, contact info, and shipment details', icon: <Users size={14} /> },
+    { label: 'Sendung, Informationen', src: screenSendungInfo, desc: 'Shipment settings with delivery options, notification toggles, and transport notes', icon: <FileText size={14} /> },
+    { label: 'Sendung, Versender', src: screenSendungVersender, desc: 'Sender information form with company details, address, and contact fields', icon: <Send size={14} /> },
+    { label: 'Sendung, Pakete', src: screenSendungPakete, desc: 'Package management with dimensions, weight, volume, and pallet configuration', icon: <Package size={14} /> },
     { label: 'Labels & Tracking', src: screenLabels, desc: 'Label generation and tracking URL management with tabular shipment list view', icon: <Tags size={14} /> },
     { label: 'Ladeliste', src: screenLadeliste, desc: 'Packing list management with document viewing, editing, and download controls', icon: <ClipboardList size={14} /> },
     { label: 'Frachtbrief', src: screenFrachtbrief, desc: 'Waybill management interface with structured document actions and filtering', icon: <Truck size={14} /> },
     { label: 'Einstellungen', src: screenSettings, desc: 'Workstation settings with printer configuration, API setup, and license management', icon: <Settings size={14} /> },
     { label: 'Help', src: screenHelp, desc: 'Help center with documentation access and support contact options', icon: <HelpCircle size={14} /> },
-    { label: 'Entwickler — API-Schlüssel', src: screenApiSchluessel, desc: 'API key management with webhook configuration for developer integration', icon: <Code size={14} /> },
-    { label: 'Entwickler — API-Doku', src: screenApiDoku, desc: 'API documentation with REST endpoints, authentication guide, and error codes', icon: <Code size={14} /> },
+    { label: 'Entwickler, API-Schlüssel', src: screenApiSchluessel, desc: 'API key management with webhook configuration for developer integration', icon: <Code size={14} /> },
+    { label: 'Entwickler, API-Doku', src: screenApiDoku, desc: 'API documentation with REST endpoints, authentication guide, and error codes', icon: <Code size={14} /> },
     { label: 'Sendungsdaten', src: screenSendungsdaten, desc: 'Shipment data entry with product selection, incoterms, customs and logistics options', icon: <Truck size={14} /> },
   ];
 
@@ -294,7 +294,7 @@ export function SchenkerCaseStudy() {
 
           <FadeIn delay={0.1}>
             <p className={`text-fluid-18-20 max-w-2xl leading-relaxed mb-8 ${bt}`}>
-              Simplifying a complex shipping workflow — designing a structured logistics interface for shipment creation, document handling, and operational efficiency.
+              Simplifying a complex shipping workflow, designing a structured logistics interface for shipment creation, document handling, and operational efficiency.
             </p>
           </FadeIn>
 
@@ -312,7 +312,7 @@ export function SchenkerCaseStudy() {
           <FadeIn delay={0.2}>
             <div className="relative">
               <BrowserMockup url="schenkerclient.cubsten.com" dark={false}>
-                <img {...IMG.wide(screenSendungEmpfanger)} alt="Schenker — Sendung" width="1440" height="900" className="w-full" />
+                <img {...IMG.wide(screenSendungEmpfanger)} alt="Schenker, Sendung" width="1440" height="900" className="w-full" />
               </BrowserMockup>
               {/* Floating secondary screens */}
               <motion.div
@@ -355,7 +355,7 @@ export function SchenkerCaseStudy() {
             {
               step: 'Hook',
               number: '00.1',
-              text: 'What if enterprise logistics software could feel intuitive — not like a spreadsheet with buttons?',
+              text: 'What if enterprise logistics software could feel intuitive, not like a spreadsheet with buttons?',
               accent: BRAND.olive,
               icon: <Eye size={16} />,
             },
@@ -369,7 +369,7 @@ export function SchenkerCaseStudy() {
             {
               step: 'Pivot',
               number: '00.3',
-              text: 'We unified shipment creation, label management, and settings into one coherent design language — progressive disclosure over cognitive overload.',
+              text: 'We unified shipment creation, label management, and settings into one coherent design language, progressive disclosure over cognitive overload.',
               accent: '#10B981',
               icon: <PenTool size={16} />,
             },
@@ -422,7 +422,7 @@ export function SchenkerCaseStudy() {
                 SCHENKER is a desktop shipping management platform built for operational logistics tasks. The system brings together shipment creation, sender and receiver data, package setup, labels and tracking, packing lists, waybills, settings, and technical tools inside one workflow.
               </p>
               <p className={`${mt} text-sm leading-relaxed`}>
-                The goal was to make this complexity feel clear, structured, and manageable in daily use — a product built for real operations, not just presentation.
+                The goal was to make this complexity feel clear, structured, and manageable in daily use, a product built for real operations, not just presentation.
               </p>
             </div>
           </FadeIn>
@@ -625,14 +625,14 @@ export function SchenkerCaseStudy() {
               {
                 num: '02', icon: <Users size={16} className="text-[#6B8E23]" />,
                 title: 'Versender & Empfanger',
-                desc: 'Sender and receiver each have their own focused step — company, address, email, and phone fields separated for clarity and fewer mistakes.',
+                desc: 'Sender and receiver each have their own focused step, company, address, email, and phone fields separated for clarity and fewer mistakes.',
                 tags: ['Firma', 'Address fields', 'Contact info'],
                 src: screenSendungEmpfanger, url: 'schenkerclient/sendung/empfanger', reverse: true
               },
               {
                 num: '03', icon: <Package size={16} className="text-[#6B8E23]" />,
                 title: 'Pakete & Paletten',
-                desc: 'Package details as a separate operational layer — dimensions, quantity, weight, volume, and packaging type without mixing with contact data.',
+                desc: 'Package details as a separate operational layer, dimensions, quantity, weight, volume, and packaging type without mixing with contact data.',
                 tags: ['Dimensions', 'Gewicht/Volumen', 'Palette hinzufugen'],
                 src: screenSendungPakete, url: 'schenkerclient/sendung/pakete', reverse: false
               },
@@ -678,15 +678,15 @@ export function SchenkerCaseStudy() {
               Every module, <span className="text-[#6B8E23]">designed</span>
             </h2>
             <p className={`${bt} max-w-xl leading-relaxed text-sm mb-16`}>
-              From shipment data to technical settings — each screen follows the same design language with consistent spacing, layout, and interaction patterns.
+              From shipment data to technical settings, each screen follows the same design language with consistent spacing, layout, and interaction patterns.
             </p>
           </FadeIn>
 
           <div className="space-y-20">
             {[
-              { num: '01', title: 'Sendung — Empfänger', desc: screenTabs[0].desc, src: cloudSendungEmpfanger, icon: <Users size={16} className="text-[#6B8E23]" />, reverse: false, tags: ['Form Design', 'Data Entry', 'Address Fields'] },
-              { num: '02', title: 'Sendung — Informationen', desc: screenTabs[1].desc, src: cloudSendungInfo, icon: <FileText size={16} className="text-[#6B8E23]" />, reverse: true, tags: ['Delivery Options', 'Notifications', 'Transport'] },
-              { num: '03', title: 'Sendung — Pakete', desc: screenTabs[3].desc, src: cloudSendungPakete, icon: <Package size={16} className="text-[#6B8E23]" />, reverse: false, tags: ['Dimensions', 'Weight', 'Pallet Config'] },
+              { num: '01', title: 'Sendung, Empfänger', desc: screenTabs[0].desc, src: cloudSendungEmpfanger, icon: <Users size={16} className="text-[#6B8E23]" />, reverse: false, tags: ['Form Design', 'Data Entry', 'Address Fields'] },
+              { num: '02', title: 'Sendung, Informationen', desc: screenTabs[1].desc, src: cloudSendungInfo, icon: <FileText size={16} className="text-[#6B8E23]" />, reverse: true, tags: ['Delivery Options', 'Notifications', 'Transport'] },
+              { num: '03', title: 'Sendung, Pakete', desc: screenTabs[3].desc, src: cloudSendungPakete, icon: <Package size={16} className="text-[#6B8E23]" />, reverse: false, tags: ['Dimensions', 'Weight', 'Pallet Config'] },
               { num: '04', title: 'Labels & Tracking', desc: screenTabs[4].desc, src: cloudLabelsTracking, icon: <Tags size={16} className="text-[#6B8E23]" />, reverse: true, tags: ['Label Generation', 'Tracking URLs', 'Shipment List'] },
               { num: '05', title: 'Einstellungen', desc: screenTabs[7].desc, src: cloudEinstellungen, icon: <Settings size={16} className="text-[#6B8E23]" />, reverse: false, tags: ['Printer Config', 'API Setup', 'License'] },
               { num: '06', title: 'API-Schlüssel', desc: screenTabs[9].desc, src: cloudEntwickler, icon: <Code size={16} className="text-[#6B8E23]" />, reverse: true, tags: ['API Keys', 'Webhooks', 'Integration'] },
@@ -741,7 +741,7 @@ export function SchenkerCaseStudy() {
               <ScreenCard src={screenLadeliste} label="Ladeliste (Packing List)" description="Document management table with name, sender, date, download status, edit and delete controls." icon={<ClipboardList size={14} />} isDark={isDark} delay={0.08} />
             </ParallaxFloat>
             <ParallaxFloat speed={0.12}>
-              <ScreenCard src={screenFrachtbrief} label="Frachtbrief (Waybill)" description="Waybill management with the same consistent table structure — quick review, download, and edit." icon={<Truck size={14} />} isDark={isDark} delay={0.04} />
+              <ScreenCard src={screenFrachtbrief} label="Frachtbrief (Waybill)" description="Waybill management with the same consistent table structure, quick review, download, and edit." icon={<Truck size={14} />} isDark={isDark} delay={0.04} />
             </ParallaxFloat>
             <ScreenCard src={screenSettings} label="Einstellungen (Settings)" description="Workstation and printer configuration, API key management, and license status display." icon={<Settings size={14} />} isDark={isDark} delay={0.12} />
           </div>

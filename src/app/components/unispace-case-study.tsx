@@ -28,7 +28,7 @@ const imgLayoutGrid   = imgFormsTable;
 const imgUpload       = imgUploadFlow;
 const imgSeparator    = imgRegister;
 
-/* ─── Project typography — single typeface ──────────────────────
+/* ─── Project typography, single typeface ──────────────────────
  * Unispace's actual product typography is Noto Sans Georgian
  * (covers Georgian + Latin glyphs). Syne / Manrope are the
  * portfolio's typefaces, not the product's.
@@ -322,7 +322,7 @@ export function UnispaceCaseStudy() {
               </motion.p>
 
               <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55, duration: 0.7, ease: [0.22, 1, 0.36, 1] }} className={`text-base leading-relaxed mb-10 max-w-md ${mt}`}>
-                A closed internal platform for Unilab — Ilia State University's Innovative Technologies Cyber Laboratory. One system, three distinct roles: student, lecturer, admin.
+                A closed internal platform for Unilab, Ilia State University's Innovative Technologies Cyber Laboratory. One system, three distinct roles: student, lecturer, admin.
               </motion.p>
 
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.65, duration: 0.6 }} className="grid grid-cols-3 gap-6">
@@ -453,10 +453,10 @@ export function UnispaceCaseStudy() {
       <section id="story" className="relative py-20 lg:py-28 px-6 lg:px-12 overflow-x-hidden">
         <div className="max-w-4xl mx-auto">
           {[
-            { step: 'Hook',    number: '00.1', text: 'What if a single platform could serve three completely different users — student, lecturer, admin — without ever making any of them feel like a secondary thought?', accent: BRAND.blue, icon: <Eye size={16} /> },
-            { step: 'Friction',number: '00.2', text: 'Managing a university lab meant juggling spreadsheets, email chains, and disconnected tools. Students had no visibility, lecturers had no control, and admins had no oversight — all at once.', accent: '#F87171', icon: <Zap size={16} /> },
-            { step: 'Pivot',   number: '00.3', text: "We designed Unispace around role-based clarity — one login, one design language, three distinct realities. No compromises, no role confusion, no 'which account is mine?'", accent: '#10B981', icon: <CheckCircle size={16} /> },
-            { step: 'Proof',   number: '00.4', text: '42+ screens, 38+ components, and a conditional form system that guided 17 edge cases without a single multi-step wizard — all delivered in 12 weeks.', accent: '#A78BFA', icon: <Layers size={16} /> },
+            { step: 'Hook',    number: '00.1', text: 'What if a single platform could serve three completely different users, student, lecturer, admin, without ever making any of them feel like a secondary thought?', accent: BRAND.blue, icon: <Eye size={16} /> },
+            { step: 'Friction',number: '00.2', text: 'Managing a university lab meant juggling spreadsheets, email chains, and disconnected tools. Students had no visibility, lecturers had no control, and admins had no oversight, all at once.', accent: '#F87171', icon: <Zap size={16} /> },
+            { step: 'Pivot',   number: '00.3', text: "We designed Unispace around role-based clarity, one login, one design language, three distinct realities. No compromises, no role confusion, no 'which account is mine?'", accent: '#10B981', icon: <CheckCircle size={16} /> },
+            { step: 'Proof',   number: '00.4', text: '42+ screens, 38+ components, and a conditional form system that guided 17 edge cases without a single multi-step wizard, all delivered in 12 weeks.', accent: '#A78BFA', icon: <Layers size={16} /> },
           ].map((item, i) => (
             <TextReveal key={item.step} delay={i * 0.12}>
               <div className="flex gap-6 lg:gap-10 mb-14 lg:mb-18 group">
@@ -493,7 +493,7 @@ export function UnispaceCaseStudy() {
             <div>
               <FadeIn delay={0.1}>
                 <p className={`text-base leading-relaxed mb-8 ${isDark ? 'text-zinc-300' : 'text-zinc-600'}`}>
-                  Unispace is a closed internal work system for Unilab — the Innovative Technologies Cyber Laboratory of Ilia State University. The platform allows students to register, track projects, build a public portfolio, and apply for competitions. Lecturers manage courses; admins control the entire ecosystem.
+                  Unispace is a closed internal work system for Unilab, the Innovative Technologies Cyber Laboratory of Ilia State University. The platform allows students to register, track projects, build a public portfolio, and apply for competitions. Lecturers manage courses; admins control the entire ecosystem.
                 </p>
               </FadeIn>
               <FadeIn delay={0.15}>
@@ -577,7 +577,7 @@ export function UnispaceCaseStudy() {
               Three users, one system,<br /><span style={{ color: BRAND.blue }}>zero compromises</span>
             </h2>
             <p className={`text-base leading-relaxed max-w-2xl mb-12 ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>
-              The core complexity of Unispace: three completely different user journeys — student, lecturer, admin — sharing a single design language. Every screen had to serve its user without bleeding into another role's context.
+              The core complexity of Unispace: three completely different user journeys, student, lecturer, admin, sharing a single design language. Every screen had to serve its user without bleeding into another role's context.
             </p>
           </FadeIn>
 
@@ -724,11 +724,11 @@ export function UnispaceCaseStudy() {
 
           <div className="space-y-4">
             {[
-              { challenge: 'Conditional form complexity — 12 base fields expanding into 4 distinct paths with 0–5 additional fields each. Designing one pattern to cover all cases without cognitive overload.', solution: 'Same-page progressive disclosure — status fields expand inline below the dropdown, labeled as a distinct section. Users always see their position in the form with no multi-step wizard.' },
-              { challenge: 'Role asymmetry — Students self-register; lecturers are added by admin. A student who later becomes a lecturer has two separate accounts. The system had to communicate this clearly.', solution: 'Single login endpoint, role-based redirect — one login screen routes to the correct dashboard based on backend role. Role switching is documented as a tooltip, not a UI element.' },
-              { challenge: "Certificate gating — The certificate button is always visible but only activates when an admin uploads the certificate. Communicating a 'feature exists but isn't ready yet' state without frustrating users.", solution: "Visible-disabled with tooltip — Certificate button always rendered, opacity 40%, cursor: not-allowed, with tooltip: 'Available once your administrator uploads your certificate.'" },
-              { challenge: 'Public vs. private boundary — The portfolio page is a public shareable URL; the cabinet is fully private. One system, two access contexts, one coherent visual language.', solution: 'Dedicated public portfolio route — /portfolio/[username] is a clean, minimal public page optimized for first impressions — no nav clutter, no login prompts. One-click copy button in the private cabinet.' },
-              { challenge: 'Verification flow edge cases — 5 distinct states: initial, auto-redirect (countdown), manual redirect, resend link, password recovery. Every state needed a clear action and fallback.', solution: 'Countdown + parallel CTA — Visual countdown timer (5 seconds) for auto-redirect, plus a manual "Go to Login" button. User stays in control regardless of their speed.' },
+              { challenge: 'Conditional form complexity, 12 base fields expanding into 4 distinct paths with 0–5 additional fields each. Designing one pattern to cover all cases without cognitive overload.', solution: 'Same-page progressive disclosure, status fields expand inline below the dropdown, labeled as a distinct section. Users always see their position in the form with no multi-step wizard.' },
+              { challenge: 'Role asymmetry, Students self-register; lecturers are added by admin. A student who later becomes a lecturer has two separate accounts. The system had to communicate this clearly.', solution: 'Single login endpoint, role-based redirect, one login screen routes to the correct dashboard based on backend role. Role switching is documented as a tooltip, not a UI element.' },
+              { challenge: "Certificate gating, The certificate button is always visible but only activates when an admin uploads the certificate. Communicating a 'feature exists but isn't ready yet' state without frustrating users.", solution: "Visible-disabled with tooltip, Certificate button always rendered, opacity 40%, cursor: not-allowed, with tooltip: 'Available once your administrator uploads your certificate.'" },
+              { challenge: 'Public vs. private boundary, The portfolio page is a public shareable URL; the cabinet is fully private. One system, two access contexts, one coherent visual language.', solution: 'Dedicated public portfolio route, /portfolio/[username] is a clean, minimal public page optimized for first impressions, no nav clutter, no login prompts. One-click copy button in the private cabinet.' },
+              { challenge: 'Verification flow edge cases, 5 distinct states: initial, auto-redirect (countdown), manual redirect, resend link, password recovery. Every state needed a clear action and fallback.', solution: 'Countdown + parallel CTA, Visual countdown timer (5 seconds) for auto-redirect, plus a manual "Go to Login" button. User stays in control regardless of their speed.' },
             ].map((row, i) => (
               <ChallengeRow key={i} number={`0${i + 1}`} challenge={row.challenge} solution={row.solution} isDark={isDark} />
             ))}
@@ -751,7 +751,7 @@ export function UnispaceCaseStudy() {
             {[
               { phase: 'PHASE 01', weeks: 'Weeks 1–2',  title: 'Discover', color: '#3D82F6', items: ['Stakeholder interviews (Unilab team, 4 sessions)', 'Competitive audit of EdTech learning platforms, student portals, and online portfolio tools', 'Technical spec analysis', 'User role mapping (student, lecturer, admin)', '17 edge cases identified and documented'] },
               { phase: 'PHASE 02', weeks: 'Weeks 3–4',  title: 'Define',   color: '#A78BFA', items: ['Information architecture (3 role-specific IA maps)', 'User flow mapping per role (9 flows total)', 'Conditional form logic matrix', 'State inventory: 12 states per key screen', 'Design principles established'] },
-              { phase: 'PHASE 03', weeks: 'Weeks 5–10', title: 'Design',   color: '#10B981', items: ['Lo-fi wireframes (42 screens)', 'Dark design system — 38+ components built', 'High-fidelity screens (42 total, 3 roles)', 'Micro-interactions prototyped for key flows', 'Responsive adaptation (1440 / 768 / 375px)'] },
+              { phase: 'PHASE 03', weeks: 'Weeks 5–10', title: 'Design',   color: '#10B981', items: ['Lo-fi wireframes (42 screens)', 'Dark design system, 38+ components built', 'High-fidelity screens (42 total, 3 roles)', 'Micro-interactions prototyped for key flows', 'Responsive adaptation (1440 / 768 / 375px)'] },
               { phase: 'PHASE 04', weeks: 'Weeks 11–12',title: 'Deliver',  color: '#F59E0B', items: ['Usability testing: 8 participants, 2 rounds', '14 issues identified, 11 resolved pre-handoff', 'Dev handoff with Figma annotations', 'Component spec documentation', 'Design QA with engineering team'] },
             ].map((phase, i) => (
               <FadeIn key={phase.phase} delay={i * 0.1}>
@@ -785,11 +785,11 @@ export function UnispaceCaseStudy() {
             ))}
           </div>
 
-          {/* ── Delivery Edge — Code Literacy + Collaboration ── */}
+          {/* ── Delivery Edge, Code Literacy + Collaboration ── */}
           <FadeIn delay={0.5}>
             <div className={`mt-12 lg:mt-16 rounded-2xl border overflow-hidden transition-all duration-500 hover:border-[#3D82F6]/25 hover:shadow-2xl hover:shadow-[#3D82F6]/10 ${isDark ? `${cardBg} border-white/[0.06]` : 'bg-white border-zinc-200'}`}>
               <div className="grid lg:grid-cols-5">
-                {/* Left — narrative */}
+                {/* Left, narrative */}
                 <div className={`lg:col-span-2 p-8 lg:p-10 lg:border-r ${isDark ? 'border-white/[0.06]' : 'border-zinc-100'}`}>
                   <div className="flex items-center gap-3 mb-5">
                     <div className="w-7 h-7 rounded-md bg-[#3D82F6]/15 flex items-center justify-center">
@@ -802,24 +802,24 @@ export function UnispaceCaseStudy() {
                     built for handoff
                   </h3>
                   <p className={`text-[14px] leading-relaxed mb-4 ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>
-                    Hands-on knowledge of HTML, CSS, JavaScript, and React shaped every design decision. Components were drawn knowing they'd map 1:1 to React components — no abstract patterns, no wasted iterations, no ambiguity at handoff.
+                    Hands-on knowledge of HTML, CSS, JavaScript, and React shaped every design decision. Components were drawn knowing they'd map 1:1 to React components, no abstract patterns, no wasted iterations, no ambiguity at handoff.
                   </p>
                   <p className={`text-[14px] leading-relaxed ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>
-                    Daily collaboration with engineering during the high-fidelity phase turned design QA into a continuous, paired activity — issues were caught and resolved in the same conversation, not in async ticket cycles.
+                    Daily collaboration with engineering during the high-fidelity phase turned design QA into a continuous, paired activity, issues were caught and resolved in the same conversation, not in async ticket cycles.
                   </p>
                 </div>
 
-                {/* Right — practices grid */}
+                {/* Right, practices grid */}
                 <div className="lg:col-span-3 p-8 lg:p-10">
                   <div className={`text-[10px] uppercase tracking-[0.2em] mb-6 ${mt}`}>Practices that accelerated delivery</div>
                   <div className="grid sm:grid-cols-2 gap-x-6 gap-y-5">
                     {[
-                      { icon: <Code2 size={14} />,      title: '1:1 Component Mapping',   body: 'Every Figma component had a planned React equivalent — no design that couldn’t be built efficiently.' },
+                      { icon: <Code2 size={14} />,      title: '1:1 Component Mapping',   body: 'Every Figma component had a planned React equivalent, no design that couldn’t be built efficiently.' },
                       { icon: <Layers size={14} />,     title: 'Tailwind-aligned tokens', body: 'Spacing, color, and radius tokens mirrored Tailwind defaults so engineers translated zero values by hand.' },
-                      { icon: <PenTool size={14} />,    title: 'HTML/CSS in handoff',     body: 'Specs included real CSS snippets for non-trivial states — focus rings, transitions, hover micro-interactions.' },
-                      { icon: <Users size={14} />,      title: 'Daily 15-min syncs',      body: 'Async questions resolved same day during weeks 5–10 — no waiting cycles, no email threads.' },
-                      { icon: <Search size={14} />,     title: 'Browser DevTools QA',     body: 'Paired live in DevTools to inspect builds — spacing, hierarchy, accessibility verified together in real time.' },
-                      { icon: <Component size={14} />,  title: 'Shared component vocab',  body: 'Same terminology in Figma, code, and docs — variants, props, states all named identically across surfaces.' },
+                      { icon: <PenTool size={14} />,    title: 'HTML/CSS in handoff',     body: 'Specs included real CSS snippets for non-trivial states, focus rings, transitions, hover micro-interactions.' },
+                      { icon: <Users size={14} />,      title: 'Daily 15-min syncs',      body: 'Async questions resolved same day during weeks 5–10, no waiting cycles, no email threads.' },
+                      { icon: <Search size={14} />,     title: 'Browser DevTools QA',     body: 'Paired live in DevTools to inspect builds, spacing, hierarchy, accessibility verified together in real time.' },
+                      { icon: <Component size={14} />,  title: 'Shared component vocab',  body: 'Same terminology in Figma, code, and docs, variants, props, states all named identically across surfaces.' },
                     ].map((p) => (
                       <div key={p.title} className="group/p flex gap-3 cursor-default">
                         <div className="w-7 h-7 rounded-md bg-[#3D82F6]/10 flex items-center justify-center flex-shrink-0 transition-all duration-300 group-hover/p:bg-[#3D82F6]/20 group-hover/p:scale-110">
@@ -869,7 +869,7 @@ export function UnispaceCaseStudy() {
               Core screens<br /><span style={{ color: BRAND.blue }}>in detail</span>
             </h2>
             <p className={`text-base leading-relaxed max-w-xl mb-14 ${mt}`}>
-              Registration, verification, cabinet, and portfolio — each screen designed for a specific user in a specific moment.
+              Registration, verification, cabinet, and portfolio, each screen designed for a specific user in a specific moment.
             </p>
           </FadeIn>
 
@@ -882,7 +882,7 @@ export function UnispaceCaseStudy() {
                     <Users size={15} className="text-[#3D82F6]" />
                   </div>
                   <div>
-                    <h3 className={`text-sm font-semibold ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont }}>Registration — Conditional Logic System</h3>
+                    <h3 className={`text-sm font-semibold ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont }}>Registration, Conditional Logic System</h3>
                     <p className={`text-[12px] ${mt}`}>12 base fields → 4 status paths → 0–5 conditional fields · One unified form pattern</p>
                   </div>
                 </div>
@@ -902,7 +902,7 @@ export function UnispaceCaseStudy() {
                       { status: 'Pupil',    fields: 'School, Grade, Parent name, surname, phone',              count: '+5', special: 'Grade dropdown',                            complexity: 'Medium' },
                       { status: 'Student',  fields: 'University, Faculty, Program, Degree, Semester',         count: '+5', special: 'Dropdown + free input, Degree checkbox',    complexity: 'High' },
                       { status: 'Graduate', fields: 'University, Faculty, Program, Degree, Graduation date',  count: '+5', special: 'Dropdown + free input, Calendar picker',    complexity: 'High' },
-                      { status: 'Other',    fields: 'None',                                                    count: '+0', special: '—',                                         complexity: 'Low' },
+                      { status: 'Other',    fields: 'None',                                                    count: '+0', special: 'None',                                         complexity: 'Low' },
                     ].map((row) => (
                       <tr key={row.status} className={`border-b ${isDark ? 'border-white/[0.04]' : 'border-zinc-50'} transition-colors`}>
                         <th scope="row" className={`px-6 py-4 font-medium text-left ${isDark ? 'text-white' : 'text-zinc-900'}`}>{row.status}</th>
@@ -922,7 +922,7 @@ export function UnispaceCaseStudy() {
 
           {/* Registration flow steps */}
           <FadeIn delay={0.1}>
-            <h3 className={`text-xl mb-6 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 700 }}>Registration Flow — Step by Step</h3>
+            <h3 className={`text-xl mb-6 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 700 }}>Registration Flow, Step by Step</h3>
             <div className="flex flex-wrap items-center gap-2 mb-16">
               {[
                 { label: 'START',       sublabel: 'Begin Registration',       color: BRAND.blue },
@@ -945,7 +945,7 @@ export function UnispaceCaseStudy() {
 
           <div className="grid md:grid-cols-2 gap-8 mb-8">
             <ScreenCard src={imgLayoutGrid} label="Layout & Grid System" description="Consistent 12-column grid applied across all 42 screens. Auto-layout components ensure pixel-perfect alignment without manual spacing adjustments." icon={<LayoutGrid size={15} />} delay={0.05} isDark={isDark} />
-            <ScreenCard src={imgUpload} label="Project Upload Flow" description="Students upload projects with rich metadata — title, tags, status, media. Progressive disclosure shows relevant fields based on project type." icon={<Code2 size={15} />} delay={0.1} isDark={isDark} />
+            <ScreenCard src={imgUpload} label="Project Upload Flow" description="Students upload projects with rich metadata, title, tags, status, media. Progressive disclosure shows relevant fields based on project type." icon={<Code2 size={15} />} delay={0.1} isDark={isDark} />
           </div>
 
           <FadeIn delay={0.15}>
@@ -975,11 +975,11 @@ export function UnispaceCaseStudy() {
           </FadeIn>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              { n: '01', title: 'Conditional Fields — Same Page, Not Wizard',   principle: 'COGNITIVE LOAD REDUCTION', body: "Splitting status-specific fields into a separate step would create unnecessary friction at a critical dropoff point. Same-page expansion keeps the user grounded, always aware of total form length, and avoids 'where am I?' confusion across 4 possible paths.", color: BRAND.blue },
+              { n: '01', title: 'Conditional Fields, Same Page, Not Wizard',   principle: 'COGNITIVE LOAD REDUCTION', body: "Splitting status-specific fields into a separate step would create unnecessary friction at a critical dropoff point. Same-page expansion keeps the user grounded, always aware of total form length, and avoids 'where am I?' confusion across 4 possible paths.", color: BRAND.blue },
               { n: '02', title: 'Dark Mode as Default for Internal Tools',       principle: 'ACCESSIBILITY AND BRAND',  body: "Unispace is an internal platform used for hours at a time. Dark mode reduces eye fatigue during extended sessions, creates a professional environment that aligns with Unilab's engineering brand, and makes the blue accent significantly more impactful.", color: '#A78BFA' },
               { n: '03', title: 'Countdown Timer with Parallel Manual CTA',     principle: 'USER CONTROL AND CLARITY', body: "After verification, users lose orientation instantly. A visible countdown (5s) provides clear feedback that something is happening; the manual button preserves user agency for those who don't want to wait. Both user types served simultaneously.", color: '#10B981' },
-              { n: '04', title: 'Certificate — Visible, Disabled, Explained',   principle: 'FEATURE DISCOVERY',        body: "Hiding the certificate button entirely would make users unaware the feature exists. Showing it as disabled with a clear tooltip sets correct expectations and keeps users engaged rather than confused.", color: '#F59E0B' },
-              { n: '05', title: 'Portfolio as a Dedicated Public Route',         principle: 'AUDIENCE-SPECIFIC DESIGN', body: "The portfolio page serves a completely different audience — potential employers and clients, not platform users. It was designed from scratch for first-impression clarity: no nav, no login prompts, clean project banners.", color: '#F87171' },
+              { n: '04', title: 'Certificate, Visible, Disabled, Explained',   principle: 'FEATURE DISCOVERY',        body: "Hiding the certificate button entirely would make users unaware the feature exists. Showing it as disabled with a clear tooltip sets correct expectations and keeps users engaged rather than confused.", color: '#F59E0B' },
+              { n: '05', title: 'Portfolio as a Dedicated Public Route',         principle: 'AUDIENCE-SPECIFIC DESIGN', body: "The portfolio page serves a completely different audience, potential employers and clients, not platform users. It was designed from scratch for first-impression clarity: no nav, no login prompts, clean project banners.", color: '#F87171' },
               { n: '06', title: 'Region → City Cascade Dropdown',               principle: 'FORM USABILITY',           body: "Showing all Georgian cities at once creates a 70+ item dropdown that is nearly unusable. Filtering cities by selected region reduces the list to 3–12 items, eliminates impossible combinations, and cuts selection time by an estimated 60%.", color: '#34D399' },
             ].map((d, i) => (
               <FadeIn key={d.n} delay={i * 0.07}>
@@ -1014,7 +1014,7 @@ export function UnispaceCaseStudy() {
             </p>
           </FadeIn>
 
-          {/* ── 7.1 — COLOR PALETTE (grouped tokens) ── */}
+          {/* ── 7.1, COLOR PALETTE (grouped tokens) ── */}
           <FadeIn delay={0.05}>
             <div className="mb-4 flex items-center gap-3">
               <span className="text-[10px] uppercase tracking-[0.2em] font-mono text-[#3D82F6]">7.1</span>
@@ -1085,11 +1085,11 @@ export function UnispaceCaseStudy() {
             </div>
           </FadeIn>
 
-          {/* ── 7.2 — TYPOGRAPHY (Noto Sans Georgian — single typeface) ── */}
+          {/* ── 7.2, TYPOGRAPHY (Noto Sans Georgian, single typeface) ── */}
           <FadeIn delay={0.1}>
             <div className="mb-4 flex items-center gap-3">
               <span className="text-[10px] uppercase tracking-[0.2em] font-mono text-[#3D82F6]">7.2</span>
-              <h3 className={`text-sm uppercase tracking-[0.15em] ${mt}`}>Typography — Noto Sans Georgian</h3>
+              <h3 className={`text-sm uppercase tracking-[0.15em] ${mt}`}>Typography, Noto Sans Georgian</h3>
             </div>
             <div className="rounded-2xl border overflow-hidden mb-16 bg-[#090707] border-white/[0.06]">
               <div className="p-8 lg:p-10">
@@ -1098,7 +1098,7 @@ export function UnispaceCaseStudy() {
                   <div>
                     <div className="text-[10px] uppercase tracking-[0.2em] mb-3 text-[#9295A6]">Single Typeface · Georgian + Latin coverage</div>
                     <div className="text-[13px] text-white/70 leading-relaxed max-w-md" style={{ fontFamily: F_GE }}>
-                      Unispace uses Noto Sans Georgian across the entire product. One typeface, one metric set — both Georgian and Latin scripts render with matching baselines, weights, and rhythm.
+                      Unispace uses Noto Sans Georgian across the entire product. One typeface, one metric set, both Georgian and Latin scripts render with matching baselines, weights, and rhythm.
                     </div>
                   </div>
                   <div className="px-3 py-1.5 rounded-full border border-[#3D82F6]/30 bg-[#3D82F6]/10 text-[#6BA4FF] text-[11px] font-mono">
@@ -1132,13 +1132,13 @@ export function UnispaceCaseStudy() {
                   <div>
                     <div className="text-[10px] uppercase tracking-[0.15em] text-white/60 mb-2 font-mono">GEORGIAN BODY · 14px · 400</div>
                     <p className="text-[14px] text-white/70 leading-relaxed" style={{ fontFamily: F_GE, fontWeight: 400 }}>
-                      ერთიანი ტიპოგრაფიული სისტემა — სათაურები, ფორმის ლეიბლები, სტატუსები და მთავარი ტექსტი. ერთი შრიფტი ანბანის ყველა ფორმისთვის.
+                      ერთიანი ტიპოგრაფიული სისტემა, სათაურები, ფორმის ლეიბლები, სტატუსები და მთავარი ტექსტი. ერთი შრიფტი ანბანის ყველა ფორმისთვის.
                     </p>
                   </div>
                   <div>
                     <div className="text-[10px] uppercase tracking-[0.15em] text-white/60 mb-2 font-mono">LATIN BODY · 14px · 400</div>
                     <p className="text-[14px] text-white/70 leading-relaxed" style={{ fontFamily: F_GE, fontWeight: 400 }}>
-                      A single typographic system — headings, form labels, statuses, and body text. One typeface for every shape of the alphabet, both scripts.
+                      A single typographic system, headings, form labels, statuses, and body text. One typeface for every shape of the alphabet, both scripts.
                     </p>
                   </div>
                 </div>
@@ -1161,11 +1161,11 @@ export function UnispaceCaseStudy() {
             </div>
           </FadeIn>
 
-          {/* ── 7.3 — FORM SYSTEM (Inputs + Dropdown + Checkbox + Buttons) ── */}
+          {/* ── 7.3, FORM SYSTEM (Inputs + Dropdown + Checkbox + Buttons) ── */}
           <FadeIn delay={0.15}>
             <div className="mb-4 flex items-center gap-3">
               <span className="text-[10px] uppercase tracking-[0.2em] font-mono text-[#3D82F6]">7.3</span>
-              <h3 className={`text-sm uppercase tracking-[0.15em] ${mt}`}>Form System — Inputs, Selectors & Actions</h3>
+              <h3 className={`text-sm uppercase tracking-[0.15em] ${mt}`}>Form System, Inputs, Selectors & Actions</h3>
             </div>
             <p className="sr-only">
               Specimen of the Unispace form system: text inputs in default, focused, error and dropdown states,
@@ -1289,11 +1289,11 @@ export function UnispaceCaseStudy() {
             </div>
           </FadeIn>
 
-          {/* ── 7.4 — STATUS SYSTEM ── */}
+          {/* ── 7.4, STATUS SYSTEM ── */}
           <FadeIn delay={0.2}>
             <div className="mb-4 flex items-center gap-3">
               <span className="text-[10px] uppercase tracking-[0.2em] font-mono text-[#3D82F6]">7.4</span>
-              <h3 className={`text-sm uppercase tracking-[0.15em] ${mt}`}>Status System — Pills & Row Indicators</h3>
+              <h3 className={`text-sm uppercase tracking-[0.15em] ${mt}`}>Status System, Pills & Row Indicators</h3>
             </div>
             <div className="rounded-2xl border p-8 lg:p-10 bg-[#090707] border-white/[0.06] mb-16">
               <div className="grid lg:grid-cols-2 gap-10">
@@ -1349,11 +1349,11 @@ export function UnispaceCaseStudy() {
             </div>
           </FadeIn>
 
-          {/* ── 7.5 — DECORATIVE MOTIF ── */}
+          {/* ── 7.5, DECORATIVE MOTIF ── */}
           <FadeIn delay={0.25}>
             <div className="mb-4 flex items-center gap-3">
               <span className="text-[10px] uppercase tracking-[0.2em] font-mono text-[#3D82F6]">7.5</span>
-              <h3 className={`text-sm uppercase tracking-[0.15em] ${mt}`}>Decorative System — Brand Motif</h3>
+              <h3 className={`text-sm uppercase tracking-[0.15em] ${mt}`}>Decorative System, Brand Motif</h3>
             </div>
             <div className="rounded-2xl border overflow-hidden mb-16 bg-[#090707] border-white/[0.06]">
               <div className="grid md:grid-cols-2">
@@ -1383,7 +1383,7 @@ export function UnispaceCaseStudy() {
                   </svg>
                   <div className="relative">
                     <div className="text-[10px] uppercase tracking-[0.2em] mb-3 text-[#9295A6]">Concentric Rings</div>
-                    <p className="text-[13px] text-white/70 leading-relaxed max-w-xs">Dashed concentric rings on a blue → purple → pink gradient. Signs every auth, onboarding, and verification screen — a calm, technical signature that frames otherwise utilitarian forms.</p>
+                    <p className="text-[13px] text-white/70 leading-relaxed max-w-xs">Dashed concentric rings on a blue → purple → pink gradient. Signs every auth, onboarding, and verification screen, a calm, technical signature that frames otherwise utilitarian forms.</p>
                   </div>
                 </div>
 
@@ -1401,14 +1401,14 @@ export function UnispaceCaseStudy() {
                   </svg>
                   <div className="absolute bottom-6 left-6 right-6">
                     <div className="text-[10px] uppercase tracking-[0.2em] text-[#9295A6]">Spark Mark</div>
-                    <p className="text-[11px] text-white/50 mt-1 leading-relaxed">Corner ornament — used for empty states, success moments, and as a transitional accent between sections.</p>
+                    <p className="text-[11px] text-white/50 mt-1 leading-relaxed">Corner ornament, used for empty states, success moments, and as a transitional accent between sections.</p>
                   </div>
                 </div>
               </div>
             </div>
           </FadeIn>
 
-          {/* ── 7.6 — LAYOUT & NAVIGATION ── */}
+          {/* ── 7.6, LAYOUT & NAVIGATION ── */}
           <FadeIn delay={0.27}>
             <div className="mb-4 flex items-center gap-3">
               <span className="text-[10px] uppercase tracking-[0.2em] font-mono text-[#3D82F6]">7.6</span>
@@ -1531,7 +1531,7 @@ export function UnispaceCaseStudy() {
               { icon: <Users size={20} />,      color: BRAND.blue,    title: '3 Roles Live',              body: 'Student, Lecturer, and Admin dashboards fully designed, documented, and handed off to development.' },
               { icon: <Shield size={20} />,     color: '#10B981',     title: '11 of 14 Issues Resolved',  body: 'Two rounds of usability testing with 8 participants. 14 friction points identified; 11 resolved before final handoff.' },
               { icon: <Palette size={20} />,    color: '#A78BFA',     title: '38+ Component Library',     body: 'Reusable, documented component library with full state coverage. Reduced dev estimation time by ~30%.' },
-              { icon: <LayoutGrid size={20} />, color: '#F59E0B',     title: '42 Screens Delivered',       body: 'From registration to portfolio — every screen for every role across three breakpoints (1440 / 768 / 375px).' },
+              { icon: <LayoutGrid size={20} />, color: '#F59E0B',     title: '42 Screens Delivered',       body: 'From registration to portfolio, every screen for every role across three breakpoints (1440 / 768 / 375px).' },
               { icon: <Code2 size={20} />,      color: '#F87171',     title: 'Clean Figma Handoff',        body: 'Full Figma annotations, component specs, spacing tokens, and interaction notes. Engineers had everything they needed on day one.' },
               { icon: <CheckCircle size={20} />,color: '#34D399',     title: '17 Edge Cases Covered',      body: 'Every form state, empty state, loading state, error state, and conditional path documented and designed before handoff.' },
             ].map((item, i) => (
@@ -1594,7 +1594,7 @@ export function UnispaceCaseStudy() {
                 label: 'What worked',
                 color: '#10B981',
                 items: [
-                  'Same-page conditional disclosure was the right call — users never felt lost between form states',
+                  'Same-page conditional disclosure was the right call, users never felt lost between form states',
                   'Dark-first design aligned perfectly with Unilab\'s brand and reduced eye fatigue for heavy users',
                   'Building the component library in parallel with screens saved significant rework time late in the project',
                   'Early edge-case documentation prevented last-minute surprises during handoff',
@@ -1604,9 +1604,9 @@ export function UnispaceCaseStudy() {
                 label: "What I'd do differently",
                 color: '#F59E0B',
                 items: [
-                  'Run usability testing earlier — Week 5 instead of Week 11 — to catch friction before high-fidelity production',
+                  'Run usability testing earlier, Week 5 instead of Week 11, to catch friction before high-fidelity production',
                   'Design mobile-first instead of adapting from desktop; the 375px breakpoint required more rework than expected',
-                  'Involve an admin user earlier in the research phase — most insights came from students and lecturers',
+                  'Involve an admin user earlier in the research phase, most insights came from students and lecturers',
                   'Create a more detailed motion spec alongside the component library for better dev alignment',
                 ],
               },
@@ -1614,9 +1614,9 @@ export function UnispaceCaseStudy() {
                 label: 'Key learnings',
                 color: BRAND.blue,
                 items: [
-                  'Role-based design requires a strict separation of context — the same component can mean different things to different roles',
-                  'Internal tools demand higher information density than consumer apps — hierarchy becomes critical at every level',
-                  'Edge cases are first-class citizens, not afterthoughts — 17 cases documented before design phase saved 40+ hours',
+                  'Role-based design requires a strict separation of context, the same component can mean different things to different roles',
+                  'Internal tools demand higher information density than consumer apps, hierarchy becomes critical at every level',
+                  'Edge cases are first-class citizens, not afterthoughts, 17 cases documented before design phase saved 40+ hours',
                   'A visible-disabled state with tooltip is almost always better than hiding a feature entirely',
                 ],
               },

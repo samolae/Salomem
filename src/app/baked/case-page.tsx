@@ -29,7 +29,7 @@ function SectionLabel({ children }: { children: string }) {
 
 function CaseBody({ c }: { c: CaseStudy }) {
   const [open, setOpen] = useState<number | null>(null);
-  const lightbox: LightboxItem[] = c.screens.map((s) => ({ src: s.src, alt: `${c.title} — ${s.title}`, brand: `${c.title} · ${s.title}` }));
+  const lightbox: LightboxItem[] = c.screens.map((s) => ({ src: s.src, alt: `${c.title}, ${s.title}`, brand: `${c.title} · ${s.title}` }));
   const others = CASES.filter((x) => x.slug !== c.slug);
   const dot = <span style={{ color: c.accent }}>.</span>;
 
@@ -111,7 +111,7 @@ function CaseBody({ c }: { c: CaseStudy }) {
           {c.screens.map((s, i) => (
             <Reveal key={s.title} className="break-inside-avoid">
               <button type="button" onClick={() => setOpen(i)} className="group block w-full text-left rounded-md outline-none focus-visible:shadow-[0_0_0_2px_#ff4306]" aria-label={`Open ${s.title}`}>
-                <Stage src={s.src} bg={c.stage} alt={`${c.title} — ${s.title}`} />
+                <Stage src={s.src} bg={c.stage} alt={`${c.title}, ${s.title}`} />
                 <Caption title={s.title} sub={s.desc} tag={String(i + 1).padStart(2, '0')} />
               </button>
             </Reveal>

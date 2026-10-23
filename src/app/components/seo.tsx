@@ -27,7 +27,7 @@ export function SEO({
   jsonLd,
 }: SEOProps) {
   const { pathname } = useLocation();
-  const pageTitle = rawTitle ?? (title ? `${title} — ${SITE_NAME}` : SITE_NAME);
+  const pageTitle = rawTitle ?? (title ? `${title}, ${SITE_NAME}` : SITE_NAME);
   const fullUrl = `${BASE_URL}${pathname}`;
   const absoluteImage = image.startsWith('http') ? image : `${BASE_URL}${image}`;
 
@@ -103,7 +103,7 @@ export function SEO({
 export function HomeSEO() {
   return (
     <SEO
-      rawTitle="Salome Mosiava — Art Director & Senior Product Designer"
+      rawTitle="Salome Mosiava, Art Director & Senior Product Designer"
       description="Salome Mosiava is a Senior Product Designer and Art Director based in Tbilisi, Georgia. Specializing in UX/UI, social media art direction, and motion design. Top-Rated Plus on Upwork."
       keywords="Salome Mosiava, art director, senior product designer, UX/UI design, social media design, motion design, Tbilisi, Georgia, portfolio, Upwork"
     />
@@ -114,7 +114,7 @@ export function ServicesSEO() {
   return (
     <SEO
       title="Services"
-      description="Design services by Salome Mosiava — UX/UI product design, art direction, social media visual design, motion graphics, and brand identity for startups and enterprises."
+      description="Design services by Salome Mosiava, UX/UI product design, art direction, social media visual design, motion graphics, and brand identity for startups and enterprises."
       keywords="design services, UX/UI design services, art direction, social media design, motion graphics, Salome Mosiava"
     />
   );
@@ -134,7 +134,7 @@ export function UxUiSEO() {
   return (
     <SEO
       title="UX/UI Design"
-      description="UX/UI design case studies by Salome Mosiava — including AURUM crypto exchange platform (196 screens) and SCHENKER enterprise logistics platform."
+      description="UX/UI design case studies by Salome Mosiava, including AURUM crypto exchange platform (196 screens) and SCHENKER enterprise logistics platform."
       keywords="UX/UI design, product design case studies, AURUM crypto exchange, SCHENKER logistics, Salome Mosiava"
       image="https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773344688/aurum_og_xkrwdx.jpg"
     />
@@ -166,14 +166,14 @@ export function SocialMediaMotionSEO() {
 export function AurumSEO() {
   return (
     <SEO
-      title="AURUM Crypto Exchange — Case Study"
+      title="AURUM Crypto Exchange | Case Study"
       description="AURUM crypto exchange platform case study: 196 screens, 64+ components, comprehensive design system. Simplifying cryptocurrency trading for the Georgian market with trust-first UX."
       keywords="AURUM, crypto exchange, UX case study, cryptocurrency platform, Georgian fintech, design system, dark UI, product design"
       type="article"
       jsonLd={{
         '@context': 'https://schema.org',
         '@type': 'Article',
-        headline: 'AURUM — Crypto Exchange Platform Case Study',
+        headline: 'AURUM, Crypto Exchange Platform Case Study',
         description:
           'Complete UX/UI case study for AURUM cryptocurrency exchange. 196 screens across web and mobile, 64+ reusable components, and a comprehensive design system.',
         author: { '@type': 'Person', name: 'Salome Mosiava', url: BASE_URL },
@@ -195,14 +195,14 @@ export function AurumSEO() {
 export function SchenkerSEO() {
   return (
     <SEO
-      title="SCHENKER Logistics Platform — Case Study"
+      title="SCHENKER Logistics Platform | Case Study"
       description="SCHENKER logistics platform case study: enterprise-grade shipment management, document workflows, and API integration. Streamlining logistics operations with intuitive UX."
       keywords="SCHENKER, logistics platform, UX case study, shipment management, enterprise design, document workflows, API integration, product design"
       type="article"
       jsonLd={{
         '@context': 'https://schema.org',
         '@type': 'Article',
-        headline: 'SCHENKER — Logistics Platform Case Study',
+        headline: 'SCHENKER, Logistics Platform Case Study',
         description:
           'Complete UX/UI case study for SCHENKER logistics platform. Enterprise shipment management, document workflows, and seamless API integration.',
         author: { '@type': 'Person', name: 'Salome Mosiava', url: BASE_URL },
@@ -224,14 +224,14 @@ export function SchenkerSEO() {
 export function UnispaceSEO() {
   return (
     <SEO
-      title="Unispace — Student Management Platform Case Study"
-      description="Unispace case study: multi-role EdTech platform for Unilab / Ilia State University. 42+ screens, 38+ components, conditional form system, three user roles — student, lecturer, admin."
+      title="Unispace | Student Management Platform Case Study"
+      description="Unispace case study: multi-role EdTech platform for Unilab / Ilia State University. 42+ screens, 38+ components, conditional form system, three user roles, student, lecturer, admin."
       keywords="Unispace, EdTech, student management, UX case study, multi-role platform, Unilab, Ilia State University, internal SaaS, Figma, product design"
       type="article"
       jsonLd={{
         '@context': 'https://schema.org',
         '@type': 'Article',
-        headline: 'Unispace — Student Management Platform Case Study',
+        headline: 'Unispace, Student Management Platform Case Study',
         description:
           'Complete UX/UI case study for Unispace, an internal platform for Unilab at Ilia State University. 42+ screens across 3 user roles, 38+ components, conditional form logic, and full developer handoff.',
         author: { '@type': 'Person', name: 'Salome Mosiava', url: BASE_URL },

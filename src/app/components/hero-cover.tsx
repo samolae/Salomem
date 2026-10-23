@@ -350,7 +350,7 @@ export function HeroCover() {
           className="relative z-10 w-full max-w-[1000px] mx-auto px-4 lg:px-8 pb-0"
         >
           <div className="relative" style={{ perspective: '1200px', transformStyle: 'preserve-3d' }}>
-            {/* Single Hero Screen — 3D perspective with glow */}
+            {/* Single Hero Screen, 3D perspective with glow */}
             <motion.div
               initial={{ opacity: 0, y: 80, rotateX: 12 }}
               animate={{ opacity: 1, y: 0, rotateX: 4 }}
@@ -372,7 +372,7 @@ export function HeroCover() {
             </motion.div>
           </div>
 
-          {/* Fade-out gradient at the bottom — extends below to cover the 3D-tilted mockup overhang */}
+          {/* Fade-out gradient at the bottom, extends below to cover the 3D-tilted mockup overhang */}
           <div
             className="absolute -bottom-20 left-0 right-0 h-56 lg:h-72 z-30 pointer-events-none"
             style={{

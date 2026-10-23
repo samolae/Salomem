@@ -11,7 +11,7 @@ const screenExchange = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto
 const screenLanding = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774040819/33bde90ba43fe3b089e907b814ef1018193651cd_hptwri.webp';
 const schenkerSendung = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774041645/1afd387db904f4cec4c15bfa6b7966e601ef294b_towksm.webp';
 const schenkerLabels = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774041563/78c6f45f9246b9cea5c0520f003d32cb8fb21ff1_kmea60.webp';
-// Unispace — real product screenshots
+// Unispace, real product screenshots
 const unispaceScreen = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1779875718/%E1%83%9E%E1%83%98%E1%83%A0%E1%83%95%E1%83%94%E1%83%9A%E1%83%98_%E1%83%92%E1%83%95%E1%83%94%E1%83%A0%E1%83%93%E1%83%98_%E1%83%9B%E1%83%9D%E1%83%9B%E1%83%AE%E1%83%9B%E1%83%90%E1%83%A0%E1%83%94%E1%83%91%E1%83%9A%E1%83%98%E1%83%A1_%E1%83%A8%E1%83%94%E1%83%A1%E1%83%95%E1%83%9A%E1%83%98%E1%83%A1%E1%83%90%E1%83%A1_uaosn1.png';
 const unispaceBg     = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1779875712/%E1%83%A8%E1%83%94%E1%83%95%E1%83%A1%E1%83%94%E1%83%91%E1%83%A3%E1%83%9A%E1%83%98_%E1%83%A4%E1%83%9D%E1%83%A0%E1%83%9B%E1%83%94%E1%83%91%E1%83%98%E1%83%A1_%E1%83%AA%E1%83%AE%E1%83%A0%E1%83%98%E1%83%9A%E1%83%98_jtudqc.png';
 
@@ -146,7 +146,7 @@ export function NextProjectRecommendation({ currentProject }: { currentProject: 
                         className="relative aspect-[16/10] overflow-hidden img-hover-zoom"
                         style={{ background: `linear-gradient(135deg, ${p.bgFrom}, ${p.bgTo})` }}
                       >
-                        {/* Overlay — green-tinted for Schenker, dark for others */}
+                        {/* Overlay, green-tinted for Schenker, dark for others */}
                         <div className={`absolute inset-0 z-10 ${isSchenker ? 'bg-gradient-to-t from-[#1a2a06]/80 via-transparent to-[#1a2a06]/5' : 'bg-gradient-to-t from-black/75 via-transparent to-black/10'}`} />
 
                         {/* Background screen */}
@@ -237,7 +237,7 @@ export function NextProjectRecommendation({ currentProject }: { currentProject: 
             })}
           </div>
 
-          {/* Cross-category recommendations — "Infinite Loop" */}
+          {/* Cross-category recommendations, "Infinite Loop" */}
           <FadeIn delay={0.2}>
             <div className="mt-8">
               <p className={`text-[10px] uppercase tracking-[0.2em] ${mt} mb-4`} style={{ fontFamily: F.body, fontWeight: 500 }}>

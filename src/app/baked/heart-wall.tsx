@@ -4,7 +4,7 @@ import { RotateCcw } from 'lucide-react';
 import { useMotionPause } from './shell';
 
 /*
- * Heart wall — frames pulled from the motion reels rise out of the dark and
+ * Heart wall, frames pulled from the motion reels rise out of the dark and
  * gather into a pixel heart, hold for a beat, then burst outward into a wall.
  * Every frame on the wall opens the reel it came from.
  *

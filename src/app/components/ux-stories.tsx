@@ -179,7 +179,7 @@ export function UXStories() {
 
   return (
     <div className="space-y-12">
-      {/* Story Switcher — prominent with step indicators */}
+      {/* Story Switcher, prominent with step indicators */}
       <FadeIn>
         <div className="space-y-3">
           {/* Progress bar */}
@@ -290,7 +290,7 @@ function Story1({ isDark }: { isDark: boolean }) {
       screens={['Login', 'Registration', 'Verification', 'Profile']}
       decisions={[
         { title: 'Single Entry Point', rationale: 'One registration screen with a clear type selector reduces cognitive load and prevents users from landing on the wrong flow.' },
-        { title: 'Progressive Disclosure', rationale: 'Legal entity fields (company name, tax ID, director info) only appear after selecting იურიდიული პირი — keeping the individual flow minimal.' },
+        { title: 'Progressive Disclosure', rationale: 'Legal entity fields (company name, tax ID, director info) only appear after selecting იურიდიული პირი, keeping the individual flow minimal.' },
         { title: 'Parallel Verification', rationale: 'Both user types reach the same verification screen but with type-specific document requirements, ensuring regulatory compliance without duplicating UI.' },
       ]}
     >
@@ -363,12 +363,12 @@ function Story2({ isDark }: { isDark: boolean }) {
       storyNum={2}
       titleEn="KYC-Gated Financial Operations"
       titleGe="ვერიფიკაციამდე ოპერაცია blocked"
-      description="Financial regulations require identity verification before any transaction. Rather than hiding features from unverified users — which causes confusion — the design shows all features but gates actions with contextual verification prompts, guiding users to complete KYC at the moment of intent."
+      description="Financial regulations require identity verification before any transaction. Rather than hiding features from unverified users, which causes confusion, the design shows all features but gates actions with contextual verification prompts, guiding users to complete KYC at the moment of intent."
       isDark={isDark}
       screens={['Profile', 'Exchange', 'Verification']}
       decisions={[
-        { title: 'Visible but Gated', rationale: 'All features are visible to unverified users. Tapping a blocked action triggers a KYC prompt — preserving feature discoverability while enforcing compliance.' },
-        { title: 'Contextual Motivation', rationale: 'The gate message explains WHY verification is needed for THIS specific action (e.g., "Verify to exchange crypto") — not a generic "complete verification" nag.' },
+        { title: 'Visible but Gated', rationale: 'All features are visible to unverified users. Tapping a blocked action triggers a KYC prompt, preserving feature discoverability while enforcing compliance.' },
+        { title: 'Contextual Motivation', rationale: 'The gate message explains WHY verification is needed for THIS specific action (e.g., "Verify to exchange crypto"), not a generic "complete verification" nag.' },
         { title: 'Tiered Verification', rationale: 'Basic operations (viewing rates) require no KYC. Financial operations (exchange, withdrawal) require Level 1. Large transactions require Level 2 with enhanced due diligence.' },
       ]}
     >
@@ -393,7 +393,7 @@ function Story2({ isDark }: { isDark: boolean }) {
         {/* Blocked State Flow */}
         <div className={`text-[10px] uppercase tracking-[0.2em] ${mt} mb-2`}>Blocked Operation Flow</div>
         <div className="flex flex-col items-center gap-2 max-w-lg mx-auto">
-          <FlowNode icon={<User size={14} />} label="Unverified User" sublabel="Tier 0 — browsing dashboard" status="default" isDark={isDark} className="w-full" />
+          <FlowNode icon={<User size={14} />} label="Unverified User" sublabel="Tier 0, browsing dashboard" status="default" isDark={isDark} className="w-full" />
           <FlowArrow direction="down" isDark={isDark} />
           <FlowNode icon={<ArrowRight size={14} />} label="Taps 'Exchange Now'" sublabel="Attempts financial operation" status="warning" isDark={isDark} className="w-full" />
           <FlowArrow direction="down" isDark={isDark} />
@@ -451,11 +451,11 @@ function Story3({ isDark }: { isDark: boolean }) {
       storyNum={3}
       titleEn="Online / Offline Crypto Exchange"
       titleGe="ონლაინ / ოფლაინ კრიპტო გაცვლა"
-      description="AURUM supports both online (digital wallet-to-wallet) and offline (in-person at branch locations) crypto exchange. Each channel has distinct risk profiles, confirmation patterns, and order tracking — unified under one consistent exchange interface with contextual adaptation."
+      description="AURUM supports both online (digital wallet-to-wallet) and offline (in-person at branch locations) crypto exchange. Each channel has distinct risk profiles, confirmation patterns, and order tracking, unified under one consistent exchange interface with contextual adaptation."
       isDark={isDark}
       screens={['Exchange', 'Transfer', 'QR Code', 'Verification']}
       decisions={[
-        { title: 'Unified Entry', rationale: 'Both online and offline flows start from the same exchange screen. Channel selection happens after amount entry — so users commit to the "what" before choosing the "how".' },
+        { title: 'Unified Entry', rationale: 'Both online and offline flows start from the same exchange screen. Channel selection happens after amount entry, so users commit to the "what" before choosing the "how".' },
         { title: 'Risk-Aware UI', rationale: 'Large transactions trigger enhanced verification. The UI shows risk level indicators and may require additional confirmation steps or cooling periods.' },
         { title: 'Real-time Tracking', rationale: 'Online orders show blockchain confirmation progress. Offline orders show appointment details, branch location on map, and time-slot countdown.' },
       ]}

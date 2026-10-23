@@ -225,7 +225,7 @@ export function ContactContent() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({
-          _subject: `New inquiry from ${form.name || 'someone'} — ${form.type || 'Portfolio'}`,
+          _subject: `New inquiry from ${form.name || 'someone'}, ${form.type || 'Portfolio'}`,
           Name: form.name || '—', Email: form.email || '—', 'Project type': form.type || '—',
           Budget: form.budget || '—', Timeline: form.timeline || '—', Message: form.message || '—',
         }),
@@ -273,7 +273,7 @@ export function ContactContent() {
                     rel="noopener noreferrer"
                     aria-label={tx('Message me on WhatsApp', 'მომწერე WhatsApp-ზე')}
                     title="WhatsApp"
-                    className="inline-flex items-center justify-center h-8 w-8 rounded-md bg-[#f0f0f0]/90 text-[#6f6f6f] hover:bg-[#e4e4e4] hover:text-[#1da851] transition-colors outline-none focus-visible:shadow-[0_0_0_2px_#ff4306]"
+                    className="inline-flex items-center justify-center h-8 w-8 rounded-md bg-[#25D366] text-white hover:bg-[#1ebe5b] transition-colors outline-none focus-visible:shadow-[0_0_0_2px_#ff4306]"
                   >
                     <WhatsAppIcon />
                   </a>
@@ -315,7 +315,7 @@ export function ContactContent() {
             <textarea name="message" rows={5} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className={`${fieldCls} resize-y min-h-[120px]`} placeholder={tx('Tell me about your project…', 'მომიყევი პროექტის შესახებ…')} />
           </label>
           <button type="submit" disabled={state !== 'idle'} className={`${darkPillCls} w-full disabled:opacity-70`}>
-            {state === 'sent' ? tx("Sent — I'll get back to you soon", 'გაიგზავნა, მალე გიპასუხებ') : state === 'sending' ? tx('Sending…', 'იგზავნება…') : tx('Send inquiry', 'გაგზავნა')}
+            {state === 'sent' ? tx("Sent. I'll get back to you soon", 'გაიგზავნა, მალე გიპასუხებ') : state === 'sending' ? tx('Sending…', 'იგზავნება…') : tx('Send inquiry', 'გაგზავნა')}
           </button>
           <p className="sr-only" role="status" aria-live="polite">{state === 'sent' ? tx('Inquiry sent.', 'შეტყობინება გაიგზავნა.') : ''}</p>
         </form>

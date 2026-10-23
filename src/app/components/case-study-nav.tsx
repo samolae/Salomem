@@ -27,7 +27,7 @@ export const CaseStudySectionNav = ({ sections, accentColor }: CaseStudySectionN
   const { scrollYProgress } = useScroll({ layoutEffect: false });
   const progress = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
 
-  /* Stabilize sections reference — parent passes inline array literal each render */
+  /* Stabilize sections reference, parent passes inline array literal each render */
   const sectionsRef = useRef(sections);
   sectionsRef.current = sections;
 
@@ -56,7 +56,7 @@ export const CaseStudySectionNav = ({ sections, accentColor }: CaseStudySectionN
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []); // stable — reads from ref
+  }, []); // stable, reads from ref
 
   const scrollToSection = useCallback((id: string) => {
     const el = document.getElementById(id);
@@ -165,7 +165,7 @@ export const CaseStudySectionNav = ({ sections, accentColor }: CaseStudySectionN
                       />
                     )}
 
-                    {/* Tooltip label — show on hover (desktop) */}
+                    {/* Tooltip label, show on hover (desktop) */}
                     <div className={`absolute right-full mr-3 px-2.5 py-1.5 rounded-lg text-[10px] tracking-wide whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none hidden sm:block ${
                       isDark ? 'bg-white/[0.1] text-white/80 backdrop-blur-xl' : 'bg-black/[0.06] text-zinc-700 backdrop-blur-xl'
                     }`}>

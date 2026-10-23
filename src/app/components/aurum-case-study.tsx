@@ -287,7 +287,7 @@ export function AurumCaseStudy() {
             {
               step: 'Hook',
               number: '00.1',
-              text: 'What if crypto trading could feel as simple as sending a message — secure, fast, and beautiful?',
+              text: 'What if crypto trading could feel as simple as sending a message, secure, fast, and beautiful?',
               accent: BRAND.gold,
               icon: <Eye size={16} />,
             },
@@ -301,7 +301,7 @@ export function AurumCaseStudy() {
             {
               step: 'Pivot',
               number: '00.3',
-              text: 'We designed AURUM around progressive disclosure — showing only what matters at each step, with guided onboarding, contextual education, and confidence-building visual feedback.',
+              text: 'We designed AURUM around progressive disclosure, showing only what matters at each step, with guided onboarding, contextual education, and confidence-building visual feedback.',
               accent: '#10B981',
               icon: <PenTool size={16} />,
             },
@@ -354,7 +354,7 @@ export function AurumCaseStudy() {
                 AURUM is a full-featured cryptocurrency exchange platform designed to make digital asset trading accessible, secure, and visually refined. The platform encompasses everything from onboarding and KYC verification to real-time trading, portfolio management, and peer-to-peer transfers.
               </p>
               <p className={`${mt} text-sm leading-relaxed`}>
-                Every interaction was carefully crafted to reduce friction and build trust — transforming complex financial operations into intuitive, confidence-inspiring experiences.
+                Every interaction was carefully crafted to reduce friction and build trust, transforming complex financial operations into intuitive, confidence-inspiring experiences.
               </p>
             </div>
           </FadeIn>
@@ -512,7 +512,7 @@ export function AurumCaseStudy() {
               Core <span className="text-[#D59A04]">experiences</span>
             </h2>
             <p className={`${bt} max-w-xl mb-16 leading-relaxed text-sm`}>
-              From onboarding to portfolio management — each screen was designed to feel intuitive while handling complex financial data with care and clarity.
+              From onboarding to portfolio management, each screen was designed to feel intuitive while handling complex financial data with care and clarity.
             </p>
           </FadeIn>
 
@@ -521,14 +521,14 @@ export function AurumCaseStudy() {
               {
                 num: '01', icon: <Home size={16} className="text-[#D59A04]" />,
                 title: 'Home Dark',
-                desc: 'The landing experience in dark mode — showcasing the platform\'s premium aesthetic with gold accents, clean typography, and inviting entry points.',
+                desc: 'The landing experience in dark mode, showcasing the platform\'s premium aesthetic with gold accents, clean typography, and inviting entry points.',
                 tags: ['Dark Mode', 'Landing', 'Brand Identity'],
                 src: cloudScreenHomeDark, reverse: false, isPhone: false
               },
               {
                 num: '02', icon: <Monitor size={16} className="text-[#D59A04]" />,
                 title: 'Exchange Dashboard',
-                desc: 'The heart of the platform — real-time market data, trading pairs, order book, and price charts unified in a clean, scannable layout.',
+                desc: 'The heart of the platform, real-time market data, trading pairs, order book, and price charts unified in a clean, scannable layout.',
                 tags: ['Real-time Data', 'Order Book', 'Price Charts'],
                 src: cloudScreenExchange, reverse: true, isPhone: false
               },
@@ -549,7 +549,7 @@ export function AurumCaseStudy() {
               {
                 num: '05', icon: <QrCode size={16} className="text-[#D59A04]" />,
                 title: 'QR Transfer',
-                desc: 'Instant peer-to-peer transfers via QR code scanning — making crypto transfers as simple as sharing a photo.',
+                desc: 'Instant peer-to-peer transfers via QR code scanning, making crypto transfers as simple as sharing a photo.',
                 tags: ['P2P Transfer', 'QR Scanner', 'Instant Send'],
                 src: cloudScreenQR, reverse: false, isPhone: true
               },
@@ -605,7 +605,7 @@ export function AurumCaseStudy() {
               Live <span className="text-[#D59A04]">components</span>
             </h2>
             <p className={`${bt} max-w-xl mb-12 leading-relaxed text-sm`}>
-              Interactive previews of key dashboard components — demonstrating real-time data visualization and trading widget design.
+              Interactive previews of key dashboard components, demonstrating real-time data visualization and trading widget design.
             </p>
           </FadeIn>
 
@@ -633,7 +633,7 @@ export function AurumCaseStudy() {
                   <span className="text-[#D59A04]">AURUM</span> Design System
                 </h2>
                 <p className={`${bt} max-w-xl leading-relaxed`}>
-                  A comprehensive design system built for scale — 8 semantic color tokens, 2 typeface families, a spatial rhythm, and 64+ reusable components powering all 196 screens.
+                  A comprehensive design system built for scale, 8 semantic color tokens, 2 typeface families, a spatial rhythm, and 64+ reusable components powering all 196 screens.
                 </p>
               </div>
               <div className="flex items-center gap-3 flex-shrink-0">
@@ -670,7 +670,7 @@ export function AurumCaseStudy() {
                   </div>
                   <div className="flex-1 flex items-center justify-center gap-2">
                     <Figma size={11} aria-hidden className={`${isDark ? 'text-white/50' : 'text-zinc-500'}`} />
-                    <span className={`text-[10px] tracking-wide ${isDark ? 'text-white/60' : 'text-zinc-500'}`}>AURUM — Design Components</span>
+                    <span className={`text-[10px] tracking-wide ${isDark ? 'text-white/60' : 'text-zinc-500'}`}>AURUM, Design Components</span>
                   </div>
                   <div className={`text-[10px] font-mono ${isDark ? 'text-white/55' : 'text-zinc-500'}`}>64+ components</div>
                 </div>

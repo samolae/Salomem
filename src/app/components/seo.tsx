@@ -27,7 +27,7 @@ export function SEO({
   jsonLd,
 }: SEOProps) {
   const { pathname } = useLocation();
-  const pageTitle = rawTitle ?? (title ? `${title}, ${SITE_NAME}` : SITE_NAME);
+  const pageTitle = rawTitle ?? (title ? `${title} | ${SITE_NAME}` : SITE_NAME);
   const fullUrl = `${BASE_URL}${pathname}`;
   const absoluteImage = image.startsWith('http') ? image : `${BASE_URL}${image}`;
 
@@ -103,7 +103,7 @@ export function SEO({
 export function HomeSEO() {
   return (
     <SEO
-      rawTitle="Salome Mosiava, Art Director & Senior Product Designer"
+      rawTitle="Salome Mosiava | Art Director & Senior Product Designer"
       description="Salome Mosiava is a Senior Product Designer and Art Director based in Tbilisi, Georgia. Specializing in UX/UI, social media art direction, and motion design. Top-Rated Plus on Upwork."
       keywords="Salome Mosiava, art director, senior product designer, UX/UI design, social media design, motion design, Tbilisi, Georgia, portfolio, Upwork"
     />

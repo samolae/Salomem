@@ -107,9 +107,9 @@ function CaseBody({ c }: { c: CaseStudy }) {
       <section aria-labelledby="screens" className="px-1.5 pt-24">
         <SectionLabel>{`Screens · ${c.screens.length}`}</SectionLabel>
         <h2 id="screens" className="sr-only">Screens</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-1.5">
+        <div className="columns-1 md:columns-2 gap-x-1.5">
           {c.screens.map((s, i) => (
-            <Reveal key={s.title}>
+            <Reveal key={s.title} className="break-inside-avoid">
               <button type="button" onClick={() => setOpen(i)} className="group block w-full text-left rounded-md outline-none focus-visible:shadow-[0_0_0_2px_#ff4306]" aria-label={`Open ${s.title}`}>
                 <Stage src={s.src} bg={c.stage} alt={`${c.title} — ${s.title}`} />
                 <Caption title={s.title} sub={s.desc} tag={String(i + 1).padStart(2, '0')} />

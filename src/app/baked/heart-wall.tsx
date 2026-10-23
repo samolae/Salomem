@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { motion, useInView, useReducedMotion } from 'motion/react';
 import { RotateCcw } from 'lucide-react';
+import { useMotionPause } from './shell';
 
 /*
  * Heart wall — frames pulled from the motion reels rise out of the dark and
@@ -39,6 +40,9 @@ const HR = HEART.length;
 
 const OFFSETS = ['12p', '32p', '52p', '72p', '90p'];
 
+/** The reel itself, scaled down for a small tile (one file per reel, shared by its tiles) */
+const tileVideo = (src: string) => src.replace('/video/upload/f_auto,q_auto/', '/video/upload/w_320,c_limit,q_auto,f_auto/');
+
 /** A still from a Cloudinary video at a percentage offset */
 const frameUrl = (src: string, offset: string, width = 360) => {
   const mark = '/video/upload/';
@@ -62,6 +66,7 @@ export const HeartWall = ({ reels, isDark, onOpen, replayLabel = 'Replay' }: Pro
   const stageRef = useRef<HTMLDivElement>(null);
   const inView = useInView(stageRef, { once: true, margin: '-80px' });
   const reduceMotion = useReducedMotion();
+  const { paused } = useMotionPause();
   const [width, setWidth] = useState(0);
   const [phase, setPhase] = useState<Phase>('dark');
   const [run, setRun] = useState(0);
@@ -79,7 +84,7 @@ export const HeartWall = ({ reels, isDark, onOpen, replayLabel = 'Replay' }: Pro
   const tiles = useMemo(() => HEART_CELLS.map((cell, i) => {
     const reelIndex = i % reels.length;
     const offset = OFFSETS[Math.floor(i / reels.length) % OFFSETS.length];
-    return { ...cell, i, reelIndex, img: frameUrl(reels[reelIndex].src, offset) };
+    return { ...cell, i, reelIndex, img: frameUrl(reels[reelIndex].src, offset), video: tileVideo(reels[reelIndex].src), start: parseInt(offset, 10) / 100 };
   }), [reels]);
 
   // Sequence: dark → heart → wall
@@ -208,6 +213,27 @@ export const HeartWall = ({ reels, isDark, onOpen, replayLabel = 'Replay' }: Pro
                 draggable={false}
                 className="absolute inset-0 h-full w-full object-cover"
               />
+              {/* Once the heart has burst, every tile plays its reel from the
+                  point its still came from; the still stays as the poster */}
+              {phase === 'wall' && !reduceMotion && (
+                <video
+                  src={t.video}
+                  poster={t.img}
+                  muted loop playsInline autoPlay={!paused}
+                  preload="auto"
+                  aria-hidden
+                  ref={(v) => {
+                    if (!v) return;
+                    if (!v.dataset.start) {
+                      v.dataset.start = '1';
+                      const seek = () => { if (v.duration) v.currentTime = v.duration * t.start; };
+                      if (v.readyState >= 1) seek(); else v.addEventListener('loadedmetadata', seek, { once: true });
+                    }
+                    if (paused) v.pause(); else v.play().catch(() => {});
+                  }}
+                  className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+                />
+              )}
               {/* Further frames sit a little deeper in the dark */}
               <span
                 aria-hidden

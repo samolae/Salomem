@@ -7,11 +7,11 @@
  */
 export const caseRoutes = {
   '/projects/aurum': () =>
-    import('./components/aurum-case-study').then((m) => ({ Component: m.AurumCaseStudy })),
+    import('./baked/case-page').then((m) => ({ Component: m.AurumCase })),
   '/projects/schenker': () =>
-    import('./components/schenker-case-study').then((m) => ({ Component: m.SchenkerCaseStudy })),
+    import('./baked/case-page').then((m) => ({ Component: m.SchenkerCase })),
   '/projects/unispace': () =>
-    import('./components/unispace-case-study').then((m) => ({ Component: m.UnispaceCaseStudy })),
+    import('./baked/case-page').then((m) => ({ Component: m.UnispaceCase })),
 } as const;
 
 /** Home, work galleries, services and contact all share one page module */

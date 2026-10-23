@@ -29,6 +29,8 @@ const NAV = [
 ];
 
 const ACTIVE = { background: '#ffe7de', color: '#b52f03' };
+/** Case studies live under UX/UI */
+const isActive = (bare: string, to: string) => bare === to || (to === '/work/ux-ui' && bare.startsWith('/projects/'));
 
 /** EN / ქა switch, to the same page in the other language */
 const GEORGIAN_LIVE = false; // the /ka pages are ready but not published yet
@@ -60,7 +62,7 @@ function TopNav() {
         <div className="hidden sm:flex items-center gap-1 pointer-events-auto">
           {NAV.map((n) => (
             <Link key={n.to} to={to(n.to)} aria-current={bare === n.to ? 'page' : undefined} className={pillCls(false)}
-              style={bare === n.to ? ACTIVE : undefined}>
+              style={isActive(bare, n.to) ? ACTIVE : undefined}>
               {tx(n.label, n.ka)}
             </Link>
           ))}

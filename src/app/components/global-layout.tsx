@@ -35,7 +35,7 @@ function MobileBottomBar() {
   const navigate = useNavigate();
   const { activeSection, mobileDrawerOpen } = useActiveSection();
 
-  const isHomePage = location.pathname === '/' || location.pathname.startsWith('/work/') || location.pathname === '/contact' || location.pathname === '/services';
+  const isHomePage = location.pathname === '/' || location.pathname.startsWith('/work/') || location.pathname.startsWith('/projects/') || location.pathname === '/contact' || location.pathname === '/services';
 
   const getActive = (item: typeof bottomNavItems[0]) => {
     if (item.id === 'contact' && location.pathname === '/contact') return true;
@@ -149,7 +149,7 @@ export function GlobalLayout() {
   }, []);
 
   // The redesigned pages bring their own light shell (src/app/baked)
-  const isBaked = BAKED_PATHS.has(location.pathname) || location.pathname.startsWith('/work/') || location.pathname === '/ka' || location.pathname.startsWith('/ka/');
+  const isBaked = BAKED_PATHS.has(location.pathname) || location.pathname.startsWith('/work/') || location.pathname.startsWith('/projects/') || location.pathname === '/ka' || location.pathname.startsWith('/ka/');
   if (isBaked) {
     return (
       <>

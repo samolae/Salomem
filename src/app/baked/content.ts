@@ -107,7 +107,7 @@ export const stats = [
 
 export const contactLinks = [
   { label: 'Email', value: EMAIL, href: `mailto:${EMAIL}`, copy: true },
-  { label: 'Phone', value: '598 67 14 16', href: 'tel:+995598671416', copy: true },
+  { label: 'Phone', value: '598 67 14 16', href: 'tel:+995598671416', copy: true, whatsapp: 'https://wa.me/995598671416' },
   { label: 'LinkedIn', value: '@samole', href: 'https://www.linkedin.com/in/samole/', external: true },
   { label: 'Behance', value: '@samole', href: 'https://www.behance.net/samole', external: true },
 ];

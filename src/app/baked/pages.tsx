@@ -272,10 +272,10 @@ export function ContactContent() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={tx('Message me on WhatsApp', 'მომწერე WhatsApp-ზე')}
-                    className="inline-flex items-center gap-1.5 h-8 px-2.5 pb-[2px] rounded-md text-[14px] leading-none whitespace-nowrap bg-[#25D366] text-white hover:bg-[#1ebe5b] transition-colors outline-none focus-visible:shadow-[0_0_0_2px_#ff4306]"
+                    title="WhatsApp"
+                    className="inline-flex items-center justify-center h-8 w-8 rounded-md bg-[#f0f0f0]/90 text-[#6f6f6f] hover:bg-[#e4e4e4] hover:text-[#1da851] transition-colors outline-none focus-visible:shadow-[0_0_0_2px_#ff4306]"
                   >
                     <WhatsAppIcon />
-                    WhatsApp
                   </a>
                 )}
                 {c.copy ? (

@@ -6,12 +6,14 @@
  * a case link, which makes the page open instantly.
  */
 export const caseRoutes = {
+  // The white case layout (./baked/case-page) is kept for later; the dark
+  // case pages stay live
   '/projects/aurum': () =>
-    import('./baked/case-page').then((m) => ({ Component: m.AurumCase })),
+    import('./components/aurum-case-study').then((m) => ({ Component: m.AurumCaseStudy })),
   '/projects/schenker': () =>
-    import('./baked/case-page').then((m) => ({ Component: m.SchenkerCase })),
+    import('./components/schenker-case-study').then((m) => ({ Component: m.SchenkerCaseStudy })),
   '/projects/unispace': () =>
-    import('./baked/case-page').then((m) => ({ Component: m.UnispaceCase })),
+    import('./components/unispace-case-study').then((m) => ({ Component: m.UnispaceCaseStudy })),
 } as const;
 
 /** Home, work galleries, services and contact all share one page module */

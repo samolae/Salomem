@@ -85,7 +85,7 @@ export function DasturiCase() {
           </div>
           <div className="relative flex items-center justify-center p-8 sm:p-14" style={{ background: 'radial-gradient(120% 90% at 50% 40%, #2a2620 0%, #141412 70%)' }}>
             <img src={`${P}/label.jpg`} alt="დასტურის საფერავის ეტიკეტი ოქროს ქაღალდზე ამოჭრილი წითელი ჯიხვით" width="1200" height="2160" loading="eager"
-              className="block w-full max-w-[360px] h-auto rounded-sm shadow-[0_40px_90px_rgba(0,0,0,0.55)]" />
+              className="block w-full max-w-[440px] h-auto rounded-sm shadow-[0_40px_90px_rgba(0,0,0,0.55)]" />
           </div>
         </div>
       </section>

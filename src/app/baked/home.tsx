@@ -90,11 +90,12 @@ export function HomeContent() {
 
   const dasturi: ReactNode = (
     <CaseLink key="dasturi" to="/projects/dasturi" cardId="home-dasturi" className="group block">
-      <div className="overflow-hidden rounded-md flex items-center justify-center p-[10%]" style={{ background: 'radial-gradient(120% 90% at 50% 40%, #2a2620 0%, #141412 70%)' }}>
-        <img src="/cases/dasturi/label.jpg" alt="Dasturi Saperavi label" width="1200" height="2160" loading="lazy" decoding="async"
-          className="block w-[52%] h-auto rounded-sm shadow-[0_30px_70px_rgba(0,0,0,0.55)] transition-transform duration-700 ease-out group-hover:scale-[1.02]" />
+      <div className="overflow-hidden rounded-md bg-[#191A17]">
+        <img src="/cases/dasturi/lineup-1000.jpg" srcSet="/cases/dasturi/lineup-1000.jpg 1000w, /cases/dasturi/lineup.jpg 2000w" sizes="(min-width: 768px) 50vw, 96vw"
+          alt="Dasturi wine bottles, five varietals" width="2000" height="1324" loading="lazy" decoding="async"
+          className="block w-full h-auto transition-transform duration-700 ease-out group-hover:scale-[1.02]" />
       </div>
-      <Caption title="Dasturi" sub={tx('Wine brand identity · logo, colour, label', 'ღვინის ბრენდის იდენტობა · ლოგო, ფერი, ეტიკეტი')} tag={tx('Case study', 'ქეისი')} />
+      <Caption title="Dasturi" sub={tx('Wine brand identity · logo, labels, packaging', 'ღვინის ბრენდის იდენტობა · ლოგო, ეტიკეტები, შეფუთვა')} tag={tx('Case study', 'ქეისი')} />
     </CaseLink>
   );
 

@@ -37,7 +37,9 @@ const manifest = JSON.parse(
   await fs.readFile(path.join(dist, '.vite', 'manifest.json'), 'utf8')
 );
 const ROUTE_SOURCE = (url) =>
-  url.startsWith('/projects/')
+  url === '/projects/dasturi'
+    ? 'src/app/baked/dasturi-case.tsx'
+    : url.startsWith('/projects/')
     ? `src/app/components/${url.split('/')[2]}-case-study.tsx`
     : 'src/app/baked/page.tsx';
 

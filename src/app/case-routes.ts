@@ -14,6 +14,8 @@ export const caseRoutes = {
     import('./components/schenker-case-study').then((m) => ({ Component: m.SchenkerCaseStudy })),
   '/projects/unispace': () =>
     import('./components/unispace-case-study').then((m) => ({ Component: m.UnispaceCaseStudy })),
+  '/projects/dasturi': () =>
+    import('./baked/dasturi-case').then((m) => ({ Component: m.DasturiCase })),
 } as const;
 
 /** Home, work galleries, services and contact all share one page module */

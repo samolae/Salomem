@@ -88,6 +88,16 @@ export function HomeContent() {
     </CaseLink>,
   ];
 
+  const dasturi: ReactNode = (
+    <CaseLink key="dasturi" to="/projects/dasturi" cardId="home-dasturi" className="group block">
+      <div className="overflow-hidden rounded-md flex items-center justify-center p-[10%]" style={{ background: 'radial-gradient(120% 90% at 50% 40%, #2a2620 0%, #141412 70%)' }}>
+        <img src="/cases/dasturi/label.jpg" alt="Dasturi Saperavi label" width="1200" height="2160" loading="lazy" decoding="async"
+          className="block w-[52%] h-auto rounded-sm shadow-[0_30px_70px_rgba(0,0,0,0.55)] transition-transform duration-700 ease-out group-hover:scale-[1.02]" />
+      </div>
+      <Caption title="Dasturi" sub={tx('Wine brand identity · logo, colour, label', 'ღვინის ბრენდის იდენტობა · ლოგო, ფერი, ეტიკეტი')} tag={tx('Case study', 'ქეისი')} />
+    </CaseLink>
+  );
+
   const right: ReactNode[] = [
     <Link key="ads" to={to('/work/social-media-ads')} className="group block">
       <div className="relative overflow-hidden rounded-md bg-[#f2f2f2]">
@@ -173,7 +183,7 @@ export function HomeContent() {
       <section aria-labelledby="work-title" className="px-1.5 pt-24 sm:pt-32">
         <h2 id="work-title" className="sr-only">{tx('Selected work', 'რჩეული ნამუშევრები')}</h2>
         <div className="columns-1 md:columns-2 xl:columns-3 gap-x-1.5">
-          {left.flatMap((n, i) => [n, right[i]]).filter(Boolean).map((n, i) => (
+          {[dasturi, ...left.flatMap((n, i) => [n, right[i]])].filter(Boolean).map((n, i) => (
             <div key={i} className="break-inside-avoid"><Tile>{n}</Tile></div>
           ))}
         </div>

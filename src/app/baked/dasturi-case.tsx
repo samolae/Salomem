@@ -68,20 +68,41 @@ function Photo({ k, onOpen, sizes = FULL, cover }: { k: string; onOpen: (i: numb
   );
 }
 
+/* Elegant type: small light headings, short justified columns */
+const H2 = 'text-[24px] sm:text-[30px] leading-[1.2]';
+const COL = 'text-[13.5px] leading-[1.85] text-justify [hyphens:manual] [text-align-last:left] tracking-[0.01em]';
+
+/* Browsers have no Georgian hyphenation, so justified lines open wide gaps.
+   Offer soft breaks at the common syllable boundary V-CV, keeping at least
+   two letters before and three after the break. */
+const VOW = 'აეიოუ';
+const isKa = (c: string) => c >= '\u10D0' && c <= '\u10FA';
+function hy(text: string) {
+  return text.replace(/[\u10D0-\u10FA]{6,}/g, (w) => {
+    let out = w[0];
+    for (let i = 1; i < w.length; i++) {
+      const breakHere = i >= 2 && w.length - i >= 3 && VOW.includes(w[i - 1]) && isKa(w[i]) && !VOW.includes(w[i]) && VOW.includes(w[i + 1] ?? '');
+      out += (breakHere ? '\u00AD' : '') + w[i];
+    }
+    return out;
+  });
+}
+function Col({ children, className = '', dark }: { children: string; className?: string; dark?: boolean }) {
+  return <p lang="ka" className={`${COL} max-w-[360px] ${dark ? 'text-[#191A17]/65' : 'text-white/60'} ${className}`}>{hy(children)}</p>;
+}
+
 /* ── The label family: rise, foil, switch the edition ─────────────────── */
 
 function LabelSystem() {
   const [edition, setEdition] = useState<'gold' | 'bordeaux'>('gold');
   return (
     <section aria-labelledby="system" className="rounded-md overflow-hidden" style={{ background: STONE, color: BLACK }}>
-      <div className="px-7 sm:px-12 lg:px-[9%] pt-20 sm:pt-28 grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-8 items-end">
-        <h2 id="system" className="text-[34px] sm:text-[52px] leading-[1.1]" style={{ fontFamily: SERIF, fontWeight: 300 }}>
+      <div className="px-7 sm:px-12 lg:px-[9%] pt-16 sm:pt-20 grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-8 items-end">
+        <h2 id="system" className={H2} style={{ fontFamily: SERIF, fontWeight: 300 }}>
           ხუთი ჯიში, ერთი ოჯახი
         </h2>
         <div>
-          <p className="max-w-[460px] text-[16px] leading-[1.7] text-[#191A17]/70">
-            პანელი, შავი არშია და წითელი ჯვარი ყველა ბოთლზე ერთია. იცვლება მხოლოდ ჯიშის სახელი და წელი. ოქროსფერ გამოცემაში ჯიხვი გამჭვირვალეა და ბოთლის ღვინის ფერს იღებს.
-          </p>
+          <Col dark>პანელი, არშია და ჯვარი ყველა ბოთლზე ერთია. იცვლება მხოლოდ ჯიშის სახელი და წელი.</Col>
           <div className="mt-6 inline-flex rounded-full p-1 bg-[#191A17]/10" role="radiogroup" aria-label="გამოცემა">
             {([['gold', 'ოქროსფერი', GOLD], ['bordeaux', 'ბორდოსფერი', BORDEAUX]] as const).map(([id, label, c]) => (
               <button
@@ -151,7 +172,7 @@ export function DasturiCase() {
             />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-4 items-end p-5 sm:p-8">
-            <h1 className="text-[28px] sm:text-[40px] leading-[1.1]" style={{ fontFamily: SERIF, fontWeight: 300 }}>
+            <h1 className="text-[22px] sm:text-[28px] leading-[1.2]" style={{ fontFamily: SERIF, fontWeight: 300 }}>
               დასტური, ქართული ღვინის ბრენდი
             </h1>
             <p className="text-[14px] text-white/55 sm:text-right">ლოგო, ეტიკეტები და შეფუთვა<br />2026</p>
@@ -160,44 +181,24 @@ export function DasturiCase() {
 
         {/* ── Opening ──────────────────────────────────────────────── */}
         <section aria-label="პროექტის შესახებ" className="rounded-md overflow-hidden" style={{ background: BLACK, color: IVORY }}>
-          <div className="px-6 sm:px-12 lg:px-[9%] py-20 sm:py-32 grid grid-cols-1 lg:grid-cols-[1fr_1.6fr] gap-12 lg:gap-20">
-            <dl className="grid grid-cols-2 lg:grid-cols-1 gap-x-6 gap-y-6 text-[14px] content-start">
-              {[
-                ['კლიენტი', 'დასტური'],
-                ['წელი', '2026'],
-                ['სერვისი', 'ლოგო, ეტიკეტები, შეფუთვა'],
-                ['ჯიშები', 'საფერავი, მანავის მწვანე, ქისი, საწური, ცოლიკაური'],
-              ].map(([k, val]) => (
-                <div key={k}>
-                  <dt style={{ color: GOLD }}>{k}</dt>
-                  <dd className="mt-1 text-white/75 leading-[1.5]">{val}</dd>
-                </div>
+          <div className="px-6 sm:px-12 lg:px-[9%] py-16 sm:py-24 grid grid-cols-2 lg:grid-cols-[1fr_1fr_340px_340px] gap-x-10 gap-y-8">
+            <dl className="contents text-[13px]">
+              {[['კლიენტი', 'დასტური'], ['სერვისი', 'ლოგო, ეტიკეტები, შეფუთვა']].map(([k, val]) => (
+                <div key={k}><dt style={{ color: GOLD }}>{k}</dt><dd className="mt-1 text-white/70">{val}</dd></div>
               ))}
             </dl>
-            <div className="max-w-[640px]">
-              <p className="text-[26px] sm:text-[36px] leading-[1.35]" style={{ fontFamily: SERIF, fontWeight: 300 }}>
-                ნიშნად ავირჩიეთ კავკასიური ჯიხვი: მშვიდი, ამაყი დგომით, აწეული ფეხით და მომრგვალებული რქებით.
-              </p>
-              <p className="mt-8 text-[16px] leading-[1.7] text-white/65 max-w-[540px]">
-                დასტური ქართული ღვინის ახალი ბრენდია. სისტემა აგებულია ოქროსფერ პანელზე, შავ არშიაზე და წითელ ჯვარზე, ასე რომ ხუთივე ჯიში ერთ ოჯახად იკითხება, თითოეული კი თავისი ღვინის ფერს ინარჩუნებს.
-              </p>
-            </div>
+            <Col className="col-span-2 lg:col-span-1">დასტური ქართული ღვინის ახალი ბრენდია. ნიშნად ავირჩიეთ კავკასიური ჯიხვი: მშვიდი, ამაყი დგომით და მომრგვალებული რქებით.</Col>
+            <Col className="col-span-2 lg:col-span-1">ოქროსფერი პანელი, შავი არშია და წითელი ჯვარი ხუთ ჯიშს ერთ ოჯახად აერთიანებს, თითოეული კი თავისი ღვინის ფერს ინარჩუნებს.</Col>
           </div>
           <Photo k="lineup" onOpen={setOpen} />
         </section>
 
         {/* ── Construction ─────────────────────────────────────────── */}
         <section aria-labelledby="build" className="rounded-md overflow-hidden" style={{ background: BLACK, color: IVORY }}>
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] items-center">
-            <div className="px-7 sm:px-12 lg:pl-[15%] pt-20 lg:py-24">
-              <h2 id="build" className="text-[34px] sm:text-[48px] leading-[1.12]" style={{ fontFamily: SERIF, fontWeight: 300 }}>
-                ჯიხვი, აგებული წრეებზე
-              </h2>
-              <p className="mt-6 max-w-[400px] text-[16px] leading-[1.7] text-white/65">
-                ჯიხვის მოხაზულობა წრის რკალებზეა აწყობილი: სამი რკალი რქებში, R 160, R 82 და R 64, ერთი მკერდზე და ერთი ფეხებს შორის. თეთრად მონიშნულია ზუსტად ის მონაკვეთი, რომელსაც წრე ემთხვევა.</p>
-              <p className="mt-4 max-w-[400px] text-[16px] leading-[1.7] text-white/65">
-                თავისუფალი სივრცე ყველა მხარეს 1X-ია, DASTURI-ს ასოს სიმაღლე.
-              </p>
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_2.4fr] items-end">
+            <div className="px-7 sm:px-12 lg:pl-[18%] pt-16 lg:pb-24">
+              <h2 id="build" className={H2} style={{ fontFamily: SERIF, fontWeight: 300 }}>კონსტრუქცია</h2>
+              <Col className="mt-5">ჯიხვი წრის რკალებზეა აწყობილი: რქებში R 160, R 82 და R 64. თეთრად მონიშნულია მონაკვეთი, რომელსაც წრე ემთხვევა. თავისუფალი სივრცე 1X-ია.</Col>
             </div>
             <div className="px-4 sm:px-10 py-12 lg:py-16"><Construction /></div>
           </div>
@@ -205,13 +206,9 @@ export function DasturiCase() {
 
         {/* ── Wordmark anatomy ─────────────────────────────────────── */}
         <section aria-labelledby="anatomy" className="rounded-md overflow-hidden" style={{ background: BORDEAUX, color: IVORY }}>
-          <div className="px-7 sm:px-12 lg:px-[9%] pt-20 sm:pt-28 grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-8 items-end">
-            <h2 id="anatomy" className="text-[34px] sm:text-[52px] leading-[1.1]" style={{ fontFamily: SERIF, fontWeight: 300 }}>
-              სიტყვანიშანი, წერტილ-წერტილ
-            </h2>
-            <p className="max-w-[440px] text-[16px] leading-[1.7] text-white/75">
-              ასოები ერთ ფუძის ხაზზე დგას, ფართო ინტერვალით. რბილი მრუდები და წვეტიანი ბოლოები ჯიხვის რქების რიტმს იმეორებს.
-            </p>
+          <div className="px-7 sm:px-12 lg:px-[9%] pt-16 sm:pt-20 grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-8 items-end">
+            <h2 id="anatomy" className={H2} style={{ fontFamily: SERIF, fontWeight: 300 }}>სიტყვანიშანი</h2>
+            <Col className="!text-white/70">ასოები ერთ ფუძის ხაზზე დგას. რბილი მრუდები ჯიხვის რქების რიტმს იმეორებს.</Col>
           </div>
           <div className="px-4 sm:px-10 lg:px-[6%] py-14 sm:py-20"><Anatomy /></div>
         </section>
@@ -231,19 +228,15 @@ export function DasturiCase() {
 
         {/* ── Craft: capsule and lettering ─────────────────────────── */}
         <section aria-labelledby="craft" className="rounded-md overflow-hidden" style={{ background: BLACK, color: IVORY }}>
-          <div className="grid grid-cols-1 lg:grid-cols-[1.25fr_1fr]">
+          <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] items-end">
             <div className="lg:aspect-auto"><Photo k="capsule" onOpen={setOpen} sizes="(min-width: 1024px) 56vw, 100vw" /></div>
-            <div className="px-7 py-14 sm:px-12 flex flex-col justify-center">
-              <h2 id="craft" className="text-[30px] sm:text-[40px] leading-[1.15]" style={{ fontFamily: SERIF, fontWeight: 300 }}>
-                ოქროს ფოლგა ბორდოს კაფსულაზე
-              </h2>
-              <p className="mt-5 max-w-[420px] text-[16px] leading-[1.7] text-white/65">
-                დასტური და DASTURI ვერტიკალურად, ისევე როგორც ეტიკეტის არშიაზე. ბოთლი თაროზე ორივე ანბანით იკითხება, რომელი მხრიდანაც არ უნდა შეხედო.
-              </p>
+            <div className="px-7 py-14 sm:px-12 lg:pb-16">
+              <h2 id="craft" className={H2} style={{ fontFamily: SERIF, fontWeight: 300 }}>კაფსული</h2>
+              <Col className="mt-5">დასტური და DASTURI ვერტიკალურად, ოქროსფერი ფოლგით ბორდოსფერ კაფსულაზე, ისევე როგორც ეტიკეტის არშიაზე.</Col>
             </div>
           </div>
           <Photo k="typefaces" onOpen={setOpen} />
-          <div className="px-7 sm:px-12 lg:px-[9%] pb-16 pt-2 grid grid-cols-2 lg:grid-cols-4 gap-6 text-[14px] leading-[1.5]">
+          <div className="px-7 sm:px-12 lg:px-[9%] pb-14 pt-2 grid grid-cols-2 lg:grid-cols-4 gap-6 text-[13px] leading-[1.5]">
             {[
               ['DM Themestia', 'სათაურები და ღვინის ტიპი'],
               ['GA Lazi', 'ჯიშის სახელი'],
@@ -260,13 +253,9 @@ export function DasturiCase() {
 
         {/* ── Bordeaux edition ─────────────────────────────────────── */}
         <section aria-labelledby="bordeaux" className="rounded-md overflow-hidden" style={{ background: BORDEAUX, color: IVORY }}>
-          <div className="px-7 sm:px-12 lg:px-[9%] py-20 sm:py-28 grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-8 items-end">
-            <h2 id="bordeaux" className="text-[34px] sm:text-[52px] leading-[1.1]" style={{ fontFamily: SERIF, fontWeight: 300 }}>
-              იგივე სისტემა, მეორე ფერი
-            </h2>
-            <p className="max-w-[440px] text-[16px] leading-[1.7] text-white/75">
-              ბორდოსფერ გამოცემაში ჯიხვი გაუმჭვირვალე ოქროა. ბადე, არშია და ქვედა ზოლი უცვლელია, ამიტომ ორივე ხაზი ერთ თაროზე ერთ ოჯახად დგას.
-            </p>
+          <div className="px-7 sm:px-12 lg:px-[9%] py-16 sm:py-20 grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-8 items-end">
+            <h2 id="bordeaux" className={H2} style={{ fontFamily: SERIF, fontWeight: 300 }}>ბორდოსფერი გამოცემა</h2>
+            <Col className="!text-white/70">იგივე ბადე და არშია, მეორე ფერი. ჯიხვი აქ გაუმჭვირვალე ოქროა.</Col>
           </div>
           <Photo k="terrace-bordeaux" onOpen={setOpen} />
           <div className="grid grid-cols-1 md:grid-cols-2">
@@ -278,10 +267,9 @@ export function DasturiCase() {
         {/* ── Close ────────────────────────────────────────────────── */}
         <section aria-label="დასასრული" className="rounded-md overflow-hidden" style={{ background: BLACK, color: IVORY }}>
           <Photo k="duo-satsuri" onOpen={setOpen} />
-          <div className="px-6 py-20 sm:py-28 flex flex-col items-center text-center">
-            <p className="max-w-[560px] text-[24px] sm:text-[32px] leading-[1.35]" style={{ fontFamily: SERIF, fontWeight: 300 }}>
-              ახალი ჯიში იგივე წესით დაემატება: პანელი, ჯიხვი და სახელი.
-            </p>
+          <div className="px-6 py-16 sm:py-20 flex flex-col items-center text-center">
+            <p className="text-[20px] sm:text-[24px] leading-[1.4]" style={{ fontFamily: SERIF, fontWeight: 300 }}>დასტური</p>
+            <p className="mt-2 text-[13px] text-white/50">ლოგო, ეტიკეტები, შეფუთვა, 2026</p>
             <div className="mt-10"><CtaLink /></div>
           </div>
         </section>

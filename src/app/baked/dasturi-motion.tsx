@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { IBEX, WORD_KA, WORD_LAT, VB, KA_NODES, KA_HANDLES, IBEX_NODES } from './dasturi-vectors';
+import { IBEX, WORD_KA, WORD_LAT, VB, KA_NODES, KA_HANDLES } from './dasturi-vectors';
 
 /*
  * Motion pieces for the Dasturi case, in the spirit of motion brand
@@ -66,87 +66,88 @@ export function MotionStyles() {
 
 /* ── 1. Construction: how the ibex is built ─────────────────────────── */
 
-// Geometry measured on the vectorised mark (803 x 1058 units)
-const HORN_OUT = { cx: 436.2, cy: 149.5, r: 129 };
-const HORN_IN = { cx: 467, cy: 136.2, r: 65.5 };
-const GROUND = 684; // hooves
+// Everything here is measured on the master artwork (803 x 1058 units):
+// each circle is a least-squares fit to an arc that really is on the
+// contour (max deviation under 1 unit), and the bright stroke marks the
+// exact stretch of outline it matches.
+const CIRCLES = [
+  { cx: 441.4, cy: 184.3, r: 159.9, arc: 'M362.9 45.0A159.9 159.9 0 0 1 546.3 63.6', label: 'R 160', lx: 300, ly: 40 },
+  { cx: 474.9, cy: 179.8, r: 82.0, arc: 'M532.3 121.1A82.0 82.0 0 0 0 407.6 132.9', label: 'R 82', lx: 450, ly: 240 },
+  { cx: 394.9, cy: 136.5, r: 64.2, arc: 'M348.0 92.6A64.2 64.2 0 0 0 376.4 198.0', label: 'R 64', lx: 300, ly: 215 },
+  { cx: 497.6, cy: 365.6, r: 111.4, arc: 'M584.7 296.2A111.4 111.4 0 0 1 606.0 391.1', label: 'R 111', lx: 665, ly: 425 },
+  { cx: 355.4, cy: 627.7, r: 106.6, arc: 'M302.2 535.4A106.6 106.6 0 0 0 249.6 640.5', label: 'R 107', lx: 205, ly: 560 },
+  { cx: 412.1, cy: 858.4, r: 54.2, arc: 'M409.7 912.5A54.2 54.2 0 0 1 360.9 840.8', label: '', lx: 0, ly: 0 },
+  { cx: 106.6, cy: 822.9, r: 43.8, arc: 'M146.4 804.6A43.8 43.8 0 1 1 68.3 801.8', label: '', lx: 0, ly: 0 },
+];
+// Real extremes of the drawing
+const IBEX_BOX = { x0: 226, y0: 26, x1: 662, y1: 684 };
 const KA_TOP = 782, KA_BASE = 909; // Georgian wordmark
 const LAT_TOP = 966, LAT_BASE = 1034; // DASTURI
-const X = LAT_BASE - LAT_TOP; // 1X = cap height of DASTURI
-const BOX = { x0: 25, y0: 26, x1: 778, y1: 1034 }; // the mark's bounds
+const X = LAT_BASE - LAT_TOP; // 1X = cap height of DASTURI (68)
+const BOX = { x0: 25, y0: 26, x1: 778, y1: 1034 }; // the whole lock-up
 
 export function Construction() {
   const [ref, on] = useSeen<HTMLDivElement>(0.3);
-  const pad = X * 1.6;
-  const vb = `${BOX.x0 - X - pad} ${BOX.y0 - X - pad} ${BOX.x1 - BOX.x0 + 2 * (X + pad)} ${BOX.y1 - BOX.y0 + 2 * (X + pad)}`;
-  const line = { vectorEffect: 'non-scaling-stroke' as const, fill: 'none' };
-  const corners = [
-    [BOX.x0 - X, BOX.y0 - X], [BOX.x1, BOX.y0 - X], [BOX.x0 - X, BOX.y1], [BOX.x1, BOX.y1],
-  ];
-  const hLines = [
-    { y: GROUND, t: 'ჩლიქები' }, { y: KA_TOP, t: '' }, { y: KA_BASE, t: 'ფუძის ხაზი' }, { y: LAT_TOP, t: '' }, { y: LAT_BASE, t: '' },
-  ];
+  const m = X * 1.5; // margin around the clear-space frame
+  const L = BOX.x0 - X - m, T = BOX.y0 - X - m, W = BOX.x1 - BOX.x0 + 2 * (X + m), Hh = BOX.y1 - BOX.y0 + 2 * (X + m);
+  const nsk = { vectorEffect: 'non-scaling-stroke' as const };
+  const corners = [[BOX.x0 - X, BOX.y0 - X], [BOX.x1, BOX.y0 - X], [BOX.x0 - X, BOX.y1], [BOX.x1, BOX.y1]];
+  // module grid in 1X steps, starting on the lock-up's own edge so every cell lines up with it
+  const cols: number[] = []; for (let x = BOX.x0 - 2 * X; x <= BOX.x1 + 2 * X; x += X / 2) cols.push(x);
+  const rows: number[] = []; for (let y = BOX.y0 - 2 * X; y <= BOX.y1 + 2 * X; y += X / 2) rows.push(y);
+  const hGuides = [IBEX_BOX.y0, IBEX_BOX.y1, KA_TOP, KA_BASE, LAT_TOP, LAT_BASE];
+  const vGuides = [IBEX_BOX.x0, IBEX_BOX.x1, BOX.x0, BOX.x1];
+  const del = (s: number) => ({ ['--delay' as string]: `${s}s` });
 
   return (
     <div ref={ref} className={`relative ${on ? 'ds-on' : ''}`}>
-      <svg viewBox={vb} className="block w-full h-auto" role="img" aria-label="დასტურის ნიშნის კონსტრუქცია: რქების წრეები, ხაზები და თავისუფალი სივრცე">
-        {/* fine grid */}
-        <g className="ds-fade" style={{ ['--delay' as string]: '0s' }} stroke={IVORY} strokeOpacity={0.06}>
-          {Array.from({ length: 40 }, (_, i) => BOX.x0 - X - pad + i * (X / 1)).map((x) => <line key={`v${x}`} x1={x} x2={x} y1={-400} y2={1500} {...line} />)}
-          {Array.from({ length: 40 }, (_, i) => BOX.y0 - X - pad + i * X).map((y) => <line key={`h${y}`} y1={y} y2={y} x1={-400} x2={1300} {...line} />)}
+      <svg viewBox={`${L} ${T} ${W} ${Hh}`} className="block w-full h-auto" role="img" aria-label="დასტურის ნიშნის კონსტრუქცია: რკალები, ხაზები და თავისუფალი სივრცე">
+        {/* half-X module grid */}
+        <g className="ds-fade" style={del(0)} stroke={IVORY} strokeOpacity={0.07}>
+          {cols.map((x) => <line key={`c${x}`} x1={x} x2={x} y1={T} y2={T + Hh} style={nsk} />)}
+          {rows.map((y) => <line key={`r${y}`} y1={y} y2={y} x1={L} x2={L + W} style={nsk} />)}
         </g>
 
-        {/* clear space: 1X on every side */}
-        <g className="ds-fade" style={{ ['--delay' as string]: '1.6s' }}>
-          {corners.map(([x, y]) => <rect key={`${x}${y}`} x={x} y={y} width={X} height={X} fill={BORDEAUX} fillOpacity={0.55} />)}
-          <rect x={BOX.x0} y={BOX.y0} width={BOX.x1 - BOX.x0} height={BOX.y1 - BOX.y0} stroke={GOLD} strokeOpacity={0.5} strokeDasharray="6 6" {...line} />
-          <rect x={BOX.x0 - X} y={BOX.y0 - X} width={BOX.x1 - BOX.x0 + 2 * X} height={BOX.y1 - BOX.y0 + 2 * X} stroke={IVORY} strokeOpacity={0.25} {...line} />
+        {/* clear space */}
+        <g className="ds-fade" style={del(1.4)}>
+          {corners.map(([x, y]) => <rect key={`${x}${y}`} x={x} y={y} width={X} height={X} fill={BORDEAUX} fillOpacity={0.6} />)}
+          <rect x={BOX.x0 - X} y={BOX.y0 - X} width={BOX.x1 - BOX.x0 + 2 * X} height={BOX.y1 - BOX.y0 + 2 * X} fill="none" stroke={IVORY} strokeOpacity={0.3} style={nsk} />
+          <rect x={BOX.x0} y={BOX.y0} width={BOX.x1 - BOX.x0} height={BOX.y1 - BOX.y0} fill="none" stroke={GOLD} strokeOpacity={0.55} strokeDasharray="5 5" style={nsk} />
           {corners.map(([x, y]) => (
-            <text key={`t${x}${y}`} x={x + X / 2} y={y + X / 2 + 9} textAnchor="middle" fontSize={26} fill={IVORY} fontFamily="Avenir Next Georgian, sans-serif">1X</text>
+            <text key={`t${x}${y}`} x={x + X / 2} y={y + X / 2 + 8} textAnchor="middle" fontSize={22} fill={IVORY} fontFamily="Avenir Next Georgian, sans-serif">1X</text>
           ))}
         </g>
 
-        {/* the mark, faint, so the lines read on top */}
-        <g className="ds-fade" style={{ ['--delay' as string]: '2.2s' }} fill={GOLD} fillOpacity={0.16} fillRule="evenodd">
-          <path d={IBEX} /><path d={WORD_KA} /><path d={WORD_LAT} />
-        </g>
-        {/* the outline drawing itself */}
-        <g stroke={GOLD} strokeWidth={1.4} fill="none" fillRule="evenodd" style={{ vectorEffect: 'non-scaling-stroke' }}>
-          <path d={IBEX} pathLength={1} className="ds-draw" style={{ ['--d' as string]: '3.2s', ['--delay' as string]: '.2s', vectorEffect: 'non-scaling-stroke' }} />
-          <path d={WORD_KA} pathLength={1} className="ds-draw" style={{ ['--d' as string]: '2.6s', ['--delay' as string]: '1s', vectorEffect: 'non-scaling-stroke' }} />
-          <path d={WORD_LAT} pathLength={1} className="ds-draw" style={{ ['--d' as string]: '2s', ['--delay' as string]: '1.4s', vectorEffect: 'non-scaling-stroke' }} />
-        </g>
-
-        {/* horns: two almost concentric circles */}
-        <g stroke={IVORY} strokeOpacity={0.8} fill="none">
-          <circle cx={HORN_OUT.cx} cy={HORN_OUT.cy} r={HORN_OUT.r} pathLength={1} className="ds-draw" transform={`rotate(-90 ${HORN_OUT.cx} ${HORN_OUT.cy})`} style={{ ['--d' as string]: '1.6s', ['--delay' as string]: '2s', vectorEffect: 'non-scaling-stroke' }} />
-          <circle cx={HORN_IN.cx} cy={HORN_IN.cy} r={HORN_IN.r} pathLength={1} className="ds-draw" transform={`rotate(-90 ${HORN_IN.cx} ${HORN_IN.cy})`} style={{ ['--d' as string]: '1.3s', ['--delay' as string]: '2.4s', vectorEffect: 'non-scaling-stroke' }} />
-          <g className="ds-fade" style={{ ['--delay' as string]: '3.2s' }}>
-            <line x1={HORN_OUT.cx - 10} x2={HORN_OUT.cx + 10} y1={HORN_OUT.cy} y2={HORN_OUT.cy} {...line} />
-            <line y1={HORN_OUT.cy - 10} y2={HORN_OUT.cy + 10} x1={HORN_OUT.cx} x2={HORN_OUT.cx} {...line} />
-            <line x1={HORN_OUT.cx} y1={HORN_OUT.cy} x2={HORN_OUT.cx - HORN_OUT.r * 0.707} y2={HORN_OUT.cy - HORN_OUT.r * 0.707} strokeDasharray="4 4" {...line} />
-          </g>
-        </g>
-
-        {/* horizontal guides */}
-        {hLines.map((h, i) => (
-          <line key={h.y} x1={BOX.x0 - X - pad} x2={BOX.x1 + X + pad} y1={h.y} y2={h.y} stroke="#6fa9ff" strokeOpacity={0.55} pathLength={1} className="ds-draw" style={{ ['--d' as string]: '1.4s', ['--delay' as string]: `${0.6 + i * 0.12}s`, vectorEffect: 'non-scaling-stroke' }} />
+        {/* guides on the drawing's real extremes */}
+        {hGuides.map((y, i) => (
+          <line key={`h${y}`} x1={L} x2={L + W} y1={y} y2={y} stroke="#7fb2ff" strokeOpacity={0.6} pathLength={1} className="ds-draw" style={{ ['--d' as string]: '1.2s', ...del(0.4 + i * 0.1), ...nsk }} />
+        ))}
+        {vGuides.map((x, i) => (
+          <line key={`v${x}`} y1={T} y2={T + Hh} x1={x} x2={x} stroke="#7fb2ff" strokeOpacity={0.6} pathLength={1} className="ds-draw" style={{ ['--d' as string]: '1.2s', ...del(0.6 + i * 0.1), ...nsk }} />
         ))}
 
-        {/* nodes along the ibex */}
-        <g fill={GOLD}>
-          {IBEX_NODES.filter((_, i) => i % 3 === 0).map(([x, y], i) => (
-            <rect key={i} x={x - 4} y={y - 4} width={8} height={8} className="ds-pop" style={{ ['--delay' as string]: `${2.6 + (y / VB.h) * 1.2}s` }} />
-          ))}
+        {/* the mark: faint fill, then its outline drawing itself */}
+        <g className="ds-fade" style={del(2)} fill={GOLD} fillOpacity={0.14} fillRule="evenodd"><path d={IBEX} /><path d={WORD_KA} /><path d={WORD_LAT} /></g>
+        <g stroke={GOLD} strokeWidth={1.3} fill="none" fillRule="evenodd">
+          <path d={IBEX} pathLength={1} className="ds-draw" style={{ ['--d' as string]: '3s', ...del(0.2), ...nsk }} />
+          <path d={WORD_KA} pathLength={1} className="ds-draw" style={{ ['--d' as string]: '2.4s', ...del(0.9), ...nsk }} />
+          <path d={WORD_LAT} pathLength={1} className="ds-draw" style={{ ['--d' as string]: '2s', ...del(1.2), ...nsk }} />
         </g>
 
-        {/* annotations */}
-        <g className="ds-fade" fontFamily="Avenir Next Georgian, sans-serif" fill={IVORY} style={{ ['--delay' as string]: '3.4s' }}>
-          <text x={HORN_OUT.cx - HORN_OUT.r * 0.707 - 18} y={HORN_OUT.cy - HORN_OUT.r * 0.707 - 16} fontSize={24} textAnchor="end">R 129</text>
-          <text x={HORN_IN.cx - 20} y={HORN_OUT.cy + HORN_OUT.r + 34} fontSize={24} textAnchor="middle">R 65</text>
-          <text x={BOX.x0 - X - pad + 10} y={GROUND - 12} fontSize={22} fillOpacity={0.7}>ჩლიქები</text>
-          <text x={BOX.x0 - X - pad + 10} y={KA_BASE - 12} fontSize={22} fillOpacity={0.7}>ფუძე</text>
-        </g>
+        {/* fitted circles, each with the stretch of outline it matches */}
+        {CIRCLES.map((c, i) => (
+          <g key={i}>
+            <circle cx={c.cx} cy={c.cy} r={c.r} fill="none" stroke={IVORY} strokeOpacity={0.45} pathLength={1} className="ds-draw" transform={`rotate(-90 ${c.cx} ${c.cy})`} style={{ ['--d' as string]: '1.4s', ...del(2.2 + i * 0.18), ...nsk }} />
+            <path d={c.arc} fill="none" stroke="#fff" strokeWidth={2.6} strokeLinecap="round" className="ds-fade" style={{ ...del(3 + i * 0.18), ...nsk }} />
+            <g className="ds-fade" style={del(3.1 + i * 0.18)} stroke={IVORY} strokeOpacity={0.7}>
+              <line x1={c.cx - 7} x2={c.cx + 7} y1={c.cy} y2={c.cy} style={nsk} />
+              <line x1={c.cx} x2={c.cx} y1={c.cy - 7} y2={c.cy + 7} style={nsk} />
+            </g>
+            {c.label && (
+              <text x={c.lx} y={c.ly} fontSize={21} fill={IVORY} textAnchor="middle" fontFamily="Avenir Next Georgian, sans-serif" className="ds-fade" style={del(3.3 + i * 0.18)}>{c.label}</text>
+            )}
+          </g>
+        ))}
       </svg>
     </div>
   );

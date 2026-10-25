@@ -29,6 +29,7 @@ export const routes: RouteObject[] = [
         Component: GlobalLayout,
         children: [
           { path: '/',                         lazy: homeRoute },
+          { path: '/work',                     lazy: homeRoute },
           { path: '/work/:category',           lazy: homeRoute },
           { path: '/contact',                  lazy: homeRoute },
           { path: '/services',                 lazy: homeRoute },
@@ -47,6 +48,7 @@ export const routes: RouteObject[] = [
 /** Every page that gets static HTML at build time (scripts/prerender.mjs) */
 export const PRERENDER_PATHS = [
   '/',
+  '/work',
   '/work/ux-ui',
   '/work/social-media-ads',
   '/work/social-media-motion',

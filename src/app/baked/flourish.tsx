@@ -4,6 +4,34 @@ import { useI18n } from './i18n';
 import { BookButton } from './booking';
 import { T } from './ui';
 
+/** The name set edge to edge: font size fitted to the container width */
+function FullWidthName() {
+  const box = useRef<HTMLDivElement>(null);
+  const txt = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    const b = box.current, t = txt.current;
+    if (!b || !t) return;
+    const fit = () => {
+      t.style.fontSize = '100px';
+      const avail = b.clientWidth - parseFloat(getComputedStyle(b).paddingLeft) * 2;
+      t.style.fontSize = `${(100 * avail) / t.scrollWidth}px`;
+    };
+    fit();
+    const ro = new ResizeObserver(fit);
+    ro.observe(b);
+    document.fonts?.ready.then(fit);
+    return () => ro.disconnect();
+  }, []);
+  return (
+    <div ref={box} aria-hidden className="-mt-6 sm:-mt-10 px-3 sm:px-4 select-none overflow-hidden">
+      <span ref={txt} className="block whitespace-nowrap leading-[0.82] text-[#111] text-center"
+        style={{ fontFamily: T.display, fontWeight: 900, fontSize: '8.4vw', letterSpacing: '-0.02em', width: 'max-content' }}>
+        Salome Mosiava
+      </span>
+    </div>
+  );
+}
+
 /* ── 1. Leaning pills: WhatsApp and Book a call ─────────────────────── */
 
 const WA_URL = 'https://wa.me/995598671416';
@@ -271,21 +299,14 @@ export function SwingingBadge({ children }: { children?: ReactNode }) {
               <div className="mx-auto mb-4 h-2.5 w-12 rounded-full bg-[#ececec]" />
               <div className="text-[22px] leading-[1.02] text-[#111]" style={{ fontFamily: T.display, fontWeight: 900 }}>Salome<br />Mosiava</div>
               <div className="mt-3 text-[12px] leading-[1.4] text-[#6f6f6f]">{tx('Art Director & Senior Product Designer', 'არტ დირექტორი, უფროსი პროდუქტის დიზაინერი')}</div>
-              <div className="mt-4 flex items-center justify-between text-[11px] text-[#9a9a9a]">
-                <span>{tx('Tbilisi, Georgia', 'თბილისი')}</span>
+              <div className="mt-4 flex items-center justify-end text-[11px]">
                 <span className="rounded-full bg-[#ff4306] px-2 py-0.5 text-white">samole.ge</span>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div
-        aria-hidden
-        className="-mt-6 sm:-mt-10 px-3 text-center whitespace-nowrap leading-[0.82] text-[#111] select-none"
-        style={{ fontFamily: T.display, fontWeight: 900, fontSize: 'clamp(30px, 8.4vw, 150px)', letterSpacing: '-0.02em' }}
-      >
-        Salome Mosiava
-      </div>
+      <FullWidthName />
       {children}
     </section>
   );

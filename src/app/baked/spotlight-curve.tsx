@@ -2,39 +2,49 @@ import { useEffect, useRef, useState } from 'react';
 import { FoldingCards } from './flourish';
 
 /*
- * Spotlights on a curve: the cards are painted into one long strip and
- * wrapped around the inside of a cylinder, so they bend as they travel and
- * the ones at the edges lean in towards you. Drag, swipe or scroll
- * sideways to move it; it drifts slowly on its own. Without WebGL it falls
- * back to the folding card row.
+ * Spotlights as folding cards: the middle of the strip lies flat, and past
+ * a point each side folds up towards the viewer on a curve, so cards
+ * stretch and swell as they travel round the bend. It steps card by card on
+ * a soft spring, and can be dragged, swiped or moved with the arrow keys.
+ * Without WebGL it falls back to the folding card row.
  */
 
 type Item = { img: string; title: string; desc: string; tag: string };
 
 const VERT = `
-attribute vec2 a; // a.x = angle (-1..1 of the span), a.y = height (-1..1)
-uniform float span, cam, yHalf, f, aspect;
-varying vec2 uv;
-varying float edge;
+attribute vec2 a; // a.x = position along the strip (-1..1), a.y = height (-1..1)
+uniform float halfLen, flatW, bend, cam, yHalf, f, aspect, phiMax;
+varying float t;
+varying float vv;
+varying float fold;
 void main(){
-  float th = a.x * span;
-  float X = sin(th), Z = -cos(th), Y = a.y * yHalf;
-  float dz = cam - Z;
-  uv = vec2(a.x * 0.5 + 0.5, 0.5 - a.y * 0.5);
-  edge = abs(a.x);
-  gl_Position = vec4(X * f / aspect, Y * f, 0.0, dz);
+  t = a.x * halfLen;
+  float at = abs(t);
+  float X = t, Z = 0.0, phi = 0.0;
+  if (at > flatW) {
+    phi = (at - flatW) / bend;
+    X = sign(t) * (flatW + bend * sin(phi));
+    Z = bend * (1.0 - cos(phi));
+  }
+  float w = cam - Z;
+  vv = 0.5 - a.y * 0.5;
+  fold = phi / phiMax;
+  gl_Position = vec4(X * f / aspect, a.y * yHalf * f, 0.0, w);
 }`;
 
 const FRAG = `
 precision mediump float;
-varying vec2 uv;
-varying float edge;
+varying float t;
+varying float vv;
+varying float fold;
 uniform sampler2D tex;
-uniform float offset, visible;
+uniform float offset, stripLen;
 void main(){
-  float u = fract(offset + (uv.x - 0.5) * visible);
-  vec4 c = texture2D(tex, vec2(u, uv.y));
-  c.rgb *= 1.0 - 0.10 * edge * edge; // texture is premultiplied
+  float u = fract(offset + t / stripLen);
+  vec4 c = texture2D(tex, vec2(u, vv));
+  // premultiplied: wash towards white as the strip folds up at the sides
+  float k = smoothstep(0.15, 1.0, fold);
+  c.rgb = mix(c.rgb, vec3(c.a), 0.45 * k);
   gl_FragColor = c;
 }`;
 
@@ -119,15 +129,18 @@ export function SpotlightCurve({ items, label }: { items: Item[]; label: string 
     const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verts), gl.STATIC_DRAW);
     const loc = gl.getAttribLocation(prog, 'a'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
     const U = (n: string) => gl.getUniformLocation(prog, n);
-    const uSpan = U('span'), uCam = U('cam'), uY = U('yHalf'), uF = U('f'), uAsp = U('aspect'), uOff = U('offset'), uVis = U('visible');
+    const uHalf = U('halfLen'), uFlat = U('flatW'), uBend = U('bend'), uCam = U('cam'), uY = U('yHalf'), uF = U('f'), uAsp = U('aspect'), uPhi = U('phiMax'), uOff = U('offset'), uLen = U('stripLen');
     gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
 
-    const SPAN = 1.15, CAM = 0.6;
+    const CAM = 1.5, Y_HALF = 0.5, PHI = 1.45;
     const items = itemsRef.current;
     const nCards = items.length * 2;
-    let offset = 0.5 / nCards * 0 + (Math.floor(items.length / 2) + 0.5) / nCards; // middle card centred
-    let vel = 0, target: number | null = null;
-    let visible = 0.4;
+    const slot = 2 * Y_HALF * ((CARD_W + GAP) / (CARD_H + PAD * 2)); // world width of one card slot
+    const stripLen = slot * nCards;
+    const centre = (i: number) => (i + 0.5) / nCards;
+    let offset = centre(Math.floor(items.length / 2));
+    let vel = 0, target = offset;
+    let f = 1;
 
     const layout = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -135,40 +148,50 @@ export function SpotlightCurve({ items, label }: { items: Item[]; label: string 
       canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
       gl.viewport(0, 0, canvas.width, canvas.height);
       const aspect = w / h;
-      // fit the edges to the width
-      const edgeDz = CAM + Math.cos(SPAN);
-      const f = 1.0 * aspect * edgeDz / Math.sin(SPAN);
-      // centre card takes ~74% of the height
-      const centerDz = CAM + 1;
-      const yHalf = 0.74 * centerDz / f;
-      // how many cards fit across: a card's angular width at the centre
-      const cardH = 2 * yHalf; // world height of the strip
-      const slotW = cardH * ((CARD_W + GAP) / (CARD_H + PAD * 2)); // world width of one slot at the centre
-      const slots = (2 * SPAN) / slotW;
-      visible = slots / nCards;
-      gl.uniform1f(uSpan, SPAN); gl.uniform1f(uCam, CAM); gl.uniform1f(uY, yHalf); gl.uniform1f(uF, f); gl.uniform1f(uAsp, aspect); gl.uniform1f(uVis, visible);
+      // flat middle holds the centre card plus the inner halves of its neighbours
+      let flat = slot * 1.15;
+      // the centre card takes ~66% of the height, less on narrow screens so it still fits
+      f = (0.72 * CAM) / Y_HALF;
+      const fitW = (aspect * 0.9 * CAM) / (slot * 0.5 + 0.02);
+      if (aspect < 1.25) { f = Math.min(f, fitW * 0.62); flat = slot * 0.6; }
+      // choose the bend radius so the folded ends reach just past the screen edge
+      const edge = (R: number) => ((flat + R * Math.sin(PHI)) * f) / (CAM - R * (1 - Math.cos(PHI)));
+      let lo = 0.02, hi = CAM / (1 - Math.cos(PHI)) * 0.95;
+      for (let k = 0; k < 40; k++) { const m = (lo + hi) / 2; if (edge(m) < aspect * 1.04) lo = m; else hi = m; }
+      const R = lo;
+      gl.uniform1f(uHalf, flat + R * PHI); gl.uniform1f(uFlat, flat); gl.uniform1f(uBend, R);
+      gl.uniform1f(uCam, CAM); gl.uniform1f(uY, Y_HALF); gl.uniform1f(uF, f); gl.uniform1f(uAsp, aspect);
+      gl.uniform1f(uPhi, PHI); gl.uniform1f(uLen, stripLen);
     };
 
+    // a soft spring towards the target card; it overshoots a touch, which reads as stretch
+    let lastStep = performance.now(), hovering = false;
     const draw = () => {
       raf = 0;
       if (disposed) return;
-      if (target != null) { offset += (target - offset) * 0.12; if (Math.abs(target - offset) < 0.0005) target = null; }
-      else { offset += vel; vel *= 0.94; if (!reduce && !dragging && Math.abs(vel) < 0.00005) offset += 0.00012; }
+      const now = performance.now();
+      if (!reduce && !dragging && !hovering && now - lastStep > 2600) { target = Math.round((target - 0.5 / nCards) * nCards + 1) / nCards + 0.5 / nCards; lastStep = now; }
+      if (!dragging) { vel += (target - offset) * 0.075; vel *= 0.78; offset += vel; }
       gl.uniform1f(uOff, offset);
       gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
       gl.drawArrays(gl.TRIANGLES, 0, SEG * 6);
-      if (visibleOnScreen && (!reduce || dragging || Math.abs(vel) > 0.00001 || target != null)) raf = requestAnimationFrame(draw);
+      const moving = dragging || Math.abs(vel) > 0.00002 || Math.abs(target - offset) > 0.00005;
+      if (visibleOnScreen && (moving || !reduce)) raf = requestAnimationFrame(draw);
     };
     const kick = () => { if (!raf) raf = requestAnimationFrame(draw); };
+    const snap = (o: number) => Math.round(o * nCards - 0.5) / nCards + 0.5 / nCards;
 
     // input: drag / swipe, horizontal wheel, arrow keys
-    let dragging = false, lastX = 0;
-    const perPx = () => visible / canvas.clientWidth;
-    const down = (e: PointerEvent) => { dragging = true; lastX = e.clientX; vel = 0; target = null; canvas.setPointerCapture(e.pointerId); kick(); };
-    const move = (e: PointerEvent) => { if (!dragging) return; const dx = e.clientX - lastX; lastX = e.clientX; offset -= dx * perPx(); vel = -dx * perPx(); kick(); };
-    const up = () => { dragging = false; kick(); };
-    const wheel = (e: WheelEvent) => { if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return; e.preventDefault(); vel = 0; offset += e.deltaX * perPx() * 0.6; kick(); };
-    const key = (e: KeyboardEvent) => { if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); target = Math.round(offset * nCards + (e.key === 'ArrowRight' ? 1 : -1) - 0.5) / nCards + 0.5 / nCards; kick(); } };
+    let dragging = false, lastX = 0, flick = 0;
+    const perPx = () => (2 * CAM) / (f * canvas.clientHeight) / stripLen;
+    const down = (e: PointerEvent) => { dragging = true; lastX = e.clientX; vel = 0; flick = 0; canvas.setPointerCapture(e.pointerId); kick(); };
+    const move = (e: PointerEvent) => { if (!dragging) return; const dx = e.clientX - lastX; lastX = e.clientX; offset -= dx * perPx(); flick = -dx * perPx(); kick(); };
+    const up = () => { if (!dragging) return; dragging = false; target = snap(offset + flick * 8); lastStep = performance.now(); kick(); };
+    let wheelT = 0;
+    const wheel = (e: WheelEvent) => { if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return; e.preventDefault(); const nowW = performance.now(); if (nowW - wheelT < 350) return; wheelT = nowW; target = snap(target) + Math.sign(e.deltaX) / nCards; lastStep = nowW; kick(); };
+    const key = (e: KeyboardEvent) => { if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); target = snap(target) + (e.key === 'ArrowRight' ? 1 : -1) / nCards; lastStep = performance.now(); kick(); } };
+    const enter = () => { hovering = true; }, leave = () => { hovering = false; lastStep = performance.now(); };
+    canvas.addEventListener('pointerenter', enter); canvas.addEventListener('pointerleave', leave);
     canvas.addEventListener('pointerdown', down); canvas.addEventListener('pointermove', move);
     canvas.addEventListener('pointerup', up); canvas.addEventListener('pointercancel', up);
     canvas.addEventListener('wheel', wheel, { passive: false }); canvas.addEventListener('keydown', key);
@@ -191,7 +214,7 @@ export function SpotlightCurve({ items, label }: { items: Item[]; label: string 
       disposed = true; cancelAnimationFrame(raf); io.disconnect(); window.removeEventListener('resize', onResize);
       canvas.removeEventListener('pointerdown', down); canvas.removeEventListener('pointermove', move);
       canvas.removeEventListener('pointerup', up); canvas.removeEventListener('pointercancel', up);
-      canvas.removeEventListener('wheel', wheel); canvas.removeEventListener('keydown', key);
+      canvas.removeEventListener('wheel', wheel); canvas.removeEventListener('pointerenter', enter); canvas.removeEventListener('pointerleave', leave); canvas.removeEventListener('keydown', key);
     };
   }, [key]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -203,7 +226,7 @@ export function SpotlightCurve({ items, label }: { items: Item[]; label: string 
         tabIndex={0}
         role="img"
         aria-label={`${label}: ${items.map((i) => i.title).join(', ')}. Drag or use the arrow keys to move.`}
-        className={`block w-full h-[440px] sm:h-[560px] cursor-grab active:cursor-grabbing outline-none focus-visible:shadow-[inset_0_0_0_2px_#ff4306] transition-opacity duration-500 ${ready ? 'opacity-100' : 'opacity-0'}`}
+        className={`block w-full h-[460px] sm:h-[620px] cursor-grab active:cursor-grabbing outline-none focus-visible:shadow-[inset_0_0_0_2px_#ff4306] transition-opacity duration-500 ${ready ? 'opacity-100' : 'opacity-0'}`}
         style={{ touchAction: 'pan-y' }}
       />
       <ul className="sr-only">

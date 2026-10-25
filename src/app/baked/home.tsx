@@ -7,7 +7,7 @@ import { useMotionPause } from './shell';
 import { AreuliBlock, Caption, CtaLink, FadeImg, LogoStrip, Reveal, T } from './ui';
 import { clients, experiences, spotlights, spotlightsKa } from './content';
 import { useI18n } from './i18n';
-import { FoldingCards } from './flourish';
+import { SpotlightCurve } from './spotlight-curve';
 import {
   adsBrands, adsCarmall1, adsGino4, adsTerminal1, screenAurumMainHQ, schenkerSendung, unispaceLogin,
 } from './data';
@@ -194,7 +194,7 @@ export function HomeContent() {
       {/* Spotlights */}
       <section aria-labelledby="spot-title" className="px-1.5 pt-16">
         <h2 id="spot-title" className="px-0.5 pb-3 text-[14px] text-[#6f6f6f]">{tx('Spotlights of 2025', '2025 წლის მთავარი მომენტები')}</h2>
-        <FoldingCards
+        <SpotlightCurve
           label={tx('Spotlights of 2025', '2025 წლის მთავარი მომენტები')}
           items={spotlights.map((s, i) => { const t = ka ? spotlightsKa[i] : s; return { img: s.img, title: t.title, desc: t.desc, tag: t.tag }; })}
         />

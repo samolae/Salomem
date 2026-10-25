@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 import { useI18n } from './i18n';
 import { BookButton } from './booking';
 import { T } from './ui';
@@ -34,18 +35,48 @@ function MeetGlyph({ size = 17 }: { size?: number }) {
  * radius and padding as the site's main button; white for WhatsApp,
  * black for booking a call.
  */
+/* Hover motion follows the reference: the pill under the cursor rises and
+   straightens, its neighbour leans in toward it on the same spring
+   (about 0.4s to settle with a small overshoot). At rest both stay level. */
+const PILL_SPRING = { type: 'spring', stiffness: 420, damping: 18, mass: 0.9 } as const;
+
 export function LeaningPills({ className = '' }: { size?: 'sm' | 'md'; className?: string }) {
   const { tx } = useI18n();
-  const shape = 'inline-flex items-center justify-center gap-2 h-12 px-6 rounded-full text-[15px] leading-none whitespace-nowrap transition-[background-color,transform,box-shadow] duration-200 hover:-translate-y-px outline-none focus-visible:shadow-[0_0_0_2px_#fff,0_0_0_4px_#111]';
+  const reduce = useReducedMotion();
+  const [hot, setHot] = useState<0 | 1 | null>(null);
+  const shape = 'inline-flex items-center justify-center gap-2 h-12 px-6 rounded-full text-[15px] leading-none whitespace-nowrap transition-[background-color,box-shadow] duration-200 outline-none focus-visible:shadow-[0_0_0_2px_#fff,0_0_0_4px_#111]';
+  // index 0 = left pill, 1 = right pill
+  const pose = (i: 0 | 1) => {
+    if (reduce || hot === null) return { x: 0, y: 0, rotate: 0, scale: 1 };
+    if (hot === i) return { x: 0, y: -3, rotate: 0, scale: 1.04 };
+    const toward = i === 0 ? 1 : -1; // lean toward the hovered pill
+    return { x: toward * 7, y: 2, rotate: toward * 7, scale: 0.98 };
+  };
+  const wrap = (i: 0 | 1, child: ReactNode) => (
+    <motion.span
+      className="inline-flex"
+      style={{ transformOrigin: i === 0 ? '100% 100%' : '0% 100%', zIndex: hot === i ? 2 : 1, position: 'relative' }}
+      animate={pose(i)}
+      transition={PILL_SPRING}
+      onHoverStart={() => setHot(i)}
+      onHoverEnd={() => setHot((h) => (h === i ? null : h))}
+      onFocus={() => setHot(i)}
+      onBlur={() => setHot((h) => (h === i ? null : h))}
+    >
+      {child}
+    </motion.span>
+  );
   return (
     <div className={`inline-flex items-center gap-2 ${className}`} data-cta>
-      <a href={WA_URL} target="_blank" rel="noopener noreferrer"
-        className={`${shape} bg-white text-[#111] ring-1 ring-inset ring-black/10 shadow-[0_8px_24px_-10px_rgba(0,0,0,0.3)] hover:bg-[#f6f6f6]`}>
-        <WhatsAppGlyph />{tx("Let's chat", 'მომწერე')}
-      </a>
-      <BookButton className={`${shape} bg-[#111] text-white ring-1 ring-inset ring-white/15 shadow-[0_8px_24px_-10px_rgba(0,0,0,0.5)] hover:bg-[#222]`}>
-        <MeetGlyph />{tx('Book a call', 'შევხვდეთ')}
-      </BookButton>
+      {wrap(0,
+        <a href={WA_URL} target="_blank" rel="noopener noreferrer"
+          className={`${shape} bg-white text-[#111] ring-1 ring-inset ring-black/10 shadow-[0_8px_24px_-10px_rgba(0,0,0,0.3)] hover:bg-[#f6f6f6]`}>
+          <WhatsAppGlyph />{tx("Let's chat", 'მომწერე')}
+        </a>)}
+      {wrap(1,
+        <BookButton className={`${shape} bg-[#111] text-white ring-1 ring-inset ring-white/15 shadow-[0_8px_24px_-10px_rgba(0,0,0,0.5)] hover:bg-[#222]`}>
+          <MeetGlyph />{tx('Book a call', 'შევხვდეთ')}
+        </BookButton>)}
     </div>
   );
 }

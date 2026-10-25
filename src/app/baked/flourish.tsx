@@ -200,28 +200,58 @@ export function FoldingCards({ items: base, label }: { items: { img: string; tit
 
 type P = { x: number; y: number; px: number; py: number };
 
-/** Swivel hook and snap clip in brushed metal */
+/** Strap end, D-ring, swivel and lobster clasp in polished metal; the clasp
+ *  hooks through the slot at the top of the sleeve */
 function BadgeClip() {
   return (
-    <svg viewBox="0 0 60 78" className="relative z-10 mx-auto block h-[78px] w-[60px]" aria-hidden>
+    <svg viewBox="0 0 64 100" className="relative z-10 mx-auto block h-[100px] w-[64px] overflow-visible" aria-hidden>
       <defs>
-        <linearGradient id="badge-metal" x1="0" x2="1" y1="0" y2="0">
-          <stop offset="0" stopColor="#8d9096" /><stop offset="0.35" stopColor="#f4f5f7" />
-          <stop offset="0.55" stopColor="#b9bcc2" /><stop offset="0.8" stopColor="#eef0f2" /><stop offset="1" stopColor="#7d8086" />
+        <linearGradient id="bc-chrome" x1="0" x2="1" y1="0" y2="0">
+          <stop offset="0" stopColor="#5f636a" /><stop offset="0.18" stopColor="#c9ccd2" />
+          <stop offset="0.32" stopColor="#ffffff" /><stop offset="0.48" stopColor="#9a9ea6" />
+          <stop offset="0.66" stopColor="#e9ebef" /><stop offset="0.85" stopColor="#8b8f97" /><stop offset="1" stopColor="#4c5056" />
         </linearGradient>
-        <linearGradient id="badge-metal-v" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0" stopColor="#f5f6f8" /><stop offset="1" stopColor="#9a9da3" />
+        <linearGradient id="bc-chrome-d" x1="0" x2="1" y1="0" y2="1">
+          <stop offset="0" stopColor="#f7f8fa" /><stop offset="0.4" stopColor="#a7abb3" />
+          <stop offset="0.6" stopColor="#d9dce1" /><stop offset="1" stopColor="#5c6067" />
         </linearGradient>
+        <linearGradient id="bc-strap" x1="0" x2="1" y1="0" y2="0">
+          <stop offset="0" stopColor="#151515" /><stop offset="0.5" stopColor="#2c2c2c" /><stop offset="1" stopColor="#141414" />
+        </linearGradient>
+        <filter id="bc-shadow" x="-40%" y="-20%" width="180%" height="150%">
+          <feDropShadow dx="1.2" dy="1.6" stdDeviation="1.1" floodColor="#000" floodOpacity="0.35" />
+        </filter>
       </defs>
-      <rect x="21" y="0" width="18" height="12" rx="2" fill="#262626" />
-      <rect x="22" y="9" width="16" height="9" rx="3" fill="none" stroke="url(#badge-metal)" strokeWidth="3" />
-      <rect x="27.5" y="17" width="5" height="7" rx="1.5" fill="url(#badge-metal)" />
-      <path d="M30 23 C 19 25, 18 44, 24 52 L 30 60 L 36 52 C 42 44, 41 25, 30 23 Z" fill="url(#badge-metal)" stroke="#7e8187" strokeWidth="0.8" />
-      <path d="M30 28 C 24 30, 24 43, 27 48 L 30 52 L 33 48 C 36 43, 36 30, 30 28 Z" fill="#fff" fillOpacity="0.25" stroke="#888b91" strokeWidth="0.6" />
-      <circle cx="30" cy="40" r="1.8" fill="#6f7277" />
-      <path d="M25 30 C 23 36, 24 44, 27 49" fill="none" stroke="#fff" strokeOpacity="0.9" strokeWidth="1" />
-      <rect x="18" y="60" width="24" height="9" rx="2.5" fill="url(#badge-metal-v)" stroke="#8a8d93" strokeWidth="0.6" />
-      <rect x="24" y="67" width="12" height="11" rx="1.5" fill="url(#badge-metal)" />
+      <g filter="url(#bc-shadow)">
+        {/* strap folded round the D-ring, with its stitching */}
+        <path d="M19 0 H45 V17 C45 20 43 22 40 22 H24 C21 22 19 20 19 17 Z" fill="url(#bc-strap)" />
+        <path d="M22 3 V15 M42 3 V15" stroke="#4a4a4a" strokeWidth="0.7" strokeDasharray="1.6 1.4" />
+        <path d="M21 10 H43" stroke="#000" strokeOpacity="0.45" strokeWidth="1" />
+        {/* D-ring */}
+        <path d="M17 19 H47 C47 25 42 29 32 29 C22 29 17 25 17 19 Z" fill="none" stroke="url(#bc-chrome)" strokeWidth="3" strokeLinejoin="round" />
+        <path d="M19 19.5 H45" stroke="#fff" strokeOpacity="0.8" strokeWidth="0.7" />
+        {/* swivel eye and barrel */}
+        <ellipse cx="32" cy="31.5" rx="3.6" ry="3" fill="none" stroke="url(#bc-chrome)" strokeWidth="2.2" />
+        <rect x="28" y="34" width="8" height="9" rx="2.4" fill="url(#bc-chrome)" />
+        <path d="M28.6 37 H35.4 M28.6 40 H35.4" stroke="#5c6067" strokeWidth="0.6" />
+        <rect x="30.4" y="34.6" width="1.2" height="7.8" rx="0.6" fill="#fff" fillOpacity="0.85" />
+        {/* lobster clasp body */}
+        <path fillRule="evenodd" fill="url(#bc-chrome-d)" stroke="#5a5e65" strokeWidth="0.6"
+          d="M32 42 C41 43 45 52 44.5 62 C44 72 39 79 32.5 81 C26.5 82.5 22.5 79 22 73 L21.5 62 C21.3 52 24 43.5 32 42 Z
+             M32 48 C37.5 49.5 39.5 55 39 62 C38.5 69 35.5 74 32 74.6 C29 75 27 73 26.8 70 L26.6 62 C26.5 55 28 49.5 32 48 Z" />
+        {/* spring gate on the left */}
+        <path d="M26.6 51 C24.6 55 24.3 63 25.4 72" fill="none" stroke="url(#bc-chrome)" strokeWidth="2.4" strokeLinecap="round" />
+        {/* lever */}
+        <path d="M43.6 51.5 L48 53 C48.8 53.3 49 54 48.6 54.7 L46.6 58.4 C46.2 59.1 45.4 59.2 44.8 58.8 L43.9 58 Z" fill="url(#bc-chrome)" stroke="#5a5e65" strokeWidth="0.5" />
+        {/* highlights */}
+        <path d="M37.6 46 C41.6 49 43 55 42.8 61" fill="none" stroke="#fff" strokeOpacity="0.95" strokeWidth="1.1" strokeLinecap="round" />
+        <path d="M24 66 C24.2 71 25.6 76 29 78.6" fill="none" stroke="#fff" strokeOpacity="0.55" strokeWidth="0.8" strokeLinecap="round" />
+        <circle cx="32" cy="62" r="1.6" fill="#55595f" /><circle cx="31.6" cy="61.6" r="0.5" fill="#fff" />
+        {/* the hook's bottom loop passing through the slot */}
+        <path d="M32.5 80 C32.5 85 32.3 88 32 91" fill="none" stroke="url(#bc-chrome)" strokeWidth="3.4" strokeLinecap="round" />
+      </g>
+      {/* behind the plastic: the part of the loop under the slot reads dimmer */}
+      <path d="M29.5 90.5 H34.5" stroke="#000" strokeOpacity="0.25" strokeWidth="1.2" strokeLinecap="round" />
     </svg>
   );
 }
@@ -380,7 +410,7 @@ export function SwingingBadge({ children }: { children?: ReactNode }) {
         </svg>
         <div ref={card} className="absolute left-0 top-0 w-[228px] sm:w-[248px] touch-none" style={{ cursor: 'grab', willChange: 'transform', filter: 'drop-shadow(var(--tilt, 0px) 26px 22px rgba(0,0,0,0.18))' }}>
           <BadgeClip />
-          <div className="relative -mt-[6px] aspect-[0.64] rounded-[18px] overflow-hidden"
+          <div className="relative -mt-[34px] aspect-[0.64] rounded-[18px] overflow-hidden"
             style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.72), rgba(236,239,243,0.55))', boxShadow: 'inset 0 0 0 1px rgba(0,0,0,0.13), inset 0 0 0 2px rgba(255,255,255,0.8), inset 3px 0 6px rgba(255,255,255,0.7)' }}>
             {/* top of the sleeve: two punch holes and the slot */}
             <div className="absolute inset-x-0 top-0 h-[52px]">

@@ -488,9 +488,9 @@ function FlowSequence() {
         ))}
       </div>
       <div className="hidden lg:col-span-7 lg:block">
-        <div className="sticky top-[max(7rem,calc(50vh-15rem))]">
+        <div className="sticky top-[6rem]">
           <BrowserFrame>
-            <div className="relative aspect-[16/10] bg-[#0B0D12]">
+            <div className="relative aspect-[11/10] max-h-[calc(100svh-11rem)] mx-auto bg-[#0B0D12]">
               {FLOW_SCREENS.map((s, i) => (
                 <ScreenImg
                   key={s.num}

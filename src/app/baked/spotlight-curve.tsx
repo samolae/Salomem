@@ -83,6 +83,7 @@ async function paintStrip(items: Item[]): Promise<HTMLCanvasElement> {
     ctx.restore();
     ctx.save(); roundRect(ctx, x, y, CARD_W, CARD_H, 34); ctx.clip();
     const ih = CARD_H * 0.64, im = imgs[i];
+    ctx.beginPath(); ctx.rect(x, y, CARD_W, ih); ctx.clip(); // the photo stays in its own area
     if (im) {
       const s = Math.max(CARD_W / im.width, ih / im.height), w = im.width * s, h = im.height * s;
       ctx.drawImage(im, x + (CARD_W - w) / 2, y + (ih - h) / 2, w, h);

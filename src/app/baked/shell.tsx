@@ -6,6 +6,8 @@ import { useRef } from 'react';
 import { T, pillCls, darkPillCls } from './ui';
 import { EMAIL } from './content';
 import { useI18n } from './i18n';
+import { BookingProvider } from './booking';
+import { LeaningPills, SwingingBadge } from './flourish';
 
 /* ── Shared "pause motion" switch ─────────────────────────────────── */
 const PauseCtx = createContext<{ paused: boolean; toggle: () => void }>({ paused: false, toggle: () => {} });
@@ -180,10 +182,7 @@ function FloatingCta() {
           className="hidden sm:block fixed bottom-4 left-1/2 -translate-x-1/2 z-[65]"
           style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
         >
-          <Link to={to('/contact')} className={darkPillCls}>
-            <span className="h-1.5 w-1.5 rounded-full bg-white" aria-hidden />
-            {tx('Contact me', 'დამიკავშირდი')}
-          </Link>
+          <LeaningPills size="sm" />
         </motion.div>
       )}
     </AnimatePresence>
@@ -305,11 +304,13 @@ export function BakedShell({ children }: { children: ReactNode }) {
 
   return (
     <PauseCtx.Provider value={{ paused, toggle: () => setPaused((p) => !p) }}>
+      <BookingProvider>
       <div lang={lang} className="baked min-h-screen bg-white text-[#111] antialiased" style={{ fontFamily: T.font, colorScheme: 'light' }}>
         <TopNav />
         <main id="main-content" tabIndex={-1} className="outline-none">
           {children}
         </main>
+        <SwingingBadge />
         <Footer />
         <FloatingCta />
         <MobileDock />
@@ -333,6 +334,7 @@ export function BakedShell({ children }: { children: ReactNode }) {
           }
         `}</style>
       </div>
+      </BookingProvider>
     </PauseCtx.Provider>
   );
 }

@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 import { AnimatePresence, motion, useInView, useReducedMotion } from 'motion/react';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { IMG } from '../lib/cld';
+import { LeaningPills } from './flourish';
 import { useI18n } from './i18n';
 
 /* ── Tokens ───────────────────────────────────────────────────────── */
@@ -29,6 +30,8 @@ export const darkPillCls =
 
 export function CtaLink({ to = '/contact', children }: { to?: string; children?: ReactNode }) {
   const { tx, to: lp } = useI18n();
+  // The default call to action is the pair of leaning pills: WhatsApp and a booked call
+  if (!children && to === '/contact') return <LeaningPills />;
   return (
     <Link to={lp(to)} className={darkPillCls} data-cta>
       {children ?? tx('Contact me', 'დამიკავშირდი')}

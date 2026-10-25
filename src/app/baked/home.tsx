@@ -7,6 +7,7 @@ import { useMotionPause } from './shell';
 import { AreuliBlock, Caption, CtaLink, FadeImg, LogoStrip, Reveal, T } from './ui';
 import { clients, experiences, spotlights, spotlightsKa } from './content';
 import { useI18n } from './i18n';
+import { FoldingCards } from './flourish';
 import {
   adsBrands, adsCarmall1, adsGino4, adsTerminal1, screenAurumMainHQ, schenkerSendung, unispaceLogin,
 } from './data';
@@ -193,19 +194,10 @@ export function HomeContent() {
       {/* Spotlights */}
       <section aria-labelledby="spot-title" className="px-1.5 pt-16">
         <h2 id="spot-title" className="px-0.5 pb-3 text-[14px] text-[#6f6f6f]">{tx('Spotlights of 2025', '2025 წლის მთავარი მომენტები')}</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
-          {spotlights.map((s, i) => {
-            const t = ka ? spotlightsKa[i] : s;
-            return (
-              <Reveal key={s.title}>
-                <div className="relative overflow-hidden rounded-md bg-[#f2f2f2]">
-                  <FadeImg src={s.img} alt={t.title} className="block w-full h-auto" />
-                </div>
-                <Caption title={t.title} sub={t.desc} tag={t.tag} />
-              </Reveal>
-            );
-          })}
-        </div>
+        <FoldingCards
+          label={tx('Spotlights of 2025', '2025 წლის მთავარი მომენტები')}
+          items={spotlights.map((s, i) => { const t = ka ? spotlightsKa[i] : s; return { img: s.img, title: t.title, desc: t.desc, tag: t.tag }; })}
+        />
       </section>
 
       {/* areuli.design, Salome's own brand */}

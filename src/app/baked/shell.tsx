@@ -29,7 +29,7 @@ const NAV = [
   { label: 'services', ka: 'სერვისები', to: '/services' },
 ];
 
-const ACTIVE = { background: '#ffe7de', color: '#b52f03' };
+const ACTIVE = { background: '#ececec' };
 /** Case studies live under UX/UI */
 const isActive = (bare: string, to: string) => bare === to || (to === '/work' && (bare.startsWith('/work/') || bare.startsWith('/projects/')));
 

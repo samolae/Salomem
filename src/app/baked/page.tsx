@@ -6,6 +6,8 @@ import { BakedShell } from './shell';
 import { HomeContent } from './home';
 import { AdsContent, ContactContent, MotionContent, ServicesContent, UxUiContent } from './pages';
 import { useI18n } from './i18n';
+import { WorkContent } from './work';
+import { SEO } from '../components/seo';
 
 /**
  * Home, the three work pages, services and contact. One module so a visit
@@ -19,6 +21,7 @@ export function BakedPage() {
   const section =
     pathname === '/contact' ? 'contact'
     : pathname === '/services' ? 'services'
+    : pathname === '/work' ? 'work'
     : category === 'ux-ui' || category === 'social-media-ads' || category === 'social-media-motion' ? category
     : 'home';
 
@@ -27,6 +30,7 @@ export function BakedPage() {
   const [seo, content] =
     section === 'contact' ? [<ContactSEO />, <ContactContent />]
     : section === 'services' ? [<ServicesSEO />, <ServicesContent />]
+    : section === 'work' ? [<SEO title="Work" description="Salome Mosiava's work by category: UX/UI, branding, social media ads and motion." />, <WorkContent />]
     : section === 'ux-ui' ? [<UxUiSEO />, <UxUiContent />]
     : section === 'social-media-ads' ? [<SocialMediaAdsSEO />, <AdsContent />]
     : section === 'social-media-motion' ? [<SocialMediaMotionSEO />, <MotionContent />]

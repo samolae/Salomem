@@ -9,7 +9,7 @@
       "destination": "/work/:slug/index.html"
     },
     {
-      "source": "/:page(services|contact)",
+      "source": "/:page(services|contact|work)",
       "destination": "/:page/index.html"
     },
     {

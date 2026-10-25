@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router';
 import { AnimatePresence, motion } from 'motion/react';
-import { ArrowUp, Pause, Play, House, LayoutGrid, Megaphone, Clapperboard, Sparkles, Mail } from 'lucide-react';
+import { ArrowUp, Pause, Play, House, FolderOpen, Sparkles, Mail } from 'lucide-react';
 import { useRef } from 'react';
 import { T, pillCls, darkPillCls } from './ui';
 import { EMAIL } from './content';
@@ -23,15 +23,13 @@ export function PauseButton({ className = '' }: { className?: string }) {
 }
 
 const NAV = [
-  { label: 'ux/ui', ka: 'ux/ui', to: '/work/ux-ui' },
-  { label: 'ads', ka: 'რეკლამა', to: '/work/social-media-ads' },
-  { label: 'motion', ka: 'მოუშენი', to: '/work/social-media-motion' },
+  { label: 'work', ka: 'ნამუშევრები', to: '/work' },
   { label: 'services', ka: 'სერვისები', to: '/services' },
 ];
 
 const ACTIVE = { background: '#ffe7de', color: '#b52f03' };
 /** Case studies live under UX/UI */
-const isActive = (bare: string, to: string) => bare === to || (to === '/work/ux-ui' && bare.startsWith('/projects/'));
+const isActive = (bare: string, to: string) => bare === to || (to === '/work' && (bare.startsWith('/work/') || bare.startsWith('/projects/')));
 
 /** EN / ქა switch, to the same page in the other language */
 const GEORGIAN_LIVE = false; // the /ka pages are ready but not published yet
@@ -59,7 +57,7 @@ function TopNav() {
         {/* Desktop pills */}
         <div className="hidden sm:flex items-center gap-1 pointer-events-auto">
           {NAV.map((n) => (
-            <Link key={n.to} to={to(n.to)} aria-current={bare === n.to ? 'page' : undefined} className={pillCls(false)}
+            <Link key={n.to} to={to(n.to)} aria-current={isActive(bare, n.to) ? 'page' : undefined} className={pillCls(false)}
               style={isActive(bare, n.to) ? ACTIVE : undefined}>
               {tx(n.label, n.ka)}
             </Link>
@@ -79,9 +77,7 @@ function TopNav() {
 
 const DOCK = [
   { label: 'home', ka: 'მთავარი', to: '/', Icon: House },
-  { label: 'ux/ui', ka: 'ux/ui', to: '/work/ux-ui', Icon: LayoutGrid },
-  { label: 'ads', ka: 'რეკლამა', to: '/work/social-media-ads', Icon: Megaphone },
-  { label: 'motion', ka: 'მოუშენი', to: '/work/social-media-motion', Icon: Clapperboard },
+  { label: 'work', ka: 'ნამუშევრები', to: '/work', Icon: FolderOpen },
   { label: 'services', ka: 'სერვისები', to: '/services', Icon: Sparkles },
   { label: 'contact', ka: 'კონტაქტი', to: '/contact', Icon: Mail },
 ];
@@ -93,12 +89,12 @@ function MobileDock() {
   const bar = useRef<HTMLDivElement>(null);
   const [px, setPx] = useState<number | null>(null); // finger x inside the dock
   const moved = useRef(false);
-  const ITEM = 52;
+  const ITEM = 64;
 
   const near = (x: number | null) => (x == null ? -1 : Math.max(0, Math.min(DOCK.length - 1, Math.floor((x - 8) / ITEM))));
   const local = (e: React.PointerEvent) => e.clientX - (bar.current?.getBoundingClientRect().left ?? 0);
   const hovered = near(px);
-  const activeIdx = DOCK.findIndex((d) => (d.to === '/' ? bare === '/' : bare === d.to || (d.to === '/work/ux-ui' && bare.startsWith('/projects/'))));
+  const activeIdx = DOCK.findIndex((d) => (d.to === '/' ? bare === '/' : isActive(bare, d.to)));
 
   return (
     <nav aria-label={tx('Primary', 'მთავარი ნავიგაცია')} className="sm:hidden fixed inset-x-0 bottom-0 z-[75] flex justify-center pointer-events-none"
@@ -229,7 +225,9 @@ function Footer() {
   const { tx, to } = useI18n();
   const groups = [
     { title: tx('Work', 'ნამუშევრები'), links: [
+      { l: tx('All work', 'ყველა ნამუშევარი'), to: '/work' },
       { l: tx('UX/UI Design', 'UX/UI დიზაინი'), to: '/work/ux-ui' },
+      { l: tx('Branding', 'ბრენდინგი'), to: '/projects/dasturi' },
       { l: tx('Social Media Ads', 'სოც. მედიის რეკლამა'), to: '/work/social-media-ads' },
       { l: tx('Social Media Motion', 'სოც. მედიის მოუშენი'), to: '/work/social-media-motion' },
     ] },

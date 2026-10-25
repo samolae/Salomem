@@ -190,7 +190,7 @@ export function Anatomy() {
 
 /* ── 3. The family: five labels rise, gold foil catches the light ───── */
 
-export function LabelRow({ edition }: { edition: 'gold' | 'bordeaux' }) {
+export function LabelRow({ edition, tone = 'light' }: { edition: 'gold' | 'bordeaux'; tone?: 'light' | 'dark' }) {
   const [ref, on] = useSeen<HTMLDivElement>(0.3);
   const ids = ['saperavi', 'manavi', 'kisi', 'satsuri', 'tsolikouri'];
   const names = ['საფერავი', 'მანავის მწვანე', 'ქისი', 'საწური', 'ცოლიკაური'];
@@ -198,11 +198,11 @@ export function LabelRow({ edition }: { edition: 'gold' | 'bordeaux' }) {
     <div ref={ref} className={`grid grid-cols-5 gap-[1.6%] ${on ? 'ds-on' : ''}`}>
       {ids.map((id, i) => (
         <figure key={id} className="ds-rise group" style={{ ['--delay' as string]: `${i * 0.12}s`, ['--tilt' as string]: `${(i - 2) * 2}deg` }}>
-          <div className="relative overflow-hidden shadow-[0_24px_40px_-18px_rgba(25,26,23,0.55)] transition-transform duration-500 group-hover:-translate-y-2">
+          <div className="relative overflow-hidden shadow-[0_28px_50px_-20px_rgba(0,0,0,0.7)] transition-transform duration-500 group-hover:-translate-y-2">
             <img src={`/cases/dasturi/labels/${id}-${edition}.jpg`} alt={`${names[i]}, ${edition === 'gold' ? 'ოქროსფერი' : 'ბორდოსფერი'} ეტიკეტი`} width={554} height={1000} loading="lazy" className="block w-full h-auto" />
             <div className="ds-sheen absolute inset-0 pointer-events-none" style={{ ['--delay' as string]: `${i * 0.25}s` }} />
           </div>
-          <figcaption className="mt-3 text-center text-[12px] sm:text-[14px]" style={{ fontFamily: SERIF, color: BLACK }}>{names[i]}</figcaption>
+          <figcaption className="mt-3 text-center text-[12px] sm:text-[14px]" style={{ fontFamily: SERIF, color: tone === 'dark' ? 'rgba(240,234,223,.7)' : BLACK }}>{names[i]}</figcaption>
         </figure>
       ))}
     </div>
@@ -214,9 +214,9 @@ export function LabelRow({ edition }: { edition: 'gold' | 'bordeaux' }) {
 export function Swatches({ items }: { items: { name: string; ka: string; role: string; hex: string; ink: string }[] }) {
   const [ref, on] = useSeen<HTMLDivElement>(0.3);
   return (
-    <div ref={ref} className={`grid grid-cols-2 lg:grid-cols-4 ${on ? 'ds-on' : ''}`} style={{ background: BLACK }}>
+    <div ref={ref} className={`grid grid-cols-2 lg:grid-cols-4 gap-2 ${on ? 'ds-on' : ''}`}>
       {items.map((c, i) => (
-        <div key={c.hex} className="ds-wipe aspect-[4/5] lg:aspect-[3/4] p-5 sm:p-7 flex flex-col justify-between" style={{ background: c.hex, color: c.ink, ['--delay' as string]: `${i * 0.14}s` }}>
+        <div key={c.hex} className="ds-wipe aspect-[4/5] lg:aspect-[3/4] p-5 sm:p-6 flex flex-col justify-between rounded-[4px] ring-1 ring-inset ring-white/10" style={{ background: c.hex, color: c.ink, ['--delay' as string]: `${i * 0.14}s` }}>
           <div className="text-[14px] opacity-75">{c.ka}<br /><span className="opacity-70">{c.role}</span></div>
           <div>
             <div className="text-[24px] sm:text-[30px] leading-[1.05]" style={{ fontFamily: '"Marcellus", Georgia, serif' }}>{c.name}</div>

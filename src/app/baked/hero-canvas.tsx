@@ -166,7 +166,7 @@ export function HeroCanvas() {
                           />
                         ) : (
                           <img
-                            {...IMG.tile(t.src)}
+                            {...IMG.tileLarge(t.src)}
                             alt=""
                             loading={ti < 2 && dup === 0 ? 'eager' : 'lazy'}
                             decoding="async"

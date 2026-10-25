@@ -359,13 +359,13 @@ export function SwingingBadge({ children }: { children?: ReactNode }) {
                 <span className="text-[#111]">Salome</span><br /><span className="text-[#ff4306]">Mosiava</span>
               </div>
               <div className="mt-auto">
-                <div className="text-[12px] italic text-[#333]" style={{ fontFamily: 'Georgia, "Times New Roman", serif', fontWeight: 700 }}>{tx('Currently', 'ახლა')}</div>
-                <div className="mt-0.5 text-[11.5px] leading-[1.35] text-[#555]" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>{tx('Freelancing between a few brave brands and one very full sketchbook ;)', 'ფრილანსში, რამდენიმე გაბედულ ბრენდსა და ერთ სავსე სკეჩბუქს შორის ;)')}</div>
-                <div className="mt-3 text-[12px] italic text-[#333]" style={{ fontFamily: 'Georgia, "Times New Roman", serif', fontWeight: 700 }}>{tx('Previously', 'მანამდე')}</div>
+                <div className="text-[12px] text-[#111]" style={{ fontWeight: 600 }}>{tx('Currently', 'ახლა')}</div>
+                <div className="mt-0.5 text-[11.5px] leading-[1.35] text-[#555]">{tx('Freelancing between a few brave brands and one very full sketchbook ;)', 'ფრილანსში, რამდენიმე გაბედულ ბრენდსა და ერთ სავსე სკეჩბუქს შორის ;)')}</div>
+                <div className="mt-3 text-[12px] text-[#111]" style={{ fontWeight: 600 }}>{tx('Previously', 'მანამდე')}</div>
                 <div className="mt-1.5 flex flex-wrap gap-1">
                   {[['Scope', '#2a2a2a', '#000'], ['UniLab', '#e5484d', '#c22a2f'], ['Cubisten', '#4b37d9', '#2a1a9e']].map(([n, c1, c2]) => (
                     <span key={n} className="rounded-full px-2 py-[3px] text-[10.5px] leading-none text-white"
-                      style={{ fontFamily: 'Georgia, "Times New Roman", serif', fontWeight: 700, background: `linear-gradient(180deg, ${c1}, ${c2})`, boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.25)' }}>{n}</span>
+                      style={{ fontWeight: 500, background: `linear-gradient(180deg, ${c1}, ${c2})`, boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.25)' }}>{n}</span>
                   ))}
                 </div>
               </div>

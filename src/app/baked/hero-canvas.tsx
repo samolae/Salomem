@@ -192,10 +192,7 @@ export function HeroCanvas() {
       <h1 className="sr-only">{tx('Salome Mosiava, Senior Product Designer and Art Director', 'სალომე მოსიავა, სენიორ პროდაქტ დიზაინერი და არტ დირექტორი')}</h1>
       {/* Centre call to action, sitting on the canvas */}
       <motion.div className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2" style={{ opacity }}>
-        <CtaLink>
-          <span className="h-1.5 w-1.5 rounded-full bg-white" aria-hidden />
-          {tx('Contact me', 'დამიკავშირდი')}
-        </CtaLink>
+        <CtaLink />
       </motion.div>
       <PauseButton className="absolute left-2 bottom-24 sm:bottom-24 z-10" />
       <div className="pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 z-10 rounded-md bg-white/80 px-3 py-1.5 text-[13px] text-[#6f6f6f] backdrop-blur-md whitespace-nowrap">

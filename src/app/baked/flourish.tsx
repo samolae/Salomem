@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { Video } from 'lucide-react';
 import { useI18n } from './i18n';
 import { BookButton } from './booking';
 import { T } from './ui';
@@ -12,6 +11,20 @@ function WhatsAppGlyph({ size = 16 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden fill="#25D366">
       <path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 2.9 2.9 0 0 0-.9 2.2 5 5 0 0 0 1 2.7 11.5 11.5 0 0 0 4.4 3.9c1.6.7 2.3.8 3.1.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.2-.2-.5-.3Z" />
+    </svg>
+  );
+}
+
+/** Google Meet's camera mark, in its four colours */
+function MeetGlyph({ size = 17 }: { size?: number }) {
+  return (
+    <svg width={size} height={size * 0.82} viewBox="0 0 87 72" aria-hidden>
+      <path fill="#00832D" d="M49.5 36l8.53 9.75 11.47 7.33 2-17.02-2-16.64-11.69 6.44z" />
+      <path fill="#0066DA" d="M0 51.5V66c0 3.315 2.685 6 6 6h14.5l3-10.96-3-9.54-9.95-3z" />
+      <path fill="#E94235" d="M20.5 0L0 20.5l10.55 3 9.95-3 2.95-9.41z" />
+      <path fill="#2684FC" d="M20.5 20.5H0v31h20.5z" />
+      <path fill="#00AC47" d="M82.6 8.68L69.5 19.42v33.66l13.16 10.79c1.97 1.54 4.85.135 4.85-2.37V11c0-2.535-2.945-3.925-4.91-2.32zM49.5 36v15.5h-29V72h43c3.315 0 6-2.685 6-6V53.08z" />
+      <path fill="#FFBA00" d="M63.5 0h-43v20.5h29V36l20-16.57V6c0-3.315-2.685-6-6-6z" />
     </svg>
   );
 }
@@ -61,7 +74,7 @@ export function LeaningPills({ size = 'md', className = '' }: { size?: 'sm' | 'm
           className={`inline-flex items-center gap-2 rounded-full bg-[#111] text-white border border-white/20 shadow-[0_8px_20px_-8px_rgba(0,0,0,0.45)] ${h} ${ring}`}
         >
           <span className="inline-flex items-center gap-2" style={{ ...label('call'), display: 'inline-flex' }}>
-            <Video size={16} strokeWidth={2} className="text-[#34A853]" />{tx('Book a call', 'შევხვდეთ')}
+            <MeetGlyph />{tx('Book a call', 'შევხვდეთ')}
           </span>
         </BookButton>
       </span>

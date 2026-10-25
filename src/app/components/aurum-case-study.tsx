@@ -1,107 +1,180 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { useState, useEffect, useRef, type ReactNode } from 'react';
+import {
+  motion, AnimatePresence, useScroll, useTransform, useReducedMotion, useMotionValueEvent,
+  type Variants,
+} from 'motion/react';
 import { useNavigate } from 'react-router';
 import { CaseHeroTarget } from './case-transition';
-import {
-  ArrowLeft, ArrowRight, ArrowUpRight, ArrowLeftRight, Home,
-  Lock, Shield, UserCheck, QrCode, MapPin, Eye, Zap, PenTool,
-  CheckCircle, Layers, ChevronDown, ChevronUp,
-  Monitor, Component, Droplets, Smartphone, BookOpen, Palette, Search, Users, Figma,
-} from 'lucide-react';
-import { useTheme } from './theme-provider';
-import { FadeIn, CountUp, GlowCard, ShineText, TextReveal, StaggerChildren, StaggerItem, ScrollProgress, MagneticWrap, AnimatedDivider, ScaleOnScroll, SmoothSection, ParallaxFloat, ScrollRevealScale } from './animated-helpers';
-import { BrowserMockup, PhoneMockup } from './device-mockup';
+import { ArrowLeft, ChevronUp } from 'lucide-react';
 import { DashboardPreview, ExchangeWidget } from './dashboard-preview';
 import { DesignSystemFull } from './color-palette';
 import { UXStories } from './ux-stories';
-import { HeroCover } from './hero-cover';
 import { NextProjectRecommendation } from './next-project';
 import { CaseStudySectionNav } from './case-study-nav';
 import { AurumSEO } from './seo';
 import aurumSvgPaths from '../../imports/svg-wj69ey5ojj';
 import { IMG } from '../lib/cld';
+import { isHydrating } from '../hydration';
 
-// ─── Aurum Screen Imports ───────────────────────────────────
+/* ─── Screens (Cloudinary) ───────────────────────────────────────── */
 const screenExchange = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774041357/470258954933ae7f3b3615ad0fe2098ae46160f5_2_wvsmro.webp';
-const screenProfile = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774040904/259c40c789033b795135eecd13ffa040e408d1d8_g0b0ks.webp';
-const screenLogin = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339514/code_wp94ox.avif';
-const screenQR = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339514/code_wp94ox.avif';
-const screenTransfer = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339514/code_wp94ox.avif';
-const screenLanding = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774040819/33bde90ba43fe3b089e907b814ef1018193651cd_hptwri.webp';
-const screenVerify = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1776339514/code_wp94ox.avif';
 const designSystemSheet = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773321666/aurumn_design_iap0vm.png';
-
-/* ─── Cloudinary Key Screens ─────────────────────────────────────── */
 const cloudScreenHomeDark = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774016538/homedark_zieimk.webp';
 const cloudScreenExchange = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774016554/exchange_ggykpz.webp';
 const cloudScreenLogin = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774016548/login-_au5gne.webp';
 const cloudScreenAuth = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774016553/authentication_r7las2.webp';
 const cloudScreenQR = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774016553/qr_vsfslb.webp';
 
-/* ─── Brand Tokens ─────────────────────────────────────────────────── */
+/* ─── Brand tokens ───────────────────────────────────────────────── */
 const BRAND = {
   gold: '#D59A04',
-  goldLight: '#F0C040',
-  goldDark: '#A67B03',
   darkBg: '#080B0F',
-  surface: '#121318',
-  lightBg: '#F3F3F3',
-  neutral: '#9295A6',
+  surface: '#0E1015',
   headingFont: '"Syne", "Space Grotesk", sans-serif',
   bodyFont: '"Manrope", "Inter", sans-serif',
-  portfolioAccent: '#ff4306',
 };
 
-/* ─── Shared Components ────────────────────────────────────────── */
-const Divider = () => {
-  const { theme } = useTheme();
-  return <AnimatedDivider color={theme === 'dark' ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.08)'} />;
-};
+const EASE = [0.22, 1, 0.36, 1] as const;
 
-const SectionTag = ({ number, label }: { number: string; label: string }) => {
-  const { theme } = useTheme();
-  const isDark = theme === 'dark';
-  return (
-    <div className="flex items-center gap-4 mb-6">
-      <span className="text-[#D59A04] text-sm font-mono">{number}</span>
-      <div className="w-8 h-px bg-[#D59A04]/40" />
-      <span className={`text-[10px] uppercase tracking-[0.25em] ${isDark ? 'text-[#9295A6]' : 'text-zinc-400'}`}>{label}</span>
-    </div>
-  );
-};
+/* Focus ring shared by every interactive element on the page */
+const FOCUS = 'outline-none focus-visible:ring-2 focus-visible:ring-[#D59A04] focus-visible:ring-offset-2 focus-visible:ring-offset-[#080B0F]';
 
-/* ─── Screen Gallery Item ─────────────────────────────────────── */
-const ScreenCard = ({
-  src, label, description, icon, delay = 0, isDark = true,
-}: {
-  src: string; label: string; description: string; icon: React.ReactNode; delay?: number; isDark?: boolean;
-}) => (
-  <FadeIn delay={delay}>
-    <div className="group">
-      <div className={`rounded-xl overflow-hidden mb-4 border shadow-lg ${isDark ? 'border-white/[0.06] shadow-black/30' : 'border-zinc-200 shadow-zinc-200/50'}`}>
-        <img {...IMG.wide(src)} alt={label} width="1440" height="900" className="w-full block group-hover:scale-[1.02] transition-transform duration-700" />
-      </div>
-      <div className="flex items-start gap-3">
-        <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5 ${isDark ? 'bg-[#D59A04]/10' : 'bg-amber-50'}`}>
-          <span className="text-[#D59A04]">{icon}</span>
-        </div>
-        <div>
-          <h4 className={`text-sm mb-1 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont }}>{label}</h4>
-          <p className={`text-[12px] leading-relaxed ${isDark ? 'text-[#9295A6]' : 'text-zinc-400'}`}>{description}</p>
-        </div>
-      </div>
-    </div>
-  </FadeIn>
+/* ─── Layout primitives ──────────────────────────────────────────── */
+/* One container, one left edge, for every section on the page */
+const Container = ({ children, className = '' }: { children: ReactNode; className?: string }) => (
+  <div className={`mx-auto w-full max-w-[1200px] px-5 sm:px-8 md:px-14 xl:px-10 ${className}`}>{children}</div>
 );
 
-/* ─── Scroll To Top Button ──────────────────────────────────────── */
+/* One vertical rhythm: every chapter is separated by the same hairline and padding */
+const Section = ({ id, children, label }: { id: string; children: ReactNode; label?: string }) => (
+  <section id={id} aria-label={label} className="scroll-mt-20 border-t border-white/[0.07] py-20 md:py-28 lg:py-32">
+    <Container>{children}</Container>
+  </section>
+);
+
+const Chapter = ({ number, label }: { number: string; label: string }) => (
+  <p className="mb-6 flex items-baseline gap-3 text-[13px] text-[#9295A6] md:mb-8">
+    <span className="font-mono text-[#D59A04]">{number}</span>
+    <span aria-hidden className="h-px w-6 translate-y-[-3px] bg-white/20" />
+    <span>{label}</span>
+  </p>
+);
+
+const H2 = ({ children, className = '' }: { children: ReactNode; className?: string }) => (
+  <h2
+    className={`max-w-[22ch] text-balance text-[34px] leading-[1.08] tracking-[-0.025em] text-white sm:text-[42px] lg:text-[52px] ${className}`}
+    style={{ fontFamily: BRAND.headingFont, fontWeight: 600 }}
+  >
+    {children}
+  </h2>
+);
+
+const H3 = ({ children, className = '' }: { children: ReactNode; className?: string }) => (
+  <h3
+    className={`text-[22px] leading-[1.2] tracking-[-0.015em] text-white md:text-[26px] ${className}`}
+    style={{ fontFamily: BRAND.headingFont, fontWeight: 600 }}
+  >
+    {children}
+  </h3>
+);
+
+const Lead = ({ children, className = '' }: { children: ReactNode; className?: string }) => (
+  <p className={`max-w-[62ch] text-pretty text-[17px] leading-[1.65] text-zinc-300 md:text-[18px] ${className}`}>{children}</p>
+);
+
+const Caption = ({ children, className = '' }: { children: ReactNode; className?: string }) => (
+  <p className={`text-[14px] leading-[1.6] text-[#9295A6] ${className}`}>{children}</p>
+);
+
+/* ─── Browser frame for product screens ──────────────────────────── */
+const BrowserFrame = ({ children, url = 'aurum.exchange', className = '' }: { children: ReactNode; url?: string; className?: string }) => (
+  <div
+    className={`overflow-hidden rounded-[10px] bg-[#0B0D12] ring-1 ring-white/[0.08] shadow-[0_40px_80px_-30px_rgba(0,0,0,0.75),0_12px_24px_-12px_rgba(0,0,0,0.5)] md:rounded-[14px] ${className}`}
+  >
+    <div className="flex h-8 items-center gap-3 border-b border-white/[0.06] bg-[#111319] px-3 md:h-10 md:px-4">
+      <div className="flex gap-1.5" aria-hidden>
+        <span className="h-2 w-2 rounded-full bg-white/[0.14] md:h-2.5 md:w-2.5" />
+        <span className="h-2 w-2 rounded-full bg-white/[0.14] md:h-2.5 md:w-2.5" />
+        <span className="h-2 w-2 rounded-full bg-white/[0.14] md:h-2.5 md:w-2.5" />
+      </div>
+      <div className="flex min-w-0 flex-1 justify-center">
+        <span className="truncate rounded-md bg-white/[0.04] px-3 py-0.5 font-mono text-[10px] text-[#9295A6] md:text-[11px]">{url}</span>
+      </div>
+      <span className="w-[42px] md:w-[52px]" aria-hidden />
+    </div>
+    <div className="relative [&_img]:block">{children}</div>
+  </div>
+);
+
+/* ─── Motion helpers (local) ─────────────────────────────────────── */
+
+/*
+ * The hero plays its entrance only on client-side navigation. Prerendered
+ * HTML (and React adopting it) stays exactly as delivered, so nothing is
+ * ever hidden waiting for JavaScript, and reduced motion skips it entirely.
+ */
+function usePlayIntro() {
+  const reduce = useReducedMotion();
+  const [play] = useState(() => typeof window !== 'undefined' && !isHydrating());
+  return play && !reduce;
+}
+
+function useIsDesktop() {
+  const [desktop, setDesktop] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 1024px)');
+    const update = () => setDesktop(mq.matches);
+    update();
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
+  }, []);
+  return desktop;
+}
+
+/*
+ * Scroll-linked reveal for large screenshots: the frame settles from a
+ * slightly smaller, lower position into place as it enters the viewport.
+ * It is tied to scroll position (no observer, no opacity), so it can never
+ * get stuck hidden; with reduced motion it renders static.
+ */
+function ScreenReveal({ children, className = '' }: { children: ReactNode; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const reduce = useReducedMotion();
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'start 0.35'] });
+  const scale = useTransform(scrollYProgress, [0, 1], [0.94, 1]);
+  const y = useTransform(scrollYProgress, [0, 1], [48, 0]);
+  return (
+    <motion.div ref={ref} className={className} style={reduce ? undefined : { scale, y, transformOrigin: '50% 0%' }}>
+      {children}
+    </motion.div>
+  );
+}
+
+const heroParent: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.09, delayChildren: 0.05 } },
+};
+const heroItem: Variants = {
+  hidden: { opacity: 0, y: 16 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE } },
+};
+const heroTitle: Variants = {
+  hidden: { y: '102%' },
+  show: { y: '0%', transition: { duration: 0.95, ease: EASE } },
+};
+const heroScreen: Variants = {
+  hidden: { opacity: 0, y: 56, scale: 0.97 },
+  show: { opacity: 1, y: 0, scale: 1, transition: { duration: 1.2, ease: EASE, delay: 0.2 } },
+};
+
+/* ─── Scroll to top ──────────────────────────────────────────────── */
 const ScrollToTopButton = () => {
   const [visible, setVisible] = useState(false);
-  const { theme } = useTheme();
-  const isDark = theme === 'dark';
+  const reduce = useReducedMotion();
 
   useEffect(() => {
     const onScroll = () => setVisible(window.scrollY > 600);
+    onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
@@ -110,53 +183,347 @@ const ScrollToTopButton = () => {
     <AnimatePresence>
       {visible && (
         <motion.button
-          initial={{ opacity: 0, scale: 0.8, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.8, y: 20 }}
-          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          initial={reduce ? false : { opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={reduce ? { opacity: 0, transition: { duration: 0 } } : { opacity: 0, y: 12 }}
+          transition={{ duration: 0.3, ease: EASE }}
+          onClick={() => window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' })}
           aria-label="Back to top"
-          className={`fixed bottom-24 md:bottom-8 right-5 md:right-8 z-50 w-12 h-12 rounded-full flex items-center justify-center shadow-2xl backdrop-blur-xl transition-colors group focus-visible:!shadow-[0_0_0_2px_rgba(255,67,6,0.9)] ${
-            isDark
-              ? 'bg-[#D59A04]/90 hover:bg-[#D59A04] shadow-[#D59A04]/20 text-black'
-              : 'bg-[#D59A04] hover:bg-[#D59A04]/90 shadow-[#D59A04]/30 text-white'
-          }`}
-          whileHover={{ scale: 1.1, y: -2 }}
-          whileTap={{ scale: 0.95 }}
+          className={`fixed bottom-24 right-5 z-50 flex h-11 w-11 items-center justify-center rounded-full bg-[#15171D] text-white ring-1 ring-white/10 transition-colors hover:bg-[#1C1F26] md:bottom-8 md:right-8 ${FOCUS}`}
         >
-          <ChevronUp size={20} aria-hidden className="group-hover:-translate-y-0.5 transition-transform" />
+          <ChevronUp size={18} aria-hidden />
         </motion.button>
       )}
     </AnimatePresence>
   );
 };
 
-/* ════════════════════════════════════════════════════════════════ */
-/* ─── AURUM CASE STUDY PAGE ──────────────────────────────────── */
-/* ═════════════════════════════════════════════════════════════════ */
-export function AurumCaseStudy() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const { theme } = useTheme();
-  const isDark = theme === 'dark';
-  const navigate = useNavigate();
+/* ─── AURUM wordmark ─────────────────────────────────────────────── */
+const AurumLogo = () => (
+  <svg className="h-[24px] w-auto md:h-[26px]" fill="none" viewBox="0 0 172.683 42" role="img" aria-label="AURUM">
+    <g clipPath="url(#aurumNavClip)">
+      <g>
+        <path d={aurumSvgPaths.p6257700} fill="white" />
+        <path d={aurumSvgPaths.p3d43c00} fill="white" />
+        <path d={aurumSvgPaths.p31dbf400} fill="white" />
+        <path d={aurumSvgPaths.p2e633f80} fill="white" />
+        <path d={aurumSvgPaths.p1daaf900} fill="white" />
+      </g>
+      <path d={aurumSvgPaths.p1ca9d680} fill="white" />
+      <g>
+        <path d={aurumSvgPaths.p3949f800} fill="white" />
+        <path d={aurumSvgPaths.p26292900} fill="white" />
+        <path d={aurumSvgPaths.pe6c6980} fill="white" />
+        <path d={aurumSvgPaths.p195dbbf0} fill="white" />
+        <path d={aurumSvgPaths.p1255fc00} fill="white" />
+        <path d={aurumSvgPaths.p1ca57680} fill="white" />
+        <path d={aurumSvgPaths.p1858a700} fill="white" />
+        <path d={aurumSvgPaths.p370a4300} fill="white" />
+        <path d={aurumSvgPaths.p221cfb80} fill="white" />
+        <path d={aurumSvgPaths.p2ce20f00} fill="white" />
+        <path d={aurumSvgPaths.p8c7a300} fill="white" />
+        <path d={aurumSvgPaths.p186acb00} fill="white" />
+        <path d={aurumSvgPaths.p10ae5200} fill="white" />
+        <path d={aurumSvgPaths.p165ebf60} fill="white" />
+      </g>
+      <g>
+        <path d={aurumSvgPaths.p3b4fec80} fill="#D59A04" />
+        <path d={aurumSvgPaths.p3c3e7800} fill="#D59A04" />
+      </g>
+    </g>
+    <defs>
+      <clipPath id="aurumNavClip">
+        <rect fill="white" height="42" width="172.683" />
+      </clipPath>
+    </defs>
+  </svg>
+);
 
-  useEffect(() => {
-    const onMove = (e: MouseEvent) => setMousePosition({ x: e.clientX, y: e.clientY });
-    window.addEventListener('mousemove', onMove);
-    return () => window.removeEventListener('mousemove', onMove);
-  }, []);
+/* ═══════════════════════════════════════════════════════════════════ */
+/* ─── HERO ─────────────────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════════ */
+const META = [
+  { label: 'Client', value: 'AURUM' },
+  { label: 'Role', value: 'Lead UX/UI Designer' },
+  { label: 'Platform', value: 'Web & Mobile' },
+  { label: 'Industry', value: 'FinTech / Crypto, regulated' },
+  { label: 'Tools', value: 'Figma, Protopie' },
+  { label: 'Timeline', value: '12 weeks, 2024' },
+];
 
-  const bg = isDark ? 'bg-[#080B0F] text-white' : 'bg-[#F3F3F3] text-zinc-900';
-  const mt = isDark ? 'text-[#9295A6]' : 'text-zinc-400';
-  const bt = isDark ? 'text-zinc-300' : 'text-zinc-600';
-  const cb = isDark ? 'border-white/[0.06]' : 'border-zinc-200';
-  const cardBg = isDark ? 'bg-[#121318]' : 'bg-white';
+function AurumHero() {
+  const play = usePlayIntro();
+  const reduce = useReducedMotion();
+  const screenRef = useRef<HTMLDivElement>(null);
+  // Gentle depth as the hero screen scrolls away
+  const { scrollYProgress } = useScroll({ target: screenRef, offset: ['start 0.6', 'end start'] });
+  const screenScale = useTransform(scrollYProgress, [0, 1], [1, 0.965]);
 
   return (
-    <div className={`${bg} min-h-screen transition-colors duration-500 relative`} style={{ fontFamily: BRAND.bodyFont }}>
+    <motion.header
+      className="pb-20 pt-28 md:pb-28 md:pt-36 lg:pb-32 lg:pt-40"
+      variants={heroParent}
+      initial={play ? 'hidden' : false}
+      animate="show"
+    >
+      <Container>
+        <motion.p variants={heroItem} className="mb-6 flex items-center gap-3 text-[13px] text-[#9295A6] md:mb-8">
+          <span>Case study</span>
+          <span aria-hidden className="h-px w-6 bg-white/20" />
+          <span>2024</span>
+        </motion.p>
+
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-end lg:gap-10">
+          <div className="lg:col-span-7">
+            <h1 className="overflow-hidden pb-[0.04em]">
+              <motion.span
+                variants={heroTitle}
+                className="block text-[72px] leading-[0.92] tracking-[-0.045em] text-white sm:text-[112px] lg:text-[148px]"
+                style={{ fontFamily: BRAND.headingFont, fontWeight: 700 }}
+              >
+                AURUM
+              </motion.span>
+              <span className="sr-only">, crypto exchange platform</span>
+            </h1>
+          </div>
+          <motion.div variants={heroItem} className="lg:col-span-5 lg:pb-3">
+            <p aria-hidden className="mb-3 text-[22px] leading-[1.25] tracking-[-0.01em] text-white md:text-[26px]" style={{ fontFamily: BRAND.headingFont, fontWeight: 600 }}>
+              Crypto Exchange Platform
+            </p>
+            <p className="max-w-[46ch] text-[17px] leading-[1.6] text-zinc-300">
+              A regulated crypto exchange designed for complex onboarding, verification logic, and online/offline transaction flows.
+            </p>
+          </motion.div>
+        </div>
+
+        <motion.dl
+          variants={heroItem}
+          className="mt-12 grid grid-cols-2 gap-x-6 gap-y-6 border-t border-white/[0.08] pt-6 md:mt-16 md:grid-cols-3 lg:grid-cols-6"
+        >
+          {META.map((m) => (
+            <div key={m.label}>
+              <dt className="mb-1 text-[13px] text-[#9295A6]">{m.label}</dt>
+              <dd className="text-[15px] leading-[1.45] text-white">{m.value}</dd>
+            </div>
+          ))}
+        </motion.dl>
+
+        <motion.div variants={heroItem} className="mt-6">
+          <Caption>Scope: UX research, UI design, design system, prototyping. 196 screens, 2 platforms, 3 UX stories.</Caption>
+        </motion.div>
+
+        <motion.div ref={screenRef} variants={heroScreen} className="mt-12 md:mt-16">
+          <motion.div style={reduce ? undefined : { scale: screenScale, transformOrigin: '50% 0%' }}>
+            <BrowserFrame>
+              <img
+                {...IMG.wide(screenExchange)}
+                alt="AURUM Exchange Dashboard"
+                width="1440"
+                height="900"
+                className="h-auto w-full"
+                loading="eager"
+                {...{ fetchpriority: 'high' }}
+              />
+            </BrowserFrame>
+          </motion.div>
+        </motion.div>
+      </Container>
+    </motion.header>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════════ */
+/* ─── STORY (scrubbed sequence) ───────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════════ */
+const STORY = [
+  { step: 'Hook', number: '00.1', text: 'What if crypto trading could feel as simple as sending a message, secure, fast, and beautiful?' },
+  { step: 'Friction', number: '00.2', text: 'Existing crypto platforms overwhelm users with cluttered dashboards, confusing charts, and intimidating verification flows. New users abandon. Experienced traders settle for poor UX.' },
+  { step: 'Pivot', number: '00.3', text: 'We designed AURUM around progressive disclosure, showing only what matters at each step, with guided onboarding, contextual education, and confidence-building visual feedback.' },
+  { step: 'Proof', number: '00.4', text: '196 screens. 64+ components. Mobile-first responsive design. End-to-end crypto exchange platform covering trading, transfers, verification, and portfolio management.' },
+];
+
+function StoryBeat({ item, index, scrub }: { item: (typeof STORY)[number]; index: number; scrub: boolean }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
+  const opacity = useTransform(scrollYProgress, [0, 0.38, 0.62, 1], [0.3, 1, 1, 0.3]);
+  return (
+    <div ref={ref} className="py-8 first:pt-0 last:pb-0 lg:flex lg:min-h-[52vh] lg:items-center lg:py-0">
+      <motion.div style={scrub ? { opacity } : undefined}>
+        <p className="mb-4 flex items-baseline gap-3 text-[13px] text-[#9295A6]">
+          <span className="font-mono text-[#D59A04]">{item.number}</span>
+          <span>{item.step}</span>
+        </p>
+        <p
+          className={`max-w-[34ch] text-pretty text-[22px] leading-[1.4] tracking-[-0.01em] md:text-[28px] lg:text-[32px] ${index === 0 ? 'text-white' : 'text-zinc-200'}`}
+          style={{ fontFamily: index === 0 ? BRAND.headingFont : BRAND.bodyFont, fontWeight: index === 0 ? 600 : 500 }}
+        >
+          {item.text}
+        </p>
+      </motion.div>
+    </div>
+  );
+}
+
+function StorySection() {
+  const ref = useRef<HTMLDivElement>(null);
+  const reduce = useReducedMotion();
+  const desktop = useIsDesktop();
+  const scrub = desktop && !reduce;
+  const [active, setActive] = useState(0);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start center', 'end center'] });
+  useMotionValueEvent(scrollYProgress, 'change', (v) => {
+    const i = Math.min(STORY.length - 1, Math.max(0, Math.floor(v * STORY.length)));
+    setActive((prev) => (prev === i ? prev : i));
+  });
+
+  return (
+    <Section id="story" label="Story">
+      <div ref={ref} className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:gap-10">
+        <div className="lg:col-span-4">
+          <div className="lg:sticky lg:top-32">
+            <h2 className="sr-only">Story</h2>
+            <Chapter number="00" label="Story" />
+            <ol className="hidden space-y-3 lg:block" aria-hidden>
+              {STORY.map((s, i) => (
+                <li key={s.step} className="flex items-center gap-3 text-[15px]">
+                  <span
+                    className={`h-px transition-all duration-500 motion-reduce:transition-none ${i === active ? 'w-10 bg-[#D59A04]' : 'w-5 bg-white/20'}`}
+                  />
+                  <span className={`transition-colors duration-500 motion-reduce:transition-none ${i === active ? 'text-white' : 'text-[#9295A6]'}`}>{s.step}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </div>
+        <div className="divide-y divide-white/[0.07] lg:col-span-8 lg:divide-y-0">
+          {STORY.map((item, i) => (
+            <StoryBeat key={item.step} item={item} index={i} scrub={scrub} />
+          ))}
+        </div>
+      </div>
+    </Section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════════ */
+/* ─── KEY SCREENS ─────────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════════ */
+type Screen = { num: string; title: string; desc: string; tags: string[]; src: string };
+
+const FEATURED_SCREENS: Screen[] = [
+  {
+    num: '01', title: 'Home Dark',
+    desc: 'The landing experience in dark mode, showcasing the platform\'s premium aesthetic with gold accents, clean typography, and inviting entry points.',
+    tags: ['Dark mode', 'Landing', 'Brand identity'], src: cloudScreenHomeDark,
+  },
+  {
+    num: '02', title: 'Exchange Dashboard',
+    desc: 'The heart of the platform, real-time market data, trading pairs, order book, and price charts unified in a clean, scannable layout.',
+    tags: ['Real-time data', 'Order book', 'Price charts'], src: cloudScreenExchange,
+  },
+];
+
+const FLOW_SCREENS: Screen[] = [
+  {
+    num: '03', title: 'Login',
+    desc: 'Secure entry point with clean form design, trust-building visual indicators, and a clear path to account creation.',
+    tags: ['Secure login', 'Form design', 'Trust signals'], src: cloudScreenLogin,
+  },
+  {
+    num: '04', title: 'Authentication',
+    desc: '2FA verification flow with biometric options and step-by-step guidance that makes security feel effortless and trustworthy.',
+    tags: ['2FA', 'Biometrics', 'Verification'], src: cloudScreenAuth,
+  },
+  {
+    num: '05', title: 'QR Transfer',
+    desc: 'Instant peer-to-peer transfers via QR code scanning, making crypto transfers as simple as sharing a photo.',
+    tags: ['P2P transfer', 'QR scanner', 'Instant send'], src: cloudScreenQR,
+  },
+];
+
+const ScreenText = ({ s, className = '' }: { s: Screen; className?: string }) => (
+  <div className={className}>
+    <p className="mb-3 font-mono text-[13px] text-[#D59A04]">{s.num}</p>
+    <H3 className="mb-3">{s.title}</H3>
+    <p className="mb-3 max-w-[52ch] text-[17px] leading-[1.6] text-zinc-300">{s.desc}</p>
+    <Caption>{s.tags.join(' · ')}</Caption>
+  </div>
+);
+
+const ScreenImg = ({ s, className = 'h-auto w-full' }: { s: Screen; className?: string }) => (
+  <img {...IMG.wide(s.src)} alt={s.title} width="1440" height="900" loading="lazy" decoding="async" className={className} />
+);
+
+/*
+ * Sign-in → 2FA → QR transfer is a sequence, so on desktop it is told as
+ * one: the copy scrolls while a single pinned frame swaps to the matching
+ * screen. Below 1024px each step simply carries its own screen.
+ */
+function FlowSequence() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [active, setActive] = useState(0);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start center', 'end center'] });
+  useMotionValueEvent(scrollYProgress, 'change', (v) => {
+    const i = Math.min(FLOW_SCREENS.length - 1, Math.max(0, Math.floor(v * FLOW_SCREENS.length)));
+    setActive((prev) => (prev === i ? prev : i));
+  });
+
+  return (
+    <div ref={ref} className="grid grid-cols-1 lg:grid-cols-12 lg:gap-12">
+      <div className="space-y-20 lg:col-span-5 lg:space-y-0">
+        {FLOW_SCREENS.map((s, i) => (
+          <div key={s.num} className="lg:flex lg:min-h-[78vh] lg:items-center">
+            <div>
+              <ScreenText
+                s={s}
+                className={`transition-opacity duration-500 motion-reduce:transition-none ${i === active ? 'lg:opacity-100' : 'lg:opacity-40'}`}
+              />
+              <ScreenReveal className="mt-8 lg:hidden">
+                <BrowserFrame>
+                  <ScreenImg s={s} />
+                </BrowserFrame>
+              </ScreenReveal>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="hidden lg:col-span-7 lg:block">
+        <div className="sticky top-[max(7rem,calc(50vh-15rem))]">
+          <BrowserFrame>
+            <div className="relative aspect-[16/10] bg-[#0B0D12]">
+              {FLOW_SCREENS.map((s, i) => (
+                <ScreenImg
+                  key={s.num}
+                  s={s}
+                  className={`absolute inset-0 h-full w-full object-contain transition-opacity duration-500 motion-reduce:transition-none ${i === active ? 'opacity-100' : 'opacity-0'}`}
+                />
+              ))}
+            </div>
+          </BrowserFrame>
+          <div className="mt-5 flex items-center gap-2" aria-hidden>
+            {FLOW_SCREENS.map((s, i) => (
+              <span key={s.num} className={`h-[3px] rounded-full transition-all duration-500 motion-reduce:transition-none ${i === active ? 'w-8 bg-[#D59A04]' : 'w-4 bg-white/15'}`} />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════════ */
+/* ─── PAGE ────────────────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════════ */
+export function AurumCaseStudy() {
+  const navigate = useNavigate();
+
+  return (
+    <div
+      className="relative min-h-screen overflow-x-clip bg-[#080B0F] text-white antialiased"
+      style={{ fontFamily: BRAND.bodyFont }}
+    >
       <AurumSEO />
       <CaseHeroTarget path="/projects/aurum" />
-      {/* Section navigator */}
       <CaseStudySectionNav
         accentColor="#D59A04"
         sections={[
@@ -171,616 +538,314 @@ export function AurumCaseStudy() {
           { id: 'outcome', label: 'Outcome' },
         ]}
       />
-      {/* Cursor */}
-      <motion.div className="fixed w-8 h-8 border border-[#D59A04]/60 rounded-full pointer-events-none z-[60] mix-blend-difference hidden lg:block" animate={{ x: mousePosition.x - 16, y: mousePosition.y - 16 }} transition={{ type: 'spring', damping: 30, stiffness: 250 }} />
-      <motion.div className="fixed w-1.5 h-1.5 bg-[#D59A04] rounded-full pointer-events-none z-[60] mix-blend-difference hidden lg:block" animate={{ x: mousePosition.x - 3, y: mousePosition.y - 3 }} transition={{ type: 'spring', damping: 50, stiffness: 400 }} />
 
-      {/* ─── NAV ────────────────────────────────────────────────────── */}
-      <motion.nav
-        aria-label="Case study"
-        initial={{ y: -80 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-        className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-2xl ${isDark ? 'bg-[#080B0F]/80 border-b border-white/[0.04]' : 'bg-white/80 border-b border-zinc-200/60'}`}
-      >
-        <div className="max-w-7xl mx-auto px-6 lg:px-12 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <motion.button
+      {/* ─── NAV ──────────────────────────────────────────────────── */}
+      <nav aria-label="Case study" className="fixed left-0 right-0 top-0 z-50 border-b border-white/[0.06] bg-[#080B0F]/80 backdrop-blur-xl">
+        <div className="mx-auto flex h-16 w-full max-w-[1200px] items-center justify-between px-5 sm:px-8 md:px-14 xl:px-10">
+          <div className="flex items-center gap-3 md:gap-4">
+            <button
+              type="button"
               onClick={() => navigate('/', { viewTransition: true })}
-              whileHover={{ x: -3 }}
-              whileTap={{ scale: 0.95 }}
-              className={`flex items-center gap-2 text-sm rounded-lg px-2 py-1.5 min-h-[44px] focus-visible:!shadow-[0_0_0_2px_rgba(255,67,6,0.9)] ${isDark ? 'text-[#9295A6] hover:text-white hover:bg-white/[0.04]' : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100'} transition-colors`}
+              className={`-ml-2 flex min-h-[44px] items-center gap-2 rounded-lg px-2 text-[13px] text-[#9295A6] transition-colors hover:text-white ${FOCUS}`}
             >
-              <ArrowLeft size={15} />
-              <span className="text-[12px] tracking-wide">Back to Portfolio</span>
-            </motion.button>
-            <div className={`w-px h-5 ${isDark ? 'bg-white/10' : 'bg-zinc-200'}`} />
-            <div className="flex items-center gap-2.5">
-              <svg className="h-[28px] w-auto" fill="none" viewBox="0 0 172.683 42" role="img" aria-label="AURUM">
-                <g clipPath="url(#aurumNavClip)">
-                  <g>
-                    <path d={aurumSvgPaths.p6257700} fill="white" />
-                    <path d={aurumSvgPaths.p3d43c00} fill="white" />
-                    <path d={aurumSvgPaths.p31dbf400} fill="white" />
-                    <path d={aurumSvgPaths.p2e633f80} fill="white" />
-                    <path d={aurumSvgPaths.p1daaf900} fill="white" />
-                  </g>
-                  <path d={aurumSvgPaths.p1ca9d680} fill="white" />
-                  <g>
-                    <path d={aurumSvgPaths.p3949f800} fill="white" />
-                    <path d={aurumSvgPaths.p26292900} fill="white" />
-                    <path d={aurumSvgPaths.pe6c6980} fill="white" />
-                    <path d={aurumSvgPaths.p195dbbf0} fill="white" />
-                    <path d={aurumSvgPaths.p1255fc00} fill="white" />
-                    <path d={aurumSvgPaths.p1ca57680} fill="white" />
-                    <path d={aurumSvgPaths.p1858a700} fill="white" />
-                    <path d={aurumSvgPaths.p370a4300} fill="white" />
-                    <path d={aurumSvgPaths.p221cfb80} fill="white" />
-                    <path d={aurumSvgPaths.p2ce20f00} fill="white" />
-                    <path d={aurumSvgPaths.p8c7a300} fill="white" />
-                    <path d={aurumSvgPaths.p186acb00} fill="white" />
-                    <path d={aurumSvgPaths.p10ae5200} fill="white" />
-                    <path d={aurumSvgPaths.p165ebf60} fill="white" />
-                  </g>
-                  <g>
-                    <path d={aurumSvgPaths.p3b4fec80} fill="#D59A04" />
-                    <path d={aurumSvgPaths.p3c3e7800} fill="#D59A04" />
-                  </g>
-                </g>
-                <defs>
-                  <clipPath id="aurumNavClip">
-                    <rect fill="white" height="42" width="172.683" />
-                  </clipPath>
-                </defs>
-              </svg>
-            </div>
+              <ArrowLeft size={15} aria-hidden />
+              <span className="hidden sm:inline">Back to Portfolio</span>
+              <span className="sm:hidden">Back</span>
+            </button>
+            <span aria-hidden className="h-5 w-px bg-white/10" />
+            <AurumLogo />
           </div>
-          <div className="flex items-center gap-5">
-            <div className="hidden md:flex gap-5">
-              {['Overview', 'Screens', 'Design'].map((item) => (
-                <motion.a key={item} href={`#${item.toLowerCase()}`} whileHover={{ y: -1 }} className={`text-[12px] tracking-wide ${isDark ? 'text-[#9295A6] hover:text-white' : 'text-zinc-500 hover:text-zinc-900'} transition-colors`}>{item}</motion.a>
-              ))}
-            </div>
-          </div>
-        </div>
-      </motion.nav>
-
-      <main id="main-content" tabIndex={-1} className="outline-none">
-      <ScrollToTopButton />
-
-      {/* ═══════════════════════════════════════════════════════════════ */}
-      {/* ─── HERO ────────────────────────────────────────────────── */}
-      {/* ═══════════════════════════════════════════════════════════════ */}
-      {/* ─── PROJECT META BAR ─────────────────────────────────────────── */}
-      <div className={`relative z-20 pt-[72px] border-b ${isDark ? 'border-white/[0.06] bg-[#121318]/30 backdrop-blur-xl' : 'border-zinc-200 bg-white/50 backdrop-blur-xl'}`}>
-        <div className="max-w-7xl mx-auto px-6 lg:px-12 py-5">
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
-            {[
-              { label: 'Client', value: 'AURUM' },
-              { label: 'Role', value: 'Lead UX/UI Designer' },
-              { label: 'Platform', value: 'Web & Mobile' },
-              { label: 'Industry', value: 'FinTech / Crypto' },
-              { label: 'Tools', value: 'Figma, Protopie' },
-            ].map((item, i) => (
-              <motion.div
-                key={item.label}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 * i + 0.3, duration: 0.5 }}
+          <div className="hidden gap-6 md:flex">
+            {['Overview', 'Screens', 'Design'].map((item) => (
+              <a
+                key={item}
+                href={`#${item.toLowerCase()}`}
+                className={`rounded text-[13px] text-[#9295A6] transition-colors hover:text-white ${FOCUS}`}
               >
-                <span className={`text-[10px] uppercase tracking-[0.2em] block mb-1 ${isDark ? 'text-[#9295A6]' : 'text-zinc-500'}`}>{item.label}</span>
-                <span className={`text-[13px] ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont }}>{item.value}</span>
-              </motion.div>
+                {item}
+              </a>
             ))}
           </div>
         </div>
-      </div>
+      </nav>
 
-      <HeroCover />
+      <main id="main-content" tabIndex={-1} className="outline-none">
+        <ScrollToTopButton />
 
-      <div className="max-w-6xl mx-auto px-6 lg:px-12"><Divider /></div>
+        <AurumHero />
 
-      {/* ─── STORYTELLING: Hook → Friction → Pivot → Proof ──────────── */}
-      <section id="story" className="relative py-20 lg:py-28 px-6 lg:px-12 overflow-x-hidden">
-        <div className="max-w-4xl mx-auto">
-          {[
-            {
-              step: 'Hook',
-              number: '00.1',
-              text: 'What if crypto trading could feel as simple as sending a message, secure, fast, and beautiful?',
-              accent: BRAND.gold,
-              icon: <Eye size={16} />,
-            },
-            {
-              step: 'Friction',
-              number: '00.2',
-              text: 'Existing crypto platforms overwhelm users with cluttered dashboards, confusing charts, and intimidating verification flows. New users abandon. Experienced traders settle for poor UX.',
-              accent: '#F87171',
-              icon: <Zap size={16} />,
-            },
-            {
-              step: 'Pivot',
-              number: '00.3',
-              text: 'We designed AURUM around progressive disclosure, showing only what matters at each step, with guided onboarding, contextual education, and confidence-building visual feedback.',
-              accent: '#10B981',
-              icon: <PenTool size={16} />,
-            },
-            {
-              step: 'Proof',
-              number: '00.4',
-              text: '196 screens. 64+ components. Mobile-first responsive design. End-to-end crypto exchange platform covering trading, transfers, verification, and portfolio management.',
-              accent: BRAND.goldLight,
-              icon: <CheckCircle size={16} />,
-            },
-          ].map((item, i) => (
-            <FadeIn key={item.step} delay={i * 0.1}>
-              <div className={`flex items-start gap-5 mb-10 last:mb-0`}>
-                <div className="flex flex-col items-center flex-shrink-0">
-                  <div
-                    className="w-9 h-9 rounded-xl flex items-center justify-center mb-2"
-                    style={{ backgroundColor: `${item.accent}15`, color: item.accent }}
-                  >
-                    {item.icon}
-                  </div>
-                  {i < 3 && <div className={`w-px h-12 ${isDark ? 'bg-white/[0.06]' : 'bg-zinc-200'}`} />}
-                </div>
-                <div className="pt-1.5">
-                  <div className="flex items-center gap-3 mb-2">
-                    <span className="text-[10px] font-mono" style={{ color: item.accent }}>{item.number}</span>
-                    <span className={`text-[10px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-md ${isDark ? 'bg-white/[0.03] text-white/60' : 'bg-zinc-100 text-zinc-500'}`}>{item.step}</span>
-                  </div>
-                  <p className={`text-fluidpx-15-17 leading-relaxed ${i === 0 ? (isDark ? 'text-white' : 'text-zinc-900') : bt}`} style={{ fontFamily: i === 0 ? BRAND.headingFont : BRAND.bodyFont }}>
-                    {item.text}
-                  </p>
-                </div>
-              </div>
-            </FadeIn>
-          ))}
-        </div>
-      </section>
+        <StorySection />
 
-      <div className="max-w-6xl mx-auto px-6 lg:px-12"><Divider /></div>
-
-      {/* ─── OVERVIEW ─────────────────────────────────────────────────── */}
-      <section id="overview" className="relative py-24 lg:py-32 px-6 lg:px-12">
-        <div className="max-w-6xl mx-auto">
-          <FadeIn><SectionTag number="01" label="Project Overview" /></FadeIn>
-          <FadeIn>
-            <h2 className="text-fluid-30-48 leading-tight mb-6" style={{ fontFamily: BRAND.headingFont }}>
-              Redefining <span className="text-[#D59A04]">crypto</span> trading<br />experience
-            </h2>
-            <div className="max-w-3xl">
-              <p className={`${bt} leading-relaxed mb-4`}>
+        {/* ─── 01 OVERVIEW ─────────────────────────────────────────── */}
+        <Section id="overview">
+          <Chapter number="01" label="Project overview" />
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-10">
+            <H2 className="lg:col-span-5">Redefining crypto trading experience</H2>
+            <div className="space-y-5 lg:col-span-7 lg:pt-2">
+              <Lead>
                 AURUM is a full-featured cryptocurrency exchange platform designed to make digital asset trading accessible, secure, and visually refined. The platform encompasses everything from onboarding and KYC verification to real-time trading, portfolio management, and peer-to-peer transfers.
-              </p>
-              <p className={`${mt} text-sm leading-relaxed`}>
+              </Lead>
+              <p className="max-w-[62ch] text-[16px] leading-[1.65] text-[#9295A6]">
                 Every interaction was carefully crafted to reduce friction and build trust, transforming complex financial operations into intuitive, confidence-inspiring experiences.
               </p>
             </div>
-          </FadeIn>
+          </div>
 
-          <FadeIn delay={0.15}>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-14">
-              {[
-                { value: 196, suffix: '', label: 'Screens', sub: 'Full Product', icon: <Monitor size={20} />, color: '#D59A04' },
-                { value: 64, suffix: '', label: 'Components', sub: 'Design System', icon: <Component size={20} />, color: '#F0C040' },
-                { value: 8, suffix: '', label: 'Color Tokens', sub: 'Brand Palette', icon: <Droplets size={20} />, color: '#D59A04' },
-                { value: 2, suffix: '', label: 'Platforms', sub: 'Mobile & Desktop', icon: <Smartphone size={20} />, color: '#9295A6' },
-              ].map((m) => (
-                <motion.div
-                  key={m.label}
-                  whileHover={{ y: -4 }}
-                  className={`relative p-5 lg:p-6 rounded-2xl border overflow-hidden group cursor-default ${cb} ${cardBg}`}
+          <dl className="mt-16 grid grid-cols-2 gap-x-6 gap-y-10 md:mt-20 md:grid-cols-4">
+            {[
+              { value: '196', label: 'Screens', sub: 'Full product' },
+              { value: '64', label: 'Components', sub: 'Design system' },
+              { value: '8', label: 'Color tokens', sub: 'Brand palette' },
+              { value: '2', label: 'Platforms', sub: 'Mobile & desktop' },
+            ].map((m) => (
+              <div key={m.label} className="flex flex-col border-t border-white/[0.1] pt-5">
+                <dt className="order-2 mt-3 text-[15px] text-zinc-200">
+                  {m.label}
+                  <span className="block text-[13px] text-[#9295A6]">{m.sub}</span>
+                </dt>
+                <dd
+                  className="order-1 text-[44px] leading-none tracking-[-0.03em] text-white md:text-[56px] lg:text-[64px]"
+                  style={{ fontFamily: BRAND.headingFont, fontWeight: 600 }}
                 >
-                  <div className="flex items-start justify-between mb-4">
-                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isDark ? 'bg-white/[0.03]' : 'bg-zinc-50'} group-hover:scale-110 transition-transform duration-300`}>
-                      <span style={{ color: m.color }}>{m.icon}</span>
-                    </div>
-                    <div className={`text-[10px] uppercase tracking-[0.15em] px-2 py-0.5 rounded-md ${isDark ? 'bg-white/[0.03] text-[#9295A6]' : 'bg-zinc-100 text-zinc-500'}`}>{m.sub}</div>
-                  </div>
-                  <div className="text-fluid-30-36 mb-1 leading-none" style={{ fontFamily: BRAND.headingFont, color: m.color }}>
-                    <CountUp target={m.value} suffix={m.suffix} />
-                  </div>
-                  <div className={`text-[11px] tracking-wide ${isDark ? 'text-white/70' : 'text-zinc-600'}`}>{m.label}</div>
-                </motion.div>
+                  {m.value}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </Section>
+
+        {/* ─── 02 CHALLENGE & SOLUTION ─────────────────────────────── */}
+        <Section id="challenge">
+          <Chapter number="02" label="Challenge & solution" />
+          <H2 className="mb-14 md:mb-20">Complexity was the barrier, for new users and experienced traders alike</H2>
+
+          <div className="grid grid-cols-1 gap-14 md:grid-cols-2 md:gap-10 lg:gap-16">
+            {[
+              {
+                title: 'The challenge',
+                intro: 'Crypto platforms struggle with overwhelming complexity, creating barriers for new users while frustrating experienced traders.',
+                items: [
+                  'Cluttered, intimidating trading interfaces',
+                  'Complex multi-step KYC verification',
+                  'Poor mobile trading experience',
+                  'Lack of trust-building visual cues',
+                  'Confusing navigation between features',
+                ],
+                muted: true,
+              },
+              {
+                title: 'The solution',
+                intro: 'A clean, confidence-inspiring interface built around progressive disclosure and trust-first design principles.',
+                items: [
+                  'Simplified trading with contextual data',
+                  'Guided step-by-step verification flow',
+                  'Mobile-first responsive architecture',
+                  'Security indicators at every touchpoint',
+                  'Intuitive portfolio & transfer management',
+                ],
+                muted: false,
+              },
+            ].map((col) => (
+              <div key={col.title}>
+                <H3 className="mb-4">{col.title}</H3>
+                <p className="mb-8 max-w-[48ch] text-[17px] leading-[1.6] text-zinc-300 md:min-h-[5.4em]">{col.intro}</p>
+                <ul className="border-b border-white/[0.07]">
+                  {col.items.map((item) => (
+                    <li key={item} className={`flex gap-4 border-t border-white/[0.07] py-4 text-[16px] leading-[1.5] ${col.muted ? 'text-[#9295A6]' : 'text-white'}`}>
+                      <span aria-hidden className={`mt-[0.7em] h-px w-3 flex-shrink-0 ${col.muted ? 'bg-white/25' : 'bg-[#D59A04]'}`} />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+
+          {/* Trust architecture */}
+          <div className="mt-24 md:mt-32">
+            <Caption className="mb-3">Trust architecture</Caption>
+            <H3 className="mb-10 max-w-[30ch] md:mb-12 md:text-[32px]">Four pillars, engineered into every touchpoint</H3>
+            <div className="grid grid-cols-1 gap-x-8 sm:grid-cols-2 lg:grid-cols-4">
+              {[
+                { name: 'Security', practice: 'Multi-layer auth, KYC, 2FA, biometric', metric: 'Every transaction · Every login' },
+                { name: 'Clarity', practice: 'Progressive disclosure, no clutter', metric: 'One primary action per screen' },
+                { name: 'Speed', practice: 'Single-click trade execution', metric: 'Sub-100ms response targets' },
+                { name: 'Confidence', practice: 'Verified status at every step', metric: 'Visible audit trail' },
+              ].map((p, i) => (
+                <div key={p.name} className="border-t border-white/[0.1] py-6 lg:py-8">
+                  <p className="mb-4 font-mono text-[13px] text-[#D59A04]">{String(i + 1).padStart(2, '0')}</p>
+                  <h4 className="mb-2 text-[20px] text-white" style={{ fontFamily: BRAND.headingFont, fontWeight: 600 }}>{p.name}</h4>
+                  <p className="mb-3 text-[16px] leading-[1.55] text-zinc-300">{p.practice}</p>
+                  <Caption>{p.metric}</Caption>
+                </div>
               ))}
             </div>
-          </FadeIn>
-        </div>
-      </section>
-
-      <div className="max-w-6xl mx-auto px-6 lg:px-12"><Divider /></div>
-
-      {/* ─── CHALLENGE & SOLUTION ─────────────────────────────────────── */}
-      <section id="challenge" className="relative py-24 lg:py-32 px-6 lg:px-12">
-        <div className="max-w-6xl mx-auto">
-          <FadeIn><SectionTag number="02" label="Challenge & Solution" /></FadeIn>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <FadeIn>
-              <GlowCard isDark={isDark} className="h-full">
-                <div className="p-8 h-full flex flex-col">
-                  <div className="flex items-center gap-3 mb-5">
-                    <div className="w-9 h-9 rounded-xl bg-[#CC0000]/10 flex items-center justify-center"><Zap size={16} className="text-[#CC0000]" /></div>
-                    <h3 className="text-xl text-[#D59A04]" style={{ fontFamily: BRAND.headingFont }}>The Challenge</h3>
-                  </div>
-                  <p className={`text-[13px] ${bt} leading-relaxed mb-5`}>
-                    Crypto platforms struggle with overwhelming complexity, creating barriers for new users while frustrating experienced traders.
-                  </p>
-                  <ul className="space-y-2.5">
-                    {[
-                      'Cluttered, intimidating trading interfaces',
-                      'Complex multi-step KYC verification',
-                      'Poor mobile trading experience',
-                      'Lack of trust-building visual cues',
-                      'Confusing navigation between features'
-                    ].map((item, i) => (
-                      <li key={i} className={`flex items-start gap-2.5 text-[13px] ${isDark ? 'text-[#9295A6]' : 'text-zinc-500'}`}>
-                        <span className="text-[#CC0000] mt-0.5 text-[10px]">&#x2715;</span>{item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </GlowCard>
-            </FadeIn>
-            <FadeIn delay={0.1}>
-              <GlowCard isDark={isDark} className="h-full">
-                <div className="p-8 h-full flex flex-col">
-                  <div className="flex items-center gap-3 mb-5">
-                    <div className="w-9 h-9 rounded-xl bg-[#D59A04]/10 flex items-center justify-center"><Shield size={16} className="text-[#D59A04]" /></div>
-                    <h3 className="text-xl text-[#D59A04]" style={{ fontFamily: BRAND.headingFont }}>The Solution</h3>
-                  </div>
-                  <p className={`text-[13px] ${bt} leading-relaxed mb-5`}>
-                    A clean, confidence-inspiring interface built around progressive disclosure and trust-first design principles.
-                  </p>
-                  <ul className="space-y-2.5">
-                    {[
-                      'Simplified trading with contextual data',
-                      'Guided step-by-step verification flow',
-                      'Mobile-first responsive architecture',
-                      'Security indicators at every touchpoint',
-                      'Intuitive portfolio & transfer management'
-                    ].map((item, i) => (
-                      <li key={i} className={`flex items-start gap-2.5 text-[13px] ${isDark ? 'text-[#9295A6]' : 'text-zinc-500'}`}>
-                        <span className="text-[#D59A04] mt-0.5 text-[10px]">&#x2713;</span>{item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </GlowCard>
-            </FadeIn>
+            <Caption className="mt-6 border-t border-white/[0.07] pt-6">
+              How trust is engineered into <span className="text-white">196</span> screens, <span className="text-white">64+</span> components and <span className="text-white">3</span> surfaces.
+            </Caption>
           </div>
+        </Section>
 
-          {/* ── Trust Architecture · Show-Don't-Tell visual ── */}
-          <FadeIn delay={0.2}>
-            <div className={`mt-14 lg:mt-16 rounded-2xl border overflow-hidden transition-all duration-500 hover:border-[#D59A04]/25 hover:shadow-2xl hover:shadow-[#D59A04]/10 ${isDark ? 'bg-[#121318]/60 border-white/[0.06]' : 'bg-white border-zinc-200'}`}>
-              {/* Header */}
-              <div className={`px-7 lg:px-10 pt-7 pb-5 border-b ${isDark ? 'border-white/[0.06]' : 'border-zinc-100'}`}>
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="w-7 h-7 rounded-md bg-[#D59A04]/15 flex items-center justify-center">
-                    <Shield size={14} className="text-[#D59A04]" />
-                  </div>
-                  <span className="text-[10px] uppercase tracking-[0.25em] text-[#D59A04] font-medium">Trust Architecture</span>
-                </div>
-                <h3 className={`text-fluid-24-30 tracking-[-0.02em] ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 700 }}>
-                  Four pillars · engineered into every touchpoint
-                </h3>
-              </div>
-
-              {/* 4 pillars */}
-              <div className={`grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x ${isDark ? 'divide-white/[0.06]' : 'divide-zinc-100'}`}>
-                {[
-                  { icon: <Shield size={18} />,      name: 'Security',   practice: 'Multi-layer auth, KYC, 2FA, biometric',  metric: 'Every transaction · Every login' },
-                  { icon: <Eye size={18} />,         name: 'Clarity',    practice: 'Progressive disclosure, no clutter',     metric: 'One primary action per screen' },
-                  { icon: <Zap size={18} />,         name: 'Speed',      practice: 'Single-click trade execution',           metric: 'Sub-100ms response targets' },
-                  { icon: <CheckCircle size={18} />, name: 'Confidence', practice: 'Verified status at every step',          metric: 'Visible audit trail' },
-                ].map((p) => (
-                  <div key={p.name} className={`group/p p-6 lg:p-7 cursor-default transition-colors duration-300 ${isDark ? 'hover:bg-white/[0.02]' : 'hover:bg-zinc-50'}`}>
-                    <div className="w-9 h-9 rounded-lg bg-[#D59A04]/10 flex items-center justify-center mb-4 text-[#D59A04] transition-transform duration-300 group-hover/p:scale-110 group-hover/p:rotate-3">
-                      {p.icon}
-                    </div>
-                    <div className={`text-[14px] mb-2 transition-colors duration-300 group-hover/p:text-[#D59A04] ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont, fontWeight: 700 }}>{p.name}</div>
-                    <div className={`text-[12px] leading-relaxed mb-3 ${bt}`}>{p.practice}</div>
-                    <div className="text-[10px] uppercase tracking-[0.15em] text-[#D59A04]">{p.metric}</div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Footer stats */}
-              <div className={`px-7 lg:px-10 py-4 border-t bg-[#D59A04]/[0.03] ${isDark ? 'border-white/[0.06]' : 'border-zinc-100'}`}>
-                <div className="flex items-center justify-between gap-4 flex-wrap">
-                  <span className={`text-[12px] ${bt}`} style={{ fontFamily: BRAND.bodyFont }}>How trust is engineered into</span>
-                  <div className="flex items-center gap-5 text-[12px]">
-                    <span className="group/n cursor-default"><span className="text-[#D59A04] font-mono transition-transform inline-block group-hover/n:scale-110" style={{ fontWeight: 700 }}>196</span> <span className={mt}>screens</span></span>
-                    <span className="group/n cursor-default"><span className="text-[#D59A04] font-mono transition-transform inline-block group-hover/n:scale-110" style={{ fontWeight: 700 }}>64+</span> <span className={mt}>components</span></span>
-                    <span className="group/n cursor-default"><span className="text-[#D59A04] font-mono transition-transform inline-block group-hover/n:scale-110" style={{ fontWeight: 700 }}>3</span> <span className={mt}>surfaces</span></span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </FadeIn>
-        </div>
-      </section>
-
-      <div className="max-w-6xl mx-auto px-6 lg:px-12"><Divider /></div>
-
-      {/* ─── KEY SCREENS ─────────────────────────────────────────────── */}
-      <section id="screens" className="relative py-24 lg:py-32 px-6 lg:px-12">
-        <div className="max-w-6xl mx-auto">
-          <FadeIn><SectionTag number="03" label="Key Screens" /></FadeIn>
-          <FadeIn>
-            <h2 className="text-fluid-30-36 leading-tight mb-4" style={{ fontFamily: BRAND.headingFont }}>
-              Core <span className="text-[#D59A04]">experiences</span>
-            </h2>
-            <p className={`${bt} max-w-xl mb-16 leading-relaxed text-sm`}>
+        {/* ─── 03 KEY SCREENS ──────────────────────────────────────── */}
+        <Section id="screens">
+          <Chapter number="03" label="Key screens" />
+          <div className="mb-16 grid grid-cols-1 gap-6 md:mb-24 lg:grid-cols-12 lg:gap-10">
+            <H2 className="lg:col-span-5">Core experiences</H2>
+            <Lead className="lg:col-span-7 lg:pt-2">
               From onboarding to portfolio management, each screen was designed to feel intuitive while handling complex financial data with care and clarity.
-            </p>
-          </FadeIn>
-
-          <div className="space-y-20">
-            {[
-              {
-                num: '01', icon: <Home size={16} className="text-[#D59A04]" />,
-                title: 'Home Dark',
-                desc: 'The landing experience in dark mode, showcasing the platform\'s premium aesthetic with gold accents, clean typography, and inviting entry points.',
-                tags: ['Dark Mode', 'Landing', 'Brand Identity'],
-                src: cloudScreenHomeDark, reverse: false, isPhone: false
-              },
-              {
-                num: '02', icon: <Monitor size={16} className="text-[#D59A04]" />,
-                title: 'Exchange Dashboard',
-                desc: 'The heart of the platform, real-time market data, trading pairs, order book, and price charts unified in a clean, scannable layout.',
-                tags: ['Real-time Data', 'Order Book', 'Price Charts'],
-                src: cloudScreenExchange, reverse: true, isPhone: false
-              },
-              {
-                num: '03', icon: <Lock size={16} className="text-[#D59A04]" />,
-                title: 'Login',
-                desc: 'Secure entry point with clean form design, trust-building visual indicators, and a clear path to account creation.',
-                tags: ['Secure Login', 'Form Design', 'Trust Signals'],
-                src: cloudScreenLogin, reverse: false, isPhone: true
-              },
-              {
-                num: '04', icon: <Shield size={16} className="text-[#D59A04]" />,
-                title: 'Authentication',
-                desc: '2FA verification flow with biometric options and step-by-step guidance that makes security feel effortless and trustworthy.',
-                tags: ['2FA', 'Biometrics', 'Verification'],
-                src: cloudScreenAuth, reverse: true, isPhone: true
-              },
-              {
-                num: '05', icon: <QrCode size={16} className="text-[#D59A04]" />,
-                title: 'QR Transfer',
-                desc: 'Instant peer-to-peer transfers via QR code scanning, making crypto transfers as simple as sharing a photo.',
-                tags: ['P2P Transfer', 'QR Scanner', 'Instant Send'],
-                src: cloudScreenQR, reverse: false, isPhone: true
-              },
-            ].map((step) => (
-              <FadeIn key={step.num}>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-                  <div className={step.reverse ? 'order-1 lg:order-2' : ''}>
-                    <div className="flex items-center gap-3 mb-4">
-                      <span className="text-3xl text-[#D59A04]/30 before:content-[attr(data-num)]" data-num={step.num} aria-hidden="true" style={{ fontFamily: BRAND.headingFont }} />
-                      <div className="w-8 h-px bg-[#D59A04]/20" />
-                      {step.icon}
-                    </div>
-                    <h3 className="text-xl mb-3" style={{ fontFamily: BRAND.headingFont }}>{step.title}</h3>
-                    <p className={`text-[13px] ${bt} leading-relaxed mb-4`}>{step.desc}</p>
-                    <div className="flex flex-wrap gap-2">
-                      {step.tags.map((t) => (
-                        <span key={t} className={`text-[10px] uppercase tracking-wider px-2 py-1 rounded-md ${isDark ? 'bg-[#121318] text-[#b0b3c0]' : 'bg-zinc-100 text-zinc-500'}`}>{t}</span>
-                      ))}
-                    </div>
-                  </div>
-                  <div className={step.reverse ? 'order-2 lg:order-1' : ''}>
-                    <ScrollRevealScale scaleFrom={0.92}>
-                      <div className={`rounded-2xl overflow-hidden border shadow-xl ${isDark ? 'border-white/[0.06] shadow-black/40' : 'border-zinc-200 shadow-zinc-200/40'}`}>
-                        <img {...IMG.wide(step.src)} alt={step.title} width="1440" height="900" className="w-full block" />
-                      </div>
-                    </ScrollRevealScale>
-                  </div>
-                </div>
-              </FadeIn>
-            ))}
+            </Lead>
           </div>
-        </div>
-      </section>
 
-      <div className="max-w-6xl mx-auto px-6 lg:px-12"><Divider /></div>
+          <div className="space-y-24 md:space-y-32">
+            {FEATURED_SCREENS.map((s) => (
+              <figure key={s.num}>
+                <ScreenReveal>
+                  <BrowserFrame>
+                    <ScreenImg s={s} />
+                  </BrowserFrame>
+                </ScreenReveal>
+                <figcaption className="mt-8 md:mt-10">
+                  <div className="grid grid-cols-1 gap-3 lg:grid-cols-12 lg:gap-10">
+                    <div className="lg:col-span-5">
+                      <p className="mb-3 font-mono text-[13px] text-[#D59A04]">{s.num}</p>
+                      <H3>{s.title}</H3>
+                    </div>
+                    <div className="lg:col-span-7 lg:pt-[calc(13px*1.6+0.75rem)]">
+                      <p className="mb-3 max-w-[60ch] text-[17px] leading-[1.6] text-zinc-300">{s.desc}</p>
+                      <Caption>{s.tags.join(' · ')}</Caption>
+                    </div>
+                  </div>
+                </figcaption>
+              </figure>
+            ))}
 
-      {/* ─── UX STORIES ──────────────────────────────────────────────── */}
-      <section id="ux-stories" className="relative py-24 lg:py-32 px-6 lg:px-12">
-        <div className="max-w-6xl mx-auto">
-          <FadeIn><SectionTag number="04" label="UX Stories" /></FadeIn>
+            <FlowSequence />
+          </div>
+        </Section>
+
+        {/* ─── 04 UX STORIES ───────────────────────────────────────── */}
+        <Section id="ux-stories">
+          <Chapter number="04" label="UX stories" />
+          <H2 className="mb-12 md:mb-16">Onboarding, KYC gates and the exchange flow</H2>
           <UXStories />
-        </div>
-      </section>
+        </Section>
 
-      <div className="max-w-6xl mx-auto px-6 lg:px-12"><Divider /></div>
-
-      {/* ─── INTERACTIVE PREVIEWS ──────────────────────────────────────── */}
-      <section id="previews" className="relative py-24 lg:py-32 px-6 lg:px-12">
-        <div className="max-w-6xl mx-auto">
-          <FadeIn><SectionTag number="06" label="Interactive Preview" /></FadeIn>
-          <FadeIn>
-            <h2 className="text-fluid-30-36 leading-tight mb-4" style={{ fontFamily: BRAND.headingFont }}>
-              Live <span className="text-[#D59A04]">components</span>
-            </h2>
-            <p className={`${bt} max-w-xl mb-12 leading-relaxed text-sm`}>
+        {/* ─── 05 INTERACTIVE PREVIEWS ─────────────────────────────── */}
+        <Section id="previews">
+          <Chapter number="05" label="Interactive preview" />
+          <div className="mb-12 grid grid-cols-1 gap-6 md:mb-16 lg:grid-cols-12 lg:gap-10">
+            <H2 className="lg:col-span-5">Live components</H2>
+            <Lead className="lg:col-span-7 lg:pt-2">
               Interactive previews of key dashboard components, demonstrating real-time data visualization and trading widget design.
-            </p>
-          </FadeIn>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <FadeIn delay={0.05}>
-              <DashboardPreview />
-            </FadeIn>
-            <FadeIn delay={0.1}>
-              <ExchangeWidget />
-            </FadeIn>
+            </Lead>
           </div>
-        </div>
-      </section>
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <DashboardPreview />
+            <ExchangeWidget />
+          </div>
+        </Section>
 
-      <div className="max-w-6xl mx-auto px-6 lg:px-12"><Divider /></div>
+        {/* ─── 06 DESIGN SYSTEM ────────────────────────────────────── */}
+        <Section id="design">
+          <Chapter number="06" label="Design system" />
+          <div className="mb-16 grid grid-cols-1 gap-6 md:mb-24 lg:grid-cols-12 lg:gap-10">
+            <H2 className="lg:col-span-5">AURUM design system</H2>
+            <Lead className="lg:col-span-7 lg:pt-2">
+              A comprehensive design system built for scale, 8 semantic color tokens, 2 typeface families, a spatial rhythm, and 64+ reusable components powering all 196 screens.
+            </Lead>
+          </div>
 
-      {/* ─── DESIGN SYSTEM ─────────────────────────────────────────────── */}
-      <section id="design" className="relative py-24 lg:py-32 px-6 lg:px-12">
-        <div className="max-w-6xl mx-auto">
-          <FadeIn><SectionTag number="07" label="Design System" /></FadeIn>
-          <FadeIn>
-            <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 mb-10">
-              <div>
-                <h2 className="text-fluid-30-36 leading-tight mb-3" style={{ fontFamily: BRAND.headingFont }}>
-                  <span className="text-[#D59A04]">AURUM</span> Design System
-                </h2>
-                <p className={`${bt} max-w-xl leading-relaxed`}>
-                  A comprehensive design system built for scale, 8 semantic color tokens, 2 typeface families, a spatial rhythm, and 64+ reusable components powering all 196 screens.
-                </p>
-              </div>
-              <div className="flex items-center gap-3 flex-shrink-0">
-                <Palette size={16} className="text-[#D59A04]" />
-                <span className={`text-[10px] uppercase tracking-wider ${mt}`}>Tokens & Components</span>
-              </div>
+          {/* Shared component: its sub-headings are kept in one colour here */}
+          <div className="[&_h3_span]:text-inherit">
+            <DesignSystemFull />
+          </div>
+
+          {/* Figma component sheet */}
+          <figure className="mt-24 md:mt-32">
+            <div className="mb-8 flex flex-col gap-2 md:mb-10">
+              <H3>Component sheet</H3>
+              <Caption>The complete Figma design components document · 64+ components</Caption>
             </div>
-          </FadeIn>
-
-          <DesignSystemFull />
-
-          {/* Figma Design System Document */}
-          <FadeIn delay={0.2}>
-            <div className="mt-24">
-              <div className="flex items-center justify-between mb-8">
-                <div>
-                  <h3 className="text-fluid-24-30 mb-2" style={{ fontFamily: BRAND.headingFont }}>
-                    Component <span className="text-[#D59A04]">Sheet</span>
-                  </h3>
-                  <p className={`text-sm ${mt}`}>The complete Figma design components document</p>
+            <ScreenReveal>
+              <BrowserFrame url="figma.com · AURUM, Design Components">
+                <div
+                  className={`max-h-[80vh] overflow-y-auto overscroll-contain bg-[#0A0C10] scrollbar-thin ${FOCUS} focus-visible:ring-offset-0 focus-visible:ring-inset`}
+                  tabIndex={0}
+                  role="region"
+                  aria-label="AURUM design system sheet, scrollable"
+                >
+                  <img {...IMG.wide(designSystemSheet)} alt="AURUM Design System" width="1440" height="1200" loading="lazy" decoding="async" className="h-auto w-full" />
                 </div>
-                <div className="hidden md:flex items-center gap-2">
-                  <Figma size={14} className="text-[#D59A04]" />
-                  <span className={`text-[10px] uppercase tracking-[0.15em] ${mt}`}>Figma Source</span>
-                </div>
-              </div>
+              </BrowserFrame>
+            </ScreenReveal>
+            <figcaption className="mt-6">
+              <Caption>
+                Includes navbar, buttons, tabs & toggles, input fields, icons, use case styles, card styles, footers, chart data, QR codes and modals. Scroll inside the frame to see the full sheet.
+              </Caption>
+            </figcaption>
+          </figure>
+        </Section>
 
-              <div className={`rounded-2xl overflow-hidden border ${cb} shadow-2xl ${isDark ? 'shadow-black/40' : 'shadow-zinc-300/40'}`}>
-                <div className={`flex items-center gap-3 px-5 py-3 ${isDark ? 'bg-[#0d0f14] border-b border-white/[0.04]' : 'bg-zinc-100 border-b border-zinc-200'}`}>
-                  <div className="flex gap-1.5">
-                    <div className="w-2.5 h-2.5 rounded-full bg-[#F87171]/60" />
-                    <div className="w-2.5 h-2.5 rounded-full bg-[#FFC701]/60" />
-                    <div className="w-2.5 h-2.5 rounded-full bg-[#10B981]/60" />
-                  </div>
-                  <div className="flex-1 flex items-center justify-center gap-2">
-                    <Figma size={11} aria-hidden className={`${isDark ? 'text-white/50' : 'text-zinc-500'}`} />
-                    <span className={`text-[10px] tracking-wide ${isDark ? 'text-white/60' : 'text-zinc-500'}`}>AURUM, Design Components</span>
-                  </div>
-                  <div className={`text-[10px] font-mono ${isDark ? 'text-white/55' : 'text-zinc-500'}`}>64+ components</div>
-                </div>
-                <div className={`relative ${isDark ? 'bg-[#0a0c10]' : 'bg-zinc-50'}`}>
-                  <div className="overflow-y-auto max-h-[80vh] scrollbar-thin rounded-b-2xl" tabIndex={0} role="region" aria-label="AURUM design system sheet, scrollable">
-                    <img {...IMG.wide(designSystemSheet)} alt="AURUM Design System" width="1440" height="1200" className="w-full block" />
-                  </div>
-                  <div className={`absolute bottom-0 left-0 right-0 h-24 pointer-events-none bg-gradient-to-t ${isDark ? 'from-[#0a0c10]' : 'from-zinc-50'} to-transparent`} />
-                </div>
-              </div>
-
-              <div className="flex flex-wrap gap-2 mt-6">
-                {['Navbar', 'Buttons', 'Tabs & Toggles', 'Input Fields', 'Icons', 'Use Case Styles', 'Card Styles', 'Footers', 'Chart Data', 'QR Codes', 'Modals'].map((tag) => (
-                  <span key={tag} className={`text-[10px] uppercase tracking-[0.12em] px-3 py-1.5 rounded-lg ${isDark ? 'bg-white/[0.03] text-[#9295A6] border border-white/[0.04]' : 'bg-zinc-100 text-zinc-500 border border-zinc-200'}`}>
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </FadeIn>
-        </div>
-      </section>
-
-      <div className="max-w-6xl mx-auto px-6 lg:px-12"><Divider /></div>
-
-      {/* ─── DESIGN APPROACH ──────────────────────────────────────────── */}
-      <section id="approach" className="relative py-24 lg:py-32 px-6 lg:px-12">
-        <div className="max-w-6xl mx-auto">
-          <FadeIn><SectionTag number="08" label="Design Approach" /></FadeIn>
-          <FadeIn>
-            <h2 className="text-fluid-30-36 leading-tight mb-5" style={{ fontFamily: BRAND.headingFont }}>
-              Trust through <span className="text-[#D59A04]">craft</span>
-            </h2>
-            <p className={`${bt} leading-relaxed max-w-xl mb-12`}>
+        {/* ─── 07 DESIGN APPROACH ──────────────────────────────────── */}
+        <Section id="approach">
+          <Chapter number="07" label="Design approach" />
+          <div className="mb-16 grid grid-cols-1 gap-6 md:mb-20 lg:grid-cols-12 lg:gap-10">
+            <H2 className="lg:col-span-5">Trust through craft</H2>
+            <Lead className="lg:col-span-7 lg:pt-2">
               In crypto, trust is earned pixel by pixel. Every design decision reinforces security, clarity, and user confidence.
-            </p>
-          </FadeIn>
+            </Lead>
+          </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-12">
+          <div className="grid grid-cols-1 gap-x-8 sm:grid-cols-2 lg:grid-cols-4">
             {[
-              { icon: <Shield size={16} />, title: 'Security First', desc: 'Trust indicators everywhere' },
-              { icon: <Eye size={16} />, title: 'Progressive Disclosure', desc: 'Show only what matters' },
-              { icon: <Smartphone size={16} />, title: 'Mobile Native', desc: 'Touch-optimized interactions' },
-              { icon: <Zap size={16} />, title: 'Speed', desc: 'Instant visual feedback' },
-            ].map((item) => (
-              <FadeIn key={item.title} delay={0.05}>
-                <motion.div whileHover={{ y: -3 }} className={`p-4 rounded-xl border h-full ${isDark ? 'bg-[#121318]/60 border-white/[0.04]' : 'bg-white border-zinc-200'}`}>
-                  <div className="text-[#D59A04] mb-2">{item.icon}</div>
-                  <div className={`text-[12px] mb-0.5 ${isDark ? 'text-white' : 'text-zinc-900'}`} style={{ fontFamily: BRAND.headingFont }}>{item.title}</div>
-                  <div className={`text-[10px] ${mt}`}>{item.desc}</div>
-                </motion.div>
-              </FadeIn>
+              { title: 'Security First', desc: 'Trust indicators everywhere' },
+              { title: 'Progressive Disclosure', desc: 'Show only what matters' },
+              { title: 'Mobile Native', desc: 'Touch-optimized interactions' },
+              { title: 'Speed', desc: 'Instant visual feedback' },
+            ].map((item, i) => (
+              <div key={item.title} className="border-t border-white/[0.1] py-6 lg:py-8">
+                <p className="mb-4 font-mono text-[13px] text-[#D59A04]">{String(i + 1).padStart(2, '0')}</p>
+                <h3 className="mb-2 text-[20px] text-white" style={{ fontFamily: BRAND.headingFont, fontWeight: 600 }}>{item.title}</h3>
+                <p className="text-[16px] leading-[1.55] text-zinc-300">{item.desc}</p>
+              </div>
             ))}
           </div>
 
-          {/* What makes this stand out */}
-          <FadeIn delay={0.15}>
-            <div className={`p-8 rounded-2xl border ${cb} ${cardBg}`}>
-              <h3 className="text-lg mb-4" style={{ fontFamily: BRAND.headingFont }}>
-                What makes this work <span className="text-[#D59A04]">stand out</span>
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {[
-                  'End-to-end product thinking',
-                  'Mobile-first responsive design',
-                  'Comprehensive design system',
-                  'Trust-building micro-interactions',
-                  'Guided verification flows',
-                  'Real-time data visualization',
-                ].map((point) => (
-                  <div key={point} className={`flex items-start gap-2.5 text-[13px] ${isDark ? 'text-[#9295A6]' : 'text-zinc-500'}`}>
-                    <span className="text-[#D59A04] mt-0.5 text-[10px] flex-shrink-0">&#x2713;</span>
-                    {point}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </FadeIn>
-        </div>
-      </section>
+          <div className="mt-20 grid grid-cols-1 gap-8 md:mt-28 lg:grid-cols-12 lg:gap-10">
+            <H3 className="lg:col-span-5">What makes this work stand out</H3>
+            <ul className="grid grid-cols-1 gap-x-8 border-b border-white/[0.07] sm:grid-cols-2 lg:col-span-7">
+              {[
+                'End-to-end product thinking',
+                'Mobile-first responsive design',
+                'Comprehensive design system',
+                'Trust-building micro-interactions',
+                'Guided verification flows',
+                'Real-time data visualization',
+              ].map((point) => (
+                <li key={point} className="flex gap-4 border-t border-white/[0.07] py-4 text-[16px] leading-[1.5] text-zinc-200">
+                  <span aria-hidden className="mt-[0.7em] h-px w-3 flex-shrink-0 bg-[#D59A04]" />
+                  {point}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </Section>
 
-      <div className="max-w-6xl mx-auto px-6 lg:px-12"><Divider /></div>
-
-      {/* ─── OUTCOME ─────────────────────────────────────────────────── */}
-      <section id="outcome" className="relative py-24 lg:py-32 px-6 lg:px-12">
-        <div className="max-w-6xl mx-auto">
-          <FadeIn><SectionTag number="09" label="Outcome" /></FadeIn>
-          <FadeIn>
-            <div className="max-w-3xl">
-              <h2 className="text-fluid-30-36 leading-tight mb-6" style={{ fontFamily: BRAND.headingFont }}>
-                A premium <span className="text-[#D59A04]">crypto</span> experience
-              </h2>
-              <p className={`${bt} leading-relaxed mb-6`}>
+        {/* ─── 08 OUTCOME ──────────────────────────────────────────── */}
+        <Section id="outcome">
+          <Chapter number="08" label="Outcome" />
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:gap-10">
+            <H2 className="lg:col-span-5">A premium crypto experience</H2>
+            <div className="lg:col-span-7 lg:pt-2">
+              <Lead className="mb-8">
                 AURUM proves that financial products don't have to sacrifice beauty for functionality. By combining thoughtful UX research, a comprehensive design system, and pixel-perfect execution, we created a platform that makes crypto trading feel premium, secure, and accessible.
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {['Crypto Exchange', 'Mobile-First', 'Design System', '196 Screens', 'Trust-First UX'].map((tag) => (
-                  <span key={tag} className={`text-[10px] uppercase tracking-[0.12em] px-3 py-1.5 rounded-lg ${isDark ? 'bg-[#D59A04]/10 text-[#F0C040] border border-[#D59A04]/20' : 'bg-amber-50 text-[#D59A04] border border-[#D59A04]/20'}`}>
-                    {tag}
-                  </span>
-                ))}
-              </div>
+              </Lead>
+              <Caption>Crypto exchange · Mobile-first · Design system · 196 screens · Trust-first UX</Caption>
             </div>
-          </FadeIn>
-        </div>
-      </section>
+          </div>
+        </Section>
 
-
-      {/* footer removed */}
-      <NextProjectRecommendation currentProject="aurum" />
+        <NextProjectRecommendation currentProject="aurum" />
       </main>
     </div>
   );

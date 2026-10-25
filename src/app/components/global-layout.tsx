@@ -129,7 +129,7 @@ function SkipLink() {
 }
 
 /**
- * GlobalLayout — wraps ALL routes with shared ambient assets.
+ * GlobalLayout, wraps ALL routes with shared ambient assets.
  * Heavy desktop-only effects (particles, mesh) are skipped on mobile
  * to improve INP and LCP on small devices.
  */
@@ -170,7 +170,7 @@ export function GlobalLayout() {
       {/* Scroll progress */}
       <ScrollProgress color="#ff4306" />
 
-      {/* Desktop-only heavy effects — skipped on mobile to protect INP and LCP */}
+      {/* Desktop-only heavy effects, skipped on mobile to protect INP and LCP */}
       {ambient && !reduceMotion && (
         <>
           <LiquidMeshBackground />

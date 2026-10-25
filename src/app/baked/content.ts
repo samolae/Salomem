@@ -64,28 +64,28 @@ export const services = [
   {
     title: 'UX/UI Product Design',
     tagline: 'End-to-end product design from research to pixel-perfect delivery.',
-    timeline: '4–12 weeks',
+    timeline: '4-12 weeks',
     deliverables: ['User research & interviews', 'Information architecture', 'User flows & wireframes', 'High-fidelity UI design', 'Design system & components', 'Interactive prototypes', 'Developer handoff (Figma)'],
     outcome: 'AURUM, 196 screens, 64+ components shipped',
   },
   {
     title: 'Art Direction',
     tagline: 'Visual strategy and creative direction for brands and campaigns.',
-    timeline: '2–6 weeks',
+    timeline: '2-6 weeks',
     deliverables: ['Brand visual identity', 'Campaign concept & moodboard', 'Creative direction', 'Visual guidelines', 'Key visual production', 'Art supervision'],
     outcome: 'Scope, Terminal, Carmall, multi-campaign direction',
   },
   {
     title: 'Social Media Design',
     tagline: 'High-impact visuals and campaign assets for social platforms.',
-    timeline: 'Ongoing or 1–4 weeks',
+    timeline: 'Ongoing or 1-4 weeks',
     deliverables: ['Static post designs', 'Carousel & story templates', 'Ad creatives (Meta, TikTok)', 'Brand-consistent visual system', 'Copy direction & layouts', 'Monthly content packages'],
     outcome: '10+ brands, Terminal, Mardi, Crystal Leasing, GTCC',
   },
   {
     title: 'Motion Design',
     tagline: 'Animated content that brings brands to life across every platform.',
-    timeline: '1–3 weeks',
+    timeline: '1-3 weeks',
     deliverables: ['Logo reveals & brand animations', 'Social media reels & stories', 'Animated ad creatives', 'UI micro-interactions', 'Motion style guide'],
     outcome: 'Carmall, Scope, Saloni, reels & brand animations',
   },
@@ -114,8 +114,8 @@ export const contactLinks = [
 
 export const formOptions = {
   type: ['UX/UI Design', 'Art Direction', 'Social Media', 'Motion Design', 'Other'],
-  budget: ['Under ₾500', '₾500–₾2,000', '₾2,000–₾6,000', '₾6,000–₾15,000', '₾15,000+', "Let's discuss"],
-  timeline: ['ASAP', 'Within 1 month', '1–3 months', '3+ months', 'Flexible'],
+  budget: ['Under ₾500', '₾500-₾2,000', '₾2,000-₾6,000', '₾6,000-₾15,000', '₾15,000+', "Let's discuss"],
+  timeline: ['ASAP', 'Within 1 month', '1-3 months', '3+ months', 'Flexible'],
 };
 
 /* ── Georgian ─────────────────────────────────────────────────────── */
@@ -129,28 +129,28 @@ export const servicesKa = [
   {
     title: 'UX/UI პროდუქტის დიზაინი',
     tagline: 'პროდუქტის დიზაინი სრულად, კვლევიდან ზუსტ, დეტალებამდე დახვეწილ შედეგამდე.',
-    timeline: '4–12 კვირა',
+    timeline: '4-12 კვირა',
     deliverables: ['მომხმარებლის კვლევა და ინტერვიუები', 'ინფორმაციული არქიტექტურა', 'მომხმარებლის გზები და wireframe-ები', 'დეტალური UI დიზაინი', 'დიზაინ სისტემა და კომპონენტები', 'ინტერაქტიული პროტოტიპები', 'დეველოპერებისთვის გადაცემა (Figma)'],
     outcome: 'AURUM, 196 ეკრანი, 64+ კომპონენტი',
   },
   {
     title: 'არტ დირექცია',
     tagline: 'ვიზუალური სტრატეგია და კრეატიული მიმართულება ბრენდებისა და კამპანიებისთვის.',
-    timeline: '2–6 კვირა',
+    timeline: '2-6 კვირა',
     deliverables: ['ბრენდის ვიზუალური იდენტობა', 'კამპანიის კონცეფცია და მუდბორდი', 'კრეატიული მიმართულება', 'ვიზუალური გაიდლაინები', 'ქი ვიზუალების წარმოება', 'არტ ზედამხედველობა'],
     outcome: 'Scope, Terminal, Carmall, არაერთი კამპანიის არტ დირექცია',
   },
   {
     title: 'სოციალური მედიის დიზაინი',
     tagline: 'თვალში საცემი ვიზუალები და კამპანიის მასალები სოციალური პლატფორმებისთვის.',
-    timeline: 'მუდმივად ან 1–4 კვირა',
+    timeline: 'მუდმივად ან 1-4 კვირა',
     deliverables: ['სტატიკური პოსტები', 'კარუსელისა და სთორის შაბლონები', 'სარეკლამო კრეატივები (Meta, TikTok)', 'ბრენდის ერთიანი ვიზუალური სისტემა', 'ტექსტის მიმართულება და განლაგება', 'ყოველთვიური კონტენტ პაკეტები'],
     outcome: '10+ ბრენდი, Terminal, Mardi, Crystal Leasing, GTCC',
   },
   {
     title: 'მოუშენ დიზაინი',
     tagline: 'ანიმირებული კონტენტი, რომელიც ბრენდს ყველა პლატფორმაზე აცოცხლებს.',
-    timeline: '1–3 კვირა',
+    timeline: '1-3 კვირა',
     deliverables: ['ლოგოს ანიმაციები და ბრენდის მოუშენი', 'სოციალური მედიის რილსები და სთორები', 'ანიმირებული სარეკლამო კრეატივები', 'UI მიკროინტერაქციები', 'მოუშენის სტილის გაიდი'],
     outcome: 'Carmall, Scope, Saloni, რილსები და ბრენდის ანიმაციები',
   },
@@ -174,8 +174,8 @@ export const contactLabelsKa: Record<string, string> = { Email: 'ელფოს
 
 export const formOptionsKa = {
   type: ['UX/UI დიზაინი', 'არტ დირექცია', 'სოციალური მედია', 'მოუშენ დიზაინი', 'სხვა'],
-  budget: ['₾500-მდე', '₾500–₾2,000', '₾2,000–₾6,000', '₾6,000–₾15,000', '₾15,000+', 'განვიხილოთ'],
-  timeline: ['რაც შეიძლება მალე', 'ერთი თვის განმავლობაში', '1–3 თვე', '3+ თვე', 'მოქნილი'],
+  budget: ['₾500-მდე', '₾500-₾2,000', '₾2,000-₾6,000', '₾6,000-₾15,000', '₾15,000+', 'განვიხილოთ'],
+  timeline: ['რაც შეიძლება მალე', 'ერთი თვის განმავლობაში', '1-3 თვე', '3+ თვე', 'მოქნილი'],
 };
 
 export const reelLabelsKa: Record<string, string> = {

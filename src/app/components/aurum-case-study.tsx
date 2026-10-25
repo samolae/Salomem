@@ -44,7 +44,7 @@ const JUSTIFY = 'hyphens-auto [text-align-last:left] md:text-justify';
  *   h3       sub-headings              18 / 20px
  *   lead     intro paragraphs          17px / 1.65
  *   body     copy                      15px / 1.7, muted
- *   caption  labels, tags, meta        12–13px
+ *   caption  labels, tags, meta        12-13px
  */
 const T = {
   h2: 'text-[clamp(1.75rem,1.3rem+1.25vw,2.25rem)] leading-[1.12] tracking-[-0.02em] text-white',

@@ -238,8 +238,8 @@ export function ContactContent() {
           _subject: `New inquiry from ${form.name.slice(0, 80) || 'someone'}, ${form.type || 'Portfolio'}`,
           _template: 'table',
           _honey: honey,
-          Name: form.name.slice(0, 120) || '—', Email: form.email.slice(0, 160) || '—', 'Project type': form.type || '—',
-          Budget: form.budget || '—', Timeline: form.timeline || '—', Message: form.message.slice(0, 5000) || '—',
+          Name: form.name.slice(0, 120) || '-', Email: form.email.slice(0, 160) || '-', 'Project type': form.type || '-',
+          Budget: form.budget || '-', Timeline: form.timeline || '-', Message: form.message.slice(0, 5000) || '-',
         }),
       });
       const data = await res.json().catch(() => ({}));

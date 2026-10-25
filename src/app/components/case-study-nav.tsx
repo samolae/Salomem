@@ -159,8 +159,8 @@ export const CaseStudySectionNav = ({ sections, accentColor }: CaseStudySectionN
                     {isActive && (
                       <motion.div
                         layoutId="sectionActiveRing"
-                        className="absolute w-[16px] h-[16px] rounded-full border-[1.5px] z-0"
-                        style={{ borderColor: accentColor, left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}
+                        className="absolute inset-0 m-auto w-[16px] h-[16px] rounded-full border-[1.5px] z-0"
+                        style={{ borderColor: accentColor }}
                         transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                       />
                     )}

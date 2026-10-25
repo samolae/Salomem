@@ -335,7 +335,7 @@ export const PixelManager = () => {
       setTestResult(prev => ({ ...prev, [pixelId]: success ? 'success' : 'error' }));
       setTestingPixel(null);
       toast[success ? 'success' : 'error'](
-        success ? 'Pixel is responding correctly!' : 'Could not verify pixel — check your ID'
+        success ? 'Pixel is responding correctly!' : 'Could not verify pixel, check your ID'
       );
     }, 1800);
   };
@@ -355,7 +355,7 @@ export const PixelManager = () => {
 
   return (
     <div className={`min-h-screen ${isDark ? 'bg-[#06060a]' : 'bg-[#f0f0f3]'} transition-colors duration-500 relative`}>
-      {/* Ambient Light — inlined to avoid re-mount loops */}
+      {/* Ambient Light, inlined to avoid re-mount loops */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
         <motion.div
           animate={{ x: [0, 20, -15, 0], y: [0, -30, 15, 0], scale: [1, 1.08, 0.96, 1] }}
@@ -431,7 +431,7 @@ export const PixelManager = () => {
         </div>
       </motion.header>
 
-      {/* ─── Main Content — Golden ratio max-width container ──────── */}
+      {/* ─── Main Content, Golden ratio max-width container ──────── */}
       <div className="relative z-10 w-full max-w-lg mx-auto" style={{ padding: `${GR.xl}px ${GR.lg}px ${GR['3xl'] * 1.618}px` }}>
 
         {/* ─── Trust Section ──────────────────────────────────────── */}
@@ -466,7 +466,7 @@ export const PixelManager = () => {
             </div>
           </div>
 
-          {/* Trust badges — golden ratio 3 columns */}
+          {/* Trust badges, golden ratio 3 columns */}
           <div className="grid grid-cols-3" style={{ gap: GR.sm }}>
             {[
               { icon: <Lock size={GR.md} />, label: 'No server', sub: 'Client-side only' },
@@ -496,7 +496,7 @@ export const PixelManager = () => {
               </p>
             </div>
 
-            {/* Copy All — full width Apple glass button */}
+            {/* Copy All, full width Apple glass button */}
             <motion.button
               whileTap={{ scale: 0.97 }}
               onClick={() => { const code = generateFullCode(); if (code) handleCopy(code); }}
@@ -590,7 +590,7 @@ export const PixelManager = () => {
                           </motion.button>
                         </div>
 
-                        {/* Action buttons — full width stacked, golden ratio gaps */}
+                        {/* Action buttons, full width stacked, golden ratio gaps */}
                         <div className="grid grid-cols-1" style={{ gap: GR.sm, marginTop: GR.lg }}>
                           {/* View Code */}
                           <motion.button
@@ -927,7 +927,7 @@ export const PixelManager = () => {
                 </motion.button>
               </div>
 
-              {/* Platform Selection — full width stacked */}
+              {/* Platform Selection, full width stacked */}
               <div style={{ padding: `0 ${GR.lg}px ${GR.lg}px`, display: 'flex', flexDirection: 'column', gap: GR.sm }}>
                 {platforms.map(p => {
                   const isSelected = selectedPlatform?.id === p.id;
@@ -1033,7 +1033,7 @@ export const PixelManager = () => {
                         type="text"
                         value={labelInput}
                         onChange={e => setLabelInput(e.target.value)}
-                        placeholder={`e.g. ${selectedPlatform.name} — Main Website`}
+                        placeholder={`e.g. ${selectedPlatform.name}, Main Website`}
                         className={`w-full transition-all outline-none ${
                           isDark
                             ? 'border-white/[0.06] bg-white/[0.02] text-white/90 placeholder:text-white/10 focus:border-[#ff4306]/30 focus:bg-white/[0.04] focus:ring-2 focus:ring-[#ff4306]/8'
@@ -1086,7 +1086,7 @@ export const PixelManager = () => {
           )}
         </AnimatePresence>
 
-        {/* ─── How It Works — Golden Ratio Steps ─────────────────── */}
+        {/* ─── How It Works, Golden Ratio Steps ─────────────────── */}
         <motion.div
           initial={{ opacity: 0, y: GR.lg }}
           animate={{ opacity: 1, y: 0 }}

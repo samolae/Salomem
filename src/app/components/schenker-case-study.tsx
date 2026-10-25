@@ -55,7 +55,7 @@ const BRAND = {
 
 /* ─── Layout & type tokens ─────────────────────────────────────── */
 // One container and one left edge for every section (and the top bar).
-// md–xl get wider gutters so the fixed section rail never sits on content.
+// md-xl get wider gutters so the fixed section rail never sits on content.
 const WRAP = 'mx-auto w-full max-w-[1232px] px-6 sm:px-8 md:px-20 xl:px-10';
 // One vertical rhythm between chapters
 const SECTION = 'scroll-mt-16 py-20 sm:py-24 lg:py-32';
@@ -68,7 +68,7 @@ const HEAD = { fontFamily: BRAND.headingFont } as const;
  *   Sub (h3)       18 → 20px
  *   Lead           17px / 1.65
  *   Body           15px / 1.7, muted
- *   Caption/label  12–13px
+ *   Caption/label  12-13px
  */
 const H2 = 'text-[clamp(1.75rem,1.25rem+1.35vw,2.25rem)] leading-[1.12] tracking-[-0.02em] font-semibold text-[#F2F3F5]';
 const H3 = 'text-[18px] lg:text-[20px] leading-[1.3] tracking-[-0.01em] font-semibold text-[#F2F3F5]';

@@ -3,7 +3,7 @@ import { Outlet, useLocation } from 'react-router';
 import { isHydrating } from '../hydration';
 
 /**
- * ScrollToTopLayout — wraps all routes via react-router.
+ * ScrollToTopLayout, wraps all routes via react-router.
  *
  * Guarantees every route change starts from the top:
  *   • First paint → instant (no visible flash)
@@ -66,7 +66,7 @@ export function ScrollToTopLayout() {
 }
 
 /**
- * scrollContentToTop — utility for scrolling within the HomePage
+ * scrollContentToTop, utility for scrolling within the HomePage
  * when sidebar section changes. Scrolls both the window and any
  * scrollable ancestor to the top instantly (pre-animation) to
  * avoid jarring mid-scroll content swaps.

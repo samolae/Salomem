@@ -623,7 +623,7 @@ export const TextScramble = ({
   const isInView = useInView(ref, { once: true, margin: '0px' });
   const reduceMotion = useReducedMotion();
   const [displayText, setDisplayText] = useState(text);
-  const chars = '!<>-_\\/[]{}—=+*^?#________';
+  const chars = '!<>-_\\/[]{}-=+*^?#________';
 
   useEffect(() => {
     if (!isInView || reduceMotion) return;
@@ -939,7 +939,7 @@ export const LightBeamCard = ({
 };
 
 /* ═══════════════════════════════════════════════════════════════════ */
-/*         LIQUID DESIGN SYSTEM — BENTO TILT CARD                    */
+/*         LIQUID DESIGN SYSTEM, BENTO TILT CARD                    */
 /* ═══════════════════════════════════════════════════════════════════ */
 export const BentoTiltCard = ({
   children,
@@ -1019,7 +1019,7 @@ export const BentoTiltCard = ({
 };
 
 /* ═══════════════════════════════════════════════════════════════════ */
-/*         LIQUID DESIGN SYSTEM — REACTIVE MESH BACKGROUND           */
+/*         LIQUID DESIGN SYSTEM, REACTIVE MESH BACKGROUND           */
 /* ═══════════════════════════════════════════════════════════════════ */
 export const LiquidMeshBackground = ({
   className = '',
@@ -1064,7 +1064,7 @@ export const LiquidMeshBackground = ({
 };
 
 /* ══════════════════════════════════════════════════════════════════ */
-/*         LIQUID DESIGN SYSTEM — SPRING COUNTER BADGE               */
+/*         LIQUID DESIGN SYSTEM, SPRING COUNTER BADGE               */
 /* ═══════════════════════════════════════════════════════════════════ */
 export const SpringBadge = ({
   children,
@@ -1105,7 +1105,7 @@ export const SpringBadge = ({
 };
 
 /* ═══════════════════════════════════════════════════════════════════ */
-/*         PARALLAX FLOAT — multi-speed floating layers              */
+/*         PARALLAX FLOAT, multi-speed floating layers              */
 /* ═══════════════════════════════════════════════════════════════════ */
 export const ParallaxFloat = ({
   children,
@@ -1136,7 +1136,7 @@ export const ParallaxFloat = ({
 };
 
 /* ═══════════════════════════════════════════════════════════════════ */
-/*         SCROLL REVEAL SCALE — zoom + fade as you scroll in        */
+/*         SCROLL REVEAL SCALE, zoom + fade as you scroll in        */
 /* ═══════════════════════════════════════════════════════════════════ */
 export const ScrollRevealScale = ({
   children,
@@ -1164,7 +1164,7 @@ export const ScrollRevealScale = ({
 };
 
 /* ══════════���═══════════════════════════════════════════════════════ */
-/*         MAGNETIC LINK — magnetic pull + underline reveal          */
+/*         MAGNETIC LINK, magnetic pull + underline reveal          */
 /* ═══════════════════════════════════════════════════════════════════ */
 export const MagneticLink = ({
   children,
@@ -1215,7 +1215,7 @@ export const MagneticLink = ({
 };
 
 /* ═══════════════════════════════════════════════════════════════════ */
-/*         MICRO PULSE — subtle breathing animation                  */
+/*         MICRO PULSE, subtle breathing animation                  */
 /* ═══════════════════════════════════════════════════════════════════ */
 export const MicroPulse = ({
   children,

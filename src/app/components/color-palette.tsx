@@ -59,7 +59,7 @@ const radiusScale = [
 ];
 
 /* ═══════════════════════════════════════════════════════════════════ */
-/* Full Design System Section — Awwwards-level showcase               */
+/* Full Design System Section, Awwwards-level showcase               */
 /* ═══════════════════════════════════════════════════════════════════ */
 export function DesignSystemFull() {
   const { theme } = useTheme();
@@ -312,7 +312,7 @@ export function DesignSystemFull() {
 }
 
 /* ═══════════════════════════════════════════════════════════════════ */
-/* Compact Design System — used in sidebar context                    */
+/* Compact Design System, used in sidebar context                    */
 /* ═══════════════════════════════════════════════════════════════════ */
 export function DesignSystem() {
   const { theme } = useTheme();

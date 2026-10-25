@@ -135,7 +135,7 @@ export function HomeContent() {
               <span className="text-[#6f6f6f]"> · {ka ? e.roleKa : e.role}</span>
             </span>
             <span className="text-[#9a9a9a] whitespace-nowrap tabular-nums hidden sm:inline">
-              {ka ? `${e.startKa} – ${e.endKa}` : `${e.start} – ${e.end}`}
+              {ka ? `${e.startKa} - ${e.endKa}` : `${e.start} - ${e.end}`}
             </span>
           </li>
         ))}

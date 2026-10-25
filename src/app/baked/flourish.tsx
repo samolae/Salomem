@@ -30,54 +30,22 @@ function MeetGlyph({ size = 17 }: { size?: number }) {
 }
 
 /**
- * Two pills that lean on each other. Pointing at one straightens it while
- * the other leans away; the label inside slides as if the pill were weighted.
+ * The call to action: two straight pills with one shape. Same height,
+ * radius and padding as the site's main button; white for WhatsApp,
+ * black for booking a call.
  */
-export function LeaningPills({ size = 'md', className = '' }: { size?: 'sm' | 'md'; className?: string }) {
+export function LeaningPills({ className = '' }: { size?: 'sm' | 'md'; className?: string }) {
   const { tx } = useI18n();
-  const [hot, setHot] = useState<'chat' | 'call' | null>(null);
-  const h = size === 'sm' ? 'h-10 px-4 text-[14px]' : 'h-12 px-5 text-[15px]';
-  const tilt = (which: 'chat' | 'call') => {
-    const base = which === 'chat' ? -7 : 6;
-    if (!hot) return { r: base, y: which === 'chat' ? 2 : 0, s: 1 };
-    if (hot === which) return { r: 0, y: -2, s: 1.04 };
-    return { r: base * 1.6, y: 4, s: 0.97 };
-  };
-  const pill = (which: 'chat' | 'call') => {
-    const t = tilt(which);
-    return {
-      transform: `translateY(${t.y}px) rotate(${t.r}deg) scale(${t.s})`,
-      transition: 'transform .5s cubic-bezier(.34,1.56,.64,1), background-color .2s',
-    };
-  };
-  const label = (which: 'chat' | 'call') => ({
-    transform: `translateY(${hot === which ? -1 : hot ? 2 : 0}px)`,
-    transition: 'transform .45s cubic-bezier(.34,1.56,.64,1)',
-  });
-  const ring = 'outline-none focus-visible:shadow-[0_0_0_2px_#fff,0_0_0_4px_#111]';
+  const shape = 'inline-flex items-center justify-center gap-2 h-12 px-6 rounded-full text-[15px] leading-none whitespace-nowrap transition-[background-color,transform,box-shadow] duration-200 hover:-translate-y-px outline-none focus-visible:shadow-[0_0_0_2px_#fff,0_0_0_4px_#111]';
   return (
-    <div className={`inline-flex items-center gap-1.5 ${className}`} data-cta onPointerLeave={() => setHot(null)}>
-      <a
-        href={WA_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        onPointerEnter={() => setHot('chat')}
-        onFocus={() => setHot('chat')}
-        onBlur={() => setHot(null)}
-        className={`inline-flex items-center gap-2 rounded-full bg-white text-[#111] border border-[#e6e6e6] shadow-[0_8px_20px_-8px_rgba(0,0,0,0.25)] ${h} ${ring}`}
-        style={pill('chat')}
-      >
-        <span className="inline-flex items-center gap-2" style={label('chat')}><WhatsAppGlyph />{tx("Let's chat", 'მომწერე')}</span>
+    <div className={`inline-flex items-center gap-2 ${className}`} data-cta>
+      <a href={WA_URL} target="_blank" rel="noopener noreferrer"
+        className={`${shape} bg-white text-[#111] ring-1 ring-inset ring-black/10 shadow-[0_8px_24px_-10px_rgba(0,0,0,0.3)] hover:bg-[#f6f6f6]`}>
+        <WhatsAppGlyph />{tx("Let's chat", 'მომწერე')}
       </a>
-      <span onPointerEnter={() => setHot('call')} onFocus={() => setHot('call')} onBlur={() => setHot(null)} className="inline-flex" style={pill('call')}>
-        <BookButton
-          className={`inline-flex items-center gap-2 rounded-full bg-[#111] text-white border border-white/20 shadow-[0_8px_20px_-8px_rgba(0,0,0,0.45)] ${h} ${ring}`}
-        >
-          <span className="inline-flex items-center gap-2" style={{ ...label('call'), display: 'inline-flex' }}>
-            <MeetGlyph />{tx('Book a call', 'შევხვდეთ')}
-          </span>
-        </BookButton>
-      </span>
+      <BookButton className={`${shape} bg-[#111] text-white ring-1 ring-inset ring-white/15 shadow-[0_8px_24px_-10px_rgba(0,0,0,0.5)] hover:bg-[#222]`}>
+        <MeetGlyph />{tx('Book a call', 'შევხვდეთ')}
+      </BookButton>
     </div>
   );
 }
@@ -270,8 +238,7 @@ export function SwingingBadge({ children }: { children?: ReactNode }) {
           <div className="-mt-1 rounded-[14px] bg-white/80 backdrop-blur-sm p-2 shadow-[0_24px_50px_-18px_rgba(0,0,0,0.4)] ring-1 ring-black/10">
             <div className="rounded-[10px] bg-white ring-1 ring-black/5 p-4 pt-5">
               <div className="mx-auto mb-4 h-2.5 w-12 rounded-full bg-[#ececec]" />
-              <img src="/avatar.jpg" alt="" width={56} height={56} className="h-14 w-14 rounded-full object-cover" draggable={false} />
-              <div className="mt-4 text-[22px] leading-[1.02] text-[#111]" style={{ fontFamily: T.display, fontWeight: 900 }}>Salome<br />Mosiava</div>
+              <div className="text-[22px] leading-[1.02] text-[#111]" style={{ fontFamily: T.display, fontWeight: 900 }}>Salome<br />Mosiava</div>
               <div className="mt-3 text-[12px] leading-[1.4] text-[#6f6f6f]">{tx('Art Director & Senior Product Designer', 'არტ დირექტორი, უფროსი პროდუქტის დიზაინერი')}</div>
               <div className="mt-4 flex items-center justify-between text-[11px] text-[#9a9a9a]">
                 <span>{tx('Tbilisi, Georgia', 'თბილისი')}</span>

@@ -185,7 +185,7 @@ export const CASES: CaseStudy[] = [
     ],
     screens: [
       { title: 'Login', desc: 'The first screen every user sees, one entry point for students, lecturers and admins.', src: `${C}/v1779875718/%E1%83%9E%E1%83%98%E1%83%A0%E1%83%95%E1%83%94%E1%83%9A%E1%83%98_%E1%83%92%E1%83%95%E1%83%94%E1%83%A0%E1%83%93%E1%83%98_%E1%83%9B%E1%83%9D%E1%83%9B%E1%83%AE%E1%83%9B%E1%83%90%E1%83%A0%E1%83%94%E1%83%91%E1%83%9A%E1%83%98%E1%83%A1_%E1%83%A8%E1%83%94%E1%83%A1%E1%83%95%E1%83%9A%E1%83%98%E1%83%A1%E1%83%90%E1%83%A1_uaosn1.png` },
-      { title: 'Registration, conditional logic', desc: '12 base fields → 4 status paths → 0–5 conditional fields, in one unified form pattern. Shown here with validation errors.', src: `${C}/v1779875712/%E1%83%90%E1%83%AE%E1%83%90%E1%83%9A%E1%83%98_%E1%83%9B%E1%83%9D%E1%83%9B%E1%83%AE%E1%83%9B%E1%83%90%E1%83%A0%E1%83%94%E1%83%91%E1%83%9A%E1%83%98%E1%83%A1_%E1%83%A0%E1%83%94%E1%83%92%E1%83%98%E1%83%A1%E1%83%A2%E1%83%A0%E1%83%90%E1%83%AA%E1%83%98%E1%83%90-%E1%83%A1%E1%83%A2%E1%83%A3%E1%83%93%E1%83%94%E1%83%9C%E1%83%A2%E1%83%98_error_vhhyi0.png` },
+      { title: 'Registration, conditional logic', desc: '12 base fields → 4 status paths → 0-5 conditional fields, in one unified form pattern. Shown here with validation errors.', src: `${C}/v1779875712/%E1%83%90%E1%83%AE%E1%83%90%E1%83%9A%E1%83%98_%E1%83%9B%E1%83%9D%E1%83%9B%E1%83%AE%E1%83%9B%E1%83%90%E1%83%A0%E1%83%94%E1%83%91%E1%83%9A%E1%83%98%E1%83%A1_%E1%83%A0%E1%83%94%E1%83%92%E1%83%98%E1%83%A1%E1%83%A2%E1%83%A0%E1%83%90%E1%83%AA%E1%83%98%E1%83%90-%E1%83%A1%E1%83%A2%E1%83%A3%E1%83%93%E1%83%94%E1%83%9C%E1%83%A2%E1%83%98_error_vhhyi0.png` },
       { title: 'Submitted forms', desc: 'Admin table of submissions with status pills and left-edge row indicators.', src: `${C}/v1779875712/%E1%83%A8%E1%83%94%E1%83%95%E1%83%A1%E1%83%94%E1%83%91%E1%83%A3%E1%83%9A%E1%83%98_%E1%83%A4%E1%83%9D%E1%83%A0%E1%83%9B%E1%83%94%E1%83%91%E1%83%98%E1%83%A1_%E1%83%AA%E1%83%AE%E1%83%A0%E1%83%98%E1%83%9A%E1%83%98_jtudqc.png` },
       { title: 'Project upload', desc: 'Students add projects to their cabinet and public portfolio.', src: `${C}/v1779875711/%E1%83%9E%E1%83%A0%E1%83%9D%E1%83%94%E1%83%A5%E1%83%A2%E1%83%98%E1%83%A1_%E1%83%90%E1%83%A2%E1%83%95%E1%83%98%E1%83%A0%E1%83%97%E1%83%95%E1%83%90_3_ewqkdw.png` },
     ],
@@ -196,7 +196,7 @@ export const CASES: CaseStudy[] = [
       { title: 'Countdown timer with a parallel manual CTA', desc: "After verification, a visible 5s countdown shows something is happening; the manual button preserves agency for those who don't want to wait." },
       { title: 'Certificate, visible, disabled, explained', desc: 'Showing the button as disabled with a clear tooltip sets correct expectations instead of hiding the feature entirely.' },
       { title: 'Portfolio as a dedicated public route', desc: 'The portfolio serves employers and clients, not platform users, so it was designed from scratch for first-impression clarity: no nav, no login prompts.' },
-      { title: 'Region → city cascade dropdown', desc: 'Filtering cities by region cuts a 70+ item list to 3–12 items and selection time by an estimated 60%.' },
+      { title: 'Region → city cascade dropdown', desc: 'Filtering cities by region cuts a 70+ item list to 3-12 items and selection time by an estimated 60%.' },
     ],
     lists: [
       { title: 'Process · 12 weeks', items: [
@@ -209,7 +209,7 @@ export const CASES: CaseStudy[] = [
         '1:1 component mapping, every Figma component had a planned React equivalent.',
         'Tailwind-aligned tokens, spacing, color and radius mirrored Tailwind defaults.',
         'HTML/CSS in handoff, real CSS snippets for focus rings, transitions and hover states.',
-        'Daily 15-min syncs with engineering during weeks 5–10.',
+        'Daily 15-min syncs with engineering during weeks 5-10.',
       ] },
     ],
     outcomeTitle: 'Delivered, tested, live',

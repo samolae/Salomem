@@ -47,9 +47,9 @@ const EASE = [0.22, 1, 0.36, 1] as const;
 /* ─── Layout + type system ─────────────────────────────────────
  * Container: same as Aurum / Schenker (1232px incl. padding).
  * Section rhythm: 80 / 112 / 128px, a self-drawing hairline on top.
- * Type: only the hero title is display-sized (48–88).
- *   h2 28–36 · h3 18–20 · lead 17 / 1.65 · body 15 / 1.7 (muted)
- *   captions + labels 12–13. Long copy sits in 38–46ch justified
+ * Type: only the hero title is display-sized (48-88).
+ *   h2 28-36 · h3 18-20 · lead 17 / 1.65 · body 15 / 1.7 (muted)
+ *   captions + labels 12-13. Long copy sits in 38-46ch justified
  *   columns; short lines stay left-aligned.
  * ────────────────────────────────────────────────────────────── */
 const CONTAINER = 'mx-auto w-full max-w-[1232px] px-6 sm:px-8 md:px-20 xl:px-10';
@@ -134,7 +134,7 @@ const ChapterHeader = ({ number, label, lines, intro }: { number: string; label:
   );
 };
 
-/** Design-system sub-section heading (6.1 – 6.6). */
+/** Design-system sub-section heading (6.1 - 6.6). */
 const SpecHeader = ({ n, title, note }: { n: string; title: string; note?: string }) => {
   const t = useTokens();
   return (
@@ -315,7 +315,7 @@ const STORY = [
 const CHALLENGES = [
   {
     cTitle: 'Conditional form complexity',
-    cBody: '12 base fields expanding into 4 distinct paths with 0–5 additional fields each. Designing one pattern to cover all cases without cognitive overload.',
+    cBody: '12 base fields expanding into 4 distinct paths with 0-5 additional fields each. Designing one pattern to cover all cases without cognitive overload.',
     sTitle: 'Same-page progressive disclosure',
     sBody: 'Status fields expand inline below the dropdown, labeled as a distinct section. Users always see their position in the form with no multi-step wizard.',
   },
@@ -346,17 +346,17 @@ const CHALLENGES = [
 ];
 
 const PHASES = [
-  { phase: 'Phase 01', weeks: 'Weeks 1–2',   title: 'Discover', items: ['Stakeholder interviews (Unilab team, 4 sessions)', 'Competitive audit of EdTech learning platforms, student portals, and online portfolio tools', 'Technical spec analysis', 'User role mapping (student, lecturer, admin)', '17 edge cases identified and documented'] },
-  { phase: 'Phase 02', weeks: 'Weeks 3–4',   title: 'Define',   items: ['Information architecture (3 role-specific IA maps)', 'User flow mapping per role (9 flows total)', 'Conditional form logic matrix', 'State inventory: 12 states per key screen', 'Design principles established'] },
-  { phase: 'Phase 03', weeks: 'Weeks 5–10',  title: 'Design',   items: ['Lo-fi wireframes (42 screens)', 'Dark design system, 38+ components built', 'High-fidelity screens (42 total, 3 roles)', 'Micro-interactions prototyped for key flows', 'Responsive adaptation (1440 / 768 / 375px)'] },
-  { phase: 'Phase 04', weeks: 'Weeks 11–12', title: 'Deliver',  items: ['Usability testing: 8 participants, 2 rounds', '14 issues identified, 11 resolved pre-handoff', 'Dev handoff with Figma annotations', 'Component spec documentation', 'Design QA with engineering team'] },
+  { phase: 'Phase 01', weeks: 'Weeks 1-2',   title: 'Discover', items: ['Stakeholder interviews (Unilab team, 4 sessions)', 'Competitive audit of EdTech learning platforms, student portals, and online portfolio tools', 'Technical spec analysis', 'User role mapping (student, lecturer, admin)', '17 edge cases identified and documented'] },
+  { phase: 'Phase 02', weeks: 'Weeks 3-4',   title: 'Define',   items: ['Information architecture (3 role-specific IA maps)', 'User flow mapping per role (9 flows total)', 'Conditional form logic matrix', 'State inventory: 12 states per key screen', 'Design principles established'] },
+  { phase: 'Phase 03', weeks: 'Weeks 5-10',  title: 'Design',   items: ['Lo-fi wireframes (42 screens)', 'Dark design system, 38+ components built', 'High-fidelity screens (42 total, 3 roles)', 'Micro-interactions prototyped for key flows', 'Responsive adaptation (1440 / 768 / 375px)'] },
+  { phase: 'Phase 04', weeks: 'Weeks 11-12', title: 'Deliver',  items: ['Usability testing: 8 participants, 2 rounds', '14 issues identified, 11 resolved pre-handoff', 'Dev handoff with Figma annotations', 'Component spec documentation', 'Design QA with engineering team'] },
 ];
 
 const PRACTICES = [
   { title: '1:1 Component Mapping',   body: 'Every Figma component had a planned React equivalent, no design that couldn’t be built efficiently.' },
   { title: 'Tailwind-aligned tokens', body: 'Spacing, color, and radius tokens mirrored Tailwind defaults so engineers translated zero values by hand.' },
   { title: 'HTML/CSS in handoff',     body: 'Specs included real CSS snippets for non-trivial states, focus rings, transitions, hover micro-interactions.' },
-  { title: 'Daily 15-min syncs',      body: 'Async questions resolved same day during weeks 5–10, no waiting cycles, no email threads.' },
+  { title: 'Daily 15-min syncs',      body: 'Async questions resolved same day during weeks 5-10, no waiting cycles, no email threads.' },
   { title: 'Browser DevTools QA',     body: 'Paired live in DevTools to inspect builds, spacing, hierarchy, accessibility verified together in real time.' },
   { title: 'Shared component vocab',  body: 'Same terminology in Figma, code, and docs, variants, props, states all named identically across surfaces.' },
 ];
@@ -372,7 +372,7 @@ const REG_FLOW = [
   { label: 'Start',       sublabel: 'Begin Registration' },
   { label: 'Base',        sublabel: '12 Mandatory Fields' },
   { label: 'Branch',      sublabel: 'Status Dropdown' },
-  { label: 'Conditional', sublabel: 'Role-specific 0–5 fields' },
+  { label: 'Conditional', sublabel: 'Role-specific 0-5 fields' },
   { label: 'Confirm',     sublabel: 'Terms & Checkbox' },
   { label: 'Success',     sublabel: 'Verification Page' },
 ];
@@ -383,7 +383,7 @@ const DECISIONS = [
   { n: '03', title: 'Countdown Timer with Parallel Manual CTA',   principle: 'User control and clarity', body: "After verification, users lose orientation instantly. A visible countdown (5s) provides clear feedback that something is happening; the manual button preserves user agency for those who don't want to wait. Both user types served simultaneously." },
   { n: '04', title: 'Certificate, Visible, Disabled, Explained',  principle: 'Feature discovery',        body: 'Hiding the certificate button entirely would make users unaware the feature exists. Showing it as disabled with a clear tooltip sets correct expectations and keeps users engaged rather than confused.' },
   { n: '05', title: 'Portfolio as a Dedicated Public Route',      principle: 'Audience-specific design', body: 'The portfolio page serves a completely different audience, potential employers and clients, not platform users. It was designed from scratch for first-impression clarity: no nav, no login prompts, clean project banners.' },
-  { n: '06', title: 'Region → City Cascade Dropdown',             principle: 'Form usability',           body: 'Showing all Georgian cities at once creates a 70+ item dropdown that is nearly unusable. Filtering cities by selected region reduces the list to 3–12 items, eliminates impossible combinations, and cuts selection time by an estimated 60%.' },
+  { n: '06', title: 'Region → City Cascade Dropdown',             principle: 'Form usability',           body: 'Showing all Georgian cities at once creates a 70+ item dropdown that is nearly unusable. Filtering cities by selected region reduces the list to 3-12 items, eliminates impossible combinations, and cuts selection time by an estimated 60%.' },
 ];
 
 const COLOR_GROUPS = [
@@ -851,7 +851,7 @@ export function UnispaceCaseStudy() {
               </div>
               <div className={`border-t ${t.line} p-6 md:p-8 lg:px-10 grid gap-8 sm:grid-cols-3`}>
                 <Stat n="~60%" label="Fewer handoff clarification tickets" />
-                <Stat n="12 wks" label="Total timeline · vs. 16–18 typical for scope" />
+                <Stat n="12 wks" label="Total timeline · vs. 16-18 typical for scope" />
                 <Stat n="0" label="Design QA issues on form components post-launch" />
               </div>
             </div>
@@ -877,7 +877,7 @@ export function UnispaceCaseStudy() {
           {/* Registration conditional logic */}
           <Rise className="mb-6">
             <h3 className={`${H3} ${t.heading}`} style={HEADING_STYLE}>Registration, conditional logic system</h3>
-            <p className={`mt-2 text-[13px] ${t.muted}`}>12 base fields → 4 status paths → 0–5 conditional fields · One unified form pattern</p>
+            <p className={`mt-2 text-[13px] ${t.muted}`}>12 base fields → 4 status paths → 0-5 conditional fields · One unified form pattern</p>
           </Rise>
 
           <Rise>
@@ -1075,10 +1075,10 @@ export function UnispaceCaseStudy() {
 
                 <dl className="border-t border-white/[0.07] px-6 md:px-8 lg:px-10 py-5 grid grid-cols-2 md:grid-cols-4 gap-5">
                   {[
-                    { l: 'Display', r: '48–72px · 700' },
-                    { l: 'Heading', r: '20–32px · 600–700' },
-                    { l: 'Body',    r: '14–16px · 400' },
-                    { l: 'Caption', r: '10–11px · 500 · +0.15em' },
+                    { l: 'Display', r: '48-72px · 700' },
+                    { l: 'Heading', r: '20-32px · 600-700' },
+                    { l: 'Body',    r: '14-16px · 400' },
+                    { l: 'Caption', r: '10-11px · 500 · +0.15em' },
                   ].map((s) => (
                     <div key={s.l}>
                       <dt className="text-[12px] text-[#9295A6] mb-1">{s.l}</dt>

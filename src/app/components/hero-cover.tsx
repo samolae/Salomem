@@ -97,7 +97,7 @@ const PerspectiveCard = ({
   mouseX: any;
   mouseY: any;
 }) => {
-  // Spring-smoothed mouse tracking — drives rotation continuously via style.
+  // Spring-smoothed mouse tracking, drives rotation continuously via style.
   // IMPORTANT: do NOT also animate rotateX/rotateY in `animate`, or the
   // entry keyframes will override the MotionValues and freeze rotation
   // after the entry transition finishes.

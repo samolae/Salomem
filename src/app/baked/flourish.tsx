@@ -360,7 +360,7 @@ export function SwingingBadge({ children }: { children?: ReactNode }) {
               </div>
               <div className="mt-auto">
                 <div className="text-[12px] italic text-[#333]" style={{ fontFamily: 'Georgia, "Times New Roman", serif', fontWeight: 700 }}>{tx('Currently', 'ახლა')}</div>
-                <div className="mt-0.5 text-[11.5px] leading-[1.35] text-[#555]" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>{tx('Visual Designer @ RunwayTeam', 'ვიზუალ დიზაინერი @ RunwayTeam')}</div>
+                <div className="mt-0.5 text-[11.5px] leading-[1.35] text-[#555]" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>{tx('Freelance, in collaboration with a few interesting companies ;)', 'ფრილანსერი, ვთანამშრომლობ რამდენიმე საინტერესო კომპანიასთან ;)')}</div>
                 <div className="mt-3 text-[12px] italic text-[#333]" style={{ fontFamily: 'Georgia, "Times New Roman", serif', fontWeight: 700 }}>{tx('Previously', 'მანამდე')}</div>
                 <div className="mt-1.5 flex flex-wrap gap-1">
                   {[['Scope', '#2a2a2a', '#000'], ['UniLab', '#e5484d', '#c22a2f'], ['Cubisten', '#4b37d9', '#2a1a9e']].map(([n, c1, c2]) => (

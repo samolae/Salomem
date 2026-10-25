@@ -148,14 +148,14 @@ const ScreenFrame = ({
           <span className="w-2 h-2 md:w-2.5 md:h-2.5 rounded-full bg-white/[0.14]" />
           <span className="w-2 h-2 md:w-2.5 md:h-2.5 rounded-full bg-white/[0.14]" />
         </div>
-        <div className="aspect-[16/10] bg-[#0f0d0d]">
+        <div className="bg-[#0f0d0d]">
           <img
             {...responsive(src, [640, 960, 1280, 1920], sizes)}
             alt={alt}
             loading={priority ? 'eager' : 'lazy'}
             {...(priority ? { fetchpriority: 'high' } : {})}
             decoding="async"
-            className="w-full h-full block object-cover object-top"
+            className="w-full h-auto block"
           />
         </div>
       </motion.div>
@@ -537,7 +537,7 @@ export function UnispaceCaseStudy() {
                     <motion.h1
                       id="unispace-title"
                       variants={heroItem}
-                      className={`text-[clamp(3.25rem,1.6rem+7vw,7.5rem)] leading-[0.92] tracking-[-0.045em] ${t.heading}`}
+                      className={`text-[clamp(3rem,1.2rem+5vw,5.5rem)] leading-[0.95] tracking-[-0.045em] ${t.heading}`}
                       style={{ fontFamily: BRAND.headingFont, fontWeight: 800 }}
                     >
                       Unispace

@@ -15,13 +15,13 @@ const SITE_NAME = 'Salome Mosiava';
 const BASE_URL = 'https://samole.ge';
 const DEFAULT_IMAGE = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1778246294/hero_boli7m.jpg';
 const DEFAULT_DESCRIPTION =
-  'Salome Mosiava is a Senior Product Designer and Art Director based in Tbilisi, Georgia. Specializing in UX/UI, social media art direction, and motion design. Top-Rated Plus on Upwork.';
+  'Salome Mosiava is a Senior Product Designer and Art Director based in Georgia. Specializing in UX/UI, social media art direction, and motion design. Top-Rated Plus on Upwork.';
 
 export function SEO({
   title,
   rawTitle,
   description = DEFAULT_DESCRIPTION,
-  keywords = 'Salome Mosiava, product designer, art director, UX design, UI design, social media design, motion design, Tbilisi, Georgia, portfolio',
+  keywords = 'Salome Mosiava, product designer, art director, UX design, UI design, social media design, motion design, Georgia, portfolio',
   image = DEFAULT_IMAGE,
   type = 'website',
   jsonLd,
@@ -41,7 +41,7 @@ export function SEO({
       jobTitle: 'Art Director & Senior Product Designer',
       url: BASE_URL,
       description:
-        'Senior Product Designer and Art Director based in Tbilisi, Georgia. Specializing in UX/UI design, social media art direction, and motion design.',
+        'Senior Product Designer and Art Director based in Georgia. Specializing in UX/UI design, social media art direction, and motion design.',
       sameAs: [
         'https://www.instagram.com/areuli.design/',
         'https://www.behance.net/samole',
@@ -104,8 +104,8 @@ export function HomeSEO() {
   return (
     <SEO
       rawTitle="Salome Mosiava | Art Director & Senior Product Designer"
-      description="Salome Mosiava is a Senior Product Designer and Art Director based in Tbilisi, Georgia. Specializing in UX/UI, social media art direction, and motion design. Top-Rated Plus on Upwork."
-      keywords="Salome Mosiava, art director, senior product designer, UX/UI design, social media design, motion design, Tbilisi, Georgia, portfolio, Upwork"
+      description="Salome Mosiava is a Senior Product Designer and Art Director based in Georgia. Specializing in UX/UI, social media art direction, and motion design. Top-Rated Plus on Upwork."
+      keywords="Salome Mosiava, art director, senior product designer, UX/UI design, social media design, motion design, Georgia, portfolio, Upwork"
     />
   );
 }

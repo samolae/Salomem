@@ -302,7 +302,7 @@ export function ContactContent() {
             ))}
           </ul>
           <div className="px-3 pt-4 pb-2 flex items-center gap-2 text-[13px] text-[#6f6f6f]">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#22c55e]" /> {tx('Available for new projects · Tbilisi, GMT+4', 'ახალი პროექტებისთვის თავისუფალი ვარ · თბილისი, GMT+4')}
+            <span className="h-1.5 w-1.5 rounded-full bg-[#22c55e]" /> {tx('Available for new projects · Georgia, GMT+4', 'ახალი პროექტებისთვის თავისუფალი ვარ · საქართველო, GMT+4')}
           </div>
         </div>
         <AreuliBlock compact />

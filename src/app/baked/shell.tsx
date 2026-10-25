@@ -268,7 +268,7 @@ function Footer() {
         <div>
           <div className="text-[#9a9a9a] mb-3">{tx('Say hello', 'მომწერე')}</div>
           <a href={`mailto:${EMAIL}`} className="text-[#111] hover:text-[#d93905] transition-colors break-all">{EMAIL}</a>
-          <div className="text-[#6f6f6f] mt-1.5">{tx('Tbilisi, Georgia', 'თბილისი, საქართველო')}</div>
+          <div className="text-[#6f6f6f] mt-1.5">{tx('Georgia', 'საქართველო')}</div>
         </div>
       </div>
       <div className="mt-16 flex flex-wrap justify-between gap-2 text-[#9a9a9a] text-[13px]">

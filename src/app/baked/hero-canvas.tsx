@@ -187,6 +187,10 @@ export function HeroCanvas() {
       <Lightbox items={lightbox} index={open} onClose={() => setOpen(null)} onIndex={setOpen} />
 
       {/* Soft fade into the page below */}
+      {/* Light grade over the visuals: a touch darker and richer, so the pills read */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 mix-blend-multiply bg-[#ece6e1]" />
+      <div aria-hidden className="pointer-events-none absolute inset-0 mix-blend-soft-light bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.28),rgba(0,0,0,0.12)_70%)]" />
+      <div aria-hidden className="pointer-events-none absolute inset-0 [backdrop-filter:saturate(1.25)]" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-white" />
 
       <h1 className="sr-only">{tx('Salome Mosiava, Senior Product Designer and Art Director', 'სალომე მოსიავა, სენიორ პროდაქტ დიზაინერი და არტ დირექტორი')}</h1>

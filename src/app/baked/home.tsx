@@ -164,8 +164,8 @@ export function HomeContent() {
           </h2>
           <p className="text-[15px] leading-[1.5] text-[#111] max-w-[390px]" style={{ fontWeight: 500 }}>
             {tx(
-              "I'm Salome, senior product designer & art director in Tbilisi. I turn the small signals and habits we often miss into ideas that create real business impact.",
-              'მე ვარ სალომე, სენიორ პროდაქტ დიზაინერი და არტ დირექტორი თბილისიდან. პატარა სიგნალებსა და ჩვევებს, რომლებსაც ხშირად ვერ ვამჩნევთ, ვაქცევ იდეებად, რომლებიც ბიზნესს რეალურ შედეგს მოუტანს.',
+              "I'm Salome, senior product designer & art director in Georgia. I turn the small signals and habits we often miss into ideas that create real business impact.",
+              'მე ვარ სალომე, სენიორ პროდაქტ დიზაინერი და არტ დირექტორი საქართველოდან. პატარა სიგნალებსა და ჩვევებს, რომლებსაც ხშირად ვერ ვამჩნევთ, ვაქცევ იდეებად, რომლებიც ბიზნესს რეალურ შედეგს მოუტანს.',
             )}
           </p>
           <p className="mt-5 text-[15px] leading-[1.5] text-[#6f6f6f] max-w-[390px]">

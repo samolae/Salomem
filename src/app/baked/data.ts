@@ -15,7 +15,7 @@ export const spotlightImage = 'https://res.cloudinary.com/dgfn598qb/image/upload
 
 /* ─── Schenker Screen imports ─────────────────────────────────────── */
 export const schenkerSettings = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774041604/d4d1e42280872aa3079a1b940b29790994d2b241_jcnrf6.webp';
-export const schenkerSendung = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1774200130/1afd387db904f4cec4c15bfa6b7966e601ef294b_towksm_1_sritlp.webp';
+export const schenkerSendung = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1774041645/1afd387db904f4cec4c15bfa6b7966e601ef294b_towksm.webp';
 export const schenkerLabels = 'https://res.cloudinary.com/dgfn598qb/image/upload/v1774199882/1afd387db904f4cec4c15bfa6b7966e601ef294b_towksm_tlzijs.webp';
 // Hi-res main foreground image for /work/ux-ui Schenker cover
 export const schenkerMainHQ = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774018719/Sendung-Empfa%CC%88nger_rkbeci.png';

@@ -32,6 +32,9 @@ function Tile({ children }: { children: ReactNode }) {
   return <Reveal>{children}</Reveal>;
 }
 
+/** The Dasturi case is hidden until it is finished */
+const DASTURI_LIVE = false;
+
 export function HomeContent() {
   const { paused } = useMotionPause();
   const { tx, to, ka } = useI18n();
@@ -184,7 +187,7 @@ export function HomeContent() {
       <section aria-labelledby="work-title" className="px-1.5 pt-24 sm:pt-32">
         <h2 id="work-title" className="sr-only">{tx('Selected work', 'რჩეული ნამუშევრები')}</h2>
         <div className="columns-1 md:columns-2 xl:columns-3 gap-x-1.5">
-          {[dasturi, ...left.flatMap((n, i) => [n, right[i]])].filter(Boolean).map((n, i) => (
+          {[...(DASTURI_LIVE ? [dasturi] : []), ...left.flatMap((n, i) => [n, right[i]])].filter(Boolean).map((n, i) => (
             <div key={i} className="break-inside-avoid"><Tile>{n}</Tile></div>
           ))}
         </div>

@@ -22,8 +22,10 @@ type Folder = { id: string; to: string; label: string; en: string; ka: string; c
 const FOLDERS: Folder[] = [
   { id: 'ux', to: '/work/ux-ui', label: 'ui_ux', en: 'UX/UI', ka: 'UX/UI', countEn: '3 products', countKa: '3 პროდუქტი', color: ['#62b5ff', '#3d9bf0', '#2b86dc'],
     thumbs: [screenAurumMainHQ, schenkerSendung, unispaceLogin].map((s) => cld(s, 240)) },
+  /* Dasturi hidden for now
   { id: 'brand', to: '/projects/dasturi', label: 'brand_design', en: 'Branding', ka: 'ბრენდინგი', countEn: '1 brand', countKa: '1 ბრენდი', color: ['#ffd25e', '#f6c03a', '#e5a91d'],
     thumbs: ['/cases/dasturi/labels/saperavi-gold.jpg', '/cases/dasturi/lineup-1000.jpg', '/cases/dasturi/labels/kisi-bordeaux.jpg'] },
+  */
   { id: 'ads', to: '/work/social-media-ads', label: 'soc_media_ads', en: 'Ads', ka: 'რეკლამა', countEn: `${adsBrands.length} brands`, countKa: `${adsBrands.length} ბრენდი`, color: ['#5fd06e', '#3fb24f', '#2f9a3f'],
     thumbs: [adsTerminal1, adsBrands[0].items[2].src, adsMardi1].map((s) => cld(s, 240)) },
   { id: 'motion', to: '/work/social-media-motion', label: 'motion', en: 'Motion', ka: 'მოუშენი', countEn: `${motionReels.length} reels`, countKa: `${motionReels.length} რილსი`, color: ['#ffa35a', '#f5852d', '#e06d17'],
@@ -75,7 +77,8 @@ function FolderCard({ f, open, onOpen }: { f: Folder; open: boolean; onOpen: (id
 }
 
 const FULL_CASES = [
-  { to: '/projects/dasturi', title: 'Dasturi', subEn: 'Georgian wine brand · identity, labels, packaging', subKa: 'ქართული ღვინის ბრენდი · იდენტობა, ეტიკეტები, შეფუთვა', img: '/cases/dasturi/lineup-1000.jpg', bg: '#191A17', local: true },
+  // Dasturi hidden for now:
+  // { to: '/projects/dasturi', title: 'Dasturi', subEn: 'Georgian wine brand · identity, labels, packaging', subKa: 'ქართული ღვინის ბრენდი · იდენტობა, ეტიკეტები, შეფუთვა', img: '/cases/dasturi/lineup-1000.jpg', bg: '#191A17', local: true },
   { to: '/projects/aurum', title: 'AURUM', subEn: 'Crypto exchange · B2C fintech', subKa: 'კრიპტოგაცვლა · B2C ფინტექი', img: screenAurumMainHQ, bg: 'linear-gradient(160deg,#16130b,#0b0b0f 70%)' },
   { to: '/projects/schenker', title: 'Schenker', subEn: 'Logistics platform · enterprise UX', subKa: 'ლოჯისტიკის პლატფორმა · კორპორატიული UX', img: schenkerSendung, bg: 'linear-gradient(160deg,#e8ecd8,#d4dab8)' },
   { to: '/projects/unispace', title: 'Unispace', subEn: 'Student management · EdTech', subKa: 'სტუდენტების მართვა · EdTech', img: unispaceLogin, bg: 'linear-gradient(160deg,#dfe6ff,#eef1ff)' },

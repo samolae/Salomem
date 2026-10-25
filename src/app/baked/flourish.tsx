@@ -200,10 +200,37 @@ export function FoldingCards({ items: base, label }: { items: { img: string; tit
 
 type P = { x: number; y: number; px: number; py: number };
 
+/** Swivel hook and snap clip in brushed metal */
+function BadgeClip() {
+  return (
+    <svg viewBox="0 0 60 78" className="relative z-10 mx-auto block h-[78px] w-[60px]" aria-hidden>
+      <defs>
+        <linearGradient id="badge-metal" x1="0" x2="1" y1="0" y2="0">
+          <stop offset="0" stopColor="#8d9096" /><stop offset="0.35" stopColor="#f4f5f7" />
+          <stop offset="0.55" stopColor="#b9bcc2" /><stop offset="0.8" stopColor="#eef0f2" /><stop offset="1" stopColor="#7d8086" />
+        </linearGradient>
+        <linearGradient id="badge-metal-v" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" stopColor="#f5f6f8" /><stop offset="1" stopColor="#9a9da3" />
+        </linearGradient>
+      </defs>
+      <rect x="21" y="0" width="18" height="12" rx="2" fill="#262626" />
+      <rect x="22" y="9" width="16" height="9" rx="3" fill="none" stroke="url(#badge-metal)" strokeWidth="3" />
+      <rect x="27.5" y="17" width="5" height="7" rx="1.5" fill="url(#badge-metal)" />
+      <path d="M30 23 C 19 25, 18 44, 24 52 L 30 60 L 36 52 C 42 44, 41 25, 30 23 Z" fill="url(#badge-metal)" stroke="#7e8187" strokeWidth="0.8" />
+      <path d="M30 28 C 24 30, 24 43, 27 48 L 30 52 L 33 48 C 36 43, 36 30, 30 28 Z" fill="#fff" fillOpacity="0.25" stroke="#888b91" strokeWidth="0.6" />
+      <circle cx="30" cy="40" r="1.8" fill="#6f7277" />
+      <path d="M25 30 C 23 36, 24 44, 27 49" fill="none" stroke="#fff" strokeOpacity="0.9" strokeWidth="1" />
+      <rect x="18" y="60" width="24" height="9" rx="2.5" fill="url(#badge-metal-v)" stroke="#8a8d93" strokeWidth="0.6" />
+      <rect x="24" y="67" width="12" height="11" rx="1.5" fill="url(#badge-metal)" />
+    </svg>
+  );
+}
+
 export function SwingingBadge({ children }: { children?: ReactNode }) {
   const { tx } = useI18n();
   const stage = useRef<HTMLDivElement>(null);
   const rope = useRef<SVGPathElement>(null);
+  const sheen = useRef<SVGPathElement>(null);
   const card = useRef<HTMLDivElement>(null);
   const drag = useRef<{ dx: number; dy: number } | null>(null);
 
@@ -211,7 +238,7 @@ export function SwingingBadge({ children }: { children?: ReactNode }) {
     const st = stage.current, cd = card.current, rp = rope.current;
     if (!st || !cd || !rp) return;
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const N = 14, SEG = 16;
+    const N = 16, SEG = 15;
     let W = st.clientWidth;
     let ax = W / 2;
     const pts: P[] = Array.from({ length: N }, (_, i) => ({ x: ax, y: i * SEG, px: ax, py: i * SEG }));
@@ -219,14 +246,28 @@ export function SwingingBadge({ children }: { children?: ReactNode }) {
     pts[N - 1].px -= reduce ? 0 : 18;
     let raf = 0, visible = false;
 
+    const STRAP = 70; // half the gap between the two strands where they leave the top
     const render = () => {
       const last = pts[N - 1], prev = pts[N - 3];
       const ang = Math.atan2(last.x - prev.x, last.y - prev.y);
-      cd.style.transform = `translate(${last.x - cd.offsetWidth / 2}px, ${last.y - 8}px) rotate(${-ang}rad)`;
-      cd.style.transformOrigin = '50% 8px';
-      let d = `M${pts[0].x} ${pts[0].y}`;
-      for (let i = 1; i < N; i++) d += ` L${pts[i].x} ${pts[i].y}`;
+      cd.style.transform = `translate(${last.x - cd.offsetWidth / 2}px, ${last.y - 6}px) rotate(${-ang}rad)`;
+      cd.style.transformOrigin = '50% 6px';
+      // the light slides across the plastic as the badge turns
+      cd.style.setProperty('--glare', `${50 + ang * 160}%`);
+      cd.style.setProperty('--tilt', `${(ang * 14).toFixed(1)}px`);
+      // one strap folded in half: two strands that meet at the clip
+      const strand = (side: number) => {
+        let d = '';
+        for (let i = 0; i < N; i++) {
+          const k = Math.pow(1 - i / (N - 1), 1.15);
+          const x = pts[i].x + side * STRAP * k, y = pts[i].y - 30 * k;
+          d += `${i ? ' L' : 'M'}${x.toFixed(1)} ${y.toFixed(1)}`;
+        }
+        return d;
+      };
+      const d = `${strand(-1)} ${strand(1)}`;
       rp.setAttribute('d', d);
+      sheen.current?.setAttribute('d', d);
     };
 
     const step = () => {
@@ -287,22 +328,53 @@ export function SwingingBadge({ children }: { children?: ReactNode }) {
 
   return (
     <section aria-label={tx('Salome Mosiava', 'სალომე მოსიავა')} className="relative overflow-hidden pt-0">
-      <div ref={stage} className="relative mt-24 h-[460px] sm:h-[520px] select-none">
-        <svg className="absolute inset-0 w-full h-full pointer-events-none" aria-hidden>
-          <path ref={rope} fill="none" stroke="#111" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
+      <div ref={stage} className="relative mt-16 h-[600px] sm:h-[660px] select-none">
+        <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible" aria-hidden style={{ maskImage: 'linear-gradient(to bottom, transparent 0, #000 140px)', WebkitMaskImage: 'linear-gradient(to bottom, transparent 0, #000 140px)' }}>
+          <defs>
+            <filter id="strap-shadow" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="10" dy="16" stdDeviation="9" floodColor="#000" floodOpacity="0.16" />
+            </filter>
+          </defs>
+          <g filter="url(#strap-shadow)">
+            <path ref={rope} fill="none" stroke="#262626" strokeWidth="13" strokeLinejoin="round" />
+            <path ref={sheen} fill="none" stroke="rgba(255,255,255,0.10)" strokeWidth="3" strokeLinejoin="round" transform="translate(-3 0)" />
+          </g>
         </svg>
-        <div ref={card} className="absolute left-0 top-0 w-[200px] sm:w-[220px] touch-none" style={{ cursor: 'grab', willChange: 'transform' }}>
-          {/* clip */}
-          <div className="mx-auto h-5 w-9 rounded-b-md bg-[#c9c9cc] shadow-inner" />
-          <div className="-mt-1 rounded-[14px] bg-white/80 backdrop-blur-sm p-2 shadow-[0_24px_50px_-18px_rgba(0,0,0,0.4)] ring-1 ring-black/10">
-            <div className="rounded-[10px] bg-white ring-1 ring-black/5 p-4 pt-5">
-              <div className="mx-auto mb-4 h-2.5 w-12 rounded-full bg-[#ececec]" />
-              <div className="text-[22px] leading-[1.02] text-[#111]" style={{ fontFamily: T.display, fontWeight: 900 }}>Salome<br />Mosiava</div>
-              <div className="mt-3 text-[12px] leading-[1.4] text-[#6f6f6f]">{tx('Art Director & Senior Product Designer', 'არტ დირექტორი, უფროსი პროდუქტის დიზაინერი')}</div>
-              <div className="mt-4 flex items-center justify-end text-[11px]">
-                <span className="rounded-full bg-[#ff4306] px-2 py-0.5 text-white">samole.ge</span>
+        <div ref={card} className="absolute left-0 top-0 w-[228px] sm:w-[248px] touch-none" style={{ cursor: 'grab', willChange: 'transform', filter: 'drop-shadow(var(--tilt, 0px) 26px 22px rgba(0,0,0,0.18))' }}>
+          <BadgeClip />
+          <div className="relative -mt-[6px] aspect-[0.64] rounded-[18px] overflow-hidden"
+            style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.72), rgba(236,239,243,0.55))', boxShadow: 'inset 0 0 0 1px rgba(0,0,0,0.13), inset 0 0 0 2px rgba(255,255,255,0.8), inset 3px 0 6px rgba(255,255,255,0.7)' }}>
+            {/* top of the sleeve: two punch holes and the slot */}
+            <div className="absolute inset-x-0 top-0 h-[52px]">
+              <span className="absolute left-[18px] top-[17px] h-[16px] w-[16px] rounded-full" style={{ boxShadow: 'inset 0 0 0 1px rgba(0,0,0,0.18), 0 1px 0 rgba(255,255,255,0.9)' }} />
+              <span className="absolute right-[18px] top-[17px] h-[16px] w-[16px] rounded-full" style={{ boxShadow: 'inset 0 0 0 1px rgba(0,0,0,0.18), 0 1px 0 rgba(255,255,255,0.9)' }} />
+              <span className="absolute left-1/2 top-[20px] h-[9px] w-[64px] -translate-x-1/2 rounded-full" style={{ boxShadow: 'inset 0 0 0 1px rgba(0,0,0,0.2)' }} />
+              <span className="absolute inset-x-[10px] bottom-[2px] h-px bg-black/10" />
+              <span className="absolute inset-x-[10px] bottom-0 h-px bg-white/90" />
+            </div>
+            {/* the card inside */}
+            <div className="absolute inset-x-[12px] top-[60px] bottom-[12px] rounded-[6px] bg-white px-5 pt-6 pb-5 flex flex-col"
+              style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04)' }}>
+              <div className="text-[34px] sm:text-[37px] leading-[0.9] tracking-[-0.02em]" style={{ fontFamily: T.display, fontWeight: 900 }}>
+                <span className="text-[#111]">Salome</span><br /><span className="text-[#ff4306]">Mosiava</span>
+              </div>
+              <div className="mt-auto">
+                <div className="text-[12px] italic text-[#333]" style={{ fontFamily: 'Georgia, "Times New Roman", serif', fontWeight: 700 }}>{tx('Currently', 'ახლა')}</div>
+                <div className="mt-0.5 text-[11.5px] leading-[1.35] text-[#555]" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>{tx('Visual Designer @ RunwayTeam', 'ვიზუალ დიზაინერი @ RunwayTeam')}</div>
+                <div className="mt-3 text-[12px] italic text-[#333]" style={{ fontFamily: 'Georgia, "Times New Roman", serif', fontWeight: 700 }}>{tx('Previously', 'მანამდე')}</div>
+                <div className="mt-1.5 flex flex-wrap gap-1">
+                  {[['Scope', '#2a2a2a', '#000'], ['UniLab', '#e5484d', '#c22a2f'], ['Cubisten', '#4b37d9', '#2a1a9e']].map(([n, c1, c2]) => (
+                    <span key={n} className="rounded-full px-2 py-[3px] text-[10.5px] leading-none text-white"
+                      style={{ fontFamily: 'Georgia, "Times New Roman", serif', fontWeight: 700, background: `linear-gradient(180deg, ${c1}, ${c2})`, boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.25)' }}>{n}</span>
+                  ))}
+                </div>
               </div>
             </div>
+            {/* plastic: a soft sheen top and bottom, and a glare band that moves with the swing */}
+            <div className="pointer-events-none absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.35), rgba(255,255,255,0) 30%, rgba(255,255,255,0) 80%, rgba(255,255,255,0.18))' }} />
+            <div className="pointer-events-none absolute inset-0 mix-blend-screen"
+              style={{ background: 'linear-gradient(112deg, rgba(255,255,255,0) calc(var(--glare, 50%) - 22%), rgba(255,255,255,0.55) calc(var(--glare, 50%) - 4%), rgba(255,255,255,0.15) var(--glare, 50%), rgba(255,255,255,0.4) calc(var(--glare, 50%) + 6%), rgba(255,255,255,0) calc(var(--glare, 50%) + 16%))' }} />
+            <div className="pointer-events-none absolute inset-0 rounded-[18px]" style={{ boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.6), inset -2px -2px 4px rgba(0,0,0,0.04)' }} />
           </div>
         </div>
       </div>

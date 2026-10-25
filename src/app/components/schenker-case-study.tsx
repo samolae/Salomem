@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, type ReactNode } from 'react';
+import { Children, useState, useEffect, useRef, type ReactNode, type CSSProperties } from 'react';
 import {
   motion,
   AnimatePresence,
@@ -14,6 +14,16 @@ import { CaseHeroTarget } from './case-transition';
 import { NextProjectRecommendation } from './next-project';
 import { CaseStudySectionNav } from './case-study-nav';
 import { SchenkerSEO } from './seo';
+import {
+  RevealLines,
+  Rise,
+  TiltIn,
+  ClipReveal,
+  CountUp,
+  DrawRule,
+  Marquee,
+  ReadProgress,
+} from './case-motion';
 import schenkerSvgPaths from '../../imports/svg-0abw9z02wj';
 import { IMG, responsive } from '../lib/cld';
 
@@ -50,10 +60,24 @@ const WRAP = 'mx-auto w-full max-w-[1232px] px-6 sm:px-8 md:px-20 xl:px-10';
 // One vertical rhythm between chapters
 const SECTION = 'scroll-mt-16 py-20 sm:py-24 lg:py-32';
 const HEAD = { fontFamily: BRAND.headingFont } as const;
-const H2 = 'text-[clamp(2rem,1.3rem+2.6vw,3.25rem)] leading-[1.06] tracking-[-0.025em] font-semibold text-[#F2F3F5] text-balance';
-const H3 = 'text-[22px] lg:text-[26px] leading-[1.2] tracking-[-0.015em] font-semibold text-[#F2F3F5]';
-const BODY = 'text-[17px] lg:text-[18px] leading-[1.65] text-[#BCBFCA] max-w-[64ch]';
-const CAPTION = 'text-[14px] leading-[1.55] text-[#9295A6]';
+/*
+ * Type scale. Only the hero title is display-sized; everything else steps
+ * down clearly so the hierarchy reads at a glance.
+ *   Display (h1)   44 → 92px
+ *   Chapter (h2)   28 → 36px
+ *   Sub (h3)       18 → 20px
+ *   Lead           17px / 1.65
+ *   Body           15px / 1.7, muted
+ *   Caption/label  12–13px
+ */
+const H2 = 'text-[clamp(1.75rem,1.25rem+1.35vw,2.25rem)] leading-[1.12] tracking-[-0.02em] font-semibold text-[#F2F3F5]';
+const H3 = 'text-[18px] lg:text-[20px] leading-[1.3] tracking-[-0.01em] font-semibold text-[#F2F3F5]';
+const LEAD = 'text-[17px] leading-[1.65] text-[#C3C6D0]';
+const BODY = 'text-[15px] leading-[1.7] text-[#A9ACB9]';
+const CAPTION = 'text-[13px] leading-[1.55] text-[#8C8FA0]';
+const LABEL = 'text-[12px] leading-none tracking-[0.02em]';
+// Justified column text (English): hyphenated, last line ragged
+const JUSTIFY = 'text-justify hyphens-auto [text-align-last:left]';
 const RULE = 'border-white/[0.08]';
 const FOCUS = 'focus-visible:!shadow-[0_0_0_2px_#8FBC3B]';
 
@@ -77,10 +101,7 @@ const HERO_CSS = `
 @keyframes sk-screen{from{opacity:0;transform:translateY(56px) scale(.965)}}
 `;
 
-/* ─── Motion gate ──────────────────────────────────────────────────
-   Scroll-linked styles are only attached after mount and only when
-   motion is allowed. Server HTML and the first client render are the
-   finished, static layout, so nothing can be left half-revealed.   */
+/* ─── Motion gate for this file's own scroll effects ─────────────── */
 function useScrollMotion() {
   const reduce = useReducedMotion();
   const [mounted, setMounted] = useState(false);
@@ -89,9 +110,9 @@ function useScrollMotion() {
 }
 
 /* ─── Browser frame ─────────────────────────────────────────────── */
-const BrowserFrame = ({ url, children, className = '' }: { url: string; children: ReactNode; className?: string }) => (
+const BrowserFrame = ({ url, children, className = '', flat = false }: { url: string; children: ReactNode; className?: string; flat?: boolean }) => (
   <div
-    className={`overflow-hidden rounded-xl lg:rounded-2xl bg-[#0E1116] ring-1 ring-white/[0.08] shadow-[0_48px_96px_-40px_rgba(0,0,0,0.85),0_16px_32px_-16px_rgba(0,0,0,0.6)] ${className}`}
+    className={`overflow-hidden rounded-xl lg:rounded-2xl bg-[#0E1116] ring-1 ring-white/[0.08] ${flat ? '' : 'shadow-[0_48px_96px_-40px_rgba(0,0,0,0.85),0_16px_32px_-16px_rgba(0,0,0,0.6)]'} ${className}`}
   >
     <div className="flex h-8 lg:h-10 items-center gap-3 border-b border-white/[0.06] bg-[#14171D] px-3 lg:px-4">
       <div className="flex gap-1.5" aria-hidden="true">
@@ -110,29 +131,16 @@ const BrowserFrame = ({ url, children, className = '' }: { url: string; children
   </div>
 );
 
-/* ─── Scroll-linked reveal for big screens ─────────────────────────
-   The frame settles from a slightly smaller, lower position into
-   place as it travels up the viewport. Scale and translate only:
-   no opacity, so the screen is always visible.                     */
-const ScreenReveal = ({ children, className = '', from = 0.92 }: { children: ReactNode; className?: string; from?: number }) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const enabled = useScrollMotion();
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'start 0.3'] });
-  const scale = useTransform(scrollYProgress, [0, 1], [from, 1]);
-  const y = useTransform(scrollYProgress, [0, 1], [64, 0]);
-  return (
-    <motion.div ref={ref} className={className} style={enabled ? { scale, y, transformOrigin: '50% 0%' } : undefined}>
-      {children}
-    </motion.div>
-  );
-};
+/* Big screens alternate between the two reveal styles */
+const ScreenMotion = ({ kind, children }: { kind: 'tilt' | 'clip'; children: ReactNode }) =>
+  kind === 'tilt' ? <TiltIn>{children}</TiltIn> : <ClipReveal>{children}</ClipReveal>;
 
-const Shot = ({ src, alt, sizes = 'wide', eager = false }: { src: string; alt: string; sizes?: 'wide' | 'half' | 'sticky'; eager?: boolean }) => {
+const Shot = ({ src, alt, sizes = 'wide', eager = false }: { src: string; alt: string; sizes?: 'wide' | 'half' | 'card'; eager?: boolean }) => {
   const props =
     sizes === 'half'
       ? responsive(src, [480, 720, 960, 1280], '(min-width: 1280px) 560px, (min-width: 768px) 46vw, 92vw')
-      : sizes === 'sticky'
-        ? responsive(src, [640, 960, 1280, 1600], '(min-width: 1280px) 760px, 62vw')
+      : sizes === 'card'
+        ? responsive(src, [480, 720, 960, 1440], '(min-width: 1024px) 46vw, 82vw')
         : IMG.wide(src);
   return (
     <img
@@ -148,12 +156,13 @@ const Shot = ({ src, alt, sizes = 'wide', eager = false }: { src: string; alt: s
   );
 };
 
-/* ─── Chapter label ────────────────────────────────────────────── */
-const Chapter = ({ number, label, asHeading = false }: { number: string; label: string; asHeading?: boolean }) => {
+/* ─── Chapter label: the rule draws itself, then the label ─────── */
+const Chapter = ({ number, label, asHeading = false, className = 'mb-10 lg:mb-14' }: { number: string; label: string; asHeading?: boolean; className?: string }) => {
   const Tag = asHeading ? 'h2' : 'p';
   return (
-    <div className={`mb-10 lg:mb-14 border-t ${RULE} pt-5`}>
-      <Tag className="flex items-baseline gap-3 text-[14px] font-normal">
+    <div className={className}>
+      <DrawRule />
+      <Tag className={`mt-5 flex items-baseline gap-3 ${LABEL} font-normal`}>
         <span className="font-mono text-[#8FBC3B]">{number}</span>
         <span className="text-[#9295A6]">{label}</span>
       </Tag>
@@ -161,12 +170,19 @@ const Chapter = ({ number, label, asHeading = false }: { number: string; label: 
   );
 };
 
+/* Chapter heading: lines slide up out of a mask */
+const ChapterTitle = ({ lines, className = '' }: { lines: string[]; className?: string }) => (
+  <RevealLines as="h2" className={`${H2} ${className}`} style={HEAD}>
+    {lines.map((l) => <span key={l}>{l}</span>)}
+  </RevealLines>
+);
+
 /* ─── Story line: colour brightens as it reaches reading height ─── */
-const StoryLine = ({ children, className = '', style }: { children: ReactNode; className?: string; style?: React.CSSProperties }) => {
+const StoryLine = ({ children, className = '', style }: { children: ReactNode; className?: string; style?: CSSProperties }) => {
   const ref = useRef<HTMLParagraphElement>(null);
   const enabled = useScrollMotion();
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start 0.9', 'start 0.5'] });
-  const color = useTransform(scrollYProgress, [0, 1], ['#8A8D9B', '#F2F3F5']);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start 0.9', 'start 0.55'] });
+  const color = useTransform(scrollYProgress, [0, 1], ['#7E8191', '#F2F3F5']);
   return (
     <motion.p ref={ref} className={`text-[#F2F3F5] ${className}`} style={enabled ? { ...style, color } : style}>
       {children}
@@ -199,10 +215,12 @@ const ShipmentFlow = ({ steps }: { steps: FlowStep[] }) => {
             <li key={step.num} className="motion-safe:lg:flex motion-safe:lg:min-h-[78vh] motion-safe:lg:items-center">
               <div className="w-full">
                 <div className="mb-5 flex items-center gap-4" aria-hidden="true">
-                  <span className={`font-mono text-[14px] transition-colors duration-500 text-[#8FBC3B] ${isActive ? '' : 'motion-safe:lg:text-[#6E7180]'}`}>
+                  <span className={`font-mono ${LABEL} transition-colors duration-500 text-[#8FBC3B] ${isActive ? '' : 'motion-safe:lg:text-[#6E7180]'}`}>
                     {step.num}
                   </span>
-                  <span className={`h-px w-12 transition-colors duration-500 bg-[#8FBC3B]/60 ${isActive ? '' : 'motion-safe:lg:bg-white/10'}`} />
+                  <span
+                    className={`h-px bg-[#8FBC3B]/70 transition-[width,background-color] duration-700 w-12 ${isActive ? 'motion-safe:lg:w-24' : 'motion-safe:lg:bg-white/10'}`}
+                  />
                 </div>
                 <h3
                   className={`${H3} transition-colors duration-500 ${isActive ? '' : 'motion-safe:lg:!text-[#7C7F8E]'}`}
@@ -211,15 +229,15 @@ const ShipmentFlow = ({ steps }: { steps: FlowStep[] }) => {
                   <span className="sr-only">Step {step.num}: </span>
                   {step.title}
                 </h3>
-                <p className={`mt-4 ${BODY}`}>{step.desc}</p>
-                <p className={`mt-5 ${CAPTION}`}>{step.tags.join('  ·  ')}</p>
+                <p lang="en" className={`mt-3 max-w-[42ch] ${BODY} ${JUSTIFY}`}>{step.desc}</p>
+                <p className={`mt-4 ${CAPTION}`}>{step.tags.join('  ·  ')}</p>
                 {/* Stacked layout: the screen sits under its step */}
                 <div className="mt-10 motion-safe:lg:hidden">
-                  <ScreenReveal>
-                    <BrowserFrame url={step.url}>
+                  <ScreenMotion kind={i % 2 ? 'tilt' : 'clip'}>
+                    <BrowserFrame url={step.url} flat={i % 2 === 0}>
                       <Shot src={step.src} alt={step.title} />
                     </BrowserFrame>
-                  </ScreenReveal>
+                  </ScreenMotion>
                 </div>
               </div>
             </li>
@@ -231,13 +249,16 @@ const ShipmentFlow = ({ steps }: { steps: FlowStep[] }) => {
       <div className="hidden motion-safe:lg:col-span-8 motion-safe:lg:block">
         <div className="sticky top-[max(96px,calc(50vh-260px))]">
           <BrowserFrame url={steps[active].url}>
-            <div className="relative aspect-[16/10]">
+            <div className="relative aspect-[16/10] overflow-hidden">
               {steps.map((step, i) => (
                 <div
                   key={step.num}
                   aria-hidden={i !== active}
-                  className="absolute inset-0 transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
-                  style={{ opacity: i === active ? 1 : 0, transform: i === active ? 'none' : `translateY(${i < active ? -16 : 16}px)` }}
+                  className="absolute inset-0 transition-[opacity,transform,clip-path] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                  style={{
+                    opacity: i === active ? 1 : 0,
+                    transform: i === active ? 'none' : `translateY(${i < active ? -24 : 24}px) scale(1.03)`,
+                  }}
                 >
                   <img
                     {...responsive(step.src, [640, 960, 1280, 1600], '(min-width: 1280px) 760px, 62vw')}
@@ -252,16 +273,81 @@ const ShipmentFlow = ({ steps }: { steps: FlowStep[] }) => {
               ))}
             </div>
           </BrowserFrame>
-          <div className="mt-5 flex items-center gap-4 text-[13px] text-[#9295A6]" aria-hidden="true">
+          <div className={`mt-5 flex items-center gap-4 ${LABEL} text-[#9295A6]`} aria-hidden="true">
             <span className="font-mono tabular-nums text-[#F2F3F5]">{steps[active].num}</span>
             <span className="font-mono">/ {String(steps.length).padStart(2, '0')}</span>
             <div className="flex flex-1 gap-1.5">
               {steps.map((s, i) => (
-                <span key={s.num} className={`h-[2px] flex-1 rounded-full transition-colors duration-500 ${i <= active ? 'bg-[#8FBC3B]' : 'bg-white/10'}`} />
+                <span key={s.num} className="relative h-[2px] flex-1 overflow-hidden rounded-full bg-white/10">
+                  <span
+                    className="absolute inset-0 origin-left bg-[#8FBC3B] transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                    style={{ transform: `scaleX(${i <= active ? 1 : 0})` }}
+                  />
+                </span>
               ))}
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  );
+};
+
+/* ─── Pinned sideways tour (local adaptation of HorizontalGallery) ──
+   Same behaviour as the shared HorizontalGallery, adapted for this
+   page: one DOM tree in both modes, so the scroll target is always
+   mounted (the shared version starts useScroll before its pinned
+   wrapper exists and ends up tracking whole-page progress), and the
+   first card lines up with the page container's measured left edge. */
+const PinnedGallery = ({ header, children, cardClassName }: { header: ReactNode; children: ReactNode; cardClassName: string }) => {
+  const reduce = useReducedMotion();
+  const outer = useRef<HTMLDivElement>(null);
+  const track = useRef<HTMLDivElement>(null);
+  const edge = useRef<HTMLDivElement>(null);
+  const [wide, setWide] = useState(false);
+  const [dist, setDist] = useState(0);
+  const [pad, setPad] = useState(0);
+  const items = Children.toArray(children);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 1024px)');
+    const update = () => {
+      setWide(mq.matches);
+      const e = edge.current;
+      if (e) setPad(e.getBoundingClientRect().left + parseFloat(getComputedStyle(e).paddingLeft));
+      const t = track.current;
+      if (t) setDist(Math.max(0, t.scrollWidth - document.documentElement.clientWidth));
+    };
+    update();
+    mq.addEventListener('change', update);
+    window.addEventListener('resize', update);
+    const ro = 'ResizeObserver' in window ? new ResizeObserver(update) : null;
+    if (track.current && ro) ro.observe(track.current);
+    return () => { mq.removeEventListener('change', update); window.removeEventListener('resize', update); ro?.disconnect(); };
+  }, []);
+
+  const { scrollYProgress } = useScroll({ target: outer, offset: ['start start', 'end end'] });
+  const x = useTransform(scrollYProgress, [0, 1], [0, -dist]);
+  const pinned = wide && !reduce && dist > 0;
+
+  return (
+    <div ref={outer} style={pinned ? { height: `calc(100svh + ${dist}px)` } : undefined}>
+      <div className={pinned ? 'sticky top-0 flex h-[100svh] flex-col justify-center overflow-hidden pt-16' : ''}>
+        <div ref={edge} className={WRAP} aria-hidden="true" />
+        {header}
+        <motion.div
+          ref={track}
+          style={pinned ? { x, paddingLeft: pad, paddingRight: pad } : pad ? { paddingLeft: pad, paddingRight: pad, scrollPaddingLeft: pad } : undefined}
+          className={
+            pinned
+              ? 'flex w-max gap-8 will-change-transform'
+              : 'flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-4 sm:px-8 md:gap-6 md:px-20 [scrollbar-width:thin] scroll-px-6 sm:scroll-px-8 md:scroll-px-20'
+          }
+        >
+          {items.map((c, i) => (
+            <div key={i} className={`shrink-0 snap-start ${cardClassName}`}>{c}</div>
+          ))}
+        </motion.div>
       </div>
     </div>
   );
@@ -356,11 +442,15 @@ export function SchenkerCaseStudy() {
     { src: screenSettings, label: 'Einstellungen (Settings)', url: 'schenkerclient/einstellungen', description: 'Workstation and printer configuration, API key management, and license status display.' },
   ];
 
+  const slug = (t: string) =>
+    t.toLowerCase().replace(/ä/g, 'ae').replace(/ü/g, 'ue').replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+
   return (
     <div className="relative min-h-screen bg-[#080B0F] text-white antialiased" style={{ fontFamily: BRAND.bodyFont }}>
       <style>{HERO_CSS}</style>
       <SchenkerSEO />
       <CaseHeroTarget path="/projects/schenker" />
+      <ReadProgress color={BRAND.oliveLight} />
       {/* Section navigator */}
       <CaseStudySectionNav
         accentColor="#6B8E23"
@@ -436,10 +526,10 @@ export function SchenkerCaseStudy() {
             </h1>
 
             <div className="sk-rise sk-d3 mt-10 lg:mt-14 grid gap-10 lg:grid-cols-12 lg:gap-12">
-              <p className="lg:col-span-7 text-[19px] sm:text-[21px] lg:text-[23px] leading-[1.5] text-[#C9CBD3] max-w-[36em]">
+              <p className={`lg:col-span-5 max-w-[44ch] ${LEAD}`}>
                 Simplifying a complex shipping workflow, designing a structured logistics interface for shipment creation, document handling, and operational efficiency.
               </p>
-              <dl className="lg:col-span-4 lg:col-start-9 grid grid-cols-2 gap-x-6 gap-y-6 self-end text-[15px]">
+              <dl className="lg:col-span-5 lg:col-start-8 grid grid-cols-2 gap-x-6 gap-y-5 self-end">
                 {[
                   ['Discipline', 'UI/UX Design'],
                   ['Domain', 'Enterprise logistics'],
@@ -447,17 +537,19 @@ export function SchenkerCaseStudy() {
                   ['Focus', 'Form systems'],
                 ].map(([k, v]) => (
                   <div key={k} className={`border-t ${RULE} pt-3`}>
-                    <dt className="text-[13px] text-[#9295A6]">{k}</dt>
-                    <dd className="mt-1 text-[#E6E7EB]">{v}</dd>
+                    <dt className={`${LABEL} text-[#8C8FA0]`}>{k}</dt>
+                    <dd className="mt-1.5 text-[14px] text-[#E6E7EB]">{v}</dd>
                   </div>
                 ))}
               </dl>
             </div>
 
             <div className="sk-screen sk-d4 mt-14 lg:mt-20">
-              <BrowserFrame url="schenkerclient.cubsten.com">
-                <Shot src={screenSendungEmpfanger} alt="Schenker, Sendung" eager />
-              </BrowserFrame>
+              <TiltIn>
+                <BrowserFrame url="schenkerclient.cubsten.com">
+                  <Shot src={screenSendungEmpfanger} alt="Schenker, Sendung" eager />
+                </BrowserFrame>
+              </TiltIn>
             </div>
           </div>
         </section>
@@ -466,20 +558,21 @@ export function SchenkerCaseStudy() {
         <section id="story" className={SECTION}>
           <div className={WRAP}>
             <h2 className="sr-only">The story in four steps</h2>
-            <ol className={`border-t ${RULE}`}>
+            <DrawRule />
+            <ol className="grid gap-x-12 md:grid-cols-2">
               {[
                 { step: 'Hook', number: '00.1', text: 'What if enterprise logistics software could feel intuitive, not like a spreadsheet with buttons?' },
                 { step: 'Friction', number: '00.2', text: 'Schenker\'s internal tools drowned operators in form complexity, scattered workflows, and inconsistent UI patterns. Training costs soared. Error rates climbed.' },
                 { step: 'Pivot', number: '00.3', text: 'We unified shipment creation, label management, and settings into one coherent design language, progressive disclosure over cognitive overload.' },
                 { step: 'Proof', number: '00.4', text: 'Desktop-first enterprise platform. Streamlined multi-step forms. Contextual help system. One design system for the entire logistics workflow.' },
               ].map((item, i) => (
-                <li key={item.step} className={`grid gap-4 border-b ${RULE} py-10 lg:grid-cols-12 lg:gap-12 lg:py-14`}>
-                  <div className="flex items-baseline gap-3 text-[14px] lg:col-span-3 lg:pt-2">
+                <li key={item.step} className={`border-b ${RULE} py-10 lg:py-12`}>
+                  <div className={`flex items-baseline gap-3 ${LABEL}`}>
                     <span className="font-mono text-[#8FBC3B]">{item.number}</span>
                     <span className="text-[#9295A6]">{item.step}</span>
                   </div>
                   <StoryLine
-                    className={`lg:col-span-9 max-w-[30em] text-[22px] sm:text-[26px] lg:text-[32px] leading-[1.32] tracking-[-0.015em] ${i === 0 ? 'font-semibold' : 'font-medium'}`}
+                    className={`mt-5 max-w-[34ch] text-[19px] sm:text-[21px] lg:text-[24px] leading-[1.38] tracking-[-0.01em] ${i === 0 ? 'font-semibold' : 'font-medium'}`}
                     style={i === 0 ? HEAD : undefined}
                   >
                     {item.text}
@@ -495,17 +588,15 @@ export function SchenkerCaseStudy() {
           <div className={WRAP}>
             <Chapter number="01" label="Project overview" />
             <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
-              <h2 className={`${H2} lg:col-span-5`} style={HEAD}>
-                Designing clarity for enterprise logistics
-              </h2>
-              <div className="lg:col-span-7">
-                <p className={BODY}>
+              <ChapterTitle className="lg:col-span-4" lines={['Designing clarity', 'for enterprise logistics']} />
+              <Rise className="grid gap-6 sm:grid-cols-2 sm:gap-10 lg:col-span-7 lg:col-start-6">
+                <p lang="en" className={`${BODY} ${JUSTIFY}`}>
                   SCHENKER is a desktop shipping management platform built for operational logistics tasks. The system brings together shipment creation, sender and receiver data, package setup, labels and tracking, packing lists, waybills, settings, and technical tools inside one workflow.
                 </p>
-                <p className={`mt-5 ${BODY} !text-[#9DA0AE]`}>
+                <p lang="en" className={`${BODY} ${JUSTIFY}`}>
                   The goal was to make this complexity feel clear, structured, and manageable in daily use, a product built for real operations, not just presentation.
                 </p>
-              </div>
+              </Rise>
             </div>
 
             <dl className="mt-16 lg:mt-24 grid grid-cols-2 gap-x-6 gap-y-12 sm:gap-x-8 lg:grid-cols-4">
@@ -515,10 +606,10 @@ export function SchenkerCaseStudy() {
                 { value: '3', label: 'Document Types', sub: 'Labels · Lists · Waybills' },
                 { value: '1', label: 'Platform', sub: 'Desktop App' },
               ].map((m) => (
-                <div key={m.label} className={`flex flex-col border-t ${RULE} pt-6`}>
-                  <dt className="order-2 mt-4 text-[16px] text-[#E6E7EB]">{m.label}</dt>
-                  <dd className="order-1 text-[clamp(3rem,2.2rem+3vw,4.5rem)] font-semibold leading-none tracking-[-0.04em] text-[#F2F3F5]" style={HEAD}>
-                    {m.value}
+                <div key={m.label} className={`flex flex-col border-t ${RULE}`}>
+                  <dt className="order-2 mt-4 text-[14px] text-[#E6E7EB]">{m.label}</dt>
+                  <dd className="order-1 mt-6 text-[clamp(2.75rem,2rem+2.6vw,4rem)] font-semibold leading-none tracking-[-0.04em] text-[#F2F3F5]" style={HEAD}>
+                    <CountUp value={m.value} />
                   </dd>
                   <dd className={`order-3 mt-1 ${CAPTION}`}>{m.sub}</dd>
                 </div>
@@ -537,7 +628,7 @@ export function SchenkerCaseStudy() {
                   title: 'The Challenge',
                   intro: 'Enterprise logistics systems become difficult to use because they combine many repetitive, detail-heavy tasks in one place.',
                   items: ['Multi-step shipment setup complexity', 'Large amounts of form input', 'Document-heavy workflows', 'Need for operational speed', 'Technical setup & configuration'],
-                  mark: '✕', markClass: 'text-[#9295A6]', col: 'lg:pr-12',
+                  mark: '✕', markClass: 'text-[#8C8FA0]', col: 'lg:pr-12',
                 },
                 {
                   title: 'The Solution',
@@ -545,55 +636,61 @@ export function SchenkerCaseStudy() {
                   items: ['Step-based shipment creation flow', 'Grouped & scannable form fields', 'Consistent table-based document views', 'Strong side navigation structure', 'Separated operational & technical areas'],
                   mark: '✓', markClass: 'text-[#8FBC3B]', col: `lg:pl-12 lg:border-l ${RULE}`,
                 },
-              ].map((block) => (
+              ].map((block, bi) => (
                 <div key={block.title} className={block.col}>
-                  <h3 className={H3} style={HEAD}>{block.title}</h3>
-                  <p className={`mt-4 ${BODY}`}>{block.intro}</p>
-                  <ul className={`mt-8 border-t ${RULE}`}>
-                    {block.items.map((item) => (
-                      <li key={item} className={`flex items-baseline gap-3 border-b ${RULE} py-3.5 text-[16px] text-[#D3D5DC]`}>
-                        <span aria-hidden="true" className={`w-4 shrink-0 text-[12px] ${block.markClass}`}>{block.mark}</span>
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
+                  <RevealLines as="h3" className={H3} style={HEAD} delay={bi * 0.08}>
+                    <span>{block.title}</span>
+                  </RevealLines>
+                  <p lang="en" className={`mt-3 max-w-[44ch] ${BODY} ${JUSTIFY}`}>{block.intro}</p>
+                  <Rise delay={0.1 + bi * 0.08}>
+                    <ul className={`mt-8 border-t ${RULE}`}>
+                      {block.items.map((item) => (
+                        <li key={item} className={`flex items-baseline gap-3 border-b ${RULE} py-3 text-[14px] text-[#C9CBD3]`}>
+                          <span aria-hidden="true" className={`w-4 shrink-0 text-[11px] ${block.markClass}`}>{block.mark}</span>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </Rise>
                 </div>
               ))}
             </div>
 
             {/* Friction → Flow */}
-            <div className="mt-20 lg:mt-28 overflow-hidden rounded-2xl bg-[#0E1116] ring-1 ring-white/[0.06]">
-              <div className="p-6 sm:p-8 lg:p-10">
-                <p className="text-[14px] text-[#8FBC3B]">Friction → Flow</p>
-                <h3 className={`mt-3 ${H3}`} style={HEAD}>Four principles, applied to enterprise complexity</h3>
-              </div>
-              <div className="grid gap-px border-t border-white/[0.06] bg-white/[0.06] sm:grid-cols-2 lg:grid-cols-4">
-                {[
-                  { name: 'Step', practice: 'Break long flows into stages', outcome: 'Cognitive load down ~60%' },
-                  { name: 'Group', practice: 'Cluster fields by semantic intent', outcome: 'Scannable forms · fewer errors' },
-                  { name: 'Table', practice: 'Document workflows in dense tables', outcome: 'Bulk operations enabled' },
-                  { name: 'Separate', practice: 'Operational vs technical zones', outcome: 'Right user · right tools' },
-                ].map((p, i) => (
-                  <div key={p.name} className="flex flex-col bg-[#0E1116] p-6 sm:p-8 lg:p-10">
-                    <span className="font-mono text-[13px] text-[#9295A6]">0{i + 1}</span>
-                    <h4 className="mt-6 lg:mt-10 text-[20px] font-semibold text-[#F2F3F5]" style={HEAD}>{p.name}</h4>
-                    <p className="mt-2 text-[15px] leading-[1.55] text-[#BCBFCA]">{p.practice}</p>
-                    <p className="mt-auto pt-6 text-[14px] text-[#8FBC3B]">{p.outcome}</p>
-                  </div>
-                ))}
-              </div>
-              <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-3 border-t border-white/[0.06] px-6 py-5 sm:px-8 lg:px-10">
-                <span className={CAPTION}>Complexity controlled across</span>
-                <div className="flex flex-wrap items-baseline gap-x-6 gap-y-2 text-[14px] text-[#9295A6]">
-                  {[['9+', 'screens'], ['47', 'fields'], ['7', 'modules']].map(([n, l]) => (
-                    <span key={l}>
-                      <span className="mr-1.5 text-[18px] font-semibold text-[#F2F3F5]" style={HEAD}>{n}</span>
-                      {l}
-                    </span>
+            <Rise className="mt-20 lg:mt-28">
+              <div className="overflow-hidden rounded-2xl bg-[#0E1116] ring-1 ring-white/[0.06]">
+                <div className="p-6 sm:p-8 lg:p-10">
+                  <p className={`${LABEL} text-[#8FBC3B]`}>Friction → Flow</p>
+                  <h3 className={`mt-3 ${H3}`} style={HEAD}>Four principles, applied to enterprise complexity</h3>
+                </div>
+                <div className="grid gap-px border-t border-white/[0.06] bg-white/[0.06] sm:grid-cols-2 lg:grid-cols-4">
+                  {[
+                    { name: 'Step', practice: 'Break long flows into stages', outcome: 'Cognitive load down ~60%' },
+                    { name: 'Group', practice: 'Cluster fields by semantic intent', outcome: 'Scannable forms · fewer errors' },
+                    { name: 'Table', practice: 'Document workflows in dense tables', outcome: 'Bulk operations enabled' },
+                    { name: 'Separate', practice: 'Operational vs technical zones', outcome: 'Right user · right tools' },
+                  ].map((p, i) => (
+                    <div key={p.name} className="flex flex-col bg-[#0E1116] p-6 sm:p-8 lg:p-10">
+                      <span className={`font-mono ${LABEL} text-[#8C8FA0]`}>0{i + 1}</span>
+                      <h4 className="mt-6 lg:mt-10 text-[17px] font-semibold text-[#F2F3F5]" style={HEAD}>{p.name}</h4>
+                      <p className="mt-2 text-[14px] leading-[1.6] text-[#A9ACB9]">{p.practice}</p>
+                      <p className="mt-auto pt-6 text-[13px] text-[#8FBC3B]">{p.outcome}</p>
+                    </div>
                   ))}
                 </div>
+                <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-3 border-t border-white/[0.06] px-6 py-5 sm:px-8 lg:px-10">
+                  <span className={CAPTION}>Complexity controlled across</span>
+                  <div className="flex flex-wrap items-baseline gap-x-6 gap-y-2 text-[13px] text-[#8C8FA0]">
+                    {[['9+', 'screens'], ['47', 'fields'], ['7', 'modules']].map(([n, l]) => (
+                      <span key={l}>
+                        <CountUp value={n} className="mr-1.5 text-[18px] font-semibold text-[#F2F3F5]" />
+                        {l}
+                      </span>
+                    ))}
+                  </div>
+                </div>
               </div>
-            </div>
+            </Rise>
           </div>
         </section>
 
@@ -602,75 +699,85 @@ export function SchenkerCaseStudy() {
           <div className={WRAP}>
             <Chapter number="03" label="Product structure" />
             <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
-              <h2 className={`${H2} lg:col-span-5`} style={HEAD}>Modular architecture</h2>
-              <ol className={`border-t ${RULE} lg:col-span-7`}>
-                {[
-                  { num: '01', title: 'Sendung', desc: 'Shipment creation' },
-                  { num: '02', title: 'Labels', desc: 'Labels & Tracking' },
-                  { num: '03', title: 'Ladeliste', desc: 'Packing lists' },
-                  { num: '04', title: 'Frachtbrief', desc: 'Waybills' },
-                  { num: '05', title: 'Einstellungen', desc: 'Settings' },
-                  { num: '06', title: 'Help', desc: 'Documentation' },
-                  { num: '07', title: 'Entwickler', desc: 'Developer tools' },
-                ].map((m) => (
-                  <li key={m.num} className={`grid grid-cols-[2.75rem_1fr] items-baseline gap-x-4 border-b ${RULE} py-5 sm:grid-cols-[3rem_1fr_auto]`}>
-                    <span className="font-mono text-[13px] text-[#8FBC3B]">{m.num}</span>
-                    <span lang="de" className="text-[20px] lg:text-[24px] font-semibold tracking-[-0.01em] text-[#F2F3F5]" style={HEAD}>{m.title}</span>
-                    <span className={`col-start-2 mt-1 sm:col-start-3 sm:mt-0 sm:text-right ${CAPTION} !text-[15px]`}>{m.desc}</span>
-                  </li>
-                ))}
-              </ol>
+              <ChapterTitle className="lg:col-span-4" lines={['Modular', 'architecture']} />
+              <Rise className="lg:col-span-7 lg:col-start-6">
+                <ol className={`border-t ${RULE}`}>
+                  {[
+                    { num: '01', title: 'Sendung', desc: 'Shipment creation' },
+                    { num: '02', title: 'Labels', desc: 'Labels & Tracking' },
+                    { num: '03', title: 'Ladeliste', desc: 'Packing lists' },
+                    { num: '04', title: 'Frachtbrief', desc: 'Waybills' },
+                    { num: '05', title: 'Einstellungen', desc: 'Settings' },
+                    { num: '06', title: 'Help', desc: 'Documentation' },
+                    { num: '07', title: 'Entwickler', desc: 'Developer tools' },
+                  ].map((m) => (
+                    <li key={m.num} className={`group grid grid-cols-[2.5rem_1fr] items-baseline gap-x-4 border-b ${RULE} py-4 sm:grid-cols-[2.75rem_1fr_auto]`}>
+                      <span className={`font-mono ${LABEL} text-[#8FBC3B]`}>{m.num}</span>
+                      <span lang="de" className="text-[17px] lg:text-[18px] font-semibold text-[#F2F3F5]" style={HEAD}>{m.title}</span>
+                      <span className={`col-start-2 mt-1 sm:col-start-3 sm:mt-0 sm:text-right ${CAPTION}`}>{m.desc}</span>
+                    </li>
+                  ))}
+                </ol>
+              </Rise>
             </div>
           </div>
         </section>
+
+        {/* ─── Interlude: the product's own vocabulary ────────────────── */}
+        <div className={`border-y ${RULE} py-8 lg:py-10`}>
+          <Marquee
+            speed={48}
+            className="text-[clamp(1.75rem,1.1rem+2.4vw,3.25rem)] font-semibold tracking-[-0.02em] text-white/[0.22]"
+            items={['Sendung', 'Labels & Tracking', 'Ladeliste', 'Frachtbrief', 'Einstellungen', 'Entwickler', 'UI/UX Design', 'Form Systems', 'Desktop App', 'Enterprise Logistics']}
+          />
+        </div>
 
         {/* ─── SHIPMENT FLOW ───────────────────────────────────────────── */}
         <section id="flow" className={SECTION}>
           <div className={WRAP}>
             <Chapter number="04" label="Shipment flow" />
             <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
-              <h2 className={`${H2} lg:col-span-5`} style={HEAD}>Step-based shipment creation</h2>
-              <p className={`${BODY} lg:col-span-7 lg:pt-2`}>
-                Instead of placing everything on one screen, the flow is divided into clear steps that reduce cognitive load and make complex data entry easier to complete.
-              </p>
+              <ChapterTitle className="lg:col-span-4" lines={['Step-based', 'shipment creation']} />
+              <Rise className="lg:col-span-7 lg:col-start-6">
+                <p lang="en" className={`max-w-[44ch] ${LEAD}`}>
+                  Instead of placing everything on one screen, the flow is divided into clear steps that reduce cognitive load and make complex data entry easier to complete.
+                </p>
+              </Rise>
             </div>
             <ShipmentFlow steps={flowSteps} />
           </div>
         </section>
 
-        {/* ─── KEY SCREENS ──────────────────────────────────────────────── */}
-        <section id="screens" className={SECTION}>
-          <div className={WRAP}>
-            <Chapter number="05" label="Key screens" />
-            <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
-              <h2 className={`${H2} lg:col-span-5`} style={HEAD}>Every module, designed</h2>
-              <p className={`${BODY} lg:col-span-7 lg:pt-2`}>
-                From shipment data to technical settings, each screen follows the same design language with consistent spacing, layout, and interaction patterns.
-              </p>
-            </div>
-
-            <div className="mt-16 lg:mt-24 space-y-24 lg:space-y-36">
-              {keyScreens.map((s) => (
-                <article key={s.num}>
-                  <ScreenReveal>
-                    <BrowserFrame url={`schenkerclient/${s.title.toLowerCase().replace(/ä/g, 'ae').replace(/ü/g, 'ue').replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}`}>
-                      <Shot src={s.src} alt={s.title} />
-                    </BrowserFrame>
-                  </ScreenReveal>
-                  <div className="mt-8 lg:mt-10 grid gap-3 lg:grid-cols-12 lg:gap-12">
-                    <div className="flex items-baseline gap-4 lg:col-span-5">
-                      <span className="font-mono text-[14px] text-[#8FBC3B]">{s.num}</span>
-                      <h3 className={H3} style={HEAD}>{s.title}</h3>
-                    </div>
-                    <div className="lg:col-span-7">
-                      <p className={`${BODY} !max-w-[52ch]`}>{s.desc}</p>
-                      <p className={`mt-3 ${CAPTION}`}>{s.tags.join('  ·  ')}</p>
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
+        {/* ─── KEY SCREENS: pinned sideways tour ───────────────────────── */}
+        <section id="screens" className="scroll-mt-16 pt-20 sm:pt-24 lg:pt-32 pb-12 lg:pb-16">
+          <PinnedGallery
+            cardClassName="w-[84vw] sm:w-[68vw] lg:w-[min(44vw,700px,calc((100svh_-_440px)_*_1.6))]"
+            header={
+              <div className={`${WRAP} mb-8 lg:mb-10`}>
+                <Chapter number="05" label="Key screens" className="mb-6 lg:mb-8" />
+                <div className="grid gap-5 lg:grid-cols-12 lg:gap-12">
+                  <ChapterTitle className="lg:col-span-4" lines={['Every module,', 'designed']} />
+                  <p lang="en" className={`max-w-[44ch] lg:col-span-7 lg:col-start-6 ${BODY} ${JUSTIFY}`}>
+                    From shipment data to technical settings, each screen follows the same design language with consistent spacing, layout, and interaction patterns.
+                  </p>
+                </div>
+              </div>
+            }
+          >
+            {keyScreens.map((s) => (
+              <article key={s.num} className="h-full">
+                <BrowserFrame url={`schenkerclient/${slug(s.title)}`} flat>
+                  <Shot src={s.src} alt={s.title} sizes="card" />
+                </BrowserFrame>
+                <div className="mt-5 flex items-baseline gap-3">
+                  <span className={`font-mono ${LABEL} text-[#8FBC3B]`}>{s.num}</span>
+                  <h3 className={H3} style={HEAD}>{s.title}</h3>
+                </div>
+                <p className={`mt-2 max-w-[52ch] ${BODY}`}>{s.desc}</p>
+                <p className={`mt-2 ${CAPTION}`}>{s.tags.join('  ·  ')}</p>
+              </article>
+            ))}
+          </PinnedGallery>
         </section>
 
         {/* ─── DOCUMENT WORKFLOWS ───────────────────────────────────────── */}
@@ -678,23 +785,29 @@ export function SchenkerCaseStudy() {
           <div className={WRAP}>
             <Chapter number="06" label="Document workflows" />
             <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
-              <h2 className={`${H2} lg:col-span-5`} style={HEAD}>Structured table views</h2>
-              <p className={`${BODY} lg:col-span-7 lg:pt-2`}>
-                Labels, packing lists, and waybills rely on structured table views that support quick review, editing, downloading, and deletion. Consistency across these modules helps the system feel more stable.
-              </p>
+              <ChapterTitle className="lg:col-span-4" lines={['Structured', 'table views']} />
+              <Rise className="lg:col-span-7 lg:col-start-6">
+                <p lang="en" className={`${BODY} ${JUSTIFY} sm:columns-2 sm:gap-10`}>
+                  Labels, packing lists, and waybills rely on structured table views that support quick review, editing, downloading, and deletion. Consistency across these modules helps the system feel more stable.
+                </p>
+              </Rise>
             </div>
             <div className="mt-16 lg:mt-24 grid gap-x-8 gap-y-16 md:grid-cols-2 lg:gap-x-12 lg:gap-y-20">
-              {documents.map((d) => (
-                <article key={d.label}>
-                  <ScreenReveal from={0.95}>
-                    <BrowserFrame url={d.url}>
-                      <Shot src={d.src} alt={d.label} sizes="half" />
-                    </BrowserFrame>
-                  </ScreenReveal>
-                  <h3 className="mt-6 text-[19px] lg:text-[20px] font-semibold text-[#F2F3F5]" style={HEAD}>{d.label}</h3>
-                  <p className="mt-2 max-w-[48ch] text-[16px] leading-[1.6] text-[#A9ACB9]">{d.description}</p>
-                </article>
-              ))}
+              {documents.map((d, i) => {
+                // Row 1 opens from a window, row 2 tips up: the rhythm varies
+                const kind = i < 2 ? 'clip' : 'tilt';
+                return (
+                  <article key={d.label}>
+                    <ScreenMotion kind={kind}>
+                      <BrowserFrame url={d.url} flat={kind === 'clip'}>
+                        <Shot src={d.src} alt={d.label} sizes="half" />
+                      </BrowserFrame>
+                    </ScreenMotion>
+                    <h3 className={`mt-6 ${H3}`} style={HEAD}>{d.label}</h3>
+                    <p className={`mt-2 max-w-[46ch] ${BODY}`}>{d.description}</p>
+                  </article>
+                );
+              })}
             </div>
           </div>
         </section>
@@ -704,43 +817,52 @@ export function SchenkerCaseStudy() {
           <div className={WRAP}>
             <Chapter number="07" label="Design approach" />
             <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
-              <h2 className={`${H2} lg:col-span-5`} style={HEAD}>Clarity over decoration</h2>
-              <p className={`${BODY} lg:col-span-7 lg:pt-2`}>
-                The interface is built around clarity and operational speed. Its strength comes from structure, not excess.
-              </p>
+              <ChapterTitle className="lg:col-span-4" lines={['Clarity over', 'decoration']} />
+              <Rise className="lg:col-span-7 lg:col-start-6">
+                <p className={`max-w-[44ch] ${LEAD}`}>
+                  The interface is built around clarity and operational speed. Its strength comes from structure, not excess.
+                </p>
+              </Rise>
             </div>
 
-            <dl className="mt-16 lg:mt-20 grid grid-cols-2 gap-x-6 gap-y-10 sm:gap-x-8 lg:grid-cols-4">
-              {[
-                { title: 'Navigation', desc: 'Strong side navigation' },
-                { title: 'Surfaces', desc: 'Large structured areas' },
-                { title: 'Progression', desc: 'Tab-based flow steps' },
-                { title: 'Actions', desc: 'Clear primary & destructive' },
-              ].map((item) => (
-                <div key={item.title} className={`border-t ${RULE} pt-5`}>
-                  <dt className="text-[18px] font-semibold text-[#F2F3F5]" style={HEAD}>{item.title}</dt>
-                  <dd className="mt-1.5 text-[15px] leading-[1.5] text-[#A9ACB9]">{item.desc}</dd>
-                </div>
-              ))}
-            </dl>
+            <Rise className="mt-16 lg:mt-20">
+              <dl className="grid grid-cols-2 gap-x-6 gap-y-10 sm:gap-x-8 lg:grid-cols-4">
+                {[
+                  { title: 'Navigation', desc: 'Strong side navigation' },
+                  { title: 'Surfaces', desc: 'Large structured areas' },
+                  { title: 'Progression', desc: 'Tab-based flow steps' },
+                  { title: 'Actions', desc: 'Clear primary & destructive' },
+                ].map((item) => (
+                  <div key={item.title} className={`border-t ${RULE} pt-5`}>
+                    <dt className="text-[16px] font-semibold text-[#F2F3F5]" style={HEAD}>{item.title}</dt>
+                    <dd className={`mt-1.5 ${CAPTION}`}>{item.desc}</dd>
+                  </div>
+                ))}
+              </dl>
+            </Rise>
 
             <div className="mt-20 lg:mt-28 grid gap-8 lg:grid-cols-12 lg:gap-12">
-              <h3 className={`${H3} lg:col-span-5`} style={HEAD}>What makes this work stand out</h3>
-              <ul className="grid gap-x-8 sm:grid-cols-2 lg:col-span-7">
-                {[
-                  'Strong workflow thinking',
-                  'Clear information architecture',
-                  'Structured form design',
-                  'Consistency across complex modules',
-                  'Usability for repeated daily tasks',
-                  'Operational & technical support in one product',
-                ].map((point) => (
-                  <li key={point} className={`flex items-baseline gap-3 border-t ${RULE} py-4 text-[16px] text-[#D3D5DC]`}>
-                    <span aria-hidden="true" className="w-4 shrink-0 text-[12px] text-[#8FBC3B]">✓</span>
-                    {point}
-                  </li>
-                ))}
-              </ul>
+              <RevealLines as="h3" className={`${H3} lg:col-span-4`} style={HEAD}>
+                <span>What makes this work</span>
+                <span>stand out</span>
+              </RevealLines>
+              <Rise className="lg:col-span-7 lg:col-start-6">
+                <ul className="grid gap-x-8 sm:grid-cols-2">
+                  {[
+                    'Strong workflow thinking',
+                    'Clear information architecture',
+                    'Structured form design',
+                    'Consistency across complex modules',
+                    'Usability for repeated daily tasks',
+                    'Operational & technical support in one product',
+                  ].map((point) => (
+                    <li key={point} className={`flex items-baseline gap-3 border-t ${RULE} py-3.5 text-[14px] text-[#C9CBD3]`}>
+                      <span aria-hidden="true" className="w-4 shrink-0 text-[11px] text-[#8FBC3B]">✓</span>
+                      {point}
+                    </li>
+                  ))}
+                </ul>
+              </Rise>
             </div>
           </div>
         </section>
@@ -750,19 +872,23 @@ export function SchenkerCaseStudy() {
           <div className={WRAP}>
             <Chapter number="08" label="Outcome" />
             <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
-              <h2 className={`${H2} lg:col-span-5`} style={HEAD}>A clearer enterprise interface</h2>
-              <div className="lg:col-span-7 lg:pt-2">
-                <p className={BODY}>
-                  By breaking complex workflows into focused modules and step-based screens, the platform becomes easier to navigate, easier to complete, and more useful in real working conditions.
-                </p>
-                <ul className="mt-10 grid gap-x-8 sm:grid-cols-2">
-                  {['Enterprise workflows', 'Complex form systems', 'Document-heavy interfaces', 'Clarity under operational complexity'].map((tag) => (
-                    <li key={tag} className={`flex items-baseline gap-3 border-t ${RULE} py-4 text-[16px] text-[#D3D5DC]`}>
-                      <span aria-hidden="true" className="h-px w-3 shrink-0 translate-y-[-4px] bg-[#8FBC3B]" />
-                      {tag}
-                    </li>
-                  ))}
-                </ul>
+              <ChapterTitle className="lg:col-span-4" lines={['A clearer', 'enterprise interface']} />
+              <div className="lg:col-span-7 lg:col-start-6">
+                <Rise>
+                  <p lang="en" className={`max-w-[44ch] ${LEAD}`}>
+                    By breaking complex workflows into focused modules and step-based screens, the platform becomes easier to navigate, easier to complete, and more useful in real working conditions.
+                  </p>
+                </Rise>
+                <Rise delay={0.1}>
+                  <ul className="mt-10 grid gap-x-8 sm:grid-cols-2">
+                    {['Enterprise workflows', 'Complex form systems', 'Document-heavy interfaces', 'Clarity under operational complexity'].map((tag) => (
+                      <li key={tag} className={`flex items-baseline gap-3 border-t ${RULE} py-3.5 text-[14px] text-[#C9CBD3]`}>
+                        <span aria-hidden="true" className="h-px w-3 shrink-0 translate-y-[-4px] bg-[#8FBC3B]" />
+                        {tag}
+                      </li>
+                    ))}
+                  </ul>
+                </Rise>
               </div>
             </div>
           </div>

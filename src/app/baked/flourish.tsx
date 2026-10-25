@@ -232,26 +232,32 @@ export function SwingingBadge({ children }: { children?: ReactNode }) {
   const rope = useRef<SVGPathElement>(null);
   const sheen = useRef<SVGPathElement>(null);
   const card = useRef<HTMLDivElement>(null);
-  const drag = useRef<{ dx: number; dy: number } | null>(null);
+  const drag = useRef<{ t: number; s: number; gx: number; gy: number } | null>(null);
 
   useEffect(() => {
     const st = stage.current, cd = card.current, rp = rope.current;
     if (!st || !cd || !rp) return;
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // rope points 0..N-1 (0 is pinned at the top), then the card as one rigid
+    // segment from the clip (N-1) to its bottom edge (N)
     const N = 16, SEG = 15;
-    let W = st.clientWidth;
-    let ax = W / 2;
-    const pts: P[] = Array.from({ length: N }, (_, i) => ({ x: ax, y: i * SEG, px: ax, py: i * SEG }));
+    const CLIP = 6; // the clip sits this far below the card element's top
+    let cardLen = Math.max(200, cd.offsetHeight - CLIP);
+    let ax = st.clientWidth / 2;
+    const pts: P[] = Array.from({ length: N + 1 }, (_, i) => {
+      const y = i < N ? i * SEG : (N - 1) * SEG + cardLen;
+      return { x: ax, y, px: ax, py: y };
+    });
     // a gentle push so it is already swinging when it comes into view
-    pts[N - 1].px -= reduce ? 0 : 18;
+    pts[N].px -= reduce ? 0 : 26;
     let raf = 0, visible = false;
 
     const STRAP = 70; // half the gap between the two strands where they leave the top
     const render = () => {
-      const last = pts[N - 1], prev = pts[N - 3];
-      const ang = Math.atan2(last.x - prev.x, last.y - prev.y);
-      cd.style.transform = `translate(${last.x - cd.offsetWidth / 2}px, ${last.y - 6}px) rotate(${-ang}rad)`;
-      cd.style.transformOrigin = '50% 6px';
+      const A = pts[N - 1], B = pts[N];
+      const ang = Math.atan2(B.x - A.x, B.y - A.y);
+      cd.style.transform = `translate(${A.x - cd.offsetWidth / 2}px, ${A.y - CLIP}px) rotate(${-ang}rad)`;
+      cd.style.transformOrigin = `50% ${CLIP}px`;
       // the light slides across the plastic as the badge turns
       cd.style.setProperty('--glare', `${50 + ang * 160}%`);
       cd.style.setProperty('--tilt', `${(ang * 14).toFixed(1)}px`);
@@ -270,47 +276,77 @@ export function SwingingBadge({ children }: { children?: ReactNode }) {
       sheen.current?.setAttribute('d', d);
     };
 
+    const link = (a: P, b: P, len: number, wa: number, wb: number) => {
+      const dx = b.x - a.x, dy = b.y - a.y, dist = Math.hypot(dx, dy) || 1;
+      const diff = (dist - len) / dist / (wa + wb || 1);
+      a.x += dx * diff * wa; a.y += dy * diff * wa;
+      b.x -= dx * diff * wb; b.y -= dy * diff * wb;
+    };
+    // move the card segment so the grabbed spot on it sits exactly under the pointer
+    const hold = () => {
+      const g = drag.current; if (!g) return;
+      const A = pts[N - 1], B = pts[N];
+      const ux = (B.x - A.x) / cardLen, uy = (B.y - A.y) / cardLen;
+      const tx = g.gx + uy * g.s, ty = g.gy - ux * g.s; // back from the grab point onto the card's axis
+      const px = A.x + (B.x - A.x) * g.t, py = A.y + (B.y - A.y) * g.t;
+      const dx = tx - px, dy = ty - py;
+      const wa = 1 - g.t, wb = g.t, n = wa * wa + wb * wb || 1;
+      A.x += dx * wa / n; A.y += dy * wa / n;
+      B.x += dx * wb / n; B.y += dy * wb / n;
+    };
+
     const step = () => {
       raf = 0;
-      for (let i = 1; i < N; i++) {
+      for (let i = 1; i <= N; i++) {
         const p = pts[i];
-        if (i === N - 1 && drag.current) continue;
-        const vx = (p.x - p.px) * 0.985, vy = (p.y - p.py) * 0.985;
+        const vx = (p.x - p.px) * 0.988, vy = (p.y - p.py) * 0.988;
         p.px = p.x; p.py = p.y;
-        p.x += vx; p.y += vy + 0.55;
+        p.x += vx; p.y += vy + (i === N ? 0.7 : 0.45);
       }
-      for (let k = 0; k < 18; k++) {
+      for (let k = 0; k < 24; k++) {
         pts[0].x = ax; pts[0].y = 0;
-        for (let i = 0; i < N - 1; i++) {
-          const a = pts[i], b = pts[i + 1];
-          const dx = b.x - a.x, dy = b.y - a.y, dist = Math.hypot(dx, dy) || 1;
-          const diff = (dist - SEG) / dist;
-          const fa = i === 0 ? 0 : 0.5, fb = i === 0 ? 1 : 0.5;
-          if (!(i + 1 === N - 1 && drag.current)) { b.x -= dx * diff * fb; b.y -= dy * diff * fb; }
-          if (i !== 0) { a.x += dx * diff * fa; a.y += dy * diff * fa; }
-        }
+        for (let i = 0; i < N - 1; i++) link(pts[i], pts[i + 1], SEG, i === 0 ? 0 : 1, 1);
+        link(pts[N - 1], pts[N], cardLen, 1, 1);
+        hold();
       }
       render();
       if (visible && !reduce) raf = requestAnimationFrame(step);
+      else if (drag.current) raf = requestAnimationFrame(step);
     };
 
     const io = new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible && !raf) raf = requestAnimationFrame(step); });
     io.observe(st);
-    const onResize = () => { const nW = st.clientWidth; const dx = nW / 2 - ax; ax = nW / 2; W = nW; pts.forEach((p) => { p.x += dx; p.px += dx; }); if (reduce) step(); };
+    const onResize = () => {
+      const dx = st.clientWidth / 2 - ax; ax = st.clientWidth / 2;
+      cardLen = Math.max(200, cd.offsetHeight - CLIP);
+      pts.forEach((p) => { p.x += dx; p.px += dx; });
+      if (!raf) raf = requestAnimationFrame(step);
+    };
     window.addEventListener('resize', onResize);
 
     const local = (e: PointerEvent) => { const r = st.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
+    // keep the pointer within reach of the strap, so the rope never stretches
+    const reach = (x: number, y: number, t: number) => {
+      const max = (N - 1) * SEG * 1.02 + cardLen * t;
+      const dx = x - ax, dy = y, d = Math.hypot(dx, dy);
+      return d > max ? { x: ax + dx * max / d, y: dy * max / d } : { x, y };
+    };
     const down = (e: PointerEvent) => {
-      const m = local(e); const last = pts[N - 1];
-      drag.current = { dx: last.x - m.x, dy: last.y - m.y };
+      e.preventDefault();
+      const m = local(e); const A = pts[N - 1], B = pts[N];
+      const ux = (B.x - A.x) / cardLen, uy = (B.y - A.y) / cardLen;
+      const rx = m.x - A.x, ry = m.y - A.y;
+      const t = Math.min(1, Math.max(0, (rx * ux + ry * uy) / cardLen));
+      const s = rx * -uy + ry * ux; // sideways offset from the card's centre line
+      drag.current = { t, s, gx: m.x, gy: m.y };
       cd.setPointerCapture(e.pointerId);
       cd.style.cursor = 'grabbing';
+      if (!raf) raf = requestAnimationFrame(step);
     };
     const move = (e: PointerEvent) => {
-      if (!drag.current) return;
-      const m = local(e); const last = pts[N - 1];
-      last.px = last.x; last.py = last.y;
-      last.x = m.x + drag.current.dx; last.y = Math.max(20, m.y + drag.current.dy);
+      const g = drag.current; if (!g) return;
+      const m = local(e); const r = reach(m.x, m.y, g.t);
+      g.gx = r.x; g.gy = r.y;
       if (!raf) raf = requestAnimationFrame(step);
     };
     const up = () => { drag.current = null; cd.style.cursor = 'grab'; if (!raf) raf = requestAnimationFrame(step); };
@@ -318,11 +354,13 @@ export function SwingingBadge({ children }: { children?: ReactNode }) {
     cd.addEventListener('pointermove', move);
     cd.addEventListener('pointerup', up);
     cd.addEventListener('pointercancel', up);
+    cd.addEventListener('lostpointercapture', up);
     step();
     return () => {
       cancelAnimationFrame(raf); io.disconnect(); window.removeEventListener('resize', onResize);
       cd.removeEventListener('pointerdown', down); cd.removeEventListener('pointermove', move);
       cd.removeEventListener('pointerup', up); cd.removeEventListener('pointercancel', up);
+      cd.removeEventListener('lostpointercapture', up);
     };
   }, []);
 

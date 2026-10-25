@@ -1,7 +1,8 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
-import { Link, useLocation } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
 import { AnimatePresence, motion } from 'motion/react';
-import { ArrowUp, Pause, Play } from 'lucide-react';
+import { ArrowUp, Pause, Play, House, LayoutGrid, Megaphone, Clapperboard, Sparkles, Mail } from 'lucide-react';
+import { useRef } from 'react';
 import { T, pillCls, darkPillCls } from './ui';
 import { EMAIL } from './content';
 import { useI18n } from './i18n';
@@ -48,9 +49,6 @@ function LangSwitch() {
 function TopNav() {
   const { pathname } = useLocation();
   const { tx, to, bare } = useI18n();
-  const [open, setOpen] = useState(false);
-  useEffect(() => setOpen(false), [pathname]);
-
   return (
     <nav aria-label={tx('Primary', 'მთავარი ნავიგაცია')} className="fixed inset-x-0 top-0 z-[70] pointer-events-none">
       <div className="flex items-start justify-between p-1.5 sm:p-2">
@@ -70,30 +68,85 @@ function TopNav() {
           <Link to={to('/contact')} className={pillCls(true)}>{tx('contact me', 'კონტაქტი')}</Link>
         </div>
 
-        {/* Mobile */}
-        <div className="sm:hidden pointer-events-auto flex flex-col items-end gap-1">
-          <div className="flex gap-1">
-            <LangSwitch />
-            <Link to={to('/contact')} className={pillCls(true)}>{tx('contact', 'კონტაქტი')}</Link>
-            <button type="button" aria-expanded={open} aria-controls="mobile-menu" onClick={() => setOpen((o) => !o)} className={pillCls(false)}>
-              {open ? tx('close', 'დახურვა') : tx('menu', 'მენიუ')}
-            </button>
-          </div>
-          <AnimatePresence>
-            {open && (
-              <motion.div
-                id="mobile-menu"
-                initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.18 }}
-                className="flex flex-col items-end gap-1"
-              >
-                {[{ label: 'home', ka: 'მთავარი', to: '/' }, ...NAV].map((n) => (
-                  <Link key={n.to} to={to(n.to)} className={pillCls(false)} style={bare === n.to ? ACTIVE : undefined}>{tx(n.label, n.ka)}</Link>
-                ))}
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+        {/* Mobile: navigation lives in the dock at the bottom */}
+        <div className="sm:hidden pointer-events-auto flex gap-1"><LangSwitch /></div>
+      </div>
+    </nav>
+  );
+}
+
+/* ── Mobile dock: icons swell toward the finger, the nearest most ──── */
+
+const DOCK = [
+  { label: 'home', ka: 'მთავარი', to: '/', Icon: House },
+  { label: 'ux/ui', ka: 'ux/ui', to: '/work/ux-ui', Icon: LayoutGrid },
+  { label: 'ads', ka: 'რეკლამა', to: '/work/social-media-ads', Icon: Megaphone },
+  { label: 'motion', ka: 'მოუშენი', to: '/work/social-media-motion', Icon: Clapperboard },
+  { label: 'services', ka: 'სერვისები', to: '/services', Icon: Sparkles },
+  { label: 'contact', ka: 'კონტაქტი', to: '/contact', Icon: Mail },
+];
+const MAGNIFY = 1.32, LIFT = 8, REACH = 2;
+
+function MobileDock() {
+  const { tx, to, bare } = useI18n();
+  const navigate = useNavigate();
+  const bar = useRef<HTMLDivElement>(null);
+  const [px, setPx] = useState<number | null>(null); // finger x inside the dock
+  const moved = useRef(false);
+  const ITEM = 52;
+
+  const near = (x: number | null) => (x == null ? -1 : Math.max(0, Math.min(DOCK.length - 1, Math.floor((x - 8) / ITEM))));
+  const local = (e: React.PointerEvent) => e.clientX - (bar.current?.getBoundingClientRect().left ?? 0);
+  const hovered = near(px);
+  const activeIdx = DOCK.findIndex((d) => (d.to === '/' ? bare === '/' : bare === d.to || (d.to === '/work/ux-ui' && bare.startsWith('/projects/'))));
+
+  return (
+    <nav aria-label={tx('Primary', 'მთავარი ნავიგაცია')} className="sm:hidden fixed inset-x-0 bottom-0 z-[75] flex justify-center pointer-events-none"
+      style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 12px)' }}>
+      <div
+        ref={bar}
+        className="pointer-events-auto relative flex items-end rounded-[26px] px-2 h-[64px] bg-[#1c1c1c] border border-white/[0.06] shadow-[0_18px_40px_-12px_rgba(0,0,0,0.55)]"
+        style={{ touchAction: 'none' }}
+        onPointerDown={(e) => { moved.current = false; setPx(local(e)); }}
+        onPointerMove={(e) => { if (e.pointerType === 'mouse' || e.buttons) { if (px != null && Math.abs(local(e) - px) > 4) moved.current = true; setPx(local(e)); } }}
+        onPointerUp={(e) => {
+          const i = near(local(e));
+          if (moved.current && i >= 0) navigate(to(DOCK[i].to));
+          setPx(null);
+        }}
+        onPointerLeave={() => setPx(null)}
+        onPointerCancel={() => setPx(null)}
+      >
+        {DOCK.map((d, i) => {
+          const center = 8 + i * ITEM + ITEM / 2;
+          const t = px == null ? 0 : Math.max(0, 1 - Math.abs(px - center) / (ITEM * REACH));
+          const k = t * t * (3 - 2 * t); // smooth falloff
+          const active = i === activeIdx;
+          return (
+            <Link
+              key={d.to}
+              to={to(d.to)}
+              aria-label={tx(d.label, d.ka)}
+              aria-current={active ? 'page' : undefined}
+              onClick={(e) => { if (moved.current) e.preventDefault(); }}
+              className="relative flex flex-col items-center justify-center outline-none focus-visible:[&>svg]:text-white"
+              style={{ width: ITEM, height: 64 }}
+            >
+              {i === hovered && px != null && (
+                <span className="absolute -top-9 whitespace-nowrap rounded-full bg-white px-3 py-1 text-[12px] text-[#111] shadow-[0_6px_18px_rgba(0,0,0,0.25)]">
+                  {tx(d.label, d.ka)}
+                </span>
+              )}
+              <d.Icon
+                size={24}
+                strokeWidth={1.75}
+                className={`transition-[transform,color] duration-150 ease-out ${active || i === hovered ? 'text-white' : 'text-[#8b8b8b]'}`}
+                style={{ transform: `translateY(${-LIFT * k}px) scale(${1 + (MAGNIFY - 1) * k})`, transformOrigin: 'bottom center' }}
+              />
+              <span className={`mt-1.5 h-1 w-1 rounded-full ${active ? 'bg-white/70' : 'bg-transparent'}`} />
+            </Link>
+          );
+        })}
       </div>
     </nav>
   );
@@ -128,7 +181,7 @@ function FloatingCta() {
         <motion.div
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}
           transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-          className="fixed bottom-4 left-1/2 -translate-x-1/2 z-[65]"
+          className="hidden sm:block fixed bottom-4 left-1/2 -translate-x-1/2 z-[65]"
           style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
         >
           <Link to={to('/contact')} className={darkPillCls}>
@@ -162,7 +215,7 @@ function BackToTop() {
             window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
           }}
           aria-label={tx('Back to top', 'ზემოთ დაბრუნება')}
-          className="fixed bottom-4 right-4 z-[65] h-11 w-11 rounded-full bg-white text-[#111] border border-[#ececec] shadow-[0_8px_24px_rgba(0,0,0,0.12)] flex items-center justify-center hover:bg-[#ffe7de] hover:text-[#b52f03] transition-colors outline-none focus-visible:shadow-[0_0_0_2px_#ff4306]"
+          className="fixed bottom-[96px] sm:bottom-4 right-4 z-[65] h-11 w-11 rounded-full bg-white text-[#111] border border-[#ececec] shadow-[0_8px_24px_rgba(0,0,0,0.12)] flex items-center justify-center hover:bg-[#ffe7de] hover:text-[#b52f03] transition-colors outline-none focus-visible:shadow-[0_0_0_2px_#ff4306]"
           style={{ marginBottom: 'env(safe-area-inset-bottom, 0px)' }}
         >
           <ArrowUp size={18} />
@@ -261,6 +314,7 @@ export function BakedShell({ children }: { children: ReactNode }) {
         </main>
         <Footer />
         <FloatingCta />
+        <MobileDock />
         <BackToTop />
         <style>{`
           @font-face { font-family: 'Avenir Next Georgian'; src: url('/fonts/avenir-next-georgian-regular-v2.woff2') format('woff2'); font-weight: 100 700; font-style: normal; font-display: swap; }

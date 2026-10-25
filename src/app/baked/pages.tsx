@@ -214,26 +214,40 @@ const fieldCls = 'w-full rounded-md bg-[#f2f2f2] px-3.5 py-3 text-[15px] text-[#
 export function ContactContent() {
   const { tx, ka, to } = useI18n();
   const [form, setForm] = useState({ name: '', email: '', type: '', budget: '', timeline: '', message: '' });
-  const [state, setState] = useState<'idle' | 'sending' | 'sent'>('idle');
+  const [state, setState] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
   const [copied, setCopied] = useState<string | null>(null);
+  const [honey, setHoney] = useState(''); // hidden field: people never fill it, bots do
+  const startedAt = useMemo(() => Date.now(), []);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (state === 'sending') return;
+    const done = () => {
+      setState('sent');
+      setForm({ name: '', email: '', type: '', budget: '', timeline: '', message: '' });
+      setTimeout(() => setState('idle'), 4000);
+    };
+    // Bots fill the hidden field or submit within a second or two; drop those quietly
+    if (honey || Date.now() - startedAt < 2500) { done(); return; }
     setState('sending');
     try {
-      await fetch(`https://formsubmit.co/ajax/${EMAIL}`, {
+      const res = await fetch(`https://formsubmit.co/ajax/${EMAIL}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({
-          _subject: `New inquiry from ${form.name || 'someone'}, ${form.type || 'Portfolio'}`,
-          Name: form.name || '—', Email: form.email || '—', 'Project type': form.type || '—',
-          Budget: form.budget || '—', Timeline: form.timeline || '—', Message: form.message || '—',
+          _subject: `New inquiry from ${form.name.slice(0, 80) || 'someone'}, ${form.type || 'Portfolio'}`,
+          _template: 'table',
+          _honey: honey,
+          Name: form.name.slice(0, 120) || '—', Email: form.email.slice(0, 160) || '—', 'Project type': form.type || '—',
+          Budget: form.budget || '—', Timeline: form.timeline || '—', Message: form.message.slice(0, 5000) || '—',
         }),
       });
-    } catch { /* the message may still arrive; show success as before */ }
-    setState('sent');
-    setForm({ name: '', email: '', type: '', budget: '', timeline: '', message: '' });
-    setTimeout(() => setState('idle'), 4000);
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || String((data as { success?: unknown }).success) === 'false') throw new Error('send failed');
+      done();
+    } catch {
+      setState('error');
+    }
   };
 
   const copy = (v: string, label: string) => {
@@ -294,7 +308,7 @@ export function ContactContent() {
         <AreuliBlock compact />
         </div>
 
-        <form onSubmit={submit} className="rounded-md border border-[#ececec] p-5 sm:p-7 space-y-4">
+        <form onSubmit={submit} className="relative rounded-md border border-[#ececec] p-5 sm:p-7 space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <label className="block">
               <span className="block text-[13px] text-[#6f6f6f] mb-1.5">{tx('Name', 'სახელი')}</span>
@@ -314,8 +328,17 @@ export function ContactContent() {
             <span className="block text-[13px] text-[#6f6f6f] mb-1.5">{tx('Message', 'შეტყობინება')}</span>
             <textarea name="message" rows={5} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className={`${fieldCls} resize-y min-h-[120px]`} placeholder={tx('Tell me about your project…', 'მომიყევი პროექტის შესახებ…')} />
           </label>
-          <button type="submit" disabled={state !== 'idle'} className={`${darkPillCls} w-full disabled:opacity-70`}>
-            {state === 'sent' ? tx("Sent. I'll get back to you soon", 'გაიგზავნა, მალე გიპასუხებ') : state === 'sending' ? tx('Sending…', 'იგზავნება…') : tx('Send inquiry', 'გაგზავნა')}
+          <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
+            <label>Leave this empty<input type="text" name="_honey" tabIndex={-1} autoComplete="off" value={honey} onChange={(e) => setHoney(e.target.value)} /></label>
+          </div>
+          {state === 'error' && (
+            <p className="text-[14px] text-[#b52f03]" role="alert">
+              {tx('The message did not go through. Try again, or write to', 'შეტყობინება ვერ გაიგზავნა. სცადე თავიდან ან მომწერე:')}{' '}
+              <a href={`mailto:${EMAIL}`} className="underline">{EMAIL}</a>
+            </p>
+          )}
+          <button type="submit" disabled={state === 'sending' || state === 'sent'} className={`${darkPillCls} w-full disabled:opacity-70`}>
+            {state === 'sent' ? tx("Sent. I'll get back to you soon", 'გაიგზავნა, მალე გიპასუხებ') : state === 'sending' ? tx('Sending…', 'იგზავნება…') : state === 'error' ? tx('Try again', 'თავიდან ცდა') : tx('Send inquiry', 'გაგზავნა')}
           </button>
           <p className="sr-only" role="status" aria-live="polite">{state === 'sent' ? tx('Inquiry sent.', 'შეტყობინება გაიგზავნა.') : ''}</p>
         </form>

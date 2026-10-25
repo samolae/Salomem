@@ -158,8 +158,8 @@ export function DasturiCase() {
         {/* ── Hero: the ibex in chrome ─────────────────────────────── */}
         <header className="relative rounded-md overflow-hidden min-h-[calc(100svh-64px)] flex flex-col" style={{ background: BLACK, color: IVORY }}>
           <div className="flex items-start justify-between p-5 sm:p-8 text-[13px]">
-            <Link to="/work" className="inline-flex items-center gap-1.5 text-white/50 hover:text-white transition-colors">
-              <ArrowLeft size={13} /> ნამუშევრები
+            <Link to="/work/ux-ui" className="inline-flex items-center gap-1.5 text-white/50 hover:text-white transition-colors">
+              <ArrowLeft size={13} /> ქეისები
             </Link>
             <span className="hidden sm:inline text-white/40">გაამოძრავე კურსორი</span>
           </div>

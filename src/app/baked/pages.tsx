@@ -76,15 +76,15 @@ export function MotionContent() {
         <HeartWall reels={motionReels} isDark={false} onOpen={setOpen} replayLabel={tx('Replay', 'თავიდან')} />
       </section>
 
-      <section aria-label={tx('Reels', 'რილსები')} className="px-1.5 columns-2 sm:columns-3 lg:columns-4 xl:columns-6 gap-1.5">
+      <section aria-label={tx('Reels', 'რილსები')} className="px-1.5 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-1.5">
         {motionReels.map((r, i) => (
           <Reveal key={r.src} className="break-inside-avoid">
             <button type="button" onClick={() => setOpen(i)} className="group block w-full text-left outline-none focus-visible:shadow-[0_0_0_2px_#ff4306] rounded-md" aria-label={tx(`Watch ${bn(r.brand)} reel with sound`, `${bn(r.brand)}: რილსის ხმით ნახვა`)}>
-              <div className="relative overflow-hidden rounded-md bg-[#f2f2f2]">
+              <div className="relative overflow-hidden rounded-md bg-[#f2f2f2] aspect-[9/16]">
                 <video
                   src={r.src} loop muted playsInline preload="metadata" autoPlay={!paused}
                   ref={(v) => { if (v) { paused ? v.pause() : v.play().catch(() => {}); } }}
-                  className="block w-full h-auto"
+                  className="block w-full h-full object-cover"
                 />
                 <span className="absolute bottom-2 left-2 rounded-md bg-white/85 px-2 py-1 text-[12px] text-[#111] opacity-0 backdrop-blur-md transition-opacity group-hover:opacity-100">{tx('Play with sound', 'ხმით ნახვა')}</span>
               </div>

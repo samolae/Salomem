@@ -46,12 +46,12 @@ export function HomeContent() {
       <Caption title="AURUM" sub={tx('Crypto exchange · 196 screens, 64+ components', 'კრიპტოგაცვლა · 196 ეკრანი, 64+ კომპონენტი')} tag={caseTag} />
     </CaseLink>,
     <Link key="motion" to={to('/work/social-media-motion')} className="group block">
-      <div className="relative overflow-hidden rounded-md bg-[#f2f2f2]">
+      <div className="relative overflow-hidden rounded-md bg-[#f2f2f2] aspect-[9/16]">
         <video
           src="https://res.cloudinary.com/dgfn598qb/video/upload/f_auto,q_auto/carmall-ne_1_u5ewuz.mp4"
           autoPlay={!paused} loop muted playsInline preload="metadata"
           ref={(v) => { if (v) { paused ? v.pause() : v.play().catch(() => {}); } }}
-          className="block w-full h-auto"
+          className="block w-full h-full object-cover"
         />
       </div>
       <Caption

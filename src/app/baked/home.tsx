@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Link } from 'react-router';
 import { CaseLink } from '../components/case-transition';
 import { IMG } from '../lib/cld';
@@ -13,6 +13,57 @@ import {
 } from './data';
 
 const AVATAR = '/avatar.jpg';
+
+/**
+ * Work tiles in balanced columns: each tile goes to the shortest column,
+ * using the tiles' real heights once they are measured, so the columns end
+ * close together instead of one running far below the others.
+ */
+function Balanced({ items }: { items: ReactNode[] }) {
+  const [cols, setCols] = useState(3);
+  const [heights, setHeights] = useState<number[]>([]);
+  const refs = useRef<(HTMLDivElement | null)[]>([]);
+  useEffect(() => {
+    const pick = () => setCols(window.innerWidth >= 1280 ? 3 : window.innerWidth >= 768 ? 2 : 1);
+    pick();
+    window.addEventListener('resize', pick);
+    return () => window.removeEventListener('resize', pick);
+  }, []);
+  useEffect(() => {
+    let raf = 0;
+    const read = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const hs = refs.current.slice(0, items.length).map((el) => (el ? el.offsetHeight : 0));
+        setHeights((prev) => (prev.length === hs.length && prev.every((h, i) => Math.abs(h - hs[i]) < 4) ? prev : hs));
+      });
+    };
+    const ro = new ResizeObserver(read);
+    refs.current.forEach((el) => el && ro.observe(el));
+    read();
+    return () => { ro.disconnect(); cancelAnimationFrame(raf); };
+  }, [items.length, cols]);
+
+  const columns: number[][] = Array.from({ length: cols }, () => []);
+  const sums = new Array(cols).fill(0);
+  items.forEach((_, i) => {
+    let c = 0;
+    for (let k = 1; k < cols; k++) if (sums[k] < sums[c] - 1) c = k;
+    columns[c].push(i);
+    sums[c] += heights[i] || 400;
+  });
+  return (
+    <div className="flex items-start gap-x-1.5">
+      {columns.map((col, c) => (
+        <div key={c} className="min-w-0 flex-1">
+          {col.map((i) => (
+            <div key={i} ref={(el) => { refs.current[i] = el; }}><Tile>{items[i]}</Tile></div>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
 
 function Tile({ children }: { children: ReactNode }) {
   return <Reveal>{children}</Reveal>;
@@ -171,11 +222,7 @@ export function HomeContent() {
       {/* Selected work */}
       <section aria-labelledby="work-title" className="px-1.5 pt-24 sm:pt-32">
         <h2 id="work-title" className="sr-only">{tx('Selected work', 'რჩეული ნამუშევრები')}</h2>
-        <div className="columns-1 md:columns-2 xl:columns-3 gap-x-1.5">
-          {[...(DASTURI_LIVE ? [dasturi] : []), ...left.flatMap((n, i) => [n, right[i]])].filter(Boolean).map((n, i) => (
-            <div key={i} className="break-inside-avoid"><Tile>{n}</Tile></div>
-          ))}
-        </div>
+        <Balanced items={[...(DASTURI_LIVE ? [dasturi] : []), ...left.flatMap((n, i) => [n, right[i]])].filter(Boolean)} />
       </section>
 
       {/* Spotlights */}

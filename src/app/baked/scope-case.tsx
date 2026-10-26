@@ -271,6 +271,7 @@ function Reel({ src, poster, label }: { src: string; poster: string; label: stri
   const reduce = useReducedMotion();
   const ref = useRef<HTMLVideoElement>(null);
   const [muted, setMuted] = useState(true);
+  const [ratio, setRatio] = useState('9/16'); // the film's own shape, never cropped
   useEffect(() => {
     const v = ref.current;
     if (!v || reduce) return;
@@ -287,8 +288,10 @@ function Reel({ src, poster, label }: { src: string; poster: string; label: stri
     if (!next) { window.dispatchEvent(new CustomEvent('scope-sound', { detail: v })); v.play().catch(() => {}); }
   };
   return (
-    <figure className="relative overflow-hidden rounded-[4px] bg-black aspect-[9/16]">
-      <video ref={ref} src={src} poster={poster} muted loop playsInline preload="none" aria-label={label} className="absolute inset-0 h-full w-full object-cover" />
+    <figure className="relative overflow-hidden rounded-[4px] bg-black" style={{ aspectRatio: ratio }}>
+      <video ref={ref} src={src} poster={poster} muted loop playsInline preload="metadata" aria-label={label}
+        onLoadedMetadata={(e) => { const v = e.currentTarget; if (v.videoWidth && v.videoHeight) setRatio(`${v.videoWidth}/${v.videoHeight}`); }}
+        className="absolute inset-0 h-full w-full object-contain" />
       <button type="button" onClick={toggle} aria-pressed={!muted} aria-label={muted ? tx('Turn sound on', 'ხმის ჩართვა') : tx('Turn sound off', 'ხმის გამორთვა')}
         className="absolute bottom-2.5 right-2.5 grid h-9 w-9 place-items-center rounded-full bg-black/45 text-white backdrop-blur hover:bg-black/65 outline-none focus-visible:shadow-[0_0_0_2px_#9aff01]">
         {muted ? <VolumeX size={15} /> : <Volume2 size={15} />}
@@ -333,6 +336,37 @@ const POSTS = [
 
 /** Website pages from the Figma file; shown once the exports are in */
 const W = `${P}/web`;
+
+/** the site's pages laid on a diagonal, each column drifting on its own */
+const COLS = [
+  ['home', 'cases'], ['services', 'about'], ['contact', 'home'], ['cases', 'services'], ['about', 'contact'],
+];
+function DiagonalScreens() {
+  const { tx } = useI18n();
+  const reduce = useReducedMotion();
+  return (
+    <div className="px-1.5">
+      <ClipReveal className="overflow-hidden rounded-[4px]">
+        <div className="relative w-full aspect-[16/10] overflow-hidden" style={{ background: INK }} role="img" aria-label={tx('Scope website pages laid out on a diagonal', 'Scope-ის ვებსაიტის გვერდები დიაგონალზე')}>
+          <style>{`@keyframes sc-up{to{transform:translateY(-50%)}}@keyframes sc-down{from{transform:translateY(-50%)}to{transform:translateY(0)}}`}</style>
+          <div className="absolute left-1/2 top-1/2 flex gap-[2.2%] w-[150%]"
+            style={{ transform: 'translate(-50%,-50%) rotateX(52deg) rotateZ(-38deg)', transformStyle: 'preserve-3d' }}>
+            {COLS.map((pages, c) => (
+              <div key={c} className="flex-1 min-w-0" style={{ marginTop: `${(c % 2) * 18}%` }}>
+                <div className="flex flex-col gap-[6%]" style={reduce ? undefined : { animation: `${c % 2 ? 'sc-down' : 'sc-up'} ${70 + c * 9}s linear infinite` }}>
+                  {[...pages, ...pages].map((k, i) => (
+                    <img key={i} src={`${W}/${k}-900.jpg`} alt="" loading="lazy" decoding="async" className="block w-full h-auto rounded-[6px] shadow-[0_30px_60px_-20px_rgba(0,0,0,0.7)]" />
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_55%,rgba(30,30,30,0.75))]" />
+        </div>
+      </ClipReveal>
+    </div>
+  );
+}
 
 export function ScopeCase() {
   const { tx } = useI18n();
@@ -397,7 +431,7 @@ export function ScopeCase() {
 
         {/* ── 02 Motion ────────────────────────────────────────────────── */}
         <Mark no="02" name={tx('Motion', 'მოუშენი')} line={tx('The lens underlines what matters.', 'ლინზა ხაზს უსვამს მთავარს.')} />
-        <div className="px-1.5 grid grid-cols-1 sm:grid-cols-3 gap-1.5">
+        <div className="px-1.5 grid grid-cols-3 gap-1.5 md:ml-[33.333%]">
           {reels.slice(0, 3).map((r, i) => <Rise key={r.src} delay={i * 0.05}><Reel {...r} /></Rise>)}
         </div>
 
@@ -415,9 +449,7 @@ export function ScopeCase() {
 
         {/* ── 04 Web ───────────────────────────────────────────────────── */}
         <Mark no="04" name={tx('Website', 'ვებსაიტი')} line={tx('Built to sell, not to explain.', 'გაყიდვისთვის, არა ახსნისთვის.')} />
-        <Bleed>
-          <img src={`${W}/fold.jpg`} width={1440} height={810} alt={tx('Scope website, the first screen', 'Scope-ის ვებსაიტი, პირველი ეკრანი')} loading="lazy" decoding="async" className="block h-full w-full object-cover" />
-        </Bleed>
+        <DiagonalScreens />
         <div className="px-1.5 pt-1.5 grid grid-cols-1 md:grid-cols-12 gap-1.5">
           <Rise className="md:col-span-8">
             <img src={`${W}/results.jpg`} width={1440} height={810} alt={tx('Scope website, the results block', 'Scope-ის ვებსაიტი, შედეგების ბლოკი')} loading="lazy" decoding="async" className="block w-full h-auto rounded-[4px]" />

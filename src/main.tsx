@@ -12,6 +12,24 @@ import './styles/index.css';
  * React then hydrates that HTML instead of rendering it again. Every other
  * path (404, tools) gets an empty shell and renders on the client.
  */
+/*
+ * If a script file fails to download (a flaky network, or a cached old
+ * page asking for files a new deploy replaced), reload once with a fresh
+ * request instead of leaving a page that never comes alive. The guard stops
+ * a reload loop; the page itself stays readable without JavaScript.
+ */
+function recover() {
+  try {
+    if (sessionStorage.getItem('chunk-retry')) return;
+    sessionStorage.setItem('chunk-retry', '1');
+  } catch { return; }
+  const url = new URL(window.location.href);
+  url.searchParams.set('r', Date.now().toString(36));
+  window.location.replace(url.toString());
+}
+window.addEventListener('vite:preloadError', (e) => { e.preventDefault(); recover(); });
+window.addEventListener('load', () => { setTimeout(() => { try { sessionStorage.removeItem('chunk-retry'); } catch { /* private mode */ } }, 4000); });
+
 async function boot() {
   const container = document.getElementById('root')!;
   // A `?section=` deep link opens a home section the static page cannot
@@ -51,4 +69,4 @@ async function boot() {
   idle(() => { homeRoute().catch(() => { /* retried on navigation */ }); });
 }
 
-boot();
+boot().catch((err) => { console.warn('[boot]', err); recover(); });

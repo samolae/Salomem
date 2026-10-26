@@ -47,12 +47,16 @@ export function Reveal({ children, delay = 0, className = '' }: { children: Reac
   const ref = useRef<HTMLDivElement>(null);
   const seen = useInView(ref, { once: true, margin: '-40px' });
   const reduce = useReducedMotion();
+  // the static page shows everything; only once the script runs do items
+  // below the fold step back to rise in, so a failed download never hides content
+  const [armed, setArmed] = useState(false);
+  useEffect(() => { setArmed(true); }, []);
   return (
     <motion.div
       ref={ref}
       className={className}
       initial={false}
-      animate={seen || reduce ? { opacity: 1, y: 0 } : { opacity: 0.001, y: 18 }}
+      animate={!armed || seen || reduce ? { opacity: 1, y: 0 } : { opacity: 0.001, y: 18 }}
       transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay }}
     >
       {children}

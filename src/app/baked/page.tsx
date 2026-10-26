@@ -7,6 +7,7 @@ import { HomeContent } from './home';
 import { AdsContent, ContactContent, MotionContent, ServicesContent, UxUiContent } from './pages';
 import { useI18n } from './i18n';
 import { WorkContent } from './work';
+import { CaseStudiesContent } from './case-studies';
 import { SEO } from '../components/seo';
 
 /**
@@ -22,7 +23,7 @@ export function BakedPage() {
     pathname === '/contact' ? 'contact'
     : pathname === '/services' ? 'services'
     : pathname === '/work' ? 'work'
-    : category === 'ux-ui' || category === 'social-media-ads' || category === 'social-media-motion' ? category
+    : category === 'ux-ui' || category === 'case-studies' || category === 'social-media-ads' || category === 'social-media-motion' ? category
     : 'home';
 
   useEffect(() => { setActiveSection(section); }, [section, setActiveSection]);
@@ -32,6 +33,7 @@ export function BakedPage() {
     : section === 'services' ? [<ServicesSEO />, <ServicesContent />]
     : section === 'work' ? [<SEO title="Work" description="Salome Mosiava's work by category: UX/UI, branding, social media ads and motion." />, <WorkContent />]
     : section === 'ux-ui' ? [<UxUiSEO />, <UxUiContent />]
+    : section === 'case-studies' ? [<SEO title="Case Studies" description="Branding and campaign case studies by Salome Mosiava, each told as one story: the brief, the idea, the work." />, <CaseStudiesContent />]
     : section === 'social-media-ads' ? [<SocialMediaAdsSEO />, <AdsContent />]
     : section === 'social-media-motion' ? [<SocialMediaMotionSEO />, <MotionContent />]
     : [<HomeSEO />, <HomeContent />];

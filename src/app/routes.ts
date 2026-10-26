@@ -51,6 +51,7 @@ export const PRERENDER_PATHS = [
   '/',
   '/work',
   '/work/ux-ui',
+  '/work/case-studies',
   '/work/social-media-ads',
   '/work/social-media-motion',
   '/services',

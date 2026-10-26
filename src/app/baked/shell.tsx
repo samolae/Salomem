@@ -227,7 +227,7 @@ function Footer() {
       { l: tx('All work', 'ყველა ნამუშევარი'), to: '/work' },
       { l: tx('UX/UI Design', 'UX/UI დიზაინი'), to: '/work/ux-ui' },
       // { l: tx('Branding', 'ბრენდინგი'), to: '/projects/dasturi' }, (Dasturi hidden for now)
-      { l: tx('AI Campaigns', 'AI კამპანიები'), to: '/projects/fitmeal' },
+      { l: tx('Case Studies', 'ქეისები'), to: '/work/case-studies' },
       { l: tx('Social Media Ads', 'სოც. მედიის რეკლამა'), to: '/work/social-media-ads' },
       { l: tx('Social Media Motion', 'სოც. მედიის მოუშენი'), to: '/work/social-media-motion' },
     ] },

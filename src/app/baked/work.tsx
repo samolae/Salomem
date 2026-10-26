@@ -26,7 +26,7 @@ const FOLDERS: Folder[] = [
   { id: 'brand', to: '/projects/dasturi', label: 'brand_design', en: 'Branding', ka: 'ბრენდინგი', countEn: '1 brand', countKa: '1 ბრენდი', color: ['#ffd25e', '#f6c03a', '#e5a91d'],
     thumbs: ['/cases/dasturi/labels/saperavi-gold.jpg', '/cases/dasturi/lineup-1000.jpg', '/cases/dasturi/labels/kisi-bordeaux.jpg'] },
   */
-  { id: 'ai', to: '/projects/fitmeal', label: 'ai_campaigns', en: 'AI campaigns', ka: 'AI კამპანიები', countEn: '1 campaign', countKa: '1 კამპანია', color: ['#b896ff', '#9d72f7', '#8656e8'],
+  { id: 'cases', to: '/work/case-studies', label: 'case_studies', en: 'Case studies', ka: 'ქეისები', countEn: '1 case', countKa: '1 ქეისი', color: ['#b896ff', '#9d72f7', '#8656e8'],
     thumbs: ['/cases/fitmeal/picnic-bowl-800.jpg', '/cases/fitmeal/table-greek-800.jpg', '/cases/fitmeal/blanket-eat-800.jpg'] },
   { id: 'ads', to: '/work/social-media-ads', label: 'soc_media_ads', en: 'Ads', ka: 'რეკლამა', countEn: `${adsBrands.length} brands`, countKa: `${adsBrands.length} ბრენდი`, color: ['#5fd06e', '#3fb24f', '#2f9a3f'],
     thumbs: [adsTerminal1, adsBrands[0].items[2].src, adsMardi1].map((s) => cld(s, 240)) },

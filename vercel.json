@@ -5,7 +5,7 @@
       "destination": "/index.html"
     },
     {
-      "source": "/work/:slug(ux-ui|social-media-ads|social-media-motion)",
+      "source": "/work/:slug(ux-ui|case-studies|social-media-ads|social-media-motion)",
       "destination": "/work/:slug/index.html"
     },
     {

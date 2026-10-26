@@ -26,32 +26,32 @@ const LIVE = 'https://gv-capital.vercel.app/';
 
 type Shot = { key: string; w: number; h: number; en: string; ka: string };
 const SHOTS: Shot[] = [
-  { key: 'reception', w: 1400, h: 788, en: 'Reception wall with the GV mark', ka: 'მისაღების კედელი GV ნიშნით' },
-  { key: 'lounge', w: 1400, h: 788, en: 'Lounge from above, emerald and carbon', ka: 'ლაუნჯი ზემოდან, ზურმუხტისფერი და ნახშირისფერი' },
-  { key: 'overhead', w: 1400, h: 1400, en: 'Meeting corner from above', ka: 'შეხვედრის კუთხე ზემოდან' },
-  { key: 'focus-office', w: 1400, h: 1244, en: 'A focus booth in the office', ka: 'ფოკუსის კაბინა ოფისში' },
-  { key: 'direction', w: 1400, h: 788, en: 'Wayfinding in the office', ka: 'ნავიგაცია ოფისში' },
-  { key: 'corridor', w: 1046, h: 1400, en: 'Corridor with directional blades', ka: 'დერეფანი მიმართულების ნიშნებით' },
-  { key: 'wayfinding', w: 934, h: 1400, en: 'Layered wayfinding blade', ka: 'შრეებიანი ნავიგაციის ნიშანი' },
-  { key: 'cards', w: 1046, h: 1400, en: 'Business cards', ka: 'სავიზიტო ბარათები' },
-  { key: 'letterhead', w: 990, h: 1400, en: 'Letterhead', ka: 'ბლანკი' },
-  { key: 'document', w: 990, h: 1400, en: 'Project proposal cover', ka: 'პროექტის შეთავაზების ყდა' },
-  { key: 'profile', w: 990, h: 1400, en: 'Company profile', ka: 'კომპანიის პროფილი' },
-  { key: 'brochure', w: 990, h: 1400, en: 'Space for your business brochure', ka: 'ბროშურა' },
+  { key: 'reception', w: 2400, h: 1350, en: 'Reception wall with the GV mark', ka: 'მისაღების კედელი GV ნიშნით' },
+  { key: 'lounge', w: 2400, h: 1350, en: 'Lounge from above, emerald and carbon', ka: 'ლაუნჯი ზემოდან, ზურმუხტისფერი და ნახშირისფერი' },
+  { key: 'overhead', w: 2400, h: 2400, en: 'Meeting corner from above', ka: 'შეხვედრის კუთხე ზემოდან' },
+  { key: 'focus-office', w: 2400, h: 2133, en: 'A focus booth in the office', ka: 'ფოკუსის კაბინა ოფისში' },
+  { key: 'direction', w: 2400, h: 1350, en: 'Wayfinding in the office', ka: 'ნავიგაცია ოფისში' },
+  { key: 'corridor', w: 1744, h: 2336, en: 'Corridor with directional blades', ka: 'დერეფანი მიმართულების ნიშნებით' },
+  { key: 'wayfinding', w: 1200, h: 1800, en: 'Layered wayfinding blade', ka: 'შრეებიანი ნავიგაციის ნიშანი' },
+  { key: 'cards', w: 1744, h: 2336, en: 'Business cards', ka: 'სავიზიტო ბარათები' },
+  { key: 'letterhead', w: 1200, h: 1697, en: 'Letterhead', ka: 'ბლანკი' },
+  { key: 'document', w: 1200, h: 1697, en: 'Project proposal cover', ka: 'პროექტის შეთავაზების ყდა' },
+  { key: 'profile', w: 1200, h: 1697, en: 'Company profile', ka: 'კომპანიის პროფილი' },
+  { key: 'brochure', w: 1200, h: 1697, en: 'Space for your business brochure', ka: 'ბროშურა' },
   { key: 'company', w: 1280, h: 720, en: 'Company presentation', ka: 'კომპანიის პრეზენტაცია' },
   { key: 'layouts', w: 1280, h: 720, en: 'Presentation template', ka: 'პრეზენტაციის შაბლონი' },
-  { key: 'digital', w: 1400, h: 788, en: 'Mark on a warehouse corner at dusk', ka: 'ნიშანი საწყობის კუთხეზე, დაბინდებისას' },
-  { key: 'folder', w: 1050, h: 1400, en: 'Folder', ka: 'საქაღალდე' },
-  { key: 'packaging', w: 1050, h: 1400, en: 'Packaging tape and box', ka: 'შეფუთვის ლენტი და ყუთი' },
-  { key: 'hardhat', w: 1050, h: 1400, en: 'Site hard hat', ka: 'სამშენებლო ჩაფხუტი' },
-  { key: 'uniform', w: 1050, h: 1400, en: 'Uniform', ka: 'უნიფორმა' },
-  { key: 'material', w: 1050, h: 1400, en: 'Embossed mark on fabric', ka: 'ამოტვიფრული ნიშანი ქსოვილზე' },
+  { key: 'digital', w: 1920, h: 1080, en: 'Mark on a warehouse corner at dusk', ka: 'ნიშანი საწყობის კუთხეზე, დაბინდებისას' },
+  { key: 'folder', w: 1248, h: 1664, en: 'Folder', ka: 'საქაღალდე' },
+  { key: 'packaging', w: 1086, h: 1448, en: 'Packaging tape and box', ka: 'შეფუთვის ლენტი და ყუთი' },
+  { key: 'hardhat', w: 1086, h: 1448, en: 'Site hard hat', ka: 'სამშენებლო ჩაფხუტი' },
+  { key: 'uniform', w: 1248, h: 1664, en: 'Uniform', ka: 'უნიფორმა' },
+  { key: 'material', w: 1248, h: 1664, en: 'Embossed mark on fabric', ka: 'ამოტვიფრული ნიშანი ქსოვილზე' },
   { key: 'concrete', w: 720, h: 1280, en: 'Mark set in concrete', ka: 'ნიშანი ბეტონში' },
-  { key: 'hoodie', w: 1400, h: 933, en: 'Team hoodie', ka: 'გუნდის ჰუდი' },
-  { key: 'facade', w: 1400, h: 788, en: 'Warehouse facade at night', ka: 'საწყობის ფასადი ღამით' },
-  { key: 'campus', w: 1400, h: 788, en: 'Logistics campus at sunset', ka: 'ლოჯისტიკური კომპლექსი მზის ჩასვლისას' },
-  { key: 'fleet', w: 1400, h: 788, en: 'Fleet', ka: 'ავტოპარკი' },
-  { key: 'flags', w: 1050, h: 1400, en: 'Flags', ka: 'დროშები' },
+  { key: 'hoodie', w: 1536, h: 1024, en: 'Team hoodie', ka: 'გუნდის ჰუდი' },
+  { key: 'facade', w: 1920, h: 1080, en: 'Warehouse facade at night', ka: 'საწყობის ფასადი ღამით' },
+  { key: 'campus', w: 1920, h: 1080, en: 'Logistics campus at sunset', ka: 'ლოჯისტიკური კომპლექსი მზის ჩასვლისას' },
+  { key: 'fleet', w: 1920, h: 1080, en: 'Fleet', ka: 'ავტოპარკი' },
+  { key: 'flags', w: 1248, h: 1664, en: 'Flags', ka: 'დროშები' },
   { key: 'social-opportunities', w: 1080, h: 1350, en: 'Social post: space that creates opportunities', ka: 'პოსტი: სივრცე, რომელიც ქმნის შესაძლებლობებს' },
   { key: 'social-possibility', w: 1080, h: 1350, en: 'Social post: built around possibility', ka: 'პოსტი: შესაძლებლობის გარშემო' },
   { key: 'social-perspective', w: 1080, h: 1350, en: 'Social post: a long-term view', ka: 'პოსტი: გრძელვადიანი ხედვა' },
@@ -88,7 +88,7 @@ function Photo({ k, onOpen, sizes = '(min-width: 768px) 33vw, 100vw', className 
   return (
     <button type="button" onClick={() => onOpen(i)} aria-label={`${tx(s.en, s.ka)}, ${tx('enlarge', 'გადიდება')}`}
       className={`group relative block w-full overflow-hidden rounded-[6px] bg-[#dcd8d0] cursor-zoom-in outline-none focus-visible:shadow-[0_0_0_2px_#0A6670] ${cover ? 'h-full' : ''} ${className}`}>
-      <img src={`${P}/${k}.jpg`} srcSet={`${P}/${k}-800.jpg 800w, ${P}/${k}.jpg ${s.w}w`} sizes={sizes} width={s.w} height={s.h}
+      <img src={`${P}/${k}.jpg`} srcSet={s.w > 1200 ? `${P}/${k}-1200.jpg 1200w, ${P}/${k}.jpg ${s.w}w` : undefined} sizes={sizes} width={s.w} height={s.h}
         alt={tx(s.en, s.ka)} loading="lazy" decoding="async"
         className={`block w-full transition-transform duration-[900ms] ease-[cubic-bezier(.2,.7,.2,1)] group-hover:scale-[1.03] ${cover ? 'h-full object-cover' : 'h-auto'}`} />
     </button>

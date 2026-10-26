@@ -27,26 +27,26 @@ const LEAF = '#5E8F4E';
 
 type Shot = { key: string; w: number; h: number; en: string; ka: string };
 const SHOTS: Shot[] = [
-  { key: 'picnic-bowl', w: 1400, h: 1738, en: 'Bowl on a gingham blanket in the grass', ka: 'ბოული ბალახზე, უჯრედიან პლედზე' },
-  { key: 'picnic-headphones', w: 1400, h: 1738, en: 'Picnic with headphones and spring flowers', ka: 'პიკნიკი ყურსასმენებით და გაზაფხულის ყვავილებით' },
-  { key: 'picnic-bottle', w: 1400, h: 1738, en: 'A fit body holding a FitMeal juice', ka: 'ფიტ სხეული FitMeal-ის წვენით ხელში' },
-  { key: 'stripe-spread', w: 1400, h: 1738, en: 'Lunch spread on a striped blanket', ka: 'სადილი ზოლიან პლედზე' },
-  { key: 'stripe-hand', w: 1400, h: 1738, en: 'A hand sets down a drink next to the bowl', ka: 'ხელი სასმელს ბოულის გვერდით დებს' },
-  { key: 'blanket-flat', w: 1400, h: 1738, en: 'Salmon bowl, camera and hat on a white blanket', ka: 'ორაგულის ბოული, კამერა და ქუდი თეთრ პლედზე' },
-  { key: 'blanket-read', w: 1400, h: 1738, en: 'Reading on the blanket, lunch within reach', ka: 'კითხვა პლედზე, სადილი ხელთ' },
-  { key: 'blanket-eat', w: 1400, h: 1738, en: 'Eating the salmon bowl, seen from behind', ka: 'ორაგულის ბოული, ზურგიდან' },
-  { key: 'park-read', w: 1400, h: 1738, en: 'A book and a box in the park', ka: 'წიგნი და ყუთი პარკში' },
-  { key: 'office-desk', w: 1400, h: 1750, en: 'Lunch at the desk', ka: 'სადილი სამუშაო მაგიდასთან' },
-  { key: 'office-greek', w: 1400, h: 1738, en: 'Greek salad bowl at work', ka: 'ბერძნული სალათი სამსახურში' },
-  { key: 'office-salmon', w: 1400, h: 1738, en: 'Salmon bowl at work', ka: 'ორაგულის ბოული სამსახურში' },
+  { key: 'picnic-bowl', w: 1933, h: 2400, en: 'Bowl on a gingham blanket in the grass', ka: 'ბოული ბალახზე, უჯრედიან პლედზე' },
+  { key: 'picnic-headphones', w: 1856, h: 2304, en: 'Picnic with headphones and spring flowers', ka: 'პიკნიკი ყურსასმენებით და გაზაფხულის ყვავილებით' },
+  { key: 'picnic-bottle', w: 1933, h: 2400, en: 'A fit body holding a FitMeal juice', ka: 'ფიტ სხეული FitMeal-ის წვენით ხელში' },
+  { key: 'stripe-spread', w: 1933, h: 2400, en: 'Lunch spread on a striped blanket', ka: 'სადილი ზოლიან პლედზე' },
+  { key: 'stripe-hand', w: 1856, h: 2304, en: 'A hand sets down a drink next to the bowl', ka: 'ხელი სასმელს ბოულის გვერდით დებს' },
+  { key: 'blanket-flat', w: 1933, h: 2400, en: 'Salmon bowl, camera and hat on a white blanket', ka: 'ორაგულის ბოული, კამერა და ქუდი თეთრ პლედზე' },
+  { key: 'blanket-read', w: 1933, h: 2400, en: 'Reading on the blanket, lunch within reach', ka: 'კითხვა პლედზე, სადილი ხელთ' },
+  { key: 'blanket-eat', w: 1933, h: 2400, en: 'Eating the salmon bowl, seen from behind', ka: 'ორაგულის ბოული, ზურგიდან' },
+  { key: 'park-read', w: 1856, h: 2304, en: 'A book and a box in the park', ka: 'წიგნი და ყუთი პარკში' },
+  { key: 'office-desk', w: 1814, h: 2267, en: 'Lunch at the desk', ka: 'სადილი სამუშაო მაგიდასთან' },
+  { key: 'office-greek', w: 1933, h: 2400, en: 'Greek salad bowl at work', ka: 'ბერძნული სალათი სამსახურში' },
+  { key: 'office-salmon', w: 1933, h: 2400, en: 'Salmon bowl at work', ka: 'ორაგულის ბოული სამსახურში' },
   { key: 'drink-mango', w: 896, h: 1200, en: 'Mango smoothie and wraps in the sun', ka: 'მანგოს სმუზი და რეპები მზეზე' },
   { key: 'drink-berry', w: 896, h: 1200, en: 'Berry smoothie and wraps in the sun', ka: 'კენკრის სმუზი და რეპები მზეზე' },
-  { key: 'table-salmon', w: 1400, h: 1738, en: 'Salmon and green beans on the teal table', ka: 'ორაგული და მწვანე ლობიო ფირუზისფერ მაგიდაზე' },
-  { key: 'table-greek', w: 1400, h: 1738, en: 'Greek salad on the teal table', ka: 'ბერძნული სალათი ფირუზისფერ მაგიდაზე' },
-  { key: 'table-shrimp', w: 1400, h: 1738, en: 'Shrimp and peppers on the teal table', ka: 'კრევეტი და წიწაკა ფირუზისფერ მაგიდაზე' },
-  { key: 'floor-tall', w: 1400, h: 2509, en: 'Hands over a box, from above', ka: 'ხელები ყუთთან, ზემოდან' },
+  { key: 'table-salmon', w: 1856, h: 2304, en: 'Salmon and green beans on the teal table', ka: 'ორაგული და მწვანე ლობიო ფირუზისფერ მაგიდაზე' },
+  { key: 'table-greek', w: 1856, h: 2304, en: 'Greek salad on the teal table', ka: 'ბერძნული სალათი ფირუზისფერ მაგიდაზე' },
+  { key: 'table-shrimp', w: 1856, h: 2304, en: 'Shrimp and peppers on the teal table', ka: 'კრევეტი და წიწაკა ფირუზისფერ მაგიდაზე' },
+  { key: 'floor-tall', w: 1340, h: 2400, en: 'Hands over a box, from above', ka: 'ხელები ყუთთან, ზემოდან' },
   { key: 'floor', w: 1200, h: 1500, en: 'Salmon box on a napkin, from above', ka: 'ორაგულის ყუთი ხელსახოცზე, ზემოდან' },
-  { key: 'share', w: 1400, h: 1738, en: 'Two bowls shared between friends', ka: 'ორი ბოული მეგობრებს შორის' },
+  { key: 'share', w: 1933, h: 2400, en: 'Two bowls shared between friends', ka: 'ორი ბოული მეგობრებს შორის' },
 ];
 const idx = (k: string) => SHOTS.findIndex((s) => s.key === k);
 
@@ -64,7 +64,7 @@ function Photo({ k, onOpen, sizes = '(min-width: 768px) 33vw, 100vw', className 
       className={`group relative block w-full overflow-hidden rounded-[6px] bg-[#e9e2d3] cursor-zoom-in outline-none focus-visible:shadow-[0_0_0_2px_#0E4B48] ${cover ? 'h-full' : ''} ${className}`}>
       <img
         src={`${P}/${k}.jpg`}
-        srcSet={s.w > 900 ? `${P}/${k}-800.jpg 800w, ${P}/${k}.jpg ${s.w}w` : undefined}
+        srcSet={s.w > 900 ? `${P}/${k}-800.jpg 800w, ${P}/${k}-1200.jpg 1200w, ${P}/${k}.jpg ${s.w}w` : undefined}
         sizes={sizes}
         width={s.w}
         height={s.h}
@@ -123,7 +123,7 @@ function SwapTile({ keys, onOpen, sizes = '(min-width: 768px) 50vw, 100vw', aspe
       <button type="button" onClick={() => onOpen(idx(k))} aria-label={`${tx(sh.en, sh.ka)}, ${tx('enlarge', 'გადიდება')}`}
         className="relative block w-full overflow-hidden rounded-[6px] bg-[#e9e2d3] cursor-zoom-in outline-none focus-visible:shadow-[0_0_0_2px_#0E4B48]" style={{ aspectRatio: aspect }}>
         {keys.map((kk, i) => (
-          <motion.img key={kk} src={`${P}/${kk}.jpg`} srcSet={SHOTS[idx(kk)].w > 900 ? `${P}/${kk}-800.jpg 800w, ${P}/${kk}.jpg ${SHOTS[idx(kk)].w}w` : undefined} sizes={sizes}
+          <motion.img key={kk} src={`${P}/${kk}.jpg`} srcSet={SHOTS[idx(kk)].w > 900 ? `${P}/${kk}-800.jpg 800w, ${P}/${kk}-1200.jpg 1200w, ${P}/${kk}.jpg ${SHOTS[idx(kk)].w}w` : undefined} sizes={sizes}
             alt={i === cur ? tx(SHOTS[idx(kk)].en, SHOTS[idx(kk)].ka) : ''} aria-hidden={i !== cur || undefined} loading="lazy" decoding="async"
             className="absolute inset-0 h-full w-full object-cover"
             initial={false}
@@ -169,7 +169,7 @@ function DishSwitch({ onOpen }: { onOpen: (i: number) => void }) {
               transition={{ duration: 0.6, ease: [0.2, 0.7, 0.2, 1] }}
               aria-label={`${tx(SHOTS[idx(d.k)].en, SHOTS[idx(d.k)].ka)}, ${tx('enlarge', 'გადიდება')}`}
             >
-              <img src={`${P}/${d.k}.jpg`} srcSet={`${P}/${d.k}-800.jpg 800w, ${P}/${d.k}.jpg 1400w`} sizes="(min-width: 768px) 58vw, 100vw"
+              <img src={`${P}/${d.k}.jpg`} srcSet={`${P}/${d.k}-800.jpg 800w, ${P}/${d.k}-1200.jpg 1200w, ${P}/${d.k}.jpg ${SHOTS[idx(d.k)].w}w`} sizes="(min-width: 768px) 58vw, 100vw"
                 alt={tx(SHOTS[idx(d.k)].en, SHOTS[idx(d.k)].ka)} className="h-full w-full object-cover" />
             </motion.button>
           </AnimatePresence>

@@ -27,7 +27,7 @@ const FOLDERS: Folder[] = [
     thumbs: ['/cases/dasturi/labels/saperavi-gold.jpg', '/cases/dasturi/lineup-1000.jpg', '/cases/dasturi/labels/kisi-bordeaux.jpg'] },
   */
   { id: 'cases', to: '/work/case-studies', label: 'case_studies', en: 'Case studies', ka: 'ქეისები', countEn: '3 cases', countKa: '3 ქეისი', color: ['#ffd25e', '#f6c03a', '#e5a91d'],
-    thumbs: ['/cases/gv/reception-800.jpg', '/cases/fitmeal/picnic-bowl-800.jpg', '/cases/dasturi/lineup-1000.jpg'] },
+    thumbs: ['/cases/gv/reception-1200.jpg', '/cases/fitmeal/picnic-bowl-800.jpg', '/cases/dasturi/lineup-1000.jpg'] },
   { id: 'ads', to: '/work/social-media-ads', label: 'soc_media_ads', en: 'Ads', ka: 'რეკლამა', countEn: `${adsBrands.length} brands`, countKa: `${adsBrands.length} ბრენდი`, color: ['#5fd06e', '#3fb24f', '#2f9a3f'],
     thumbs: [adsTerminal1, adsBrands[0].items[2].src, adsMardi1].map((s) => cld(s, 240)) },
   { id: 'motion', to: '/work/social-media-motion', label: 'motion', en: 'Motion', ka: 'მოუშენი', countEn: `${motionReels.length} reels`, countKa: `${motionReels.length} რილსი`, color: ['#ffa35a', '#f5852d', '#e06d17'],
@@ -80,7 +80,7 @@ function FolderCard({ f, open, onOpen }: { f: Folder; open: boolean; onOpen: (id
 
 const FULL_CASES = [
   { to: '/projects/dasturi', title: 'Dasturi', subEn: 'Georgian wine brand · identity, labels, packaging', subKa: 'ქართული ღვინის ბრენდი · იდენტობა, ეტიკეტები, შეფუთვა', img: '/cases/dasturi/lineup-1000.jpg', bg: '#191A17', local: true },
-  { to: '/projects/gv-capital', title: 'GV Capital', subEn: 'Investment holding · brand concept, identity, guidelines', subKa: 'საინვესტიციო ჰოლდინგი · კონცეფცია, იდენტობა, გაიდლაინი', img: '/cases/gv/reception-800.jpg', bg: '#16232A', local: true },
+  { to: '/projects/gv-capital', title: 'GV Capital', subEn: 'Investment holding · brand concept, identity, guidelines', subKa: 'საინვესტიციო ჰოლდინგი · კონცეფცია, იდენტობა, გაიდლაინი', img: '/cases/gv/reception-1200.jpg', bg: '#16232A', local: true },
   { to: '/projects/fitmeal', title: 'FitMeal', subEn: 'Spring campaign made with AI · art direction', subKa: 'საგაზაფხულო კამპანია AI-ით · არტ დირექშენი', img: '/cases/fitmeal/picnic-bowl-800.jpg', bg: '#F6F1E7', local: true },
   { to: '/projects/aurum', title: 'AURUM', subEn: 'Crypto exchange · B2C fintech', subKa: 'კრიპტოგაცვლა · B2C ფინტექი', img: screenAurumMainHQ, bg: 'linear-gradient(160deg,#16130b,#0b0b0f 70%)' },
   { to: '/projects/schenker', title: 'Schenker', subEn: 'Logistics platform · enterprise UX', subKa: 'ლოჯისტიკის პლატფორმა · კორპორატიული UX', img: schenkerSendung, bg: 'linear-gradient(160deg,#e8ecd8,#d4dab8)' },

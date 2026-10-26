@@ -282,6 +282,26 @@ export function CaseStudiesContent({ initialTag }: { initialTag?: string }) {
 }
 
 /** "More case studies" at the end of every case: the same covers as the grid, three at a time */
+/** one case as a card: its cover, name with "View case", two tags */
+function StudyCardOf({ x, prefix }: { x: Study; prefix: string }) {
+  const { tx } = useI18n();
+  return (
+    <CaseLink to={x.to} cardId={`${prefix}-${x.title.toLowerCase().replace(/\s+/g, '-')}`} className="group block">
+      <PeekCover cover={x.cover} peek={x.peek} className="relative aspect-[16/11] overflow-hidden rounded-md" />
+      <div className="mt-3 flex items-baseline justify-between gap-4 px-0.5">
+        <h3 className="text-[18px] leading-[1.1] text-[#111]" style={{ fontFamily: T.display, fontWeight: 900 }}>{x.title}</h3>
+        <ViewCase small />
+      </div>
+      <div className="mt-1 px-0.5 text-[13px] text-[#6f6f6f]">{x.tags.slice(0, 2).map((t) => tx(t.en, t.ka)).join(' · ')}</div>
+    </CaseLink>
+  );
+}
+
+/** every case as a cover card, in the grid's order (for the home page) */
+export function StudyCards() {
+  return <>{STUDIES.map((x) => <Reveal key={x.to}><StudyCardOf x={x} prefix="home" /></Reveal>)}</>;
+}
+
 export function MoreCases({ current }: { current: string }) {
   const { tx } = useI18n();
   const i = STUDIES.findIndex((x) => x.to === current);
@@ -290,16 +310,7 @@ export function MoreCases({ current }: { current: string }) {
     <section aria-labelledby="more" className="px-1.5 pt-24">
       <h2 id="more" className="px-0.5 pb-3 text-[14px] text-[#6f6f6f]">{tx('More case studies', 'სხვა ქეისები')}</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-x-1.5 gap-y-10">
-        {rest.map((x) => (
-          <CaseLink key={x.to} to={x.to} cardId={`more-${x.title.toLowerCase()}`} className="group block">
-            <PeekCover cover={x.cover} peek={x.peek} className="relative aspect-[16/11] overflow-hidden rounded-md" />
-            <div className="mt-3 flex items-baseline justify-between gap-4 px-0.5">
-              <h3 className="text-[18px] leading-[1.1] text-[#111]" style={{ fontFamily: T.display, fontWeight: 900 }}>{x.title}</h3>
-              <ViewCase small />
-            </div>
-            <div className="mt-1 px-0.5 text-[13px] text-[#6f6f6f]">{x.tags.slice(0, 2).map((t) => tx(t.en, t.ka)).join(' · ')}</div>
-          </CaseLink>
-        ))}
+        {rest.map((x) => <StudyCardOf key={x.to} x={x} prefix="more" />)}
       </div>
     </section>
   );

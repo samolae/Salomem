@@ -6,7 +6,7 @@ import { HeroCanvas } from './hero-canvas';
 import { useMotionPause } from './shell';
 import { AreuliBlock, Caption, CtaLink, FadeImg, LogoStrip, Reveal, T } from './ui';
 import { clients, experiences, spotlights, spotlightsKa } from './content';
-import { StudyCover } from './case-studies';
+import { StudyCards, StudyCover } from './case-studies';
 import { useI18n } from './i18n';
 import {
   adsBrands, adsCarmall1, adsGino4, adsTerminal1,
@@ -222,7 +222,39 @@ export function HomeContent() {
       {/* Selected work */}
       <section aria-labelledby="work-title" className="px-1.5 pt-24 sm:pt-32">
         <h2 id="work-title" className="sr-only">{tx('Selected work', 'რჩეული ნამუშევრები')}</h2>
-        <Balanced items={[...(DASTURI_LIVE ? [dasturi] : []), ...left.flatMap((n, i) => [n, right[i]])].filter(Boolean)} />
+        {/* every case by its cover, then ads and motion in the same frame: even rows */}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-1.5 gap-y-10">
+          <StudyCards />
+          <Reveal>
+            <Link to={to('/work/social-media-ads')} className="group block">
+              <div className="relative aspect-[16/11] overflow-hidden rounded-md bg-[#111]">
+                <FadeImg src={adsTerminal1} className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]" alt={tx('Social media ads', 'სოც. მედიის რეკლამა')} />
+              </div>
+              <div className="mt-3 flex items-baseline justify-between gap-4 px-0.5">
+                <h3 className="text-[18px] leading-[1.1] text-[#111]" style={{ fontFamily: T.display, fontWeight: 900 }}>{tx('Social Media Ads', 'სოც. მედიის რეკლამა')}</h3>
+                <span className="text-[13px] text-[#111]">{tx(`${brandCount} brands`, `${brandCount} ბრენდი`)}</span>
+              </div>
+              <div className="mt-1 px-0.5 text-[13px] text-[#6f6f6f]">{tx('Terminal, Mardi, Crystal Leasing and more', 'Terminal, Mardi, Crystal Leasing და სხვები')}</div>
+            </Link>
+          </Reveal>
+          <Reveal>
+            <Link to={to('/work/social-media-motion')} className="group block">
+              <div className="relative aspect-[16/11] overflow-hidden rounded-md bg-[#111]">
+                <video src="https://res.cloudinary.com/dgfn598qb/video/upload/f_auto,q_auto/carmall-ne_1_u5ewuz.mp4" autoPlay={!paused} loop muted playsInline preload="metadata"
+                  ref={(v) => { if (v) { paused ? v.pause() : v.play().catch(() => {}); } }}
+                  className="absolute inset-0 h-full w-full object-cover" />
+              </div>
+              <div className="mt-3 flex items-baseline justify-between gap-4 px-0.5">
+                <h3 className="text-[18px] leading-[1.1] text-[#111]" style={{ fontFamily: T.display, fontWeight: 900 }}>{tx('Social Media Motion', 'სოც. მედიის მოუშენი')}</h3>
+                <span className="text-[13px] text-[#111]">{tx('12 reels', '12 რილსი')}</span>
+              </div>
+              <div className="mt-1 px-0.5 text-[13px] text-[#6f6f6f]">{tx('Reels and brand animations', 'რილსები და ბრენდის ანიმაციები')}</div>
+            </Link>
+          </Reveal>
+        </div>
+        <div className="pt-12 grid grid-cols-1 md:grid-cols-2 gap-1.5 items-stretch">
+          {[...left, ...right].filter((n) => ['about', 'exp'].includes(String((n as { key?: unknown }).key))).map((n, i) => <Reveal key={i} className="[&>div]:h-full [&>div]:mb-0 h-full">{n}</Reveal>)}
+        </div>
       </section>
 
       {/* Spotlights */}

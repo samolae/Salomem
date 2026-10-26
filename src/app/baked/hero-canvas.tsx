@@ -86,7 +86,8 @@ function layout(g: Geo, pool: Item[]) {
   const L = g.mobile ? Math.max(1100, window.innerHeight * 2.4) : 2300 * Math.max(1, window.innerWidth / 1440);
   const cols: Col[] = [];
   const slots: Slot[] = [];
-  let step = MIX.step; while (pool.length % step === 0 && step > 1) step--; // keep the stride coprime so every item gets a turn
+  const gcd = (a: number, b: number): number => (b ? gcd(b, a % b) : a);
+  let step = MIX.step; while (gcd(pool.length, step) !== 1) step++; // a stride coprime with the pool, so every item gets a turn
   let pick = MIX.start % pool.length;
   for (let c = 0; c < nCols; c++) {
     cols.push({ phi: (360 / nCols) * c, off: (c * 173) % 400, L: 0 });

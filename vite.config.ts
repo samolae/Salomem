@@ -38,5 +38,11 @@ export default defineConfig({
     manifest: true,
     // Raise the warning threshold to avoid noise (default 500kB)
     chunkSizeWarningLimit: 1000,
+    // new URL scheme so no CDN edge can serve a 404 it cached for an old name
+    rollupOptions: {
+      output: {
+        chunkFileNames: 'assets/[name].[hash].js',
+      },
+    },
   },
 })

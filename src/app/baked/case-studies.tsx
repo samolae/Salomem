@@ -84,18 +84,29 @@ function DasturiCover() {
 
 /** FitMeal: a bento of the campaign, the strongest frame largest */
 function FitmealBento() {
-  const tile = (k: string, cls: string) => (
-    <div className={`relative overflow-hidden rounded-[4px] ${cls}`}>
-      <img src={`/cases/fitmeal/${k}-800.jpg`} srcSet={`/cases/fitmeal/${k}-800.jpg 800w, /cases/fitmeal/${k}-1200.jpg 1200w`} sizes="(min-width: 768px) 25vw, 50vw" alt="" loading="lazy" decoding="async"
-        className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.05]" />
-    </div>
-  );
+  // an editorial mosaic: one hero dish, then the picnic, the office and the drinks around it
+  const tiles: [string, string, string][] = [
+    ['table-salmon', '1 / span 2', '1 / span 3'],
+    ['picnic-bowl', '3', '1 / span 2'],
+    ['drink-mango', '4', '1'],
+    ['drink-berry', '4', '2'],
+    ['blanket-eat', '5 / span 2', '1 / span 2'],
+    ['share', '3 / span 2', '3 / span 2'],
+    ['stripe-spread', '5', '3'],
+    ['floor-tall', '6', '3 / span 2'],
+    ['office-greek', '1', '4'],
+    ['park-read', '2', '4'],
+    ['picnic-headphones', '5', '4'],
+  ];
   return (
-    <div className="grid h-full grid-cols-4 grid-rows-2 gap-1 bg-[#F6F1E7] p-1">
-      {tile('table-salmon', 'col-span-2 row-span-2')}
-      {tile('picnic-bowl', 'row-span-2')}
-      {tile('blanket-eat', '')}
-      {tile('share', '')}
+    <div className="grid h-full grid-cols-6 grid-rows-4 gap-1 bg-[#F6F1E7] p-1">
+      {tiles.map(([k, col, row], i) => (
+        <div key={k} className="relative overflow-hidden rounded-[4px]" style={{ gridColumn: col, gridRow: row }}>
+          <img src={`/cases/fitmeal/${k}-800.jpg`} srcSet={`/cases/fitmeal/${k}-800.jpg 800w, /cases/fitmeal/${k}-1200.jpg 1200w`} sizes={i === 0 ? '(min-width: 768px) 17vw, 34vw' : '(min-width: 768px) 9vw, 17vw'} alt="" loading="lazy" decoding="async"
+            className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.07]"
+            style={{ transitionDelay: `${(i % 4) * 60}ms` }} />
+        </div>
+      ))}
     </div>
   );
 }

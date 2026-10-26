@@ -25,14 +25,16 @@ type Study = {
 /** Dasturi is hidden until its case is finished */
 const DASTURI_LIVE = true;
 
-function FitmealCover() {
-  const k = ['picnic-bowl', 'blanket-eat', 'table-greek'];
+
+function UnispaceCover() {
   return (
-    <div className="grid h-full grid-cols-3 gap-[3%] p-[6%] items-center" style={{ background: '#F6F1E7' }}>
-      {k.map((x, i) => (
-        <img key={x} src={`/cases/fitmeal/${x}-800.jpg`} alt="" loading="lazy" decoding="async"
-          className={`w-full aspect-[1400/1738] object-cover rounded-[6px] shadow-[0_18px_40px_-20px_rgba(14,75,72,0.45)] transition-transform duration-700 ease-out ${i === 1 ? 'translate-y-[6%] group-hover:translate-y-[2%]' : 'group-hover:-translate-y-[3%]'}`} />
-      ))}
+    <div className="grid h-full grid-cols-[1fr_1.35fr] bg-[#0b0d16]">
+      <div className="relative overflow-hidden">
+        <img {...IMG.caseMain(`${CLD}/v1779887428/241852566_416907023197215_4126473183608966576_n_ecyuw4.png`)} alt="" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1200ms] group-hover:scale-[1.06]" />
+      </div>
+      <div className="flex items-center justify-center p-[7%] bg-[radial-gradient(circle_at_70%_30%,#2a2f6b,#0b0d16_70%)]">
+        <img {...IMG.caseMain(unispaceLogin)} alt="" loading="lazy" decoding="async" className="w-full rounded-[8px] shadow-[0_30px_70px_-25px_rgba(0,0,0,0.8)] transition-transform duration-700 group-hover:-translate-y-1" />
+      </div>
     </div>
   );
 }
@@ -42,10 +44,41 @@ function DasturiCover() {
 }
 
 /** product work: the main screen on its own stage */
-function ScreenCover({ img, bg }: { img: string; bg: string }) {
+
+
+const CLD = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto';
+
+/** a still that turns into its film on hover (desktop), or a second still */
+function HoverCover({ img, srcSet, alt = '', film, swap }: { img: string; srcSet?: string; alt?: string; film?: string; swap?: string }) {
   return (
-    <div className="flex h-full items-center justify-center p-[8%]" style={{ background: bg }}>
-      <img {...IMG.caseMain(img)} alt="" loading="lazy" decoding="async" className="max-h-full w-auto max-w-full rounded-md shadow-[0_24px_60px_rgba(0,0,0,0.35)] transition-transform duration-700 ease-out group-hover:scale-[1.02]" />
+    <div className="relative h-full w-full">
+      <img src={img} srcSet={srcSet} sizes="(min-width: 768px) 50vw, 100vw" alt={alt} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.04]" />
+      {swap && <img src={swap} alt="" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-700 group-hover:opacity-100" />}
+      {film && (
+        <video src={film} muted loop playsInline preload="none" aria-hidden
+          onMouseEnter={(e) => e.currentTarget.play().catch(() => {})}
+          className="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+          ref={(v) => { if (!v) return; const card = v.closest('a'); if (!card || (card as HTMLElement).dataset.film) return; (card as HTMLElement).dataset.film = '1';
+            card.addEventListener('mouseenter', () => { v.play().catch(() => {}); }); card.addEventListener('mouseleave', () => v.pause()); }} />
+      )}
+    </div>
+  );
+}
+
+/** product work: screens floating in perspective on the product's own colour */
+function ScreensCover({ bg, screens, glow }: { bg: string; screens: string[]; glow?: string }) {
+  return (
+    <div className="relative h-full w-full overflow-hidden" style={{ background: bg }}>
+      {glow && <div aria-hidden className="absolute -inset-[20%] opacity-60" style={{ background: `radial-gradient(closest-side, ${glow}, transparent)` }} />}
+      <div className="absolute inset-0 [perspective:1800px]">
+        <div className="absolute left-1/2 top-1/2 w-[78%] -translate-x-1/2 -translate-y-1/2 [transform-style:preserve-3d] transition-transform duration-[900ms] ease-[cubic-bezier(.2,.7,.2,1)] [transform:rotateX(22deg)_rotateZ(-10deg)] group-hover:[transform:rotateX(14deg)_rotateZ(-6deg)_scale(1.03)]">
+          {screens.map((src, i) => (
+            <img key={src} {...IMG.caseMain(src)} alt="" loading="lazy" decoding="async"
+              className="absolute left-0 top-0 w-full rounded-[8px] shadow-[0_40px_80px_-30px_rgba(0,0,0,0.6)] transition-transform duration-[900ms] ease-[cubic-bezier(.2,.7,.2,1)]"
+              style={{ transform: `translate3d(${(i - (screens.length - 1) / 2) * 16}%, ${(i - (screens.length - 1) / 2) * -14}%, ${i * 40}px)`, position: i === screens.length - 1 ? 'relative' : 'absolute', zIndex: i }} />
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
@@ -58,21 +91,21 @@ const STUDIES: Study[] = [
     en: 'Brand concept, identity and live guidelines for a Georgian investment and development holding. GV Capital makes space.',
     ka: 'ბრენდის კონცეფცია, იდენტობა და ცოცხალი გაიდლაინი ქართული საინვესტიციო და განვითარების ჰოლდინგისთვის.',
     tags: [{ en: 'Branding', ka: 'ბრენდინგი' }, { en: 'Visual identity', ka: 'ვიზუალური იდენტობა' }, { en: 'Brand guidelines', ka: 'გაიდლაინი' }],
-    cover: <img src="/cases/gv/reception-1200.jpg" srcSet="/cases/gv/reception-1200.jpg 1200w, /cases/gv/reception.jpg 2400w" sizes="(min-width: 768px) 50vw, 100vw" alt="" loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]" />,
+    cover: <HoverCover img="/cases/gv/facade-1200.jpg" srcSet="/cases/gv/facade-1200.jpg 1200w, /cases/gv/facade.jpg 1920w" film="/cases/gv/facade.mp4" />,
   },
   {
     to: '/projects/fitmeal', title: 'FitMeal',
     en: 'A spring campaign for a healthy food brand, made entirely with AI. Real dishes, no faces, cut for the feed and for stories.',
     ka: 'საგაზაფხულო კამპანია ჯანსაღი კვების ბრენდისთვის, მთლიანად AI-ით. ნამდვილი კერძები, სახის გარეშე, ფიდისა და სთორისთვის.',
     tags: [{ en: 'AI campaign', ka: 'AI კამპანია' }, { en: 'Social media', ka: 'სოციალური მედია' }, { en: 'Art direction', ka: 'არტ დირექშენი' }],
-    cover: <FitmealCover />,
+    cover: <HoverCover img="/cases/fitmeal/table-greek-1200.jpg" srcSet="/cases/fitmeal/table-greek-1200.jpg 1200w, /cases/fitmeal/table-greek.jpg 1856w" swap="/cases/fitmeal/table-salmon-1200.jpg" />,
   },
   {
     to: '/projects/aurum', title: 'AURUM',
     en: 'A crypto exchange for everyday investors: onboarding, trading and the wallet in one calm, trustworthy interface.',
     ka: 'კრიპტოგაცვლა ყოველდღიური ინვესტორისთვის: რეგისტრაცია, ვაჭრობა და საფულე ერთ მშვიდ, სანდო ინტერფეისში.',
     tags: [UX, { en: 'Product design', ka: 'პროდუქტის დიზაინი' }, { en: 'Fintech', ka: 'ფინტექი' }],
-    cover: <ScreenCover img={screenAurumMainHQ} bg="linear-gradient(160deg,#16130b,#0b0b0f 70%)" />,
+    cover: <ScreensCover bg="linear-gradient(160deg,#17130a,#0a0a0d 70%)" glow="rgba(212,166,60,0.35)" screens={[`${CLD}/v1774016554/exchange_ggykpz.webp`, `${CLD}/v1774016548/login-_au5gne.webp`, screenAurumMainHQ]} />,
   },
   ...(DASTURI_LIVE ? [{
     to: '/projects/dasturi', title: 'Dasturi',
@@ -86,14 +119,14 @@ const STUDIES: Study[] = [
     en: 'An enterprise logistics platform: shipments, parties and documents organised so dispatch teams move faster.',
     ka: 'კორპორატიული ლოჯისტიკის პლატფორმა: გზავნილები, მხარეები და დოკუმენტები ისე, რომ გუნდი უფრო სწრაფად მუშაობდეს.',
     tags: [UX, { en: 'Enterprise', ka: 'კორპორატიული' }, { en: 'Logistics', ka: 'ლოჯისტიკა' }],
-    cover: <ScreenCover img={schenkerSendung} bg="linear-gradient(160deg,#e8ecd8,#d4dab8)" />,
+    cover: <ScreensCover bg="linear-gradient(160deg,#eef2df,#cfd8ac)" screens={[`${CLD}/v1774041604/d4d1e42280872aa3079a1b940b29790994d2b241_jcnrf6.webp`, `${CLD}/v1774041563/78c6f45f9246b9cea5c0520f003d32cb8fb21ff1_kmea60.webp`, schenkerSendung]} />,
   },
   {
     to: '/projects/unispace', title: 'Unispace',
     en: 'A student management platform for several roles at once: students, lecturers and administrators in one product.',
     ka: 'სტუდენტების მართვის პლატფორმა რამდენიმე როლისთვის: სტუდენტები, ლექტორები და ადმინისტრაცია ერთ პროდუქტში.',
     tags: [UX, { en: 'EdTech', ka: 'EdTech' }, { en: 'Web app', ka: 'ვებ აპლიკაცია' }],
-    cover: <ScreenCover img={unispaceLogin} bg="linear-gradient(160deg,#dfe6ff,#eef1ff)" />,
+    cover: <UnispaceCover />,
   },
 ];
 

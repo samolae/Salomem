@@ -143,6 +143,14 @@ function ScreensCover({ bg, screens, glow }: { bg: string; screens: string[]; gl
 const UX = { en: 'UX/UI', ka: 'UX/UI' };
 
 const STUDIES: Study[] = [
+  ...(DASTURI_LIVE ? [{
+    to: '/projects/dasturi', title: 'Dasturi',
+    en: 'Identity, labels and packaging for a Georgian wine brand: an ibex built on circles and one label system for five varietals.',
+    ka: 'იდენტობა, ეტიკეტები და შეფუთვა ქართული ღვინის ბრენდისთვის: წრეებზე აგებული ჯიხვი და ერთი ეტიკეტის სისტემა ხუთი ჯიშისთვის.',
+    tags: [{ en: 'Branding', ka: 'ბრენდინგი' }, { en: 'Packaging', ka: 'შეფუთვა' }, { en: 'Visual identity', ka: 'ვიზუალური იდენტობა' }],
+    cover: <DasturiCover />,
+    peek: '/cases/dasturi/saperavi-1000.jpg',
+  }] : []),
   {
     to: '/projects/gv-capital', title: 'GV Capital',
     en: 'Brand concept, identity and live guidelines for a Georgian investment and development holding. GV Capital makes space.',
@@ -175,14 +183,6 @@ const STUDIES: Study[] = [
     cover: <ScreensCover bg="linear-gradient(160deg,#17130a,#0a0a0d 70%)" glow="rgba(212,166,60,0.35)" screens={[`${CLD}/v1774016554/exchange_ggykpz.webp`, `${CLD}/v1774016548/login-_au5gne.webp`, screenAurumMainHQ]} />,
     peek: `${CLD}/v1774016548/login-_au5gne.webp`,
   },
-  ...(DASTURI_LIVE ? [{
-    to: '/projects/dasturi', title: 'Dasturi',
-    en: 'Identity, labels and packaging for a Georgian wine brand: an ibex built on circles and one label system for five varietals.',
-    ka: 'იდენტობა, ეტიკეტები და შეფუთვა ქართული ღვინის ბრენდისთვის: წრეებზე აგებული ჯიხვი და ერთი ეტიკეტის სისტემა ხუთი ჯიშისთვის.',
-    tags: [{ en: 'Branding', ka: 'ბრენდინგი' }, { en: 'Packaging', ka: 'შეფუთვა' }, { en: 'Visual identity', ka: 'ვიზუალური იდენტობა' }],
-    cover: <DasturiCover />,
-    peek: '/cases/dasturi/saperavi-1000.jpg',
-  }] : []),
   {
     to: '/projects/schenker', title: 'Schenker',
     en: 'An enterprise logistics platform: shipments, parties and documents organised so dispatch teams move faster.',

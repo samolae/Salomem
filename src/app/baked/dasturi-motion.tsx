@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useI18n } from './i18n';
 import { IBEX, WORD_KA, WORD_LAT, VB, KA_NODES, KA_HANDLES } from './dasturi-vectors';
 
 /*
@@ -87,6 +88,7 @@ const X = LAT_BASE - LAT_TOP; // 1X = cap height of DASTURI (68)
 const BOX = { x0: 25, y0: 26, x1: 778, y1: 1034 }; // the whole lock-up
 
 export function Construction() {
+  const { tx } = useI18n();
   const [ref, on] = useSeen<HTMLDivElement>(0.3);
   const m = X * 1.5; // margin around the clear-space frame
   const L = BOX.x0 - X - m, T = BOX.y0 - X - m, W = BOX.x1 - BOX.x0 + 2 * (X + m), Hh = BOX.y1 - BOX.y0 + 2 * (X + m);
@@ -101,7 +103,7 @@ export function Construction() {
 
   return (
     <div ref={ref} className={`relative ${on ? 'ds-on' : ''}`}>
-      <svg viewBox={`${L} ${T} ${W} ${Hh}`} className="block w-full h-auto" role="img" aria-label="დასტურის ნიშნის კონსტრუქცია: რკალები, ხაზები და თავისუფალი სივრცე">
+      <svg viewBox={`${L} ${T} ${W} ${Hh}`} className="block w-full h-auto" role="img" aria-label={tx('Construction of the Dasturi mark: arcs, guides and clear space', 'დასტურის ნიშნის კონსტრუქცია: რკალები, ხაზები და თავისუფალი სივრცე')}>
         {/* half-X module grid */}
         <g className="ds-fade" style={del(0)} stroke={IVORY} strokeOpacity={0.07}>
           {cols.map((x) => <line key={`c${x}`} x1={x} x2={x} y1={T} y2={T + Hh} style={nsk} />)}
@@ -168,6 +170,7 @@ const NODES = (() => {
 })();
 
 export function Anatomy() {
+  const { tx } = useI18n();
   const [ref, on] = useSeen<HTMLDivElement>(0.35);
   // crop to the Georgian wordmark with room for the notes
   const vb = `0 ${KA_TOP - 70} ${VB.w} ${KA_BASE - KA_TOP + 140}`;
@@ -176,7 +179,7 @@ export function Anatomy() {
 
   return (
     <div ref={ref} className={`relative ${on ? 'ds-on' : ''}`}>
-      <svg viewBox={vb} className="block w-full h-auto" role="img" aria-label="სიტყვანიშანი დასტური ბეზიეს წერტილებით">
+      <svg viewBox={vb} className="block w-full h-auto" role="img" aria-label={tx('The Dasturi wordmark with its bezier points', 'სიტყვანიშანი დასტური ბეზიეს წერტილებით')}>
         {[KA_TOP, KA_BASE].map((y, i) => (
           <line key={y} x1={0} x2={VB.w} y1={y} y2={y} stroke={IVORY} strokeOpacity={0.35} pathLength={1} className="ds-draw" style={{ ['--d' as string]: '1.2s', ['--delay' as string]: `${i * 0.15}s`, vectorEffect: 'non-scaling-stroke' }} />
         ))}
@@ -205,13 +208,14 @@ export function Anatomy() {
 export function LabelRow({ edition, tone = 'light' }: { edition: 'gold' | 'bordeaux'; tone?: 'light' | 'dark' }) {
   const [ref, on] = useSeen<HTMLDivElement>(0.3);
   const ids = ['saperavi', 'manavi', 'kisi', 'satsuri', 'tsolikouri'];
-  const names = ['საფერავი', 'მანავის მწვანე', 'ქისი', 'საწური', 'ცოლიკაური'];
+  const { tx, lang } = useI18n();
+  const names = lang === 'ka' ? ['საფერავი', 'მანავის მწვანე', 'ქისი', 'საწური', 'ცოლიკაური'] : ['Saperavi', 'Manavi Mtsvane', 'Kisi', 'Satsuri', 'Tsolikouri'];
   return (
     <div ref={ref} className={`grid grid-cols-5 gap-[1.6%] ${on ? 'ds-on' : ''}`}>
       {ids.map((id, i) => (
         <figure key={id} className="ds-rise group" style={{ ['--delay' as string]: `${i * 0.12}s`, ['--tilt' as string]: `${(i - 2) * 2}deg` }}>
           <div className="relative overflow-hidden shadow-[0_28px_50px_-20px_rgba(0,0,0,0.7)] transition-transform duration-500 group-hover:-translate-y-2">
-            <img src={`/cases/dasturi/labels/${id}-${edition}.jpg`} alt={`${names[i]}, ${edition === 'gold' ? 'ოქროსფერი' : 'ბორდოსფერი'} ეტიკეტი`} width={554} height={1000} loading="lazy" className="block w-full h-auto" />
+            <img src={`/cases/dasturi/labels/${id}-${edition}.jpg`} alt={`${names[i]}, ${edition === 'gold' ? tx('gold label', 'ოქროსფერი ეტიკეტი') : tx('bordeaux label', 'ბორდოსფერი ეტიკეტი')}`} width={554} height={1000} loading="lazy" className="block w-full h-auto" />
             <div className="ds-sheen absolute inset-0 pointer-events-none" style={{ ['--delay' as string]: `${i * 0.25}s` }} />
           </div>
           <figcaption className="mt-3 text-center text-[12px] sm:text-[14px]" style={{ fontFamily: SERIF, color: tone === 'dark' ? 'rgba(240,234,223,.7)' : BLACK }}>{names[i]}</figcaption>

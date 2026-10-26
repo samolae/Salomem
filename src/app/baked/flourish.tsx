@@ -7,7 +7,7 @@ import { T } from './ui';
 /** The name set edge to edge in a variable font whose weight breathes from
  *  hairline to black and back (3s, ease-in-out, alternating). The size is
  *  fitted to the widest moment, the black weight, so it never overflows. */
-const NAME_FONT = '"Unbounded", ' + T.display;
+// T comes from ui.tsx, which imports this file, so it is read at render time
 const NAME_CSS = `
 @keyframes name-wght { from { font-variation-settings: "wght" 200; } to { font-variation-settings: "wght" 900; } }
 .name-breathe { animation: name-wght 3s ease-in-out -0.3s infinite alternate; }
@@ -48,7 +48,7 @@ function FullWidthName() {
     <div ref={box} aria-hidden className="-mt-6 sm:-mt-10 px-3 sm:px-4 select-none overflow-hidden">
       <style>{NAME_CSS}</style>
       <span ref={txt} className="name-breathe mx-auto block whitespace-nowrap leading-[0.9] text-[#111] text-center"
-        style={{ fontFamily: NAME_FONT, fontSize: '8.4vw', letterSpacing: '-0.02em', width: 'max-content' }}>
+        style={{ fontFamily: '"Unbounded", ' + T.display, fontSize: '8.4vw', letterSpacing: '-0.02em', width: 'max-content' }}>
         Salome Mosiava
       </span>
     </div>

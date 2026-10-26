@@ -22,14 +22,14 @@ export const T = {
 /* ── Pills ────────────────────────────────────────────────────────── */
 /** Same family as the Let's chat / Book a call pills: round, white with a hairline ring, black for the primary one */
 export const pillCls = (active = false) =>
-  `inline-flex items-center justify-center gap-1.5 h-9 px-4 rounded-full text-[14px] leading-none whitespace-nowrap transition-[background-color,color,transform,box-shadow] duration-200 hover:-translate-y-px outline-none focus-visible:shadow-[0_0_0_2px_#fff,0_0_0_4px_#111] ${
+  `chrome chrome-sm inline-flex items-center justify-center gap-1.5 h-9 px-4 rounded-full text-[14px] leading-none whitespace-nowrap transition-[background-color,color,transform,box-shadow] duration-200 hover:-translate-y-px outline-none focus-visible:shadow-[0_0_0_2px_#fff,0_0_0_4px_#111] ${
     active
       ? 'bg-[#111] text-white ring-1 ring-inset ring-white/15 shadow-[0_6px_18px_-8px_rgba(0,0,0,0.5)] hover:bg-[#222]'
       : 'bg-white/90 text-[#111] ring-1 ring-inset ring-black/10 shadow-[0_6px_18px_-10px_rgba(0,0,0,0.3)] hover:bg-[#f6f6f6] backdrop-blur-md'
   }`;
 
 export const darkPillCls =
-  'inline-flex items-center justify-center gap-2 h-12 px-6 rounded-full bg-[#111] text-white text-[15px] leading-none whitespace-nowrap ring-1 ring-inset ring-white/15 shadow-[0_8px_24px_-10px_rgba(0,0,0,0.5)] hover:bg-[#222] hover:-translate-y-px transition-[background-color,transform,box-shadow] duration-200 outline-none focus-visible:shadow-[0_0_0_2px_#fff,0_0_0_4px_#111]';
+  'chrome inline-flex items-center justify-center gap-2 h-12 px-6 rounded-full bg-[#111] text-white text-[15px] leading-none whitespace-nowrap ring-1 ring-inset ring-white/15 shadow-[0_8px_24px_-10px_rgba(0,0,0,0.5)] hover:bg-[#222] hover:-translate-y-px transition-[background-color,transform,box-shadow] duration-200 outline-none focus-visible:shadow-[0_0_0_2px_#fff,0_0_0_4px_#111]';
 
 export function CtaLink({ to = '/contact', children }: { to?: string; children?: ReactNode }) {
   const { tx, to: lp } = useI18n();

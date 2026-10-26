@@ -57,7 +57,7 @@ function TopNav() {
         </Link>
 
         {/* Desktop pills */}
-        <div className="hidden sm:flex items-center gap-1 pointer-events-auto">
+        <div className="hidden sm:flex items-center gap-2 pointer-events-auto">
           {NAV.map((n) => (
             <Link key={n.to} to={to(n.to)} aria-current={isActive(bare, n.to) ? 'page' : undefined} className={pillCls(false)}
               style={isActive(bare, n.to) ? ACTIVE : undefined}>

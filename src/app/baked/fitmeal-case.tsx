@@ -50,8 +50,6 @@ const SHOTS: Shot[] = [
 ];
 const idx = (k: string) => SHOTS.findIndex((s) => s.key === k);
 
-const H2 = 'text-[26px] sm:text-[30px] leading-[1.12] tracking-[-0.02em]';
-const COL = 'text-[14px] leading-[1.7] text-justify [text-align-last:left]';
 
 function Wrap({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return <div className={`mx-auto w-full max-w-[1240px] px-6 sm:px-10 lg:px-14 ${className}`}>{children}</div>;
@@ -79,18 +77,22 @@ function Photo({ k, onOpen, sizes = '(min-width: 768px) 33vw, 100vw', className 
   );
 }
 
-function Chapter({ no, name, title, children, id }: { no: string; name: string; title: string; children: string; id: string }) {
-  // one compact block, about a third of the section wide
+/* Editorial text blocks: a small capitalised label, a quiet serif heading
+   and a larger serif paragraph, set flush left across about half the page */
+const SERIF = '"Newsreader", "Noto Serif Georgian", Georgia, serif';
+const LABEL = 'text-[12px] uppercase tracking-[0.06em] text-[#0E4B48]/80';
+const HEAD = 'text-[26px] sm:text-[30px] leading-[1.15] tracking-[-0.01em]';
+const BODY = 'text-[17px] sm:text-[19px] leading-[1.5] text-[#0E4B48]';
+
+function Chapter({ name, title, children, id }: { no?: string; name: string; title: string; children: string; id: string }) {
   return (
-    <Wrap className="pt-24 sm:pt-32 pb-10 sm:pb-12">
-      <div className="max-w-[360px]">
-        <div className="flex items-baseline gap-3 text-[12px]">
-          <span className="tabular-nums" style={{ color: LEAF }}>{no}</span><span className="text-[#0E4B48]/55">{name}</span>
-        </div>
-        <RevealLines as="h2" className={`mt-3 ${H2}`} style={{ fontWeight: 500 }}>
+    <Wrap className="pt-28 sm:pt-36 pb-12 sm:pb-16">
+      <div className="max-w-[600px]" style={{ fontFamily: SERIF }}>
+        <div className={LABEL}>{name}</div>
+        <RevealLines as="h2" className={`mt-2 ${HEAD}`} style={{ fontWeight: 400 }}>
           <span id={id}>{title}</span>
         </RevealLines>
-        <Rise delay={0.1}><p className={`${COL} mt-4 text-[#0E4B48]/70`}>{children}</p></Rise>
+        <Rise delay={0.1}><p className={`mt-6 ${BODY}`}>{children}</p></Rise>
       </div>
     </Wrap>
   );
@@ -184,7 +186,7 @@ function DishSwitch({ onOpen }: { onOpen: (i: number) => void }) {
               </button>
             ))}
           </div>
-          <p className={`${COL} mt-6 max-w-[420px] text-[#0E4B48]/70`}>
+          <p className="mt-6 max-w-[420px] text-[16px] leading-[1.5] text-[#0E4B48]" style={{ fontFamily: SERIF }}>
             {tx('The cloth, the napkin, the glass and the light stay put, so the eye goes straight to the food. A new dish slots into the same frame.',
               'სუფრა, ხელსახოცი, ჭიქა და შუქი უცვლელია, ამიტომ თვალი პირდაპირ კერძზე მიდის. ახალი კერძი იმავე კადრში ჩაჯდება.')}
           </p>
@@ -265,6 +267,9 @@ export function FitmealCase() {
         keywords="FitMeal, AI campaign, AI visuals, food photography, social media, art direction, healthy food, Salome Mosiava"
         type="article"
       />
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Noto+Serif+Georgian:wght@400;500&display=swap" />
       <CaseHeroTarget path="/projects/fitmeal" />
 
       <article className="px-1.5 pt-14 sm:pt-[52px]">
@@ -307,16 +312,16 @@ export function FitmealCase() {
           </header>
 
           {/* ── Statement ────────────────────────────────────────────── */}
-          <Wrap className="pt-24 sm:pt-32 pb-4">
-            <div className="max-w-[400px]">
-              <RevealLines as="p" className="text-[24px] sm:text-[30px] leading-[1.18] tracking-[-0.02em]" style={{ fontWeight: 500 }}>
-                <span>{tx('The brief: pictures that pass for a real photo shoot,', 'ბრიფი: ვიზუალები, რომლებიც ნამდვილ ფოტოსესიად აღიქმება,')}</span>
-                <span className="text-[#0E4B48]/45">{tx('with real dishes and not a single face.', 'ნამდვილი კერძებით და არც ერთი სახით.')}</span>
+          <Wrap className="pt-28 sm:pt-36 pb-4">
+            <div className="max-w-[600px]" style={{ fontFamily: SERIF }}>
+              <div className={LABEL}>{tx('The brief', 'ბრიფი')}</div>
+              <RevealLines as="h2" className={`mt-2 ${HEAD}`} style={{ fontWeight: 400 }}>
+                <span>{tx('Spring that passes for a real shoot', 'გაზაფხული, რომელიც ნამდვილ გადაღებად აღიქმება')}</span>
               </RevealLines>
-              <Rise><p className={`${COL} mt-6 text-[#0E4B48]/70`}>{tx(
-                'FitMeal wanted spring on its feed: its dishes out in the sun, on a picnic blanket, at a desk, on a quiet morning. A shoot across that many settings costs days. AI let us build every one of them around the real packaging and the real menu.',
-                'FitMeal-ს გაზაფხული უნდოდა თავის ფიდზე: კერძები მზეზე, პიკნიკის პლედზე, სამუშაო მაგიდასთან, მშვიდ დილას. ამდენ გარემოში ფოტოსესიას დღეები სჭირდება. AI-ით თითოეული მათგანი ნამდვილი შეფუთვისა და ნამდვილი მენიუს გარშემო ავაწყვეთ.')}</p></Rise>
-              <Rise delay={0.08}><p className={`${COL} mt-4 text-[#0E4B48]/70`}>{tx(
+              <Rise><p className={`mt-6 ${BODY}`}>{tx(
+                'FitMeal wanted spring on its feed: its dishes out in the sun, on a picnic blanket, at a desk, on a quiet morning. A shoot across that many settings costs days. AI let us build every one of them around the real packaging and the real menu, with real-looking dishes and not a single face.',
+                'FitMeal-ს გაზაფხული უნდოდა თავის ფიდზე: კერძები მზეზე, პიკნიკის პლედზე, სამუშაო მაგიდასთან, მშვიდ დილას. ამდენ გარემოში ფოტოსესიას დღეები სჭირდება. AI-ით თითოეული მათგანი ნამდვილი შეფუთვისა და ნამდვილი მენიუს გარშემო ავაწყვეთ, ნამდვილი კერძებით და არც ერთი სახით.')}</p></Rise>
+              <Rise delay={0.08}><p className={`mt-5 ${BODY}`}>{tx(
                 'The brief set two moods. A picnic: grass, flowers, sun, fresh and light. And a healthy spring routine: calm, morning, a book, a coffee, the meal close at hand. Every frame keeps the food as the hero and the light natural.',
                 'ბრიფში ორი განწყობა იყო. პიკნიკი: ბალახი, ყვავილები, მზე, სიახლე და სიმსუბუქე. და ჯანსაღი გაზაფხულის რუტინა: სიმშვიდე, დილა, წიგნი, ყავა და კერძი ხელთ. ყველა კადრში საკვებია მთავარი გმირი და შუქი ბუნებრივია.')}</p></Rise>
             </div>

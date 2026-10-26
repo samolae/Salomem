@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react';
 import { IMG } from '../lib/cld';
 import { adsBrands, motionReels } from './data';
 import { spotlights } from './content';
@@ -8,9 +7,13 @@ import { CtaLink, Lightbox, type LightboxItem } from './ui';
 import { brandName, useI18n } from './i18n';
 
 /*
- * The opening canvas: every kind of work laid out as tilted columns that
- * drift up and down at their own pace. Moving the pointer pans the plane
- * ("look around"); scrolling lifts it away to the intro underneath.
+ * The opening world, after baked.design: the work is pinned to the inside
+ * of a tall cylinder seen from within. Columns stand round the drum, the
+ * near edges swing towards you, the drum turns slowly on its own, the
+ * columns drift upward, the pointer looks around, and a drag spins it with
+ * inertia. Scrolling opens it: the tiles push out and fade, revealing the
+ * page. Same constants and easing as the reference. The pictures carry a
+ * light grade (a touch darker, more saturated) so the pills read on top.
  */
 
 /** A still from a Cloudinary video at a percentage offset */
@@ -24,185 +27,285 @@ export const videoFrame = (src: string, offset = '40p', width = 480) => {
   return `${src.slice(0, at + mark.length)}so_${offset},w_${width},c_limit,q_auto,f_auto/${rest.replace(/\.(mp4|mov|webm)$/i, '.jpg')}`;
 };
 
-/** The same reel, scaled down for a small tile */
-const smallVideo = (src: string) => src.replace('/video/upload/f_auto,q_auto/', '/video/upload/w_360,c_limit,q_auto,f_auto/');
-
 /** full: what opens large; brand/logo: shown in the enlarged view */
-type Tile = { src: string; ratio: number; frame?: boolean; video?: string; full: string; fullVideo?: boolean; brand: string; logo?: string; n: number };
+type Item = { src: string; full: string; fullVideo?: boolean; brand: string; logo?: string };
 
-function usePool(): Tile[] {
+function usePool(): Item[] {
   return useMemo(() => {
-    const ads: Tile[] = adsBrands.flatMap((b) =>
-      b.items.filter((it) => it.type === 'image' && !it.fullWidth).map((it, i) => ({ src: it.src, ratio: i % 3 === 1 ? 1 : 1.25, full: it.src, brand: b.name, logo: b.logoImg, n: 0 }))
+    const ads: Item[] = adsBrands.flatMap((b) =>
+      b.items.filter((it) => it.type === 'image' && !it.fullWidth).map((it) => ({ src: it.src, full: it.src, brand: b.name, logo: b.logoImg }))
     );
-    const spots: Tile[] = spotlights.map((s) => ({ src: s.img, ratio: 0.75, full: s.img, brand: s.title, n: 0 }));
-    const frames: Tile[] = motionReels.map((r, i) => ({
-      src: videoFrame(r.src, i % 2 ? '35p' : '60p'), ratio: 1.6, frame: true, video: smallVideo(r.src),
-      full: r.src, fullVideo: true, brand: r.brand, logo: (r as { logoImg?: string }).logoImg, n: 0,
+    const spots: Item[] = spotlights.map((s) => ({ src: s.img, full: s.img, brand: s.title }));
+    const frames: Item[] = motionReels.map((r, i) => ({
+      src: videoFrame(r.src, i % 2 ? '35p' : '60p', 600), full: r.src, fullVideo: true, brand: r.brand, logo: (r as { logoImg?: string }).logoImg,
     }));
-    // Interleave so neighbouring tiles differ in kind
-    const out: Tile[] = [];
+    // interleave so neighbours differ in kind
+    const out: Item[] = [];
     const lists = [ads, frames, spots];
-    let added = true;
-    for (let k = 0; added; k++) {
+    for (let k = 0, added = true; added; k++) {
       added = false;
       for (const l of lists) {
-        // ads are plentiful: take two per round
         const take = l === ads ? [l[k * 2], l[k * 2 + 1]] : [l[k]];
-        for (const t of take) if (t) { out.push({ ...t, n: out.length }); added = true; }
+        for (const t of take) if (t) { out.push(t); added = true; }
       }
     }
     return out;
   }, []);
 }
 
+/* ── geometry, as on the reference ───────────────────────────────────── */
+type Geo = { W: number; R: number; Z: number; P: number; GAP: number; mobile: boolean };
+const geo = (): Geo => {
+  if (window.innerWidth < 760) return { W: 150, R: 560, Z: 330, P: 760, GAP: 22, mobile: true };
+  const s = Math.max(1, window.innerWidth / 1440);
+  return { W: Math.round(250 * Math.min(s, 1.35)), R: Math.round(900 * s), Z: Math.round(540 * s), P: Math.round(1100 * s), GAP: Math.round(34 * Math.min(s, 1.35)), mobile: false };
+};
+const RATIOS = [1.33, 1, 0.8, 1.6, 1.25, 0.75];
+type Slot = { col: number; y: number; h: number; item: number };
+type Col = { phi: number; off: number; L: number };
+
+function layout(g: Geo, poolSize: number) {
+  const nCols = Math.round(360 / (((g.W + g.GAP + 14) / g.R) * 180 / Math.PI));
+  const L = g.mobile ? Math.max(1100, window.innerHeight * 2.4) : 2300 * Math.max(1, window.innerWidth / 1440);
+  const cols: Col[] = [];
+  const slots: Slot[] = [];
+  let pick = 0;
+  for (let c = 0; c < nCols; c++) {
+    cols.push({ phi: (360 / nCols) * c, off: (c * 173) % 400, L: 0 });
+    let y = 0, r = c % RATIOS.length;
+    while (y < L) {
+      const h = Math.round(g.W / RATIOS[r % RATIOS.length]);
+      if (y + h > L && y > 0) break;
+      // spread the pool: a rotating pointer, stepping past neighbours' picks
+      slots.push({ col: c, y, h, item: (pick = (pick + 7) % poolSize) });
+      y += h + g.GAP; r++;
+    }
+    cols[c].L = y; // the column wraps on its own length
+  }
+  return { cols, slots };
+}
+
+const clamp = (v: number) => Math.max(0, Math.min(1, v));
+const smooth = (v: number) => v * v * (3 - 2 * v);
+
 export function HeroCanvas() {
   const { tx, ka } = useI18n();
   const pool = usePool();
   const [open, setOpen] = useState<number | null>(null);
-  const downAt = useRef<{ x: number; y: number; t: number } | null>(null);
   const lightbox: LightboxItem[] = useMemo(() => pool.map((t) => ({
     src: t.full, video: t.fullVideo, alt: brandName(t.brand, ka), brand: brandName(t.brand, ka), logo: t.logo,
   })), [pool, ka]);
   const { paused } = useMotionPause();
-  const reduce = useReducedMotion();
-  const wrapRef = useRef<HTMLDivElement>(null);
-  const planeRef = useRef<HTMLDivElement>(null);
-  const [cols, setCols] = useState(9);
+  const pausedRef = useRef(paused);
+  pausedRef.current = paused;
 
+  const heroRef = useRef<HTMLElement>(null);
+  const worldRef = useRef<HTMLDivElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const chipRef = useRef<HTMLDivElement>(null);
+  const [g, setG] = useState<Geo | null>(null);
+  const [plan, setPlan] = useState<ReturnType<typeof layout> | null>(null);
+
+  // build the drum for this screen size
   useEffect(() => {
-    const set = () => setCols(window.innerWidth < 640 ? 5 : window.innerWidth < 1100 ? 7 : window.innerWidth < 1600 ? 9 : 11);
-    set();
-    window.addEventListener('resize', set);
-    return () => window.removeEventListener('resize', set);
-  }, []);
+    let t = 0, last = '';
+    const build = () => {
+      const ng = geo();
+      const key = `${ng.W}|${ng.R}|${ng.mobile}|${Math.round(window.innerHeight / 100)}`;
+      if (key === last) return;
+      last = key;
+      setG(ng); setPlan(layout(ng, pool.length));
+    };
+    build();
+    const onResize = () => { clearTimeout(t); t = window.setTimeout(build, 120); };
+    window.addEventListener('resize', onResize);
+    return () => { window.removeEventListener('resize', onResize); clearTimeout(t); };
+  }, [pool.length]);
 
-  // Columns: deal the pool round-robin, each column gets its own speed
-  const columns = useMemo(() => {
-    const c: Tile[][] = Array.from({ length: cols }, () => []);
-    pool.forEach((t, i) => c[i % cols].push(t));
-    return c.map((tiles, i) => ({ tiles, dur: 70 + ((i * 23) % 40), up: i % 2 === 0 }));
-  }, [pool, cols]);
-
-  // Pointer pans the plane with a little lag
+  // the frame loop
   useEffect(() => {
-    if (reduce) return;
-    const wrap = wrapRef.current, plane = planeRef.current;
-    if (!wrap || !plane) return;
-    let tx = 0, ty = 0, x = 0, y = 0, raf = 0;
+    const world = worldRef.current, hero = heroRef.current, stage = stageRef.current, chip = chipRef.current;
+    if (!world || !hero || !stage || !g || !plan) return;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const els = Array.from(world.querySelectorAll<HTMLElement>('[data-slot]'));
+    const lift = new Float32Array(els.length);
+    const start = performance.now();
+    let prev = start, raf = 0;
+    // state, named as on the reference where it helps
+    let spin = 0, vel = 0, A = 1, sway = 0, drift = 0;
+    let N = 0, Py = 0, F = 0, se = 0, I = 0;
+    let q = 0, hovered = -1, dragging = false, inView = true;
+    const off = () => reduced || pausedRef.current;
+
+    const tick = (now: number) => {
+      raf = 0;
+      const dt = Math.min(0.05, (now - prev) / 1000); prev = now;
+      const motionOff = off();
+      // scroll intro: 0 at the top, 1 once scrolled 90% of a screen
+      const qt = clamp(-hero.getBoundingClientRect().top / (window.innerHeight * 0.9));
+      q = reduced ? qt : q + (qt - q) * (1 - Math.exp(-dt / 0.1));
+      A += ((dragging ? 0 : hovered >= 0 ? 0.35 : 1) - A) * (1 - 0.05 ** dt);
+      vel *= 0.04 ** dt;
+      const swayT = !motionOff && Math.abs(I) > 0.78 ? Math.sign(I) * 14 * Math.min(1, (Math.abs(I) - 0.78) / 0.2) : 0;
+      sway += (swayT - sway) * (1 - 0.05 ** dt);
+      spin += ((motionOff ? 0 : 7) * A + vel + sway) * dt;
+      if (!motionOff) drift += 22 * A * dt;
+      const r = 1 - 0.0004 ** dt;
+      N += ((motionOff ? 0 : F) - N) * r; Py += ((motionOff ? 0 : se) - Py) * r;
+      world.style.perspectiveOrigin = `50% ${(50 + Py * 9).toFixed(2)}%`;
+
+      const o = spin - N, py = -Py * 70;
+      const v = clamp((q - Math.min(1, g.R / 900) * 0.3) / 0.7), open = smooth(v);
+      const n = (now - start) / 1000;
+      const yGate = g.mobile ? 0 : (1000 * g.R) / 900;
+      for (let i = 0; i < els.length; i++) {
+        const el = els[i], sl = plan.slots[i], col = plan.cols[sl.col];
+        const s = ((col.phi + o) % 360 + 540) % 360 - 180;
+        let shown = Math.abs(s) <= 82 && q < 1;
+        const th = (s * Math.PI) / 180;
+        let u = g.R * Math.sin(th);
+        const z = g.Z - g.R * Math.cos(th);
+        let l = ((sl.y + col.off - drift) % col.L + col.L) % col.L - col.L / 2 + sl.h / 2 + py;
+        if (Math.abs(l) > (g.mobile ? col.L / 2 + 200 : yGate)) shown = false;
+        if (!shown) { if (el.style.visibility !== 'hidden') el.style.visibility = 'hidden'; continue; }
+        // reveal on load, from the middle outward
+        const rev = reduced ? 1 : 1 - (1 - clamp((n - 0.1 - (Math.abs(s) / 90) * 0.9) / 0.9)) ** 3;
+        lift[i] += (+(i === hovered && q < 0.2) - lift[i]) * (1 - 0.001 ** dt);
+        // opening: push outward from the centre on screen
+        const a = g.P / (g.P - z);
+        const push = ((Math.max(0, Math.hypot(u * a, l * a) / 1.7 - g.R) + 250) / a) * open;
+        const len = Math.hypot(u, l) || 1;
+        u += (u / len) * push; l += (l / len) * push;
+        const d = z - (1 - rev) * 500 + 160 * open + lift[i] * 70;
+        const f = rev * Math.min(1, (g.P * 0.7 - d) / 250) * (1 - open);
+        el.style.visibility = 'visible';
+        el.style.transform = `translate3d(${(u - g.W / 2).toFixed(1)}px,${(l - sl.h / 2).toFixed(1)}px,${d.toFixed(1)}px) rotateY(${(-s).toFixed(2)}deg)`;
+        el.style.opacity = Math.max(0, f).toFixed(3);
+      }
+      stage.style.opacity = (1 - smooth(clamp((q - 0.45) / 0.4))).toFixed(3);
+      const settling = Math.abs(vel) > 0.01 || Math.abs(qt - q) > 0.001 || n < 2.5;
+      if (inView && (!motionOff || dragging || settling || hovered >= 0)) raf = requestAnimationFrame(tick);
+    };
+    const kick = () => { if (!raf) { prev = performance.now(); raf = requestAnimationFrame(tick); } };
+
+    // pointer: look around
     const onMove = (e: PointerEvent) => {
-      if (e.pointerType === 'touch') return;
-      const r = wrap.getBoundingClientRect();
-      tx = -((e.clientX - r.left) / r.width - 0.5) * 140;
-      ty = -((e.clientY - r.top) / r.height - 0.5) * 90;
-      if (!raf) raf = requestAnimationFrame(tick);
+      if (e.pointerType !== 'touch') {
+        I = (e.clientX / window.innerWidth) * 2 - 1;
+        F = I * 24;
+        se = (e.clientY / window.innerHeight) * 2 - 1;
+        if (chip && hovered >= 0) chip.style.transform = `translate(${e.clientX + 14}px, ${e.clientY + 14}px)`;
+      }
+      if (down) {
+        const dx = e.clientX - down.x;
+        if (!dragging && Math.abs(dx) > 6) { dragging = true; world.classList.add('cursor-grabbing'); }
+        if (dragging) {
+          const step = e.clientX - down.last;
+          down.last = e.clientX;
+          spin += step * 0.09;
+          vel += (step * 6 - vel) * (e.pointerType === 'touch' ? 0.35 : 1);
+        }
+      }
+      kick();
     };
-    const tick = () => {
-      x += (tx - x) * 0.06;
-      y += (ty - y) * 0.06;
-      plane.style.translate = `${x.toFixed(1)}px ${y.toFixed(1)}px`;
-      raf = Math.abs(tx - x) > 0.2 || Math.abs(ty - y) > 0.2 ? requestAnimationFrame(tick) : 0;
+    // drag to spin, tap to open
+    let down: { x: number; y: number; last: number; t: number } | null = null;
+    const onDown = (e: PointerEvent) => { down = { x: e.clientX, y: e.clientY, last: e.clientX, t: performance.now() }; };
+    const onUp = (e: PointerEvent) => {
+      const d = down; down = null;
+      const wasDrag = dragging;
+      dragging = false; world.classList.remove('cursor-grabbing');
+      if (!d || wasDrag || Math.hypot(e.clientX - d.x, e.clientY - d.y) > 8 || performance.now() - d.t > 700) return;
+      const tile = (document.elementFromPoint(e.clientX, e.clientY) as HTMLElement | null)?.closest<HTMLElement>('[data-slot]');
+      if (tile) setOpen(Number(tile.dataset.item));
     };
-    wrap.addEventListener('pointermove', onMove);
-    return () => { wrap.removeEventListener('pointermove', onMove); cancelAnimationFrame(raf); };
-  }, [reduce]);
+    const onWheel = (e: WheelEvent) => {
+      if (reduced || Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+      vel -= e.deltaX * 0.9; e.preventDefault(); kick();
+    };
+    const onOver = (e: PointerEvent) => {
+      const t = (e.target as HTMLElement).closest<HTMLElement>('[data-slot]');
+      const idx = t ? els.indexOf(t) : -1;
+      if (idx === hovered) return;
+      hovered = idx;
+      if (chip) {
+        if (t) { chip.textContent = t.dataset.label || ''; chip.style.opacity = '1'; chip.style.transform = `translate(${e.clientX + 14}px, ${e.clientY + 14}px)`; }
+        else chip.style.opacity = '0';
+      }
+      kick();
+    };
+    const onLeave = () => { hovered = -1; I = 0; if (chip) chip.style.opacity = '0'; kick(); };
+    const io = new IntersectionObserver(([en]) => { inView = en.isIntersecting; if (inView) kick(); });
+    io.observe(hero);
+    window.addEventListener('pointermove', onMove);
+    world.addEventListener('pointerdown', onDown);
+    window.addEventListener('pointerup', onUp);
+    world.addEventListener('pointerover', onOver);
+    world.addEventListener('pointerleave', onLeave);
+    world.addEventListener('wheel', onWheel, { passive: false });
+    window.addEventListener('scroll', kick, { passive: true });
+    kick();
+    return () => {
+      cancelAnimationFrame(raf); io.disconnect();
+      window.removeEventListener('pointermove', onMove);
+      world.removeEventListener('pointerdown', onDown);
+      window.removeEventListener('pointerup', onUp);
+      world.removeEventListener('pointerover', onOver);
+      world.removeEventListener('pointerleave', onLeave);
+      world.removeEventListener('wheel', onWheel);
+      window.removeEventListener('scroll', kick);
+    };
+  }, [g, plan]);
 
-  // Scroll lifts the canvas away
-  const { scrollY } = useScroll();
-  const scale = useTransform(scrollY, [0, 700], [1, 0.9]);
-  const opacity = useTransform(scrollY, [0, 650], [1, 0]);
-
-  const stopped = paused || !!reduce;
+  // restart the loop when motion is switched back on
+  useEffect(() => { window.dispatchEvent(new Event('scroll')); }, [paused]);
 
   return (
-    <section
-      onPointerDown={(e) => { downAt.current = { x: e.clientX, y: e.clientY, t: Date.now() }; }}
-      onPointerUp={(e) => {
-        const d = downAt.current;
-        downAt.current = null;
-        if (!d || Math.hypot(e.clientX - d.x, e.clientY - d.y) > 8 || Date.now() - d.t > 700) return;
-        const tile = (document.elementFromPoint(e.clientX, e.clientY) as HTMLElement | null)?.closest<HTMLElement>('[data-tile]');
-        if (tile) setOpen(Number(tile.dataset.tile));
-      }}
-      ref={wrapRef} aria-label={tx('Selected work, moving canvas', 'ნამუშევრები, მოძრავი კანვასი')} className="relative h-[100svh] min-h-[560px] overflow-hidden bg-white">
-      <motion.div className="absolute inset-0" style={{ scale, opacity }}>
-        <div
-          ref={planeRef}
-          className="absolute left-1/2 top-1/2 flex gap-2 sm:gap-2.5"
-          style={{
-            width: cols * (cols === 5 ? 110 : 175),
-            transform: 'translate(-50%, -50%) perspective(1800px) rotateX(14deg) rotateZ(-8deg) scale(1.08)',
-          }}
-        >
-          {columns.map((col, ci) => (
-            <div key={ci} className="flex-1 min-w-0 h-[150vh] overflow-hidden -my-[25vh]" style={{ marginTop: ci % 2 ? '-8vh' : undefined }}>
-              <div
-                className={col.up ? 'baked-col-up' : 'baked-col-down'}
-                style={{ ['--dur' as string]: `${col.dur}s`, animationPlayState: stopped ? 'paused' : 'running' }}
-              >
-                {[0, 1].map((dup) => (
-                  <div key={dup} className="flex flex-col gap-2 sm:gap-2.5 pb-2 sm:pb-2.5" aria-hidden={dup === 1 || undefined}>
-                    {col.tiles.map((t, ti) => (
-                      <button
-                        key={ti}
-                        type="button"
-                        tabIndex={dup === 1 ? -1 : 0}
-                        data-tile={t.n}
-                        // Keyboard activation; pointer taps are handled on the section,
-                        // since the canvas drifts between press and release
-                        onClick={(e) => { if (e.detail === 0) setOpen(t.n); }}
-                        aria-label={`${tx('Open', 'გახსენი')} ${brandName(t.brand, ka)}`}
-                        className="relative block w-full overflow-hidden rounded-md bg-[#f2f2f2] shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-transform duration-300 hover:scale-[1.04] hover:z-10 outline-none focus-visible:shadow-[0_0_0_2px_#ff4306]"
-                        style={{ minHeight: 60 }}
-                      >
-                        {t.video ? (
-                          <video
-                            src={t.video}
-                            poster={t.src}
-                            muted loop playsInline autoPlay={!stopped}
-                            preload="metadata"
-                            ref={(v) => { if (v) { stopped ? v.pause() : v.play().catch(() => {}); } }}
-                            className="block w-full h-auto"
-                          />
-                        ) : (
-                          <img
-                            {...IMG.tileLarge(t.src)}
-                            alt=""
-                            loading={ti < 2 && dup === 0 ? 'eager' : 'lazy'}
-                            decoding="async"
-                            draggable={false}
-                            className="block w-full h-auto"
-                          />
-                        )}
-                      </button>
-                    ))}
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
+    <section ref={heroRef} aria-label={tx('Selected work, moving canvas', 'ნამუშევრები, მოძრავი კანვასი')} className="relative h-[190svh]">
+      <div className="sticky top-0 h-[100svh] min-h-[560px] overflow-hidden bg-white">
+        <div ref={stageRef} className="absolute inset-0">
+          <div ref={worldRef} className="absolute inset-0 select-none cursor-default" style={{ perspective: g ? `${g.P}px` : '1100px', touchAction: 'pan-y' }}>
+            {g && plan && plan.slots.map((sl, i) => {
+              const it = pool[sl.item];
+              return (
+                <button
+                  key={i}
+                  type="button"
+                  data-slot=""
+                  data-item={sl.item}
+                  data-label={brandName(it.brand, ka)}
+                  tabIndex={-1}
+                  aria-hidden
+                  className="absolute left-1/2 top-1/2 block overflow-hidden rounded-[10px] bg-[#f2f2f2] will-change-transform"
+                  style={{ width: g.W, height: sl.h, visibility: 'hidden', opacity: 0, backfaceVisibility: 'hidden' }}
+                >
+                  <img {...IMG.tileLarge(it.src)} alt="" loading="lazy" decoding="async" draggable={false} className="pointer-events-none h-full w-full object-cover" style={{ filter: 'saturate(1.22) brightness(0.95) contrast(1.03)' }} />
+                </button>
+              );
+            })}
+          </div>
+
         </div>
-      </motion.div>
+
+        {/* the brand under the pointer */}
+        <div ref={chipRef} aria-hidden className="pointer-events-none fixed left-0 top-0 z-20 rounded-full bg-[#111] px-3 py-1 text-[12px] text-white opacity-0 transition-opacity duration-150 whitespace-nowrap" />
+
+        <h1 className="sr-only">{tx('Salome Mosiava, Senior Product Designer and Art Director', 'სალომე მოსიავა, სენიორ პროდაქტ დიზაინერი და არტ დირექტორი')}</h1>
+        {/* keyboard and screen readers get a plain list of the work */}
+        <ul className="sr-only">
+          {pool.slice(0, 24).map((it, i) => (
+            <li key={i}><button type="button" onClick={() => setOpen(i)}>{tx('Open', 'გახსენი')} {brandName(it.brand, ka)}</button></li>
+          ))}
+        </ul>
+        <div className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2"><CtaLink /></div>
+        <PauseButton className="absolute left-2 bottom-24 sm:bottom-24 z-10" />
+        <div className="pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 z-10 rounded-md bg-white/80 px-3 py-1.5 text-[13px] text-[#6f6f6f] backdrop-blur-md whitespace-nowrap">
+          <span className="hidden sm:inline">{tx('Move to look around, scroll to open', 'კურსორით დაათვალიერე, სქროლით გახსენი')}</span>
+          <span className="sm:hidden">{tx('Swipe to spin, scroll to open', 'გაასრიალე, სქროლით გახსენი')}</span>
+        </div>
+      </div>
 
       <Lightbox items={lightbox} index={open} onClose={() => setOpen(null)} onIndex={setOpen} />
-
-      {/* Soft fade into the page below */}
-      {/* Light grade over the visuals: a touch darker and richer, so the pills read */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 mix-blend-multiply bg-[#ece6e1]" />
-      <div aria-hidden className="pointer-events-none absolute inset-0 mix-blend-soft-light bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.28),rgba(0,0,0,0.12)_70%)]" />
-      <div aria-hidden className="pointer-events-none absolute inset-0 [backdrop-filter:saturate(1.25)]" />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-white" />
-
-      <h1 className="sr-only">{tx('Salome Mosiava, Senior Product Designer and Art Director', 'სალომე მოსიავა, სენიორ პროდაქტ დიზაინერი და არტ დირექტორი')}</h1>
-      {/* Centre call to action, sitting on the canvas */}
-      <motion.div className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2" style={{ opacity }}>
-        <CtaLink />
-      </motion.div>
-      <PauseButton className="absolute left-2 bottom-24 sm:bottom-24 z-10" />
-      <div className="pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 z-10 rounded-md bg-white/80 px-3 py-1.5 text-[13px] text-[#6f6f6f] backdrop-blur-md whitespace-nowrap">
-        <span className="hidden sm:inline">{tx('Move to look around, scroll to open', 'კურსორით დაათვალიერე, სქროლით გახსენი')}</span>
-        <span className="sm:hidden">{tx('Scroll to open', 'სქროლით გახსენი')}</span>
-      </div>
     </section>
   );
 }

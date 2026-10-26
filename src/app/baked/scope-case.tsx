@@ -37,7 +37,7 @@ const [LENS_BODY, LENS_GLINT] = (() => { const i = LENS.indexOf('ZM') + 1; retur
 
 /**
  * The lens follows the pointer on a spring: it leans toward it inside its
- * own gap, squashes a little with speed, and the glint rolls further, as if
+ * own gap, always a true circle, and the glint rolls further, as if
  * the lens turned to look. With no pointer it looks around on its own.
  */
 function LookingLogo() {
@@ -70,9 +70,7 @@ function LookingLogo() {
       }
       vx += ((tx - x) * K - vx * D) * dt; vy += ((ty - y) * K - vy * D) * dt;
       x += vx * dt; y += vy * dt;
-      const sp = Math.hypot(vx, vy), s = Math.min(0.05, sp * 0.0025), ang = (Math.atan2(vy, vx) * 180) / Math.PI;
-      const { x: cx, y: cy } = LENS_C;
-      lens.current?.setAttribute('transform', `translate(${x.toFixed(3)} ${y.toFixed(3)}) rotate(${ang.toFixed(1)} ${cx} ${cy}) translate(${cx} ${cy}) scale(${(1 + s).toFixed(3)} ${(1 - s).toFixed(3)}) translate(${-cx} ${-cy}) rotate(${(-ang).toFixed(1)} ${cx} ${cy})`);
+      lens.current?.setAttribute('transform', `translate(${x.toFixed(3)} ${y.toFixed(3)})`); // the lens stays a perfect circle
       glint.current?.setAttribute('transform', `translate(${((x / MAX) * ROLL).toFixed(3)} ${((y / MAX) * ROLL).toFixed(3)})`);
       raf = requestAnimationFrame(tick);
     };

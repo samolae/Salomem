@@ -236,7 +236,7 @@ export function LogoStrip({ logos, paused }: { logos: { name: string; logo: stri
           role={i < logos.length ? 'listitem' : undefined}
           aria-hidden={i >= logos.length || undefined}
           className="absolute left-1/2 top-1/2 -mt-[60px] sm:-mt-[68px] h-[120px] w-[230px] sm:h-[136px] sm:w-[250px] rounded-md bg-[#f3f3f3] flex items-center justify-center gap-3 will-change-transform"
-          style={{ visibility: 'hidden', backfaceVisibility: 'hidden' }}
+          style={{ visibility: 'hidden' }}
         >
           <span aria-hidden className="absolute right-2.5 top-2.5 h-1.5 w-1.5 rounded-full bg-[#c9c9c9]" />
           <img {...IMG.logo(c.logo)} alt="" width="40" height="40" loading="lazy" className="h-10 w-10 rounded-lg object-contain bg-white shadow-[0_1px_3px_rgba(0,0,0,0.08)]" />

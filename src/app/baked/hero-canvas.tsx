@@ -277,7 +277,7 @@ export function HeroCanvas() {
                   tabIndex={-1}
                   aria-hidden
                   className="absolute left-1/2 top-1/2 block overflow-hidden rounded-[10px] bg-[#f2f2f2] will-change-transform"
-                  style={{ width: g.W, height: sl.h, visibility: 'hidden', opacity: 0, backfaceVisibility: 'hidden' }}
+                  style={{ width: g.W, height: sl.h, visibility: 'hidden', opacity: 0 }}
                 >
                   <img {...IMG.tileLarge(it.src)} alt="" loading="lazy" decoding="async" draggable={false} className="pointer-events-none h-full w-full object-cover" style={{ filter: 'saturate(1.22) brightness(0.95) contrast(1.03)' }} />
                 </button>

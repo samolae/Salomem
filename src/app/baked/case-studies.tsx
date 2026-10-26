@@ -28,13 +28,8 @@ const DASTURI_LIVE = true;
 
 function UnispaceCover() {
   return (
-    <div className="grid h-full grid-cols-[1fr_1.35fr] bg-[#0b0d16]">
-      <div className="relative overflow-hidden">
-        <img {...IMG.caseMain(`${CLD}/v1779887428/241852566_416907023197215_4126473183608966576_n_ecyuw4.png`)} alt="" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1200ms] group-hover:scale-[1.06]" />
-      </div>
-      <div className="flex items-center justify-center p-[7%] bg-[radial-gradient(circle_at_70%_30%,#2a2f6b,#0b0d16_70%)]">
-        <img {...IMG.caseMain(unispaceLogin)} alt="" loading="lazy" decoding="async" className="w-full rounded-[8px] shadow-[0_30px_70px_-25px_rgba(0,0,0,0.8)] transition-transform duration-700 group-hover:-translate-y-1" />
-      </div>
+    <div className="flex h-full items-center justify-center p-[7%] bg-[radial-gradient(circle_at_70%_25%,#2a2f6b,#0b0d16_70%)]">
+      <img {...IMG.caseMain(unispaceLogin)} alt="" loading="lazy" decoding="async" className="max-h-full w-auto max-w-full rounded-[10px] shadow-[0_40px_90px_-30px_rgba(0,0,0,0.85)] transition-transform duration-700 ease-out group-hover:scale-[1.03]" />
     </div>
   );
 }

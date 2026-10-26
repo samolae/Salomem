@@ -91,7 +91,7 @@ const STUDIES: Study[] = [
     en: 'Brand concept, identity and live guidelines for a Georgian investment and development holding. GV Capital makes space.',
     ka: 'ბრენდის კონცეფცია, იდენტობა და ცოცხალი გაიდლაინი ქართული საინვესტიციო და განვითარების ჰოლდინგისთვის.',
     tags: [{ en: 'Branding', ka: 'ბრენდინგი' }, { en: 'Visual identity', ka: 'ვიზუალური იდენტობა' }, { en: 'Brand guidelines', ka: 'გაიდლაინი' }],
-    cover: <HoverCover img="/cases/gv/facade-1200.jpg" srcSet="/cases/gv/facade-1200.jpg 1200w, /cases/gv/facade.jpg 1920w" film="/cases/gv/facade.mp4" />,
+    cover: <HoverCover img="/cases/gv/lounge-1200.jpg" srcSet="/cases/gv/lounge-1200.jpg 1200w, /cases/gv/lounge.jpg 2400w" />,
   },
   {
     to: '/projects/fitmeal', title: 'FitMeal',

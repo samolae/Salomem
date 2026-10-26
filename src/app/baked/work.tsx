@@ -25,7 +25,7 @@ const FOLDERS: Folder[] = [
     thumbs: ['/cases/dasturi/labels/saperavi-gold.jpg', '/cases/dasturi/lineup-1000.jpg', '/cases/dasturi/labels/kisi-bordeaux.jpg'] },
   */
   { id: 'cases', to: '/work/case-studies', label: 'case_studies', en: 'Case studies', ka: 'ქეისები', countEn: '6 cases', countKa: '6 ქეისი', color: ['#ffd25e', '#f6c03a', '#e5a91d'],
-    thumbs: ['/cases/gv/reception-1200.jpg', '/cases/fitmeal/picnic-bowl-800.jpg', '/cases/dasturi/lineup-1000.jpg'] },
+    thumbs: ['/cases/gv/lounge-1200.jpg', '/cases/fitmeal/picnic-bowl-800.jpg', '/cases/dasturi/lineup-1000.jpg'] },
   { id: 'ads', to: '/work/social-media-ads', label: 'soc_media_ads', en: 'Ads', ka: 'რეკლამა', countEn: `${adsBrands.length} brands`, countKa: `${adsBrands.length} ბრენდი`, color: ['#5fd06e', '#3fb24f', '#2f9a3f'],
     thumbs: [adsTerminal1, adsBrands[0].items[2].src, adsMardi1].map((s) => cld(s, 240)) },
   { id: 'motion', to: '/work/social-media-motion', label: 'motion', en: 'Motion', ka: 'მოუშენი', countEn: `${motionReels.length} reels`, countKa: `${motionReels.length} რილსი`, color: ['#ffa35a', '#f5852d', '#e06d17'],

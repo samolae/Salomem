@@ -1,4 +1,3 @@
-import { ShowcaseRing } from '../baked/showcase-ring';
 import { Children, useState, useEffect, useRef, type ReactNode, type CSSProperties } from 'react';
 import {
   motion,
@@ -733,10 +732,6 @@ export function SchenkerCaseStudy() {
           />
         </div>
 
-        {/* ─── The screens on a turning ring ─────────────────────────── */}
-        <div className="py-10 md:py-16">
-          <ShowcaseRing screens={keyScreens.map((x) => x.src)} bg="radial-gradient(ellipse at 50% 35%, #2b3a12 0%, #0f130b 70%)" label="Schenker screens on a turning ring" />
-        </div>
 
         {/* ─── SHIPMENT FLOW ───────────────────────────────────────────── */}
         <section id="flow" className={SECTION}>

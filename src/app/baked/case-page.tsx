@@ -7,7 +7,6 @@ import { IMG } from '../lib/cld';
 import { BakedShell } from './shell';
 import { Caption, CtaLink, Lightbox, Reveal, T, type LightboxItem } from './ui';
 import { MoreCases } from './case-studies';
-import { ShowcaseRing } from './showcase-ring';
 import { CASES, caseBySlug, type CaseStudy } from './cases';
 
 /* A screenshot on its product's coloured stage, never cropped */
@@ -61,11 +60,6 @@ function CaseBody({ c }: { c: CaseStudy }) {
             </div>
           ))}
         </dl>
-      </section>
-
-      {/* The product's screens on a turning ring */}
-      <section aria-label={`${c.title} screens`} className="px-1.5 pt-1.5">
-        <Reveal><ShowcaseRing screens={c.screens.map((s) => s.src)} bg={c.stage} label={`${c.title}: ${c.screens.length} screens on a turning ring`} /></Reveal>
       </section>
 
       {/* Hero screen */}

@@ -18,7 +18,7 @@ export function ShowcaseRing({ screens, bg, label, tilt = -10 }: { screens: stri
   // enough cards to close the ring
   const cards = screens.length >= 8 ? screens : Array.from({ length: Math.ceil(8 / screens.length) * screens.length }, (_, i) => screens[i % screens.length]);
   const n = cards.length;
-  const cardW = Math.max(150, w * (w < 640 ? 0.42 : 0.26));
+  const cardW = Math.max(160, w * (w < 640 ? 0.5 : 0.34));
   const R = (cardW / 2) / Math.tan(Math.PI / n) * 1.08;
 
   useEffect(() => {

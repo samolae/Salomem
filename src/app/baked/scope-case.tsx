@@ -450,17 +450,6 @@ export function ScopeCase() {
         {/* ── 04 Web ───────────────────────────────────────────────────── */}
         <Mark no="04" name={tx('Website', 'ვებსაიტი')} line={tx('Built to sell, not to explain.', 'გაყიდვისთვის, არა ახსნისთვის.')} />
         <DiagonalScreens />
-        <div className="px-1.5 pt-1.5 grid grid-cols-1 md:grid-cols-12 gap-1.5">
-          <Rise className="md:col-span-8">
-            <img src={`${W}/results.jpg`} width={1440} height={810} alt={tx('Scope website, the results block', 'Scope-ის ვებსაიტი, შედეგების ბლოკი')} loading="lazy" decoding="async" className="block w-full h-auto rounded-[4px]" />
-          </Rise>
-          <Rise delay={0.05} className="md:col-span-4">
-            <div className="flex h-full min-h-[420px] items-center justify-center rounded-[4px] py-8" style={{ background: LIME }}>
-              <img src={`${W}/mobile-fold.jpg`} width={780} height={1688} alt={tx('Scope website on a phone', 'Scope-ის ვებსაიტი ტელეფონზე')} loading="lazy" decoding="async"
-                className="block w-[46%] min-w-[150px] h-auto rounded-[22px] border-[5px] border-black shadow-[0_40px_80px_-30px_rgba(0,0,0,0.55)]" />
-            </div>
-          </Rise>
-        </div>
 
         {/* ── Close ────────────────────────────────────────────────────── */}
         <div className="px-3 sm:px-5 lg:px-8 py-28 sm:py-40 grid grid-cols-12 gap-x-6 gap-y-8 items-end">

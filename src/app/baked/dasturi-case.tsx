@@ -7,7 +7,6 @@ import { IMG } from '../lib/cld';
 import { BakedShell } from './shell';
 import { Caption, CtaLink, Lightbox, type LightboxItem } from './ui';
 import { CASES } from './cases';
-import { ChromeLogo } from './chrome-logo';
 import { Anatomy, Construction, LabelRow, MotionStyles, Swatches } from './dasturi-motion';
 
 /*
@@ -180,14 +179,16 @@ export function DasturiCase() {
               <Link to="/work" className="inline-flex items-center gap-1.5 text-white/50 hover:text-white transition-colors">
                 <ArrowLeft size={13} /> ნამუშევრები
               </Link>
-              <span className="hidden sm:inline text-white/35">გაამოძრავე კურსორი</span>
+              <span className="hidden sm:inline text-white/35">ბრენდის იდენტობა</span>
             </Wrap>
             <div className="flex-1 flex items-center justify-center px-6 py-10">
-              <ChromeLogo
-                src={`${P}/ibex-height.png`}
-                fallback={`${P}/ibex-gold.png`}
-                alt="დასტურის ლოგო: ჯიხვი და სიტყვანიშანი, ქრომში"
-                className="h-[min(62svh,600px)] aspect-[1285/1693]"
+<video
+                src={`${P}/chrome-logo.mp4`}
+                poster={`${P}/chrome-logo.jpg`}
+                muted loop playsInline autoPlay preload="auto"
+                aria-label="დასტურის ლოგო: ჯიხვი და სიტყვანიშანი, ქრომში"
+                className="h-[min(68svh,640px)] aspect-square object-cover"
+                style={{ WebkitMaskImage: 'radial-gradient(closest-side, #000 72%, transparent 100%)', maskImage: 'radial-gradient(closest-side, #000 72%, transparent 100%)' }}
               />
             </div>
             <Wrap className="pb-8 sm:pb-10">

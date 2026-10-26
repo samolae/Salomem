@@ -35,7 +35,30 @@ function UnispaceCover() {
 }
 
 function DasturiCover() {
-  return <img src="/cases/dasturi/lineup-1000.jpg" alt="" loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]" />;
+  return (
+    <div className="flex h-full items-center justify-center bg-[#0e0e0f]">
+      <video src="/cases/dasturi/chrome-logo.mp4" poster="/cases/dasturi/chrome-logo.jpg" muted loop playsInline autoPlay preload="metadata" aria-hidden
+        className="h-full aspect-square object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]" />
+    </div>
+  );
+}
+
+/** FitMeal: a bento of the campaign, the strongest frame largest */
+function FitmealBento() {
+  const tile = (k: string, cls: string) => (
+    <div className={`relative overflow-hidden rounded-[4px] ${cls}`}>
+      <img src={`/cases/fitmeal/${k}-800.jpg`} srcSet={`/cases/fitmeal/${k}-800.jpg 800w, /cases/fitmeal/${k}-1200.jpg 1200w`} sizes="(min-width: 768px) 25vw, 50vw" alt="" loading="lazy" decoding="async"
+        className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.05]" />
+    </div>
+  );
+  return (
+    <div className="grid h-full grid-cols-4 grid-rows-2 gap-1 bg-[#F6F1E7] p-1">
+      {tile('table-salmon', 'col-span-2 row-span-2')}
+      {tile('picnic-bowl', 'row-span-2')}
+      {tile('blanket-eat', '')}
+      {tile('share', '')}
+    </div>
+  );
 }
 
 /** product work: the main screen on its own stage */
@@ -93,7 +116,7 @@ const STUDIES: Study[] = [
     en: 'A spring campaign for a healthy food brand, made entirely with AI. Real dishes, no faces, cut for the feed and for stories.',
     ka: 'საგაზაფხულო კამპანია ჯანსაღი კვების ბრენდისთვის, მთლიანად AI-ით. ნამდვილი კერძები, სახის გარეშე, ფიდისა და სთორისთვის.',
     tags: [{ en: 'AI campaign', ka: 'AI კამპანია' }, { en: 'Social media', ka: 'სოციალური მედია' }, { en: 'Art direction', ka: 'არტ დირექშენი' }],
-    cover: <HoverCover img="/cases/fitmeal/table-greek-1200.jpg" srcSet="/cases/fitmeal/table-greek-1200.jpg 1200w, /cases/fitmeal/table-greek.jpg 1856w" swap="/cases/fitmeal/table-salmon-1200.jpg" />,
+    cover: <FitmealBento />,
   },
   {
     to: '/projects/aurum', title: 'AURUM',

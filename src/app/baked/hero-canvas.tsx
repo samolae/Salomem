@@ -74,18 +74,26 @@ type Col = { phi: number; off: number; L: number };
 
 const ratioOf = (it: Item, fallback: number) => RATIO.get(it.src) ?? it.ratio ?? fallback;
 
+/** a fresh mix on every visit: random start and stride through the pool, fixed for the visit so a resize keeps it */
+const MIX = (() => {
+  if (typeof window === 'undefined') return { start: 0, step: 7 };
+  const steps = [5, 7, 11, 13, 17];
+  return { start: Math.floor(Math.random() * 997), step: steps[Math.floor(Math.random() * steps.length)] };
+})();
+
 function layout(g: Geo, pool: Item[]) {
   const nCols = Math.round(360 / (((g.W + g.GAP + 14) / g.R) * 180 / Math.PI));
   const L = g.mobile ? Math.max(1100, window.innerHeight * 2.4) : 2300 * Math.max(1, window.innerWidth / 1440);
   const cols: Col[] = [];
   const slots: Slot[] = [];
-  let pick = 0;
+  let step = MIX.step; while (pool.length % step === 0 && step > 1) step--; // keep the stride coprime so every item gets a turn
+  let pick = MIX.start % pool.length;
   for (let c = 0; c < nCols; c++) {
     cols.push({ phi: (360 / nCols) * c, off: (c * 173) % 400, L: 0 });
     let y = 0, r = c % RATIOS.length;
     while (y < L) {
       // spread the pool: a rotating pointer, stepping past neighbours' picks
-      const item = (pick = (pick + 7) % pool.length);
+      const item = (pick = (pick + step) % pool.length);
       const h = Math.round(g.W / ratioOf(pool[item], RATIOS[r % RATIOS.length]));
       if (y + h > L && y > 0) break;
       slots.push({ col: c, y, h, item });

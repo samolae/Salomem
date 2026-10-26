@@ -4,7 +4,7 @@ import { ArrowLeft, Volume2, VolumeX } from 'lucide-react';
 import { motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform } from 'motion/react';
 import { CaseHeroTarget, CaseLink } from '../components/case-transition';
 import { SEO } from '../components/seo';
-import { RevealLines, Rise } from '../components/case-motion';
+import { ClipReveal, RevealLines, Rise } from '../components/case-motion';
 import { IMG } from '../lib/cld';
 import { BakedShell } from './shell';
 import { Caption, CtaLink, Lightbox, type LightboxItem } from './ui';
@@ -242,8 +242,15 @@ function Tagline() {
   const [ref, on] = useSeen<HTMLDivElement>(0.5);
   const [run, setRun] = useState(0);
   const id = useId().replace(/:/g, '');
+  const reduce = useReducedMotion();
+  // once seen, the swoosh keeps drawing itself again every few seconds
+  useEffect(() => {
+    if (!on || reduce) return;
+    const t = window.setInterval(() => setRun((r) => r + 1), 3800);
+    return () => window.clearInterval(t);
+  }, [on, reduce]);
   return (
-    <div ref={ref} onPointerEnter={() => setRun((r) => r + 1)} className={`flex aspect-[4/3] items-center justify-center rounded-[4px] bg-[#f2f2ef] ${on ? 'ds-on' : ''}`}>
+    <div ref={ref} className={`flex aspect-[4/3] items-center justify-center rounded-[4px] bg-[#f2f2ef] ${on ? 'ds-on' : ''}`}>
       <svg viewBox={TAG_VB} className="w-[72%] h-auto overflow-visible" role="img" aria-label="Target with Scope">
         <defs>
           <mask id={`sw-${id}`} maskUnits="userSpaceOnUse" x="490" y="130" width="400" height="90">
@@ -291,6 +298,15 @@ function Reel({ src, poster, label }: { src: string; poster: string; label: stri
   );
 }
 
+/** full-bleed, revealed as it scrolls in */
+function Bleed({ children, ratio = '16/9' }: { children: React.ReactNode; ratio?: string }) {
+  return (
+    <div className="px-1.5">
+      <ClipReveal className="overflow-hidden rounded-[4px]"><div className="w-full" style={{ aspectRatio: ratio }}>{children}</div></ClipReveal>
+    </div>
+  );
+}
+
 /* ── Chapter marker ────────────────────────────────────────────────────── */
 
 function Mark({ no, name, line, dark }: { no: string; name: string; line: string; dark?: boolean }) {
@@ -317,49 +333,12 @@ const POSTS = [
 
 /** Website pages from the Figma file; shown once the exports are in */
 const W = `${P}/web`;
-const WEB = [
-  { key: 'services', h: 2535, en: 'Services', ka: 'სერვისები' },
-  { key: 'cases', h: 3311, en: 'Projects', ka: 'პროექტები' },
-  { key: 'about', h: 4027, en: 'About', ka: 'ჩვენ შესახებ' },
-  { key: 'contact', h: 2995, en: 'Contact', ka: 'კონტაქტი' },
-];
-
-/** a long page inside a frame, scrolled by the page's own scroll */
-function ScrolledPage({ src, srcSet, sizes, ratio, alt, className = '' }: { src: string; srcSet?: string; sizes?: string; ratio: number; alt: string; className?: string }) {
-  const reduce = useReducedMotion();
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start 85%', 'end 15%'] });
-  const y = useTransform(scrollYProgress, [0, 1], ['0%', `${-(1 - ratio) * 100}%`]);
-  return (
-    <div ref={ref} className={`relative overflow-hidden ${className}`}>
-      <motion.img src={src} srcSet={srcSet} sizes={sizes} alt={alt} loading="lazy" decoding="async" style={reduce ? undefined : { y }} className="absolute inset-x-0 top-0 w-full h-auto will-change-transform" />
-    </div>
-  );
-}
-
-/** a page card that scrolls through itself on hover */
-function HoverPage({ k, h, label, onOpen }: { k: string; h: number; label: string; onOpen: () => void }) {
-  const { tx } = useI18n();
-  const travel = Math.max(0, 1 - (1440 * 4) / 3 / h); // part of the page below a 3:4 window
-  return (
-    <figure>
-      <button type="button" onClick={onOpen} aria-label={`${label}, ${tx('enlarge', 'გადიდება')}`}
-        className="group relative block w-full aspect-[3/4] overflow-hidden rounded-[4px] bg-black cursor-zoom-in outline-none focus-visible:shadow-[0_0_0_2px_#9aff01]">
-        <img src={`${W}/${k}-900.jpg`} srcSet={`${W}/${k}-900.jpg 900w, ${W}/${k}.jpg 1440w`} sizes="(min-width: 768px) 25vw, 50vw" alt={label} loading="lazy" decoding="async"
-          className="absolute inset-x-0 top-0 w-full h-auto transition-transform ease-in-out group-hover:[transform:translateY(var(--t))] group-focus-visible:[transform:translateY(var(--t))]"
-          style={{ ['--t' as string]: `${-travel * 100}%`, transitionDuration: `${Math.round(2000 + travel * 6000)}ms` }} />
-      </button>
-      <figcaption className="pt-2 text-[13px] text-black/55">{label}</figcaption>
-    </figure>
-  );
-}
 
 export function ScopeCase() {
   const { tx } = useI18n();
   const [open, setOpen] = useState<number | null>(null);
   const gallery: LightboxItem[] = [
     ...POSTS.map((src, i) => ({ src, alt: tx(`Scope social post ${i + 1}`, `Scope-ის პოსტი ${i + 1}`), brand: 'Scope' })),
-    ...WEB.map((w) => ({ src: `${W}/${w.key}.jpg`, alt: tx(`Scope website, ${w.en}`, `Scope-ის ვებსაიტი, ${w.ka}`), brand: 'Scope' })),
   ];
   const facts: [string, string][] = [
     [tx('Client', 'კლიენტი'), 'Scope'],
@@ -435,29 +414,20 @@ export function ScopeCase() {
         </div>
 
         {/* ── 04 Web ───────────────────────────────────────────────────── */}
-        <Mark no="04" name={tx('Website', 'ვებსაიტი')} line={tx('The agency, page by page.', 'სააგენტო, გვერდ-გვერდ.')} />
-        <div className="px-1.5 grid grid-cols-12 gap-1.5">
-          {/* desktop home in a browser window */}
-          <Rise className="col-span-12 md:col-span-9">
-            <div className="h-full rounded-[4px] p-[3%] flex flex-col" style={{ background: INK }}>
-              <div className="flex items-center gap-1.5 rounded-t-[8px] bg-[#2b2b2b] px-3 py-2.5">
-                <span className="h-2.5 w-2.5 rounded-full bg-white/20" /><span className="h-2.5 w-2.5 rounded-full bg-white/20" /><span className="h-2.5 w-2.5 rounded-full bg-white/20" />
-                <span className="mx-auto rounded-full bg-black/40 px-4 py-0.5 text-[11px] text-white/50">scope</span>
-              </div>
-              <ScrolledPage src={`${W}/home.jpg`} srcSet={`${W}/home-900.jpg 900w, ${W}/home.jpg 1440w`} sizes="75vw" ratio={(1440 * 10 / 16) / 4529} alt={tx('Scope website, home page', 'Scope-ის ვებსაიტი, მთავარი გვერდი')} className="aspect-[16/10] rounded-b-[8px] bg-black" />
+        <Mark no="04" name={tx('Website', 'ვებსაიტი')} line={tx('Built to sell, not to explain.', 'გაყიდვისთვის, არა ახსნისთვის.')} />
+        <Bleed>
+          <img src={`${W}/fold.jpg`} width={1440} height={810} alt={tx('Scope website, the first screen', 'Scope-ის ვებსაიტი, პირველი ეკრანი')} loading="lazy" decoding="async" className="block h-full w-full object-cover" />
+        </Bleed>
+        <div className="px-1.5 pt-1.5 grid grid-cols-1 md:grid-cols-12 gap-1.5">
+          <Rise className="md:col-span-8">
+            <img src={`${W}/results.jpg`} width={1440} height={810} alt={tx('Scope website, the results block', 'Scope-ის ვებსაიტი, შედეგების ბლოკი')} loading="lazy" decoding="async" className="block w-full h-auto rounded-[4px]" />
+          </Rise>
+          <Rise delay={0.05} className="md:col-span-4">
+            <div className="flex h-full min-h-[420px] items-center justify-center rounded-[4px] py-8" style={{ background: LIME }}>
+              <img src={`${W}/mobile-fold.jpg`} width={780} height={1688} alt={tx('Scope website on a phone', 'Scope-ის ვებსაიტი ტელეფონზე')} loading="lazy" decoding="async"
+                className="block w-[46%] min-w-[150px] h-auto rounded-[22px] border-[5px] border-black shadow-[0_40px_80px_-30px_rgba(0,0,0,0.55)]" />
             </div>
           </Rise>
-          {/* the same page on a phone */}
-          <Rise delay={0.05} className="col-span-12 md:col-span-3">
-            <div className="h-full rounded-[4px] flex items-center justify-center p-[8%]" style={{ background: LIME }}>
-              <div className="w-full max-w-[260px] rounded-[30px] bg-black p-[7px] shadow-[0_40px_80px_-30px_rgba(0,0,0,0.5)]">
-                <ScrolledPage src={`${W}/mobile.jpg`} ratio={(390 * 19.5 / 9) / 5675} alt={tx('Scope website on a phone', 'Scope-ის ვებსაიტი ტელეფონზე')} className="aspect-[9/19.5] rounded-[24px] bg-black" />
-              </div>
-            </div>
-          </Rise>
-        </div>
-        <div className="px-1.5 pt-6 grid grid-cols-2 md:grid-cols-4 gap-1.5">
-          {WEB.map((w, i) => <Rise key={w.key} delay={i * 0.05}><HoverPage k={w.key} h={w.h} label={tx(w.en, w.ka)} onOpen={() => setOpen(POSTS.length + i)} /></Rise>)}
         </div>
 
         {/* ── Close ────────────────────────────────────────────────────── */}

@@ -95,7 +95,7 @@ export function LeaningPills({ className = '' }: { size?: 'sm' | 'md'; className
   const { tx } = useI18n();
   const reduce = useReducedMotion();
   const [hot, setHot] = useState<0 | 1 | null>(null);
-  const shape = 'chrome inline-flex items-center justify-center gap-2 h-12 px-6 rounded-full text-[15px] leading-none whitespace-nowrap transition-[background-color,box-shadow] duration-200 outline-none focus-visible:shadow-[0_0_0_2px_#fff,0_0_0_4px_#111]';
+  const shape = 'inline-flex items-center justify-center gap-2 h-12 px-6 rounded-full text-[15px] leading-none whitespace-nowrap transition-[background-color,box-shadow] duration-200 outline-none focus-visible:shadow-[0_0_0_2px_#fff,0_0_0_4px_#111]';
   // index 0 = left pill, 1 = right pill
   const pose = (i: 0 | 1) => {
     if (reduce || hot === null) return { x: 0, y: 0, rotate: 0, scale: 1 };
@@ -118,7 +118,7 @@ export function LeaningPills({ className = '' }: { size?: 'sm' | 'md'; className
     </motion.span>
   );
   return (
-    <div className={`inline-flex items-center gap-3 ${className}`} data-cta>
+    <div className={`inline-flex items-center gap-2 ${className}`} data-cta>
       {wrap(0,
         <a href={WA_URL} target="_blank" rel="noopener noreferrer"
           className={`${shape} bg-white text-[#111] ring-1 ring-inset ring-black/10 shadow-[0_8px_24px_-10px_rgba(0,0,0,0.3)] hover:bg-[#f6f6f6]`}>

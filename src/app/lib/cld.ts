@@ -44,7 +44,7 @@ export function responsive(src: string, widths: number[], sizes: string) {
 /* Presets by role, sized from the layouts (CSS px, 1x and 2x screens) */
 export const IMG = {
   /** Logos and avatars up to ~40px */
-  logo: (src: string) => ({ src: cld(src, 120) }),
+  logo: (src: string) => ({ src: cld(src, 160) }),
   /** Main screen inside a case card (about 65-70% of the card) */
   caseMain: (src: string) => responsive(src, [400, 640, 960, 1280], '(min-width: 1024px) 480px, 70vw'),
   /** Faded side screens inside a case card (about 40-50% of the card) */

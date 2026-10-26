@@ -20,6 +20,8 @@ export const caseRoutes = {
     import('./baked/fitmeal-case').then((m) => ({ Component: m.FitmealCase })),
   '/projects/dasturi': () =>
     import('./baked/dasturi-case').then((m) => ({ Component: m.DasturiCase })),
+  '/projects/scope': () =>
+    import('./baked/scope-case').then((m) => ({ Component: m.ScopeCase })),
 } as const;
 
 /** Home, work galleries, services and contact all share one page module */

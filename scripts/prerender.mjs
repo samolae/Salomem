@@ -41,6 +41,8 @@ const ROUTE_SOURCE = (url) =>
     ? 'src/app/baked/dasturi-case.tsx'
     : url === '/projects/fitmeal'
     ? 'src/app/baked/fitmeal-case.tsx'
+    : url === '/projects/scope'
+    ? 'src/app/baked/scope-case.tsx'
     : url === '/projects/gv-capital'
     ? 'src/app/baked/gv-case.tsx'
     : url.startsWith('/projects/')

@@ -6,6 +6,7 @@ import { CtaLink, PageIntro, Reveal, T } from './ui';
 import { IMG } from '../lib/cld';
 import { screenAurumMainHQ, schenkerSendung, unispaceLogin } from './data';
 import { useI18n } from './i18n';
+import { ScopeCover } from './scope-logo';
 
 /*
  * Case studies: product, branding and campaigns told as whole stories, laid out like
@@ -112,6 +113,13 @@ const STUDIES: Study[] = [
     cover: <HoverCover img="/cases/gv/lounge-1200.jpg" srcSet="/cases/gv/lounge-1200.jpg 1200w, /cases/gv/lounge.jpg 2400w" />,
   },
   {
+    to: '/projects/scope', title: 'Scope',
+    en: 'Logo and identity for a Georgian marketing agency: an o that is a lens, built on an 8 unit grid and carried into motion and social.',
+    ka: 'ლოგო და იდენტობა ქართული მარკეტინგული სააგენტოსთვის: o, რომელიც ლინზაა, 8 მოდულის ბადეზე, მოუშენსა და სოც. მედიაში.',
+    tags: [{ en: 'Logo design', ka: 'ლოგოს დიზაინი' }, { en: 'Visual identity', ka: 'ვიზუალური იდენტობა' }, { en: 'Motion', ka: 'მოუშენი' }, { en: 'Social media', ka: 'სოციალური მედია' }],
+    cover: <ScopeCover />,
+  },
+  {
     to: '/projects/fitmeal', title: 'FitMeal',
     en: 'A spring campaign for a healthy food brand, made entirely with AI. Real dishes, no faces, cut for the feed and for stories.',
     ka: 'საგაზაფხულო კამპანია ჯანსაღი კვების ბრენდისთვის, მთლიანად AI-ით. ნამდვილი კერძები, სახის გარეშე, ფიდისა და სთორისთვის.',
@@ -148,7 +156,7 @@ const STUDIES: Study[] = [
   },
 ];
 
-const FILTERS = ['UX/UI', 'Branding', 'Visual identity', 'Brand guidelines', 'Packaging', 'AI campaign', 'Social media', 'Art direction'];
+const FILTERS = ['UX/UI', 'Branding', 'Logo design', 'Visual identity', 'Brand guidelines', 'Packaging', 'AI campaign', 'Social media', 'Motion', 'Art direction'];
 
 /** Holy Motors style tag: a thin outlined pill, filled when chosen */
 const tagCls = (on: boolean) =>

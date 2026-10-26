@@ -4,28 +4,51 @@ import { useI18n } from './i18n';
 import { BookButton } from './booking';
 import { T } from './ui';
 
-/** The name set edge to edge: font size fitted to the container width */
+/** The name set edge to edge in a variable font whose weight breathes from
+ *  hairline to black and back (3s, ease-in-out, alternating). The size is
+ *  fitted to the widest moment, the black weight, so it never overflows. */
+const NAME_FONT = '"Unbounded", ' + T.display;
+const NAME_CSS = `
+@keyframes name-wght { from { font-variation-settings: "wght" 200; } to { font-variation-settings: "wght" 900; } }
+.name-breathe { animation: name-wght 3s ease-in-out -0.3s infinite alternate; }
+@media (prefers-reduced-motion: reduce) { .name-breathe { animation: none; font-variation-settings: "wght" 900; } }
+`;
 function FullWidthName() {
   const box = useRef<HTMLDivElement>(null);
   const txt = useRef<HTMLSpanElement>(null);
   useEffect(() => {
+    // the font is only needed here, so it loads with this section
+    if (!document.querySelector('link[data-name-font]')) {
+      const l = document.createElement('link');
+      l.rel = 'stylesheet'; l.dataset.nameFont = '';
+      l.href = 'https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap';
+      document.head.appendChild(l);
+    }
     const b = box.current, t = txt.current;
     if (!b || !t) return;
     const fit = () => {
+      // measure at the black weight, the widest the word ever gets
+      const anim = t.style.animation;
+      t.style.animation = 'none';
+      t.style.fontVariationSettings = '"wght" 900';
       t.style.fontSize = '100px';
       const avail = b.clientWidth - parseFloat(getComputedStyle(b).paddingLeft) * 2;
       t.style.fontSize = `${(100 * avail) / t.scrollWidth}px`;
+      t.style.fontVariationSettings = '';
+      t.style.animation = anim;
     };
     fit();
     const ro = new ResizeObserver(fit);
     ro.observe(b);
+    document.fonts?.load('900 100px Unbounded').then(fit).catch(() => {});
     document.fonts?.ready.then(fit);
     return () => ro.disconnect();
   }, []);
   return (
     <div ref={box} aria-hidden className="-mt-6 sm:-mt-10 px-3 sm:px-4 select-none overflow-hidden">
-      <span ref={txt} className="block whitespace-nowrap leading-[0.82] text-[#111] text-center"
-        style={{ fontFamily: T.display, fontWeight: 900, fontSize: '8.4vw', letterSpacing: '-0.02em', width: 'max-content' }}>
+      <style>{NAME_CSS}</style>
+      <span ref={txt} className="name-breathe mx-auto block whitespace-nowrap leading-[0.9] text-[#111] text-center"
+        style={{ fontFamily: NAME_FONT, fontSize: '8.4vw', letterSpacing: '-0.02em', width: 'max-content' }}>
         Salome Mosiava
       </span>
     </div>

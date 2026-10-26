@@ -85,62 +85,7 @@ function Film({ src, poster, className = '' }: { src: string; poster: string; cl
   );
 }
 
-/* ── The Active Interval: hover or tap and the emerald gap opens ─────── */
-function ActiveInterval() {
-  const { tx } = useI18n();
-  const reduce = useReducedMotion();
-  const [open, setOpen] = useState(false);
-  const t = reduce ? { duration: 0 } : { duration: 0.32, ease: [0.2, 0.7, 0.2, 1] as const };
-  return (
-    <Wrap>
-      <button type="button" onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)} onClick={() => setOpen((o) => !o)} aria-pressed={open}
-        className="group block w-full rounded-[10px] p-6 sm:p-10 text-left outline-none focus-visible:shadow-[0_0_0_2px_#0A6670]" style={{ background: FIELD }}>
-        <div className="flex h-[200px] sm:h-[280px] items-stretch">
-          <div className="flex-[3] rounded-l-[4px] p-5 sm:p-7 flex flex-col justify-end" style={{ background: CARBON }}>
-            <div className="text-white text-[22px] sm:text-[34px] leading-[1]" style={{ fontWeight: 800, letterSpacing: '-0.01em' }}>GV CAPITAL</div>
-          </div>
-          <motion.div className="relative" style={{ background: EMERALD }} animate={{ width: open ? 34 : 20 }} transition={t} />
-          <motion.div className="flex-[2] rounded-r-[4px] p-5 sm:p-7 flex flex-col justify-end" style={{ background: CARBON }} animate={{ flexGrow: open ? 2.6 : 2 }} transition={t}>
-            <motion.div className="text-white/80 text-[13px] sm:text-[15px] leading-[1.3]" animate={{ opacity: open ? 1 : 0, y: open ? 0 : 8 }} transition={t}>
-              {tx('Industrial & Logistics', 'ინდუსტრია და ლოჯისტიკა')}
-            </motion.div>
-          </motion.div>
-        </div>
-        <div className="mt-4 flex items-center justify-between text-[13px] text-[#16232A]/70">
-          <span>{tx('20px at rest, 34px when it opens, 320ms', '20px მშვიდ მდგომარეობაში, 34px გახსნისას, 320ms')}</span>
-          <span className="hidden sm:inline">{tx('Hover to open the interval', 'მიიტანე კურსორი')}</span>
-        </div>
-      </button>
-    </Wrap>
-  );
-}
 
-/* ── Colour by proportion ─────────────────────────────────────────────── */
-function Proportions({ dark }: { dark?: boolean }) {
-  const { tx } = useI18n();
-  const parts = [
-    { p: 60, en: 'Mineral beige', ka: 'მინერალური ბეჟი', role: tx('Space, the open field', 'სივრცე, ღია ველი'), bg: FIELD, ink: CARBON },
-    { p: 25, en: 'Carbon black', ka: 'ნახშირისფერი', role: tx('Structure, the holding layer', 'სტრუქტურა, ჰოლდინგის შრე'), bg: CARBON, ink: '#fff' },
-    { p: 10, en: 'GV emerald', ka: 'GV ზურმუხტისფერი', role: tx('The interval, the decision', 'შუალედი, გადაწყვეტილება'), bg: EMERALD, ink: '#fff' },
-    { p: 5, en: 'Blaze orange', ka: 'ნარინჯისფერი', role: tx('Signal: wayfinding, the main action', 'სიგნალი: ნავიგაცია, მთავარი ქმედება'), bg: ORANGE, ink: '#fff' },
-  ];
-  return (
-    <Wrap>
-      <div className="flex h-[140px] sm:h-[180px] overflow-hidden rounded-[8px] ring-1 ring-inset ring-black/5">
-        {parts.map((x) => <div key={x.en} className="h-full" style={{ flexGrow: x.p, flexBasis: 0, background: x.bg }} />)}
-      </div>
-      <div className="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-5">
-        {parts.map((x) => (
-          <div key={x.en}>
-            <div className="flex items-baseline gap-2"><span className="text-[28px] tabular-nums leading-none" style={{ fontWeight: 600 }}>{x.p}%</span></div>
-            <div className="mt-2 text-[15px]" style={{ fontWeight: 500 }}>{tx(x.en, x.ka)}</div>
-            <div className={`mt-1 text-[13px] leading-[1.45] ${dark ? 'text-white/60' : 'text-[#16232A]/65'}`}>{x.role}</div>
-          </div>
-        ))}
-      </div>
-    </Wrap>
-  );
-}
 
 /* ── Visual-first building blocks ─────────────────────────────────────── */
 
@@ -229,30 +174,23 @@ export function GvCase() {
         <Bleed><Photo k="reception" onOpen={setOpen} sizes="100vw" className="!rounded-none h-full" cover /></Bleed>
         <Row keys={['concrete', 'material', 'hoodie']} ratio="4/5" onOpen={setOpen} />
 
-        {/* ── 02 The system, on a carbon band ──────────────────────────── */}
-        <section className="mt-24 sm:mt-32 bg-[#16232A] text-white pb-16 sm:pb-24">
-          <Mark dark no="02" name={tx('System', 'სისტემა')} line={tx('One emerald interval opens the space. Colour by proportion.', 'ერთი ზურმუხტისფერი შუალედი ხსნის სივრცეს. ფერი პროპორციით.')} />
-          <ActiveInterval />
-          <div className="pt-10"><Proportions dark /></div>
-        </section>
-
         {/* ── 03 Holding applications ──────────────────────────────────── */}
-        <Mark no="03" name={tx('Holding', 'ჰოლდინგი')} line={tx('Paper and screen on one grid.', 'ქაღალდი და ეკრანი ერთ ბადეზე.')} />
+        <Mark no="02" name={tx('Holding', 'ჰოლდინგი')} line={tx('Paper and screen on one grid.', 'ქაღალდი და ეკრანი ერთ ბადეზე.')} />
         <Row keys={['cards', 'letterhead', 'document', 'profile']} ratio="3/4" onOpen={setOpen} />
         <Row keys={['company', 'layouts']} ratio="16/9" onOpen={setOpen} />
 
         {/* ── 04 Space ─────────────────────────────────────────────────── */}
-        <Mark no="04" name={tx('Space', 'სივრცე')} line={tx('The office becomes the idea.', 'ოფისი თავად იქცევა იდეად.')} />
+        <Mark no="03" name={tx('Space', 'სივრცე')} line={tx('The office becomes the idea.', 'ოფისი თავად იქცევა იდეად.')} />
         <Bleed><Film src={`${P}/reception.mp4`} poster={`${P}/corridor.jpg`} className="!rounded-none" /></Bleed>
         <Row keys={['corridor', 'wayfinding', 'focus-office']} ratio="3/4" onOpen={setOpen} />
         <Row keys={['lounge', 'direction']} ratio="16/9" onOpen={setOpen} />
 
         {/* ── 05 Objects ───────────────────────────────────────────────── */}
-        <Mark no="05" name={tx('Objects', 'საგნები')} line={tx('The mark holds up on every material.', 'ნიშანი ყველა მასალაზე მუშაობს.')} />
+        <Mark no="04" name={tx('Objects', 'საგნები')} line={tx('The mark holds up on every material.', 'ნიშანი ყველა მასალაზე მუშაობს.')} />
         <Row keys={['folder', 'packaging', 'hardhat', 'uniform']} ratio="3/4" onOpen={setOpen} />
 
         {/* ── 06 First vertical ────────────────────────────────────────── */}
-        <Mark no="06" name={tx('Industrial & Logistics', 'ინდუსტრია და ლოჯისტიკა')} line={tx('The first vertical, the first proof.', 'პირველი მიმართულება, პირველი მტკიცებულება.')} />
+        <Mark no="05" name={tx('Industrial & Logistics', 'ინდუსტრია და ლოჯისტიკა')} line={tx('The first vertical, the first proof.', 'პირველი მიმართულება, პირველი მტკიცებულება.')} />
         <Bleed><Film src={`${P}/facade.mp4`} poster={`${P}/facade.jpg`} className="!rounded-none" /></Bleed>
         <div className="px-1.5 pt-1.5 grid grid-cols-1 md:grid-cols-12 gap-1.5">
           <Rise className="md:col-span-4"><div className="aspect-[3/4] overflow-hidden rounded-[4px]"><Film src={`${P}/flags.mp4`} poster={`${P}/flags.jpg`} className="!rounded-none" /></div></Rise>
@@ -263,7 +201,7 @@ export function GvCase() {
         </div>
 
         {/* ── 07 Social ────────────────────────────────────────────────── */}
-        <Mark no="07" name={tx('Social', 'სოციალური მედია')} line={tx('Claim, proof, next move.', 'მტკიცება, საბუთი, შემდეგი ნაბიჯი.')} />
+        <Mark no="06" name={tx('Social', 'სოციალური მედია')} line={tx('Claim, proof, next move.', 'მტკიცება, საბუთი, შემდეგი ნაბიჯი.')} />
         <Row keys={['social-opportunities', 'social-possibility', 'social-perspective', 'social-focus']} ratio="4/5" onOpen={setOpen} />
 
         {/* ── Close ────────────────────────────────────────────────────── */}

@@ -33,22 +33,19 @@ const CS = 4 * U;            // clear space
 
 /* ── Hero: the lens looks where you look, inside its own gap ───────────── */
 
-const [LENS_BODY, LENS_GLINT] = (() => { const i = LENS.indexOf('ZM') + 1; return [LENS.slice(0, i), LENS.slice(i)]; })();
 
 /**
  * The lens follows the pointer on a spring: it leans toward it inside its
- * own gap, always a true circle, and the glint rolls further, as if
+ * own gap. The lens is solid: circle and glint move as one piece.
  * the lens turned to look. With no pointer it looks around on its own.
  */
 function LookingLogo() {
   const reduce = useReducedMotion();
   const box = useRef<HTMLDivElement>(null);
   const lens = useRef<SVGGElement>(null);
-  const glint = useRef<SVGPathElement>(null);
   useEffect(() => {
     if (reduce) return;
     const MAX = CUT_R - LENS_C.r - 0.45;    // the whole gap, less a hair
-    const ROLL = 2.4;                       // the glint travels further inside the lens
     const K = 55, D = 13.5;                 // a soft, nearly critically damped spring
     let tx = 0, ty = 0, x = 0, y = 0, vx = 0, vy = 0;
     let last = performance.now(), lastMove = -1e9, raf = 0;
@@ -71,7 +68,6 @@ function LookingLogo() {
       vx += ((tx - x) * K - vx * D) * dt; vy += ((ty - y) * K - vy * D) * dt;
       x += vx * dt; y += vy * dt;
       lens.current?.setAttribute('transform', `translate(${x.toFixed(3)} ${y.toFixed(3)})`); // the lens stays a perfect circle
-      glint.current?.setAttribute('transform', `translate(${((x / MAX) * ROLL).toFixed(3)} ${((y / MAX) * ROLL).toFixed(3)})`);
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
@@ -83,7 +79,7 @@ function LookingLogo() {
     <div ref={box}>
       <svg viewBox={`0 0 ${LOGO_VB.w} ${LOGO_VB.h}`} className="block w-full h-auto overflow-visible" role="img" aria-label="Scope">
         <g fill="#fff">{LETTERS.map((d, i) => <path key={i} d={d} />)}</g>
-        <g ref={lens}><path d={LENS_BODY} fill={LIME} /><path ref={glint} d={LENS_GLINT} fill={INK} /></g>
+        <g ref={lens}><path d={LENS} fill={LIME} /></g>
       </svg>
     </div>
   );

@@ -14,6 +14,7 @@ import { AurumSEO } from './seo';
 import { RevealLines, Rise, TiltIn, ClipReveal, CountUp, DrawRule, Marquee, ReadProgress } from './case-motion';
 import aurumSvgPaths from '../../imports/svg-wj69ey5ojj';
 import { IMG } from '../lib/cld';
+import { ShowcaseRing } from '../baked/showcase-ring';
 
 /* ─── Screens (Cloudinary) ───────────────────────────────────────── */
 const screenExchange = 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1774041357/470258954933ae7f3b3615ad0fe2098ae46160f5_2_wvsmro.webp';
@@ -611,6 +612,11 @@ export function AurumCaseStudy() {
             className="text-[26px] tracking-[-0.01em] text-white/25 md:text-[34px]"
             items={['UX research', 'UI design', 'Design system', 'Prototyping', 'FinTech', 'Crypto exchange', 'Web & Mobile', 'Figma', 'Protopie', '196 screens', 'Trust-first UX']}
           />
+        </div>
+
+        {/* ─── The screens on a turning ring ─────────────────────────── */}
+        <div className="pb-10 md:pb-16">
+          <ShowcaseRing screens={[...FEATURED_SCREENS, ...FLOW_SCREENS].map((x) => x.src)} bg="radial-gradient(ellipse at 50% 35%, #2a2108 0%, #0d0d10 65%)" label="AURUM screens on a turning ring" />
         </div>
 
         {/* ─── 02 CHALLENGE & SOLUTION ─────────────────────────────── */}

@@ -1,3 +1,4 @@
+import { ShowcaseRing } from '../baked/showcase-ring';
 import { useState, useEffect, useRef, type ReactNode } from 'react';
 import {
   motion, AnimatePresence, useScroll, useTransform, useReducedMotion,
@@ -864,6 +865,11 @@ export function UnispaceCaseStudy() {
           speed={55}
           className={`py-8 md:py-12 text-[clamp(1.5rem,1.1rem+1.6vw,2.5rem)] tracking-[-0.02em] ${isDark ? 'text-white/25' : 'text-zinc-900/25'}`}
         />
+
+        {/* ─── The screens on a turning ring ─────────────────────────── */}
+        <div className="pb-10 md:pb-16">
+          <ShowcaseRing screens={[imgLogin, imgFormsTable, imgRegister, imgUploadFlow]} bg="radial-gradient(ellipse at 50% 35%, #232a6b 0%, #0b0d16 70%)" label="Unispace screens on a turning ring" />
+        </div>
 
         {/* ─── 04 KEY SCREENS ─────────────────────────────────────── */}
         <Section id="screens">

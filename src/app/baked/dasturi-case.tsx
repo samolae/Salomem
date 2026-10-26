@@ -69,7 +69,7 @@ function Photo({ k, onOpen, sizes = FULL, cover }: { k: string; onOpen: (i: numb
 
 /* Elegant type: small light headings, short justified columns */
 const H2 = 'text-[30px] sm:text-[44px] leading-[1.12] tracking-[-0.01em]';
-const COL = 'text-[15px] leading-[1.8] text-justify [hyphens:manual] [text-align-last:left] tracking-[0.01em]';
+const COL = 'text-[15px] leading-[1.8] text-left tracking-[0.01em]';
 
 /* Browsers have no Georgian hyphenation, so justified lines open wide gaps.
    Offer soft breaks at the common syllable boundary V-CV, keeping at least
@@ -214,7 +214,6 @@ export function DasturiCase() {
                 ნიშნად ავირჩიეთ კავკასიური ჯიხვი: მშვიდი, ამაყი დგომით და მომრგვალებული რქებით.
               </p>
               <div className="lg:col-start-4 lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6">
-                <Col className="!max-w-none">დასტური ქართული ღვინის ახალი ბრენდია. სახელი თანხმობას ნიშნავს, სიტყვას, რომლითაც სუფრაზე სადღეგრძელოს ადასტურებენ.</Col>
                 <Col className="!max-w-none">ოქროსფერი პანელი, შავი არშია და წითელი ჯვარი ხუთ ჯიშს ერთ ოჯახად აერთიანებს, თითოეული კი თავისი ღვინის ფერს ინარჩუნებს.</Col>
               </div>
             </div>

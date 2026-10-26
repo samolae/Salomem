@@ -6,27 +6,13 @@ import { HeroCanvas } from './hero-canvas';
 import { useMotionPause } from './shell';
 import { AreuliBlock, Caption, CtaLink, FadeImg, LogoStrip, Reveal, T } from './ui';
 import { clients, experiences, spotlights, spotlightsKa } from './content';
+import { StudyCover } from './case-studies';
 import { useI18n } from './i18n';
 import {
-  adsBrands, adsCarmall1, adsGino4, adsTerminal1, screenAurumMainHQ, schenkerSendung, unispaceLogin,
+  adsBrands, adsCarmall1, adsGino4, adsTerminal1,
 } from './data';
 
 const AVATAR = '/avatar.jpg';
-
-/* A screenshot set on a coloured stage, for the UX/UI case tiles */
-function ScreenStage({ src, bg, alt, eager }: { src: string; bg: string; alt: string; eager?: boolean }) {
-  return (
-    <div className="relative overflow-hidden rounded-md p-[8%]" style={{ background: bg }}>
-      <img
-        {...IMG.caseMain(src)}
-        alt={alt}
-        loading={eager ? 'eager' : 'lazy'}
-        decoding="async"
-        className="block w-full h-auto rounded-md shadow-[0_24px_60px_rgba(0,0,0,0.35)] transition-transform duration-700 ease-out group-hover:scale-[1.02]"
-      />
-    </div>
-  );
-}
 
 function Tile({ children }: { children: ReactNode }) {
   return <Reveal>{children}</Reveal>;
@@ -44,7 +30,7 @@ export function HomeContent() {
 
   const left: ReactNode[] = [
     <CaseLink key="aurum" to="/projects/aurum" cardId="home-aurum" className="group block">
-      <ScreenStage src={screenAurumMainHQ} bg="linear-gradient(160deg,#16130b,#0b0b0f 70%)" alt="AURUM crypto exchange dashboard" eager />
+      <StudyCover to="/projects/aurum" />
       <Caption title="AURUM" sub={tx('Crypto exchange · 196 screens, 64+ components', 'კრიპტოგაცვლა · 196 ეკრანი, 64+ კომპონენტი')} tag={caseTag} />
     </CaseLink>,
     <Link key="motion" to={to('/work/social-media-motion')} className="group block">
@@ -85,7 +71,7 @@ export function HomeContent() {
       <Caption title="FitMeal" sub={tx('Spring campaign made with AI', 'საგაზაფხულო კამპანია AI-ით')} tag={tx('Case study', 'ქეისი')} />
     </CaseLink>,
     <CaseLink key="unispace" to="/projects/unispace" cardId="home-unispace" className="group block">
-      <ScreenStage src={unispaceLogin} bg="linear-gradient(160deg,#dfe6ff,#eef1ff)" alt="Unispace student management platform" />
+      <StudyCover to="/projects/unispace" />
       <Caption title="Unispace" sub={tx('Student management · multi-role EdTech', 'სტუდენტების მართვა · მრავალროლიანი EdTech')} tag={caseTag} />
     </CaseLink>,
   ];
@@ -116,7 +102,7 @@ export function HomeContent() {
       />
     </Link>,
     <CaseLink key="schenker" to="/projects/schenker" cardId="home-schenker" className="group block">
-      <ScreenStage src={schenkerSendung} bg="linear-gradient(160deg,#e8ecd8,#d4dab8)" alt="Schenker shipment form" />
+      <StudyCover to="/projects/schenker" />
       <Caption title="Schenker" sub={tx('Enterprise logistics · form systems & tracking', 'კორპორატიული ლოჯისტიკა · ფორმების სისტემა და თრექინგი')} tag={caseTag} />
     </CaseLink>,
     <Link key="carmall" to={to('/work/social-media-ads')} className="group block">

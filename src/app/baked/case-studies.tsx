@@ -293,3 +293,10 @@ export function MoreCases({ current }: { current: string }) {
     </section>
   );
 }
+
+/** a case's own cover (the same one the case grid shows), for use elsewhere */
+export function StudyCover({ to }: { to: string }) {
+  const st = STUDIES.find((x) => x.to === to);
+  if (!st) return null;
+  return <PeekCover cover={st.cover} peek={st.peek} className="relative aspect-[16/11] overflow-hidden rounded-md" />;
+}

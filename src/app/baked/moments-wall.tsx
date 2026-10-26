@@ -37,6 +37,17 @@ export const MomentsWall = ({ items, isDark, onOpen }: Props) => {
   const glowRef = useRef<HTMLDivElement>(null);
   const tileRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const [cols, setCols] = useState(4);
+  const [width, setWidth] = useState(0);
+  // height / width of every visual, learned as each one loads (4:5 until then)
+  const ratios = useRef(new Map<string, number>());
+  const [, setRatioTick] = useState(0);
+  const learn = (src: string, w: number, h: number) => {
+    if (!w || !h) return;
+    const r = h / w;
+    if (Math.abs((ratios.current.get(src) ?? 0) - r) < 0.001) return;
+    ratios.current.set(src, r);
+    setRatioTick((t) => t + 1);
+  };
   const reduceMotion = useReducedMotion();
 
   // Physics state lives in a ref: nothing here should re-render React
@@ -58,6 +69,7 @@ export const MomentsWall = ({ items, isDark, onOpen }: Props) => {
     if (!el) return;
     const ro = new ResizeObserver(([entry]) => {
       const w = entry.contentRect.width;
+      setWidth(w);
       baseCols.current = Math.max(3, Math.min(9, Math.round(w / 112)));
       setCols(baseCols.current);
     });
@@ -208,13 +220,35 @@ export const MomentsWall = ({ items, isDark, onOpen }: Props) => {
 
   const tileBg = isDark ? 'bg-[#121318]' : 'bg-[#f2f2f2]';
 
+  // Balanced masonry: each visual goes to the shortest column, then every
+  // column is eased to the same height (tiles crop a touch, never distort),
+  // so the wall ends on one clean line
+  const cw = width > 0 ? (width - GAP * (cols - 1)) / cols : 160;
+  const columns: { i: number; h: number }[][] = Array.from({ length: cols }, () => []);
+  const sums = new Array(cols).fill(0);
+  items.forEach((v, i) => {
+    const h = cw * (ratios.current.get(v.src) ?? 1.25);
+    let c = 0;
+    for (let k = 1; k < cols; k++) if (sums[k] < sums[c]) c = k;
+    columns[c].push({ i, h });
+    sums[c] += h + (columns[c].length > 1 ? GAP : 0);
+  });
+  const filled = sums.filter((x) => x > 0);
+  const target = filled.length ? filled.reduce((a, b) => a + b, 0) / filled.length : 0;
+  const heightOf = (c: number, h: number) => {
+    const n = columns[c].length;
+    const content = sums[c] - GAP * (n - 1);
+    const want = target - GAP * (n - 1);
+    return content > 0 ? h * (want / content) : h;
+  };
+
   return (
     <div
       ref={wallRef}
       onPointerMove={onPointerMove}
       onPointerLeave={onPointerLeave}
-      className="relative"
-      style={{ columnCount: cols, columnGap: GAP }}
+      className="relative flex items-start"
+      style={{ gap: GAP }}
     >
       {/* Soft light inside the void */}
       <div
@@ -229,18 +263,20 @@ export const MomentsWall = ({ items, isDark, onOpen }: Props) => {
           willChange: 'transform, opacity',
         }}
       />
-      {items.map((v, i) => (
+      {columns.map((col, c) => (
+        <div key={c} className="flex min-w-0 flex-1 flex-col" style={{ gap: GAP }}>
+        {col.map(({ i, h }) => { const v = items[i]; return (
         <button
           key={`${v.brandName}-${v.src}`}
           ref={(el) => { tileRefs.current[i] = el; }}
           onClick={() => onOpen(i)}
           data-cursor={v.type === 'video' ? 'play' : 'expand'}
           aria-label={`${v.brandName.split(' · ')[0]}, ${v.type === 'video' ? 'play reel' : `open visual ${i + 1}`}`}
-          className={`group relative block w-full mb-[6px] break-inside-avoid overflow-hidden rounded-md ${v.whiteBg ? 'bg-white border border-[#eee]' : tileBg} focus-visible:shadow-[0_0_0_2px_rgba(255,67,6,0.9)] outline-none`}
-          style={{ willChange: 'transform', transformOrigin: 'center' }}
+          className={`group relative block w-full overflow-hidden rounded-md ${v.whiteBg ? 'bg-white border border-[#eee]' : tileBg} focus-visible:shadow-[0_0_0_2px_rgba(255,67,6,0.9)] outline-none`}
+          style={{ willChange: 'transform', transformOrigin: 'center', height: width ? heightOf(c, h) : undefined }}
         >
           {v.type === 'video' ? (
-            <video src={v.src} autoPlay loop muted playsInline className="block w-full h-auto" />
+            <video src={v.src} autoPlay loop muted playsInline onLoadedMetadata={(e) => learn(v.src, e.currentTarget.videoWidth, e.currentTarget.videoHeight)} className="block w-full h-full object-cover" />
           ) : (
             <img
               {...IMG.tile(v.src)}
@@ -248,7 +284,8 @@ export const MomentsWall = ({ items, isDark, onOpen }: Props) => {
               loading="eager"
               decoding="async"
               draggable={false}
-              className={`block w-full h-auto transition-transform duration-500 ease-out group-hover:scale-[1.04]`}
+              onLoad={(e) => learn(v.src, e.currentTarget.naturalWidth, e.currentTarget.naturalHeight)}
+              className={`block w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]`}
             />
           )}
           {/* Brand label on hover */}
@@ -265,6 +302,8 @@ export const MomentsWall = ({ items, isDark, onOpen }: Props) => {
             </span>
           )}
         </button>
+        ); })}
+        </div>
       ))}
     </div>
   );

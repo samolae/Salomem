@@ -28,7 +28,13 @@ export const videoFrame = (src: string, offset = '40p', width = 480) => {
 };
 
 /** full: what opens large; brand/logo: shown in the enlarged view */
-type Item = { src: string; full: string; fullVideo?: boolean; brand: string; logo?: string };
+type Item = { src: string; full: string; fullVideo?: boolean; brand: string; logo?: string; video?: string; ratio?: number };
+
+/** The same reel, scaled down for a small tile */
+const smallVideo = (src: string) => src.replace('/video/upload/f_auto,q_auto/', '/video/upload/w_360,c_limit,q_auto,f_auto/');
+
+/** width / height of each picture once it has loaded, so tiles take its shape */
+const RATIO = new Map<string, number>();
 
 function usePool(): Item[] {
   return useMemo(() => {
@@ -38,6 +44,7 @@ function usePool(): Item[] {
     const spots: Item[] = spotlights.map((s) => ({ src: s.img, full: s.img, brand: s.title }));
     const frames: Item[] = motionReels.map((r, i) => ({
       src: videoFrame(r.src, i % 2 ? '35p' : '60p', 600), full: r.src, fullVideo: true, brand: r.brand, logo: (r as { logoImg?: string }).logoImg,
+      video: smallVideo(r.src), ratio: 9 / 16,
     }));
     // interleave so neighbours differ in kind
     const out: Item[] = [];
@@ -56,15 +63,18 @@ function usePool(): Item[] {
 /* ── geometry, as on the reference ───────────────────────────────────── */
 type Geo = { W: number; R: number; Z: number; P: number; GAP: number; mobile: boolean };
 const geo = (): Geo => {
-  if (window.innerWidth < 760) return { W: 150, R: 560, Z: 330, P: 760, GAP: 22, mobile: true };
+  // tiles a little smaller than the reference, so more of the work fits on the drum
+  if (window.innerWidth < 760) return { W: 112, R: 560, Z: 330, P: 760, GAP: 14, mobile: true };
   const s = Math.max(1, window.innerWidth / 1440);
-  return { W: Math.round(250 * Math.min(s, 1.35)), R: Math.round(900 * s), Z: Math.round(540 * s), P: Math.round(1100 * s), GAP: Math.round(34 * Math.min(s, 1.35)), mobile: false };
+  return { W: Math.round(180 * Math.min(s, 1.35)), R: Math.round(900 * s), Z: Math.round(540 * s), P: Math.round(1100 * s), GAP: Math.round(22 * Math.min(s, 1.35)), mobile: false };
 };
 const RATIOS = [1.33, 1, 0.8, 1.6, 1.25, 0.75];
 type Slot = { col: number; y: number; h: number; item: number };
 type Col = { phi: number; off: number; L: number };
 
-function layout(g: Geo, poolSize: number) {
+const ratioOf = (it: Item, fallback: number) => RATIO.get(it.src) ?? it.ratio ?? fallback;
+
+function layout(g: Geo, pool: Item[]) {
   const nCols = Math.round(360 / (((g.W + g.GAP + 14) / g.R) * 180 / Math.PI));
   const L = g.mobile ? Math.max(1100, window.innerHeight * 2.4) : 2300 * Math.max(1, window.innerWidth / 1440);
   const cols: Col[] = [];
@@ -74,15 +84,30 @@ function layout(g: Geo, poolSize: number) {
     cols.push({ phi: (360 / nCols) * c, off: (c * 173) % 400, L: 0 });
     let y = 0, r = c % RATIOS.length;
     while (y < L) {
-      const h = Math.round(g.W / RATIOS[r % RATIOS.length]);
-      if (y + h > L && y > 0) break;
       // spread the pool: a rotating pointer, stepping past neighbours' picks
-      slots.push({ col: c, y, h, item: (pick = (pick + 7) % poolSize) });
+      const item = (pick = (pick + 7) % pool.length);
+      const h = Math.round(g.W / ratioOf(pool[item], RATIOS[r % RATIOS.length]));
+      if (y + h > L && y > 0) break;
+      slots.push({ col: c, y, h, item });
       y += h + g.GAP; r++;
     }
     cols[c].L = y; // the column wraps on its own length
   }
   return { cols, slots };
+}
+
+/** once real picture shapes are known, re-stack each column so every tile shows its whole picture */
+function restack(g: Geo, plan: ReturnType<typeof layout>, pool: Item[], els: HTMLElement[]) {
+  const ys = plan.cols.map(() => 0);
+  plan.slots.forEach((sl, i) => {
+    const r = RATIO.get(pool[sl.item].src) ?? pool[sl.item].ratio;
+    if (r) sl.h = Math.round(g.W / r);
+    sl.y = ys[sl.col];
+    ys[sl.col] += sl.h + g.GAP;
+    const el = els[i];
+    if (el) el.style.height = `${sl.h}px`;
+  });
+  plan.cols.forEach((c, i) => { c.L = ys[i]; });
 }
 
 const clamp = (v: number) => Math.max(0, Math.min(1, v));
@@ -114,13 +139,13 @@ export function HeroCanvas() {
       const key = `${ng.W}|${ng.R}|${ng.mobile}|${Math.round(window.innerHeight / 100)}`;
       if (key === last) return;
       last = key;
-      setG(ng); setPlan(layout(ng, pool.length));
+      setG(ng); setPlan(layout(ng, pool));
     };
     build();
     const onResize = () => { clearTimeout(t); t = window.setTimeout(build, 120); };
     window.addEventListener('resize', onResize);
     return () => { window.removeEventListener('resize', onResize); clearTimeout(t); };
-  }, [pool.length]);
+  }, [pool]);
 
   // the frame loop
   useEffect(() => {
@@ -128,6 +153,22 @@ export function HeroCanvas() {
     if (!world || !hero || !stage || !g || !plan) return;
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const els = Array.from(world.querySelectorAll<HTMLElement>('[data-slot]'));
+    const vids = els.map((e) => e.querySelector('video'));
+    // pictures report their real shape as they load; re-stack once per frame at most
+    let restackQueued = false;
+    const onLoad = (e: Event) => {
+      const t = e.target as HTMLElement;
+      if (!(t instanceof HTMLImageElement) || !t.naturalWidth) return;
+      const key = t.closest<HTMLElement>('[data-slot]')?.dataset.src;
+      if (!key) return;
+      const r = t.naturalWidth / t.naturalHeight;
+      if (Math.abs((RATIO.get(key) ?? 0) - r) < 0.01) return;
+      RATIO.set(key, r);
+      if (!restackQueued) { restackQueued = true; requestAnimationFrame(() => { restackQueued = false; restack(g, plan, pool, els); kick(); }); }
+    };
+    world.addEventListener('load', onLoad, true);
+    // anything already loaded before the listener
+    els.forEach((el) => { const im = el.querySelector('img'); if (im?.complete && im.naturalWidth) onLoad({ target: im } as unknown as Event); });
     const lift = new Float32Array(els.length);
     const start = performance.now();
     let prev = start, raf = 0;
@@ -167,7 +208,7 @@ export function HeroCanvas() {
         const z = g.Z - g.R * Math.cos(th);
         let l = ((sl.y + col.off - drift) % col.L + col.L) % col.L - col.L / 2 + sl.h / 2 + py;
         if (Math.abs(l) > (g.mobile ? col.L / 2 + 200 : yGate)) shown = false;
-        if (!shown) { if (el.style.visibility !== 'hidden') el.style.visibility = 'hidden'; continue; }
+        if (!shown) { if (el.style.visibility !== 'hidden') el.style.visibility = 'hidden'; const v = vids[i]; if (v && !v.paused) v.pause(); continue; }
         // reveal on load, from the middle outward
         const rev = reduced ? 1 : 1 - (1 - clamp((n - 0.1 - (Math.abs(s) / 90) * 0.9) / 0.9)) ** 3;
         lift[i] += (+(i === hovered && q < 0.2) - lift[i]) * (1 - 0.001 ** dt);
@@ -181,6 +222,13 @@ export function HeroCanvas() {
         el.style.visibility = 'visible';
         el.style.transform = `translate3d(${(u - g.W / 2).toFixed(1)}px,${(l - sl.h / 2).toFixed(1)}px,${d.toFixed(1)}px) rotateY(${(-s).toFixed(2)}deg)`;
         el.style.opacity = Math.max(0, f).toFixed(3);
+        // reels play while they face you
+        const v = vids[i];
+        if (v) {
+          const want = !motionOff && f > 0.4 && Math.abs(s) < 70;
+          if (want && v.paused) { if (v.preload !== 'auto') v.preload = 'auto'; v.play().catch(() => {}); }
+          else if (!want && !v.paused) v.pause();
+        }
       }
       stage.style.opacity = (1 - smooth(clamp((q - 0.45) / 0.4))).toFixed(3);
       const settling = Math.abs(vel) > 0.01 || Math.abs(qt - q) > 0.001 || n < 2.5;
@@ -253,9 +301,11 @@ export function HeroCanvas() {
       world.removeEventListener('pointerover', onOver);
       world.removeEventListener('pointerleave', onLeave);
       world.removeEventListener('wheel', onWheel);
+      world.removeEventListener('load', onLoad, true);
+      vids.forEach((v) => v?.pause());
       window.removeEventListener('scroll', kick);
     };
-  }, [g, plan]);
+  }, [g, plan, pool]);
 
   // restart the loop when motion is switched back on
   useEffect(() => { window.dispatchEvent(new Event('scroll')); }, [paused]);
@@ -274,12 +324,17 @@ export function HeroCanvas() {
                   data-slot=""
                   data-item={sl.item}
                   data-label={brandName(it.brand, ka)}
+                  data-src={it.src}
                   tabIndex={-1}
                   aria-hidden
                   className="absolute left-1/2 top-1/2 block overflow-hidden rounded-[10px] bg-[#f2f2f2] will-change-transform"
                   style={{ width: g.W, height: sl.h, visibility: 'hidden', opacity: 0 }}
                 >
-                  <img {...IMG.tileLarge(it.src)} alt="" loading="lazy" decoding="async" draggable={false} className="pointer-events-none h-full w-full object-cover" style={{ filter: 'saturate(1.22) brightness(0.95) contrast(1.03)' }} />
+                  {it.video ? (
+                    <video src={it.video} poster={it.src} muted loop playsInline preload="none" aria-hidden className="pointer-events-none h-full w-full object-cover" style={{ filter: 'saturate(1.22) brightness(0.95) contrast(1.03)' }} />
+                  ) : (
+                    <img {...IMG.tileLarge(it.src)} alt="" loading="lazy" decoding="async" draggable={false} className="pointer-events-none h-full w-full object-cover" style={{ filter: 'saturate(1.22) brightness(0.95) contrast(1.03)' }} />
+                  )}
                 </button>
               );
             })}

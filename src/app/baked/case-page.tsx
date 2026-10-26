@@ -6,6 +6,7 @@ import { AurumSEO, SchenkerSEO, UnispaceSEO } from '../components/seo';
 import { IMG } from '../lib/cld';
 import { BakedShell } from './shell';
 import { Caption, CtaLink, Lightbox, Reveal, T, type LightboxItem } from './ui';
+import { MoreCases } from './case-studies';
 import { CASES, caseBySlug, type CaseStudy } from './cases';
 
 /* A screenshot on its product's coloured stage, never cropped */
@@ -205,19 +206,7 @@ function CaseBody({ c }: { c: CaseStudy }) {
 
       <div className="pt-12 flex justify-center"><CtaLink /></div>
 
-      {/* Next cases */}
-      <section aria-labelledby="next" className="px-1.5 pt-28">
-        <SectionLabel>More case studies</SectionLabel>
-        <h2 id="next" className="sr-only">More case studies</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-1.5">
-          {others.map((o) => (
-            <CaseLink key={o.slug} to={o.path} cardId={`next-${c.slug}-${o.slug}`} className="group block">
-              <Stage src={o.hero} bg={o.stage} alt={`${o.title} interface`} />
-              <Caption title={o.title} sub={o.subtitle} tag="Case study" />
-            </CaseLink>
-          ))}
-        </div>
-      </section>
+      <MoreCases current={`/projects/${c.slug}`} />
 
       <Lightbox items={lightbox} index={open} onClose={() => setOpen(null)} onIndex={setOpen} />
     </>

@@ -10,6 +10,7 @@ import { BakedShell } from './shell';
 import { Caption, CtaLink, Lightbox, type LightboxItem } from './ui';
 import { CASES } from './cases';
 import { useI18n } from './i18n';
+import { MoreCases } from './case-studies';
 import { MotionStyles, useSeen } from './dasturi-motion';
 import { LOGO_VB, LETTERS, LENS } from './scope-vectors';
 import { TAG, TAG_VB, SWOOSH } from './scope-tag';
@@ -333,31 +334,30 @@ const POSTS = [
 /** Website pages from the Figma file; shown once the exports are in */
 const W = `${P}/web`;
 
-/** the site's pages laid on a diagonal, each column drifting on its own */
-const COLS = [
-  ['home', 'cases'], ['services', 'about'], ['contact', 'home'], ['cases', 'services'], ['about', 'contact'],
-];
+/** the site's pages laid on a diagonal, packed edge to edge, each column drifting */
+const PAGES = ['home', 'services', 'cases', 'about', 'contact'];
+const COLS = Array.from({ length: 9 }, (_, c) => Array.from({ length: 5 }, (_, i) => PAGES[(c * 2 + i) % PAGES.length]));
 function DiagonalScreens() {
   const { tx } = useI18n();
   const reduce = useReducedMotion();
   return (
     <div className="px-1.5">
       <ClipReveal className="overflow-hidden rounded-[4px]">
-        <div className="relative w-full aspect-[16/10] overflow-hidden" style={{ background: INK }} role="img" aria-label={tx('Scope website pages laid out on a diagonal', 'Scope-ის ვებსაიტის გვერდები დიაგონალზე')}>
-          <style>{`@keyframes sc-up{to{transform:translateY(-50%)}}@keyframes sc-down{from{transform:translateY(-50%)}to{transform:translateY(0)}}`}</style>
-          <div className="absolute left-1/2 top-1/2 flex gap-[2.2%] w-[150%]"
-            style={{ transform: 'translate(-50%,-50%) rotateX(52deg) rotateZ(-38deg)', transformStyle: 'preserve-3d' }}>
+        <div className="relative w-full aspect-[4/3] md:aspect-[21/9] overflow-hidden" style={{ background: INK }} role="img" aria-label={tx('Scope website pages laid out on a diagonal', 'Scope-ის ვებსაიტის გვერდები დიაგონალზე')}>
+          <style>{`@keyframes sc-up{from{transform:translateY(0)}to{transform:translateY(-50%)}}@keyframes sc-down{from{transform:translateY(-50%)}to{transform:translateY(0)}}`}</style>
+          <div className="absolute left-1/2 top-1/2 flex items-center gap-[1.2%] w-[175%] md:w-[135%]"
+            style={{ transform: 'translate(-50%,-50%) rotateX(52deg) rotateZ(-38deg)' }}>
             {COLS.map((pages, c) => (
-              <div key={c} className="flex-1 min-w-0" style={{ marginTop: `${(c % 2) * 18}%` }}>
-                <div className="flex flex-col gap-[6%]" style={reduce ? undefined : { animation: `${c % 2 ? 'sc-down' : 'sc-up'} ${70 + c * 9}s linear infinite` }}>
+              <div key={c} className="flex-1 min-w-0">
+                <div className="flex flex-col gap-[1.2%]" style={reduce ? undefined : { animation: `${c % 2 ? 'sc-down' : 'sc-up'} ${90 + (c % 4) * 12}s linear ${-c * 7}s infinite` }}>
                   {[...pages, ...pages].map((k, i) => (
-                    <img key={i} src={`${W}/${k}-900.jpg`} alt="" loading="lazy" decoding="async" className="block w-full h-auto rounded-[6px] shadow-[0_30px_60px_-20px_rgba(0,0,0,0.7)]" />
+                    <img key={i} src={`${W}/${k}-900.jpg`} alt="" loading="lazy" decoding="async" className="block w-full h-auto rounded-[4px]" />
                   ))}
                 </div>
               </div>
             ))}
           </div>
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_55%,rgba(30,30,30,0.75))]" />
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_60%,rgba(30,30,30,0.6))]" />
         </div>
       </ClipReveal>
     </div>
@@ -456,19 +456,7 @@ export function ScopeCase() {
         </div>
       </article>
 
-      <section aria-labelledby="more" className="px-1.5 pt-24">
-        <h2 id="more" className="px-0.5 pb-3 text-[14px] text-[#6f6f6f]">{tx('More case studies', 'სხვა ქეისები')}</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-x-1.5">
-          {CASES.map((o) => (
-            <CaseLink key={o.slug} to={o.path} cardId={`scope-${o.slug}`} className="group block">
-              <div className="overflow-hidden rounded-md" style={{ background: o.stage, padding: '7%' }}>
-                <img {...IMG.caseSide(o.hero)} alt={`${o.title} interface`} loading="lazy" decoding="async" className="block w-full h-auto rounded-md shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-transform duration-700 group-hover:scale-[1.015]" />
-              </div>
-              <Caption title={o.title} sub={o.subtitle} tag="Case study" />
-            </CaseLink>
-          ))}
-        </div>
-      </section>
+      <MoreCases current="/projects/scope" />
 
       <Lightbox items={gallery} index={open} onClose={() => setOpen(null)} onIndex={setOpen} />
     </BakedShell>

@@ -6,6 +6,7 @@ import { SEO } from '../components/seo';
 import { IMG } from '../lib/cld';
 import { BakedShell } from './shell';
 import { Caption, CtaLink, Lightbox, type LightboxItem } from './ui';
+import { MoreCases } from './case-studies';
 import { CASES } from './cases';
 import { Anatomy, Construction, LabelRow, MotionStyles, Swatches } from './dasturi-motion';
 
@@ -290,20 +291,7 @@ export function DasturiCase() {
         </div>
       </article>
 
-      {/* Other cases */}
-      <section aria-labelledby="more" className="px-1.5 pt-24">
-        <h2 id="more" className="px-0.5 pb-3 text-[14px] text-[#6f6f6f]">სხვა ქეისები</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-x-1.5">
-          {CASES.map((o) => (
-            <CaseLink key={o.slug} to={o.path} cardId={`dasturi-${o.slug}`} className="group block">
-              <div className="overflow-hidden rounded-md" style={{ background: o.stage, padding: '7%' }}>
-                <img {...IMG.caseSide(o.hero)} alt={`${o.title} interface`} loading="lazy" decoding="async" className="block w-full h-auto rounded-md shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-transform duration-700 group-hover:scale-[1.015]" />
-              </div>
-              <Caption title={o.title} sub={o.subtitle} tag="Case study" />
-            </CaseLink>
-          ))}
-        </div>
-      </section>
+      <MoreCases current="/projects/dasturi" />
 
       <Lightbox items={gallery} index={open} onClose={() => setOpen(null)} onIndex={setOpen} />
     </BakedShell>

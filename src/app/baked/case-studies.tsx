@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router';
 import { Eye } from 'lucide-react';
 import { CaseLink } from '../components/case-transition';
@@ -15,12 +15,50 @@ import { ScopeCover } from './scope-logo';
  * tags. Filters appear once there is more than one case to sort.
  */
 
+/** Holy Motors style: a dash before "View case" that turns into an eye on hover */
+function ViewCase({ small }: { small?: boolean }) {
+  const { tx } = useI18n();
+  return (
+    <span className={`inline-flex items-center gap-3 whitespace-nowrap text-[#111] ${small ? 'text-[13px]' : 'text-[14px]'}`}>
+      <span aria-hidden className="relative flex h-5 w-8 items-center justify-end">
+        <span className="absolute right-0 h-px w-8 bg-current origin-right transition-transform duration-300 ease-out group-hover:scale-x-0 group-focus-visible:scale-x-0" />
+        <Eye size={small ? 16 : 18} className="absolute right-0 opacity-0 scale-50 transition-[opacity,transform] duration-300 delay-100 ease-out group-hover:opacity-100 group-hover:scale-100 group-focus-visible:opacity-100 group-focus-visible:scale-100" />
+      </span>
+      {tx('View case', 'ქეისის ნახვა')}
+    </span>
+  );
+}
+
+/** cover with a capsule picture that springs out and follows the cursor */
+function PeekCover({ cover, peek, className }: { cover: React.ReactNode; peek: string; className: string }) {
+  const cap = useRef<HTMLDivElement>(null);
+  const move = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType !== 'mouse' || !cap.current) return;
+    const r = e.currentTarget.getBoundingClientRect();
+    cap.current.style.transform = `translate3d(${e.clientX - r.left}px, ${e.clientY - r.top}px, 0)`;
+  };
+  return (
+    <div className="relative" onPointerMove={move}>
+      <div className={className}>{cover}</div>
+      <div ref={cap} aria-hidden className="pointer-events-none absolute left-0 top-0 z-10 transition-transform duration-300 ease-out [@media(hover:none)]:hidden" style={{ transform: 'translate3d(50%, 50%, 0)' }}>
+        <div className="-translate-x-1/2 -translate-y-1/2">
+          <div className="w-[clamp(110px,13vw,190px)] aspect-[7/12] overflow-hidden rounded-full bg-[#ddd] shadow-[0_30px_60px_-20px_rgba(0,0,0,0.55)] opacity-0 scale-[0.35] -rotate-[10deg] transition-[opacity,transform] duration-500 ease-[cubic-bezier(.2,1.5,.4,1)] group-hover:opacity-100 group-hover:scale-100 group-hover:rotate-0">
+            <img src={peek} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 type Study = {
   to: string;
   title: string;
   en: string; ka: string;
   tags: { en: string; ka: string }[];
   cover: React.ReactNode;
+  /** a tall picture that pops out under the cursor on hover */
+  peek: string;
 };
 
 /** Dasturi is hidden until its case is finished */
@@ -111,6 +149,7 @@ const STUDIES: Study[] = [
     ka: 'ბრენდის კონცეფცია, იდენტობა და ცოცხალი გაიდლაინი ქართული საინვესტიციო და განვითარების ჰოლდინგისთვის.',
     tags: [{ en: 'Branding', ka: 'ბრენდინგი' }, { en: 'Visual identity', ka: 'ვიზუალური იდენტობა' }, { en: 'Brand guidelines', ka: 'გაიდლაინი' }],
     cover: <HoverCover img="/cases/gv/lounge-1200.jpg" srcSet="/cases/gv/lounge-1200.jpg 1200w, /cases/gv/lounge.jpg 2400w" />,
+    peek: '/cases/gv/corridor-1200.jpg',
   },
   {
     to: '/projects/scope', title: 'Scope',
@@ -118,6 +157,7 @@ const STUDIES: Study[] = [
     ka: 'ლოგო და იდენტობა ქართული მარკეტინგული სააგენტოსთვის: o, რომელიც ლინზაა, 8 მოდულის ბადეზე, მოუშენსა და სოც. მედიაში.',
     tags: [{ en: 'Logo design', ka: 'ლოგოს დიზაინი' }, { en: 'Visual identity', ka: 'ვიზუალური იდენტობა' }, { en: 'Motion', ka: 'მოუშენი' }, { en: 'Social media', ka: 'სოციალური მედია' }],
     cover: <ScopeCover />,
+    peek: '/cases/scope/casting.jpg',
   },
   {
     to: '/projects/fitmeal', title: 'FitMeal',
@@ -125,6 +165,7 @@ const STUDIES: Study[] = [
     ka: 'საგაზაფხულო კამპანია ჯანსაღი კვების ბრენდისთვის, მთლიანად AI-ით. ნამდვილი კერძები, სახის გარეშე, ფიდისა და სთორისთვის.',
     tags: [{ en: 'AI campaign', ka: 'AI კამპანია' }, { en: 'Social media', ka: 'სოციალური მედია' }, { en: 'Art direction', ka: 'არტ დირექშენი' }],
     cover: <FitmealBento />,
+    peek: '/cases/fitmeal/floor-tall-800.jpg',
   },
   {
     to: '/projects/aurum', title: 'AURUM',
@@ -132,6 +173,7 @@ const STUDIES: Study[] = [
     ka: 'კრიპტოგაცვლა ყოველდღიური ინვესტორისთვის: რეგისტრაცია, ვაჭრობა და საფულე ერთ მშვიდ, სანდო ინტერფეისში.',
     tags: [UX, { en: 'Product design', ka: 'პროდუქტის დიზაინი' }, { en: 'Fintech', ka: 'ფინტექი' }],
     cover: <ScreensCover bg="linear-gradient(160deg,#17130a,#0a0a0d 70%)" glow="rgba(212,166,60,0.35)" screens={[`${CLD}/v1774016554/exchange_ggykpz.webp`, `${CLD}/v1774016548/login-_au5gne.webp`, screenAurumMainHQ]} />,
+    peek: `${CLD}/v1774016548/login-_au5gne.webp`,
   },
   ...(DASTURI_LIVE ? [{
     to: '/projects/dasturi', title: 'Dasturi',
@@ -139,6 +181,7 @@ const STUDIES: Study[] = [
     ka: 'იდენტობა, ეტიკეტები და შეფუთვა ქართული ღვინის ბრენდისთვის: წრეებზე აგებული ჯიხვი და ერთი ეტიკეტის სისტემა ხუთი ჯიშისთვის.',
     tags: [{ en: 'Branding', ka: 'ბრენდინგი' }, { en: 'Packaging', ka: 'შეფუთვა' }, { en: 'Visual identity', ka: 'ვიზუალური იდენტობა' }],
     cover: <DasturiCover />,
+    peek: '/cases/dasturi/saperavi-1000.jpg',
   }] : []),
   {
     to: '/projects/schenker', title: 'Schenker',
@@ -146,6 +189,7 @@ const STUDIES: Study[] = [
     ka: 'კორპორატიული ლოჯისტიკის პლატფორმა: გზავნილები, მხარეები და დოკუმენტები ისე, რომ გუნდი უფრო სწრაფად მუშაობდეს.',
     tags: [UX, { en: 'Enterprise', ka: 'კორპორატიული' }, { en: 'Logistics', ka: 'ლოჯისტიკა' }],
     cover: <ScreensCover bg="linear-gradient(160deg,#eef2df,#cfd8ac)" screens={[`${CLD}/v1774041604/d4d1e42280872aa3079a1b940b29790994d2b241_jcnrf6.webp`, `${CLD}/v1774041563/78c6f45f9246b9cea5c0520f003d32cb8fb21ff1_kmea60.webp`, schenkerSendung]} />,
+    peek: schenkerSendung,
   },
   {
     to: '/projects/unispace', title: 'Unispace',
@@ -153,6 +197,7 @@ const STUDIES: Study[] = [
     ka: 'სტუდენტების მართვის პლატფორმა რამდენიმე როლისთვის: სტუდენტები, ლექტორები და ადმინისტრაცია ერთ პროდუქტში.',
     tags: [UX, { en: 'EdTech', ka: 'EdTech' }, { en: 'Web app', ka: 'ვებ აპლიკაცია' }],
     cover: <UnispaceCover />,
+    peek: unispaceLogin,
   },
 ];
 
@@ -193,13 +238,10 @@ export function CaseGrid({ initialTag }: { initialTag?: string }) {
         {shown.map((s) => (
           <Reveal key={s.to}>
             <CaseLink to={s.to} cardId={`cases-${s.title.toLowerCase()}`} className="group block">
-              <div className="relative aspect-[16/11] overflow-hidden rounded-md">{s.cover}</div>
+              <PeekCover cover={s.cover} peek={s.peek} className="relative aspect-[16/11] overflow-hidden rounded-md" />
               <div className="mt-4 flex items-baseline justify-between gap-4 px-0.5">
                 <h2 className="text-[22px] sm:text-[26px] leading-[1.1] text-[#111]" style={{ fontFamily: T.display, fontWeight: 900 }}>{s.title}</h2>
-                <span className="inline-flex items-center gap-2 whitespace-nowrap text-[14px] text-[#111]">
-                  <Eye size={16} className="transition-transform duration-300 group-hover:scale-110" />
-                  <span className="relative after:absolute after:left-0 after:-bottom-0.5 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-current after:transition-transform after:duration-300 group-hover:after:scale-x-100">{tx('View case', 'ქეისის ნახვა')}</span>
-                </span>
+                <ViewCase />
               </div>
               <p className="mt-2 px-0.5 max-w-[560px] text-[14px] leading-[1.55] text-[#6f6f6f] line-clamp-2">{tx(s.en, s.ka)}</p>
               <div className="mt-3 px-0.5 flex flex-wrap gap-1.5">
@@ -225,5 +267,29 @@ export function CaseStudiesContent({ initialTag }: { initialTag?: string }) {
       <CaseGrid initialTag={initialTag} />
       <div className="pt-16 flex justify-center"><CtaLink /></div>
     </>
+  );
+}
+
+/** "More case studies" at the end of every case: the same covers as the grid, three at a time */
+export function MoreCases({ current }: { current: string }) {
+  const { tx } = useI18n();
+  const i = STUDIES.findIndex((x) => x.to === current);
+  const rest = [...STUDIES.slice(i + 1), ...STUDIES.slice(0, Math.max(0, i))].filter((x) => x.to !== current).slice(0, 3);
+  return (
+    <section aria-labelledby="more" className="px-1.5 pt-24">
+      <h2 id="more" className="px-0.5 pb-3 text-[14px] text-[#6f6f6f]">{tx('More case studies', 'სხვა ქეისები')}</h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-x-1.5 gap-y-10">
+        {rest.map((x) => (
+          <CaseLink key={x.to} to={x.to} cardId={`more-${x.title.toLowerCase()}`} className="group block">
+            <PeekCover cover={x.cover} peek={x.peek} className="relative aspect-[16/11] overflow-hidden rounded-md" />
+            <div className="mt-3 flex items-baseline justify-between gap-4 px-0.5">
+              <h3 className="text-[18px] leading-[1.1] text-[#111]" style={{ fontFamily: T.display, fontWeight: 900 }}>{x.title}</h3>
+              <ViewCase small />
+            </div>
+            <div className="mt-1 px-0.5 text-[13px] text-[#6f6f6f]">{x.tags.slice(0, 2).map((t) => tx(t.en, t.ka)).join(' · ')}</div>
+          </CaseLink>
+        ))}
+      </div>
+    </section>
   );
 }

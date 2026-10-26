@@ -155,6 +155,18 @@ export function Construction() {
 
 /* ── 2. Wordmark anatomy: bezier points and handles ─────────────────── */
 
+// Only the points that shape the letters: long handles on the main curves,
+// one anchor per spot; the tiny serif corners stay out so it reads calmly.
+const MIN_HANDLE = 18;
+const HANDLES = KA_HANDLES.filter(([a, b, c, d]) => Math.hypot(c - a, d - b) >= MIN_HANDLE);
+const NODES = (() => {
+  const keep: number[][] = [];
+  for (const [x, y] of HANDLES.map(([a, b]) => [a, b])) {
+    if (!keep.some(([kx, ky]) => Math.hypot(kx - x, ky - y) < 14)) keep.push([x, y]);
+  }
+  return keep.filter(([x, y]) => KA_NODES.some(([nx, ny]) => Math.hypot(nx - x, ny - y) < 1.5));
+})();
+
 export function Anatomy() {
   const [ref, on] = useSeen<HTMLDivElement>(0.35);
   // crop to the Georgian wordmark with room for the notes
@@ -171,7 +183,7 @@ export function Anatomy() {
         <path d={WORD_KA} fill={IVORY} fillOpacity={0.07} fillRule="evenodd" className="ds-fade" style={{ ['--delay' as string]: '2.6s' }} />
         <path d={WORD_KA} fill="none" stroke={IVORY} strokeWidth={1.2} pathLength={1} className="ds-draw" style={{ ['--d' as string]: '2.4s', ['--delay' as string]: '.3s', vectorEffect: 'non-scaling-stroke' }} />
         <g stroke={GOLD} strokeOpacity={0.7}>
-          {KA_HANDLES.map(([x1, y1, x2, y2], i) => (
+          {HANDLES.map(([x1, y1, x2, y2], i) => (
             <g key={i} className="ds-fade" style={{ ['--delay' as string]: delay(x1) }}>
               <line x1={x1} y1={y1} x2={x2} y2={y2} style={{ vectorEffect: 'non-scaling-stroke' }} />
               <circle cx={x2} cy={y2} r={1.4} fill={GOLD} stroke="none" />
@@ -179,8 +191,8 @@ export function Anatomy() {
           ))}
         </g>
         <g fill={GOLD}>
-          {KA_NODES.map(([x, y], i) => (
-            <rect key={i} x={x - 2} y={y - 2} width={4} height={4} className="ds-pop" style={{ ['--delay' as string]: delay(x) }} />
+          {NODES.map(([x, y], i) => (
+            <rect key={i} x={x - 2.5} y={y - 2.5} width={5} height={5} className="ds-pop" style={{ ['--delay' as string]: delay(x) }} />
           ))}
         </g>
       </svg>

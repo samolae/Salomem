@@ -36,9 +36,9 @@ function UnispaceCover() {
 
 function DasturiCover() {
   return (
-    <div className="flex h-full items-center justify-center bg-[#0e0e0f]">
+    <div className="flex h-full items-center justify-center bg-[#111111]">
       <video src="/cases/dasturi/chrome-logo.mp4" poster="/cases/dasturi/chrome-logo.jpg" muted loop playsInline autoPlay preload="metadata" aria-hidden
-        className="h-full aspect-square object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]" />
+        className="h-full aspect-square object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]" style={{ mixBlendMode: 'lighten' }} />
     </div>
   );
 }

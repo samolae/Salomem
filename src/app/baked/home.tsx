@@ -38,7 +38,6 @@ const DASTURI_LIVE = false;
 export function HomeContent() {
   const { paused } = useMotionPause();
   const { tx, to, ka } = useI18n();
-  const fitmeal = adsBrands[0];
   const brandCount = adsBrands.length;
   const caseTag = tx('Case study', 'ქეისი');
   const adsTag = tx('Ads', 'რეკლამა');
@@ -75,16 +74,16 @@ export function HomeContent() {
         {tx('Art Director, Scope', 'არტ დირექტორი, Scope')}
       </div>
     </div>,
-    <Link key="fitmeal" to={to('/work/social-media-ads')} className="group block">
+    <CaseLink key="fitmeal" to="/projects/fitmeal" cardId="home-fitmeal" className="group block">
       <div className="grid grid-cols-2 gap-1.5 items-start">
-        {fitmeal.items.slice(0, 4).map((it, i) => (
-          <div key={i} className="relative overflow-hidden rounded-md bg-[#f2f2f2]">
-            <FadeImg src={it.src} sizes="tile" className="block w-full h-auto transition-transform duration-700 group-hover:scale-[1.03]" />
+        {['picnic-bowl', 'table-greek', 'blanket-eat', 'share'].map((k) => (
+          <div key={k} className="relative overflow-hidden rounded-md bg-[#efe9dd] aspect-[1400/1738]">
+            <img src={`/cases/fitmeal/${k}-800.jpg`} alt="" width="800" height="993" loading="lazy" decoding="async" className="block w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]" />
           </div>
         ))}
       </div>
-      <Caption title="FitMeal" sub={tx('AI content for social', 'AI კონტენტი სოციალური მედიისთვის')} tag={adsTag} />
-    </Link>,
+      <Caption title="FitMeal" sub={tx('Spring campaign made with AI', 'საგაზაფხულო კამპანია AI-ით')} tag={tx('Case study', 'ქეისი')} />
+    </CaseLink>,
     <CaseLink key="unispace" to="/projects/unispace" cardId="home-unispace" className="group block">
       <ScreenStage src={unispaceLogin} bg="linear-gradient(160deg,#dfe6ff,#eef1ff)" alt="Unispace student management platform" />
       <Caption title="Unispace" sub={tx('Student management · multi-role EdTech', 'სტუდენტების მართვა · მრავალროლიანი EdTech')} tag={caseTag} />

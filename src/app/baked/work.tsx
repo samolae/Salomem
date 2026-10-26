@@ -79,6 +79,7 @@ function FolderCard({ f, open, onOpen }: { f: Folder; open: boolean; onOpen: (id
 const FULL_CASES = [
   // Dasturi hidden for now:
   // { to: '/projects/dasturi', title: 'Dasturi', subEn: 'Georgian wine brand · identity, labels, packaging', subKa: 'ქართული ღვინის ბრენდი · იდენტობა, ეტიკეტები, შეფუთვა', img: '/cases/dasturi/lineup-1000.jpg', bg: '#191A17', local: true },
+  { to: '/projects/fitmeal', title: 'FitMeal', subEn: 'Spring campaign made with AI · art direction', subKa: 'საგაზაფხულო კამპანია AI-ით · არტ დირექშენი', img: '/cases/fitmeal/picnic-bowl-800.jpg', bg: '#F6F1E7', local: true },
   { to: '/projects/aurum', title: 'AURUM', subEn: 'Crypto exchange · B2C fintech', subKa: 'კრიპტოგაცვლა · B2C ფინტექი', img: screenAurumMainHQ, bg: 'linear-gradient(160deg,#16130b,#0b0b0f 70%)' },
   { to: '/projects/schenker', title: 'Schenker', subEn: 'Logistics platform · enterprise UX', subKa: 'ლოჯისტიკის პლატფორმა · კორპორატიული UX', img: schenkerSendung, bg: 'linear-gradient(160deg,#e8ecd8,#d4dab8)' },
   { to: '/projects/unispace', title: 'Unispace', subEn: 'Student management · EdTech', subKa: 'სტუდენტების მართვა · EdTech', img: unispaceLogin, bg: 'linear-gradient(160deg,#dfe6ff,#eef1ff)' },

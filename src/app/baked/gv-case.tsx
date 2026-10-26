@@ -60,22 +60,24 @@ const SHOTS: Shot[] = [
 const idx = (k: string) => SHOTS.findIndex((s) => s.key === k);
 
 /* editorial text, as on the other cases */
-const SERIF = '"Newsreader", "Noto Serif Georgian", Georgia, serif';
+/** the home page type: Avenir Next Georgian for everything */
+const SERIF = 'inherit';
 const LABEL = 'text-[12px] uppercase tracking-[0.06em] text-[#16232A]/70';
-const HEAD = 'text-[26px] sm:text-[30px] leading-[1.15] tracking-[-0.01em]';
-const BODY = 'text-[17px] sm:text-[19px] leading-[1.5] text-[#16232A]';
+const HEAD = 'text-[26px] sm:text-[32px] leading-[1.12] tracking-[-0.015em]';
+const BODY = 'text-[16px] sm:text-[17px] leading-[1.6] text-[#16232A]';
 
 function Wrap({ children, className = '' }: { children: React.ReactNode; className?: string }) {
-  return <div className={`mx-auto w-full max-w-[1240px] px-6 sm:px-10 lg:px-14 ${className}`}>{children}</div>;
+  return <div className={`w-full px-3 sm:px-5 lg:px-8 ${className}`}>{children}</div>;
 }
 
-function Chapter({ name, title, children, id }: { name: string; title: string; children: string; id: string }) {
+function Chapter({ name, title, children, id }: { no?: string; name: string; title: string; children: string; id: string }) {
+  // spread across the full width: label, heading, then the text in its own columns
   return (
-    <Wrap className="pt-28 sm:pt-36 pb-12 sm:pb-16">
-      <div className="max-w-[600px]" style={{ fontFamily: SERIF }}>
-        <div className={LABEL}>{name}</div>
-        <RevealLines as="h2" className={`mt-2 ${HEAD}`} style={{ fontWeight: 400 }}><span id={id}>{title}</span></RevealLines>
-        <Rise delay={0.1}><p className={`mt-6 ${BODY}`}>{children}</p></Rise>
+    <Wrap className="pt-24 sm:pt-32 pb-10 sm:pb-14">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-8 gap-y-3 items-start">
+        <div className={`lg:col-span-2 lg:pt-3 ${LABEL}`}>{name}</div>
+        <RevealLines as="h2" className={`lg:col-span-4 ${HEAD}`} style={{ fontWeight: 500 }}><span id={id}>{title}</span></RevealLines>
+        <Rise delay={0.1} className="lg:col-span-6 lg:col-start-7 lg:pt-2"><p className={`mt-3 lg:mt-0 ${BODY} lg:columns-2 lg:gap-8`}>{children}</p></Rise>
       </div>
     </Wrap>
   );
@@ -179,9 +181,6 @@ export function GvCase() {
         keywords="GV Capital, brand identity, brand guidelines, investment holding, logistics, Georgia, Active Interval, Salome Mosiava"
         type="article"
       />
-      <link rel="preconnect" href="https://fonts.googleapis.com" />
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Noto+Serif+Georgian:wght@400;500&display=swap" />
       <CaseHeroTarget path="/projects/gv-capital" />
 
       <article className="px-1.5 pt-14 sm:pt-[52px]">
@@ -223,13 +222,13 @@ export function GvCase() {
 
           {/* ── The idea ─────────────────────────────────────────────── */}
           <Wrap className="pt-28 sm:pt-36 pb-4">
-            <div className="max-w-[600px]" style={{ fontFamily: SERIF }}>
-              <div className={LABEL}>{tx('Brand idea', 'ბრენდის იდეა')}</div>
-              <RevealLines as="h2" className={`mt-2 ${HEAD}`} style={{ fontWeight: 400 }}><span>{tx('Space that creates opportunities', 'სივრცე, რომელიც ქმნის შესაძლებლობებს')}</span></RevealLines>
-              <Rise><p className={`mt-6 ${BODY}`}>{tx(
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-8 gap-y-3 items-start">
+              <div className={`lg:col-span-2 lg:pt-3 ${LABEL}`}>{tx('Brand idea', 'ბრენდის იდეა')}</div>
+              <RevealLines as="h2" className={`lg:col-span-4 ${HEAD}`} style={{ fontWeight: 500 }}><span>{tx('Space that creates opportunities', 'სივრცე, რომელიც ქმნის შესაძლებლობებს')}</span></RevealLines>
+              <Rise className="lg:col-span-3 lg:col-start-7 lg:pt-2"><p className={`mt-3 lg:mt-0 ${BODY}`}>{tx(
                 'GV Capital builds the ground for projects, partnerships and new lines of business. The brand says it in three words, GV Capital makes space, and keeps the approved Georgian line as its public promise: space that creates opportunities.',
                 'GV Capital ქმნის ადგილს პროექტებისთვის, პარტნიორობებისთვის და ახალი ბიზნეს-მიმართულებებისთვის. ბრენდი ამას სამი სიტყვით ამბობს, GV Capital makes space, საჯარო დაპირებად კი დამტკიცებული სლოგანი რჩება: სივრცე, რომელიც ქმნის შესაძლებლობებს.')}</p></Rise>
-              <Rise delay={0.08}><p className={`mt-5 ${BODY}`}>{tx(
+              <Rise delay={0.08} className="lg:col-span-3 lg:pt-2"><p className={`mt-3 lg:mt-0 ${BODY}`}>{tx(
                 'Industrial and logistics is the first real proof. A new direction enters the brand only once the business behind it is real: no ghost icons, no placeholder promises.',
                 'ინდუსტრია და ლოჯისტიკა ამ იდეის პირველი რეალური მტკიცებულებაა. ახალი მიმართულება ბრენდში მხოლოდ მაშინ ჩნდება, როცა მის უკან ბიზნესი რეალურია: არც მოჩვენებითი აიქონები, არც ცარიელი დაპირებები.')}</p></Rise>
             </div>

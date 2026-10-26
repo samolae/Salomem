@@ -52,7 +52,7 @@ const idx = (k: string) => SHOTS.findIndex((s) => s.key === k);
 
 
 function Wrap({ children, className = '' }: { children: React.ReactNode; className?: string }) {
-  return <div className={`mx-auto w-full max-w-[1240px] px-6 sm:px-10 lg:px-14 ${className}`}>{children}</div>;
+  return <div className={`w-full px-3 sm:px-5 lg:px-8 ${className}`}>{children}</div>;
 }
 
 function Photo({ k, onOpen, sizes = '(min-width: 768px) 33vw, 100vw', className = '', cover }: { k: string; onOpen: (i: number) => void; sizes?: string; className?: string; cover?: boolean }) {
@@ -79,20 +79,20 @@ function Photo({ k, onOpen, sizes = '(min-width: 768px) 33vw, 100vw', className 
 
 /* Editorial text blocks: a small capitalised label, a quiet serif heading
    and a larger serif paragraph, set flush left across about half the page */
-const SERIF = '"Newsreader", "Noto Serif Georgian", Georgia, serif';
+/** the home page type: Avenir Next Georgian for everything */
+const SERIF = 'inherit';
 const LABEL = 'text-[12px] uppercase tracking-[0.06em] text-[#0E4B48]/80';
-const HEAD = 'text-[26px] sm:text-[30px] leading-[1.15] tracking-[-0.01em]';
-const BODY = 'text-[17px] sm:text-[19px] leading-[1.5] text-[#0E4B48]';
+const HEAD = 'text-[26px] sm:text-[32px] leading-[1.12] tracking-[-0.015em]';
+const BODY = 'text-[16px] sm:text-[17px] leading-[1.6] text-[#0E4B48]';
 
 function Chapter({ name, title, children, id }: { no?: string; name: string; title: string; children: string; id: string }) {
+  // spread across the full width: label, heading, then the text in its own columns
   return (
-    <Wrap className="pt-28 sm:pt-36 pb-12 sm:pb-16">
-      <div className="max-w-[600px]" style={{ fontFamily: SERIF }}>
-        <div className={LABEL}>{name}</div>
-        <RevealLines as="h2" className={`mt-2 ${HEAD}`} style={{ fontWeight: 400 }}>
-          <span id={id}>{title}</span>
-        </RevealLines>
-        <Rise delay={0.1}><p className={`mt-6 ${BODY}`}>{children}</p></Rise>
+    <Wrap className="pt-24 sm:pt-32 pb-10 sm:pb-14">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-8 gap-y-3 items-start">
+        <div className={`lg:col-span-2 lg:pt-3 ${LABEL}`}>{name}</div>
+        <RevealLines as="h2" className={`lg:col-span-4 ${HEAD}`} style={{ fontWeight: 500 }}><span id={id}>{title}</span></RevealLines>
+        <Rise delay={0.1} className="lg:col-span-6 lg:col-start-7 lg:pt-2"><p className={`mt-3 lg:mt-0 ${BODY} lg:columns-2 lg:gap-8`}>{children}</p></Rise>
       </div>
     </Wrap>
   );
@@ -267,9 +267,6 @@ export function FitmealCase() {
         keywords="FitMeal, AI campaign, AI visuals, food photography, social media, art direction, healthy food, Salome Mosiava"
         type="article"
       />
-      <link rel="preconnect" href="https://fonts.googleapis.com" />
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Noto+Serif+Georgian:wght@400;500&display=swap" />
       <CaseHeroTarget path="/projects/fitmeal" />
 
       <article className="px-1.5 pt-14 sm:pt-[52px]">
@@ -313,15 +310,15 @@ export function FitmealCase() {
 
           {/* ── Statement ────────────────────────────────────────────── */}
           <Wrap className="pt-28 sm:pt-36 pb-4">
-            <div className="max-w-[600px]" style={{ fontFamily: SERIF }}>
-              <div className={LABEL}>{tx('The brief', 'ბრიფი')}</div>
-              <RevealLines as="h2" className={`mt-2 ${HEAD}`} style={{ fontWeight: 400 }}>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-8 gap-y-3 items-start">
+              <div className={`lg:col-span-2 lg:pt-3 ${LABEL}`}>{tx('The brief', 'ბრიფი')}</div>
+              <RevealLines as="h2" className={`lg:col-span-4 ${HEAD}`} style={{ fontWeight: 500 }}>
                 <span>{tx('Spring that passes for a real shoot', 'გაზაფხული, რომელიც ნამდვილ გადაღებად აღიქმება')}</span>
               </RevealLines>
-              <Rise><p className={`mt-6 ${BODY}`}>{tx(
+              <Rise className="lg:col-span-3 lg:col-start-7 lg:pt-2"><p className={`mt-3 lg:mt-0 ${BODY}`}>{tx(
                 'FitMeal wanted spring on its feed: its dishes out in the sun, on a picnic blanket, at a desk, on a quiet morning. A shoot across that many settings costs days. AI let us build every one of them around the real packaging and the real menu, with real-looking dishes and not a single face.',
                 'FitMeal-ს გაზაფხული უნდოდა თავის ფიდზე: კერძები მზეზე, პიკნიკის პლედზე, სამუშაო მაგიდასთან, მშვიდ დილას. ამდენ გარემოში ფოტოსესიას დღეები სჭირდება. AI-ით თითოეული მათგანი ნამდვილი შეფუთვისა და ნამდვილი მენიუს გარშემო ავაწყვეთ, ნამდვილი კერძებით და არც ერთი სახით.')}</p></Rise>
-              <Rise delay={0.08}><p className={`mt-5 ${BODY}`}>{tx(
+              <Rise delay={0.08} className="lg:col-span-3 lg:pt-2"><p className={`mt-3 lg:mt-0 ${BODY}`}>{tx(
                 'The brief set two moods. A picnic: grass, flowers, sun, fresh and light. And a healthy spring routine: calm, morning, a book, a coffee, the meal close at hand. Every frame keeps the food as the hero and the light natural.',
                 'ბრიფში ორი განწყობა იყო. პიკნიკი: ბალახი, ყვავილები, მზე, სიახლე და სიმსუბუქე. და ჯანსაღი გაზაფხულის რუტინა: სიმშვიდე, დილა, წიგნი, ყავა და კერძი ხელთ. ყველა კადრში საკვებია მთავარი გმირი და შუქი ბუნებრივია.')}</p></Rise>
             </div>

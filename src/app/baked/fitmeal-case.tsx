@@ -32,7 +32,6 @@ const SHOTS: Shot[] = [
   { key: 'picnic-bottle', w: 1400, h: 1738, en: 'A fit body holding a FitMeal juice', ka: 'ფიტ სხეული FitMeal-ის წვენით ხელში' },
   { key: 'stripe-spread', w: 1400, h: 1738, en: 'Lunch spread on a striped blanket', ka: 'სადილი ზოლიან პლედზე' },
   { key: 'stripe-hand', w: 1400, h: 1738, en: 'A hand sets down a drink next to the bowl', ka: 'ხელი სასმელს ბოულის გვერდით დებს' },
-  { key: 'stripe-book', w: 960, h: 1184, en: 'Wrap, book and sunglasses on the blanket', ka: 'რეპი, წიგნი და სათვალე პლედზე' },
   { key: 'blanket-flat', w: 1400, h: 1738, en: 'Salmon bowl, camera and hat on a white blanket', ka: 'ორაგულის ბოული, კამერა და ქუდი თეთრ პლედზე' },
   { key: 'blanket-read', w: 1400, h: 1738, en: 'Reading on the blanket, lunch within reach', ka: 'კითხვა პლედზე, სადილი ხელთ' },
   { key: 'blanket-eat', w: 1400, h: 1738, en: 'Eating the salmon bowl, seen from behind', ka: 'ორაგულის ბოული, ზურგიდან' },
@@ -200,7 +199,7 @@ export function FitmealCase() {
 
   const facts: [string, string][] = [
     [tx('Client', 'კლიენტი'), 'FitMeal'],
-    [tx('Year', 'წელი'), '2026'],
+    [tx('Year', 'წელი'), '2025'],
     [tx('Role', 'როლი'), tx('Art direction, AI visuals', 'არტ დირექშენი, AI ვიზუალები')],
     [tx('Formats', 'ფორმატები'), '4:5, 9:16'],
   ];
@@ -305,9 +304,11 @@ export function FitmealCase() {
               'ბალახი, მინდვრის ყვავილები, პლედი და რბილი მზე. სამი პლედი, სამი პალიტრა: ვარდისფერი უჯრა, ყვითელი ზოლი და თეთრი სელი პალმის ჩრდილებში. ბოული ყოველთვის იქაა, სადაც თვალი პირველად ეცემა.')}
           </Chapter>
           <Wrap>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-1.5 sm:gap-2.5">
-              {['picnic-headphones', 'picnic-bottle', 'stripe-spread', 'stripe-hand', 'stripe-book', 'blanket-flat'].map((k, i) => (
-                <Rise key={k} delay={(i % 3) * 0.06}><Photo k={k} onOpen={setOpen} /></Rise>
+            <div className="grid grid-cols-2 md:grid-cols-6 gap-1.5 sm:gap-2.5">
+              {['picnic-headphones', 'picnic-bottle', 'stripe-spread', 'stripe-hand', 'blanket-flat'].map((k, i) => (
+                <Rise key={k} delay={(i % 3) * 0.06} className={i < 2 ? 'md:col-span-3' : i === 4 ? 'col-span-2 md:col-span-2' : 'md:col-span-2'}>
+                  <Photo k={k} onOpen={setOpen} sizes={i < 2 ? '(min-width: 768px) 50vw, 50vw' : '(min-width: 768px) 33vw, 50vw'} />
+                </Rise>
               ))}
             </div>
           </Wrap>
@@ -364,7 +365,7 @@ export function FitmealCase() {
           <Wrap className="py-28 sm:py-40">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-8 gap-y-10 items-end">
               <div className="lg:col-span-4 grid grid-cols-3 gap-4">
-                {[['21', tx('frames', 'კადრი')], ['9', tx('scenes', 'სცენა')], ['0', tx('faces', 'სახე')]].map(([n, l]) => (
+                {[['20', tx('frames', 'კადრი')], ['9', tx('scenes', 'სცენა')], ['0', tx('faces', 'სახე')]].map(([n, l]) => (
                   <div key={l}>
                     <div className="text-[44px] sm:text-[56px] leading-none tabular-nums" style={{ fontWeight: 600 }}>{n}</div>
                     <div className="mt-2 text-[13px] text-[#0E4B48]/55">{l}</div>

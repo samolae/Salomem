@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { Link } from 'react-router';
 import { ArrowLeft, Volume2, VolumeX } from 'lucide-react';
-import { useReducedMotion } from 'motion/react';
+import { motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform } from 'motion/react';
 import { CaseHeroTarget, CaseLink } from '../components/case-transition';
 import { SEO } from '../components/seo';
 import { RevealLines, Rise } from '../components/case-motion';
@@ -33,100 +33,227 @@ const CS = 4 * U;            // clear space
 
 /* ── Hero: the lens looks where you look, inside its own gap ───────────── */
 
+const [LENS_BODY, LENS_GLINT] = (() => { const i = LENS.indexOf('ZM') + 1; return [LENS.slice(0, i), LENS.slice(i)]; })();
+
+/**
+ * The lens follows the pointer on a spring: it leans toward it inside its
+ * own gap, squashes a little with speed, and the glint rolls further, as if
+ * the lens turned to look. With no pointer it looks around on its own.
+ */
 function LookingLogo() {
   const reduce = useReducedMotion();
-  const ref = useRef<HTMLDivElement>(null);
-  const [o, setO] = useState({ x: 0, y: 0 });
+  const box = useRef<HTMLDivElement>(null);
+  const lens = useRef<SVGGElement>(null);
+  const glint = useRef<SVGPathElement>(null);
   useEffect(() => {
     if (reduce) return;
-    const move = (e: PointerEvent) => {
-      const r = ref.current?.getBoundingClientRect();
-      if (!r) return;
+    const MAX = CUT_R - LENS_C.r - 0.45;    // the whole gap, less a hair
+    const ROLL = 2.4;                       // the glint travels further inside the lens
+    const K = 55, D = 13.5;                 // a soft, nearly critically damped spring
+    let tx = 0, ty = 0, x = 0, y = 0, vx = 0, vy = 0;
+    let last = performance.now(), lastMove = -1e9, raf = 0;
+    const aim = (cx: number, cy: number) => {
+      const r = box.current?.getBoundingClientRect(); if (!r) return;
       const k = r.width / LOGO_VB.w;
-      const cx = r.left + LENS_C.x * k, cy = r.top + LENS_C.y * k;
-      const ax = e.clientX - cx, ay = e.clientY - cy, d = Math.hypot(ax, ay) || 1;
-      const m = Math.min(1, d / 400) * (CUT_R - LENS_C.r - 0.6); // stays inside the cut
-      setO({ x: (ax / d) * m, y: (ay / d) * m });
+      const ax = cx - (r.left + LENS_C.x * k), ay = cy - (r.top + LENS_C.y * k);
+      const d = Math.hypot(ax, ay) || 1;
+      const reach = 1 - Math.pow(1 - Math.min(1, d / (r.width * 0.28)), 2); // eases out, full by ~a quarter of the logo
+      tx = (ax / d) * MAX * reach; ty = (ay / d) * MAX * reach;
     };
-    window.addEventListener('pointermove', move, { passive: true });
-    return () => window.removeEventListener('pointermove', move);
+    const onMove = (e: PointerEvent) => { if (e.pointerType === 'touch') return; lastMove = performance.now(); aim(e.clientX, e.clientY); };
+    const onLeave = () => { tx = 0; ty = 0; };
+    const tick = (now: number) => {
+      const dt = Math.min(0.033, (now - last) / 1000); last = now;
+      if (now - lastMove > 2500) { // nobody pointing: look around slowly
+        const t = now / 1000;
+        tx = Math.cos(t * 0.7) * MAX * 0.75; ty = Math.sin(t * 1.1) * MAX * 0.55;
+      }
+      vx += ((tx - x) * K - vx * D) * dt; vy += ((ty - y) * K - vy * D) * dt;
+      x += vx * dt; y += vy * dt;
+      const sp = Math.hypot(vx, vy), s = Math.min(0.05, sp * 0.0025), ang = (Math.atan2(vy, vx) * 180) / Math.PI;
+      const { x: cx, y: cy } = LENS_C;
+      lens.current?.setAttribute('transform', `translate(${x.toFixed(3)} ${y.toFixed(3)}) rotate(${ang.toFixed(1)} ${cx} ${cy}) translate(${cx} ${cy}) scale(${(1 + s).toFixed(3)} ${(1 - s).toFixed(3)}) translate(${-cx} ${-cy}) rotate(${(-ang).toFixed(1)} ${cx} ${cy})`);
+      glint.current?.setAttribute('transform', `translate(${((x / MAX) * ROLL).toFixed(3)} ${((y / MAX) * ROLL).toFixed(3)})`);
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    window.addEventListener('pointermove', onMove, { passive: true });
+    document.documentElement.addEventListener('pointerleave', onLeave);
+    return () => { cancelAnimationFrame(raf); window.removeEventListener('pointermove', onMove); document.documentElement.removeEventListener('pointerleave', onLeave); };
   }, [reduce]);
-  return <div ref={ref}><ScopeLogo dx={o.x} dy={o.y} className="block w-full h-auto" title="Scope" /></div>;
+  return (
+    <div ref={box}>
+      <svg viewBox={`0 0 ${LOGO_VB.w} ${LOGO_VB.h}`} className="block w-full h-auto overflow-visible" role="img" aria-label="Scope">
+        <g fill="#fff">{LETTERS.map((d, i) => <path key={i} d={d} />)}</g>
+        <g ref={lens}><path d={LENS_BODY} fill={LIME} /><path ref={glint} d={LENS_GLINT} fill={INK} /></g>
+      </svg>
+    </div>
+  );
 }
 
-/* ── 01 Construction ───────────────────────────────────────────────────── */
+/* ── 01 Construction, told in steps as you scroll ──────────────────────── */
 
-function Construction() {
+const LIGHT = (225 * Math.PI) / 180; // the glint sits on light from the upper left
+
+function ConstructionStory() {
   const { tx } = useI18n();
-  const [ref, on] = useSeen<HTMLDivElement>(0.3);
-  const m = 2 * U;
+  const reduce = useReducedMotion();
+  const sec = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: sec, offset: ['start start', 'end end'] });
+  const steps = [
+    { name: tx('Module', 'მოდული'), line: tx('x-height split in eight: 1u.', 'x-სიმაღლე რვად: 1u.') },
+    { name: tx('Lens', 'ლინზა'), line: tx('7u, centred on the x-height.', '7u, x-სიმაღლის ცენტრში.') },
+    { name: tx('One cut', 'ერთი ჭრილი'), line: tx('One circle trims the c and the p.', 'ერთი წრე ჭრის c-საც და p-საც.') },
+    { name: tx('Light', 'სინათლე'), line: tx('The glint faces light at 45°.', 'ანარეკლი 45°-ით სინათლისკენ.') },
+    { name: tx('Clear space', 'თავისუფალი სივრცე'), line: tx('4u on every side.', '4u ყველა მხარეს.') },
+    { name: tx('Mark', 'ნიშანი'), line: tx('Everything else steps back.', 'დანარჩენი უკან იხევს.') },
+  ];
+  const [step, setStep] = useState(reduce ? steps.length - 1 : 0);
+  useMotionValueEvent(scrollYProgress, 'change', (v) => { if (!reduce) setStep(Math.min(steps.length - 1, Math.floor(v * steps.length * 0.999))); });
+
+  const m = 2.2 * U;
   const L = -CS - m, T = -CS - m, W = LOGO_VB.w + 2 * (CS + m), H = DESC + 2 * (CS + m);
-  const nsk = { vectorEffect: 'non-scaling-stroke' as const };
-  const del = (s: number) => ({ ['--delay' as string]: `${s}s` });
   const cols: number[] = []; for (let x = -CS; x <= LOGO_VB.w + CS + 0.01; x += U) cols.push(x);
   const rows: number[] = []; for (let y = -CS; y <= DESC + CS + 0.01; y += U) rows.push(y);
-  const guides: [number, string][] = [[0, tx('x-height', 'x-სიმაღლე')], [LENS_C.y, tx('lens axis', 'ლინზის ღერძი')], [XH, tx('baseline', 'საბაზისო ხაზი')], [DESC, tx('descender', 'ქვედა ხაზი')]];
   const corners = [[-CS, -CS], [LOGO_VB.w, -CS], [-CS, DESC], [LOGO_VB.w, DESC]];
-  const a = Math.PI / 4; // where the gap is measured
-  const fs = 1.25;
-  const label = { fontSize: fs, fill: '#fff', fillOpacity: 0.7, fontFamily: 'Avenir Next Georgian, sans-serif' };
+  const fs = 1.3;
+  const txt = { fontSize: fs, fontFamily: 'Avenir Next Georgian, sans-serif' };
+  const ease = 'cubic-bezier(.65,0,.35,1)';
+  const show = (on: boolean, d = 0) => ({ opacity: on ? 1 : 0, transition: `opacity .7s ease ${on ? d : 0}s` });
+  const draw = (on: boolean, d = 0, dur = 1.2) => ({ strokeDasharray: 1, strokeDashoffset: on ? 0 : 1, transition: `stroke-dashoffset ${dur}s ${ease} ${on ? d : 0}s, opacity .5s` });
+  const at = (n: number) => step >= n;
+  const only = (n: number) => step === n;
+  const final = step === 5;
+  const cutR = at(2) ? CUT_R : LENS_C.r;
+  const lx = LENS_C.x + Math.cos(LIGHT) * 17, ly = LENS_C.y + Math.sin(LIGHT) * 17;
+  const gx = LENS_C.x + Math.cos(LIGHT) * 7.4, gy = LENS_C.y + Math.sin(LIGHT) * 7.4;
 
   return (
-    <div ref={ref} className={`relative ${on ? 'ds-on' : ''}`}>
-      <svg viewBox={`${L} ${T} ${W} ${H}`} className="block w-full h-auto" role="img"
-        aria-label={tx('Scope logo construction: an 8 unit x-height, the lens centred on it, one circle cutting the c and the p, and clear space of 4 units', 'Scope-ის ლოგოს კონსტრუქცია: 8 მოდულის x-სიმაღლე, მასზე ცენტრირებული ლინზა, ერთი წრე, რომელიც c-სა და p-ს ჭრის, და 4 მოდულის თავისუფალი სივრცე')}>
-        {/* module grid, 1u = x-height / 8 */}
-        <g className="ds-fade" style={del(0)} stroke="#fff" strokeOpacity={0.07}>
-          {cols.map((x) => <line key={`c${x}`} x1={x} x2={x} y1={-CS} y2={DESC + CS} style={nsk} />)}
-          {rows.map((y) => <line key={`r${y}`} y1={y} y2={y} x1={-CS} x2={LOGO_VB.w + CS} style={nsk} />)}
-        </g>
+    <section ref={sec} className="relative" style={{ height: reduce ? 'auto' : `${steps.length * 70 + 40}svh` }} aria-label={tx('How the logo is built', 'როგორ არის აგებული ლოგო')}>
+      <div className={`${reduce ? '' : 'sticky top-[52px] h-[calc(100svh-52px)]'} px-1.5 pb-1.5`}>
+        <div className="flex h-full flex-col lg:flex-row rounded-[4px] overflow-hidden text-white" style={{ background: INK }}>
+          {/* the steps */}
+          <ol className="flex lg:flex-col gap-x-5 gap-y-0 overflow-x-auto lg:overflow-visible px-5 pt-5 lg:p-8 lg:w-[300px] shrink-0 lg:justify-center [scrollbar-width:none]">
+            {steps.map((s, i) => (
+              <li key={i} className="shrink-0 lg:py-3 transition-opacity duration-500" style={{ opacity: i === step ? 1 : i < step ? 0.45 : 0.25 }}>
+                <div className="flex items-baseline gap-3 text-[13px]">
+                  <span className="tabular-nums" style={{ color: i === step ? LIME : undefined }}>{String(i + 1).padStart(2, '0')}</span>
+                  <span>{s.name}</span>
+                </div>
+                <div className={`hidden lg:block overflow-hidden pl-[30px] text-[13px] text-white/60 transition-[max-height,opacity] duration-500 ${i === step ? 'max-h-12 opacity-100 mt-1' : 'max-h-0 opacity-0'}`}>{s.line}</div>
+              </li>
+            ))}
+          </ol>
+          <p className="lg:hidden px-5 pt-2 text-[13px] text-white/60" aria-live="polite">{steps[step].line}</p>
 
-        {/* clear space */}
-        <g className="ds-fade" style={del(2.6)}>
-          {corners.map(([x, y]) => <rect key={`${x}${y}`} x={x} y={y} width={CS} height={CS} fill={LIME} fillOpacity={0.14} />)}
-          {corners.map(([x, y]) => <text key={`t${x}${y}`} x={x + CS / 2} y={y + CS / 2 + fs / 3} textAnchor="middle" {...label}>4u</text>)}
-          <rect x={-CS} y={-CS} width={LOGO_VB.w + 2 * CS} height={DESC + 2 * CS} fill="none" stroke="#fff" strokeOpacity={0.28} style={nsk} />
-        </g>
+          {/* the drawing */}
+          <div className="relative flex-1 min-h-0 flex items-center justify-center p-4 lg:p-8">
+            <svg viewBox={`${L} ${T} ${W} ${H}`} className="block w-full max-h-full" role="img"
+              aria-label={tx('Scope logo construction: 1u is an eighth of the x-height; the lens is 7u and centred on it; one circle 1u outside the lens trims the c and the p; the glint faces light from the upper left; clear space is 4u.', 'Scope-ის ლოგოს კონსტრუქცია: 1u x-სიმაღლის მერვედია; ლინზა 7u-ა და ცენტრშია; ლინზიდან 1u-ით დაშორებული ერთი წრე ჭრის c-სა და p-ს; ანარეკლი ზედა მარცხენა სინათლისკენაა; თავისუფალი სივრცე 4u-ა.')}>
 
-        {/* horizontal guides with their names */}
-        {guides.map(([y, n], i) => (
-          <g key={y}>
-            <line x1={L} x2={L + W} y1={y} y2={y} stroke="#fff" strokeOpacity={0.4} strokeWidth={0.1} pathLength={1} className="ds-draw" style={{ ['--d' as string]: '1.2s', ...del(0.3 + i * 0.12) }} />
-            <text x={L + W - 0.6} y={y - 0.5} textAnchor="end" className="ds-fade" style={del(1 + i * 0.12)} {...label}>{n}</text>
-          </g>
-        ))}
+              {/* module grid */}
+              <g stroke="#fff" strokeWidth={0.05} style={{ opacity: final ? 0 : at(0) ? 0.14 : 0, transition: 'opacity .8s' }}>
+                {cols.map((x) => <line key={`c${x}`} x1={x} x2={x} y1={-CS} y2={DESC + CS} />)}
+                {rows.map((y) => <line key={`r${y}`} y1={y} y2={y} x1={-CS} x2={LOGO_VB.w + CS} />)}
+              </g>
+              {/* the eight modules counted down the x-height */}
+              <g style={show(only(0), 0.3)}>
+                {Array.from({ length: 8 }, (_, i) => (
+                  <rect key={i} x={-3.2} y={i * U + 0.15} width={1.1} height={U - 0.3} fill={LIME} style={{ opacity: only(0) ? 1 : 0, transition: `opacity .3s ${only(0) ? 0.3 + i * 0.07 : 0}s` }} />
+                ))}
+                <text x={-4} y={XH / 2 + fs / 3} textAnchor="end" fill={LIME} {...txt}>8u</text>
+              </g>
 
-        {/* the letters: faint fill, then the outline drawing itself */}
-        <g className="ds-fade" style={del(1.6)} fill="#fff" fillOpacity={0.1}>{LETTERS.map((d, i) => <path key={i} d={d} />)}</g>
-        <g fill="none" stroke="#fff" strokeWidth={0.13}>
-          {LETTERS.map((d, i) => <path key={i} d={d} pathLength={1} className="ds-draw" style={{ ['--d' as string]: '2.4s', ...del(0.2 + i * 0.15) }} />)}
-        </g>
+              {/* guides */}
+              {[[0, tx('x-height', 'x-სიმაღლე'), 0], [XH, tx('baseline', 'საბაზისო'), 0], [LENS_C.y, tx('axis', 'ღერძი'), 1], [DESC, tx('descender', 'ქვედა'), 0]].map(([y, n, from], i) => {
+                const on = at(from as number) && !final;
+                return (
+                  <g key={i}>
+                    <line x1={L} x2={L + W} y1={y as number} y2={y as number} stroke={from ? LIME : '#fff'} strokeOpacity={from ? 0.8 : 0.45} strokeWidth={0.08} pathLength={1} style={draw(on, 0.1 * i, 1)} />
+                    <text x={L + W - 0.6} y={(y as number) - 0.5} textAnchor="end" fill="#fff" fillOpacity={0.6} {...txt} style={show(on, 0.6)}>{n as string}</text>
+                  </g>
+                );
+              })}
 
-        {/* the lens, and the one circle that cuts its neighbours */}
-        <circle cx={LENS_C.x} cy={LENS_C.y} r={CUT_R} fill="none" stroke="#fff" strokeOpacity={0.55} strokeDasharray="4 4" className="ds-fade" style={{ ...del(2.2), ...nsk }} />
-        <path d={LENS} fill={LIME} className="ds-fade" style={del(1.9)} />
-        <g stroke={INK} strokeOpacity={0.8} className="ds-fade" style={del(2.2)}>
-          <line x1={LENS_C.x - 1} x2={LENS_C.x + 1} y1={LENS_C.y} y2={LENS_C.y} style={nsk} />
-          <line x1={LENS_C.x} x2={LENS_C.x} y1={LENS_C.y - 1} y2={LENS_C.y + 1} style={nsk} />
-        </g>
+              {/* the letters: outlines while building, solid at the end */}
+              <g fill="#fff" style={{ opacity: final ? 1 : 0.1, transition: 'opacity .8s' }}>{LETTERS.map((d, i) => <path key={i} d={d} />)}</g>
+              <g fill="none" stroke="#fff" strokeWidth={0.12}>
+                {LETTERS.map((d, i) => <path key={i} d={d} pathLength={1} style={{ ...draw(at(0) && !final, 0.15 * i, 2), opacity: final ? 0 : 1 }} />)}
+              </g>
 
-        {/* measures */}
-        <g className="ds-fade" style={del(2.9)} stroke={LIME} strokeWidth={1.4}>
-          {/* x-height: 8u */}
-          <line x1={-2} x2={-2} y1={0} y2={XH} style={nsk} />
-          {/* lens: 7u */}
-          <line x1={LENS_C.x - LENS_C.r} x2={LENS_C.x + LENS_C.r} y1={-2.2} y2={-2.2} style={nsk} />
-          {/* gap: 1u */}
-          <line x1={LENS_C.x + LENS_C.r * Math.cos(a)} y1={LENS_C.y + LENS_C.r * Math.sin(a)} x2={LENS_C.x + CUT_R * Math.cos(a)} y2={LENS_C.y + CUT_R * Math.sin(a)} style={nsk} />
-          {/* descender: 3u */}
-          <line x1={66} x2={66} y1={XH} y2={DESC} style={nsk} />
-        </g>
-        <g className="ds-fade" style={del(3)} {...label} fill={LIME} fillOpacity={1}>
-          <text x={-2.6} y={XH / 2} textAnchor="end">8u</text>
-          <text x={LENS_C.x} y={-3} textAnchor="middle">7u</text>
-          <text x={LENS_C.x + (CUT_R + 1) * Math.cos(a)} y={LENS_C.y + (CUT_R + 1.6) * Math.sin(a)}>1u</text>
-          <text x={66.8} y={(XH + DESC) / 2 + fs / 3}>3u</text>
-        </g>
+              {/* 02 the lens: drawn, measured, centred */}
+              <circle cx={LENS_C.x} cy={LENS_C.y} r={LENS_C.r} fill="none" stroke={LIME} strokeWidth={0.14} pathLength={1} transform={`rotate(-90 ${LENS_C.x} ${LENS_C.y})`} style={{ ...draw(at(1) && !final, 0.2, 1.3), opacity: at(1) && !final ? 1 : 0 }} />
+              <g stroke={LIME} strokeWidth={0.1} style={show(only(1), 0.9)}>
+                <line x1={LENS_C.x - LENS_C.r} x2={LENS_C.x + LENS_C.r} y1={-2.4} y2={-2.4} />
+                <line x1={LENS_C.x - LENS_C.r} x2={LENS_C.x - LENS_C.r} y1={-3.1} y2={-1.7} />
+                <line x1={LENS_C.x + LENS_C.r} x2={LENS_C.x + LENS_C.r} y1={-3.1} y2={-1.7} />
+                <line x1={LENS_C.x - LENS_C.r - 1} x2={LENS_C.x - LENS_C.r - 1} y1={0} y2={LENS_C.y} strokeDasharray="0.4 0.4" />
+                <line x1={LENS_C.x - LENS_C.r - 1} x2={LENS_C.x - LENS_C.r - 1} y1={LENS_C.y} y2={XH} strokeDasharray="0.4 0.4" />
+              </g>
+              <g style={show(only(1), 1)} fill={LIME} {...txt}>
+                <text x={LENS_C.x} y={-3.4} textAnchor="middle">7u</text>
+                <text x={LENS_C.x - LENS_C.r - 1.6} y={LENS_C.y / 2 + fs / 3} textAnchor="end">4u</text>
+                <text x={LENS_C.x - LENS_C.r - 1.6} y={(LENS_C.y + XH) / 2 + fs / 3} textAnchor="end">4u</text>
+              </g>
+              <g stroke={LIME} strokeWidth={0.12} style={show(at(1) && !final, 0.5)}>
+                <line x1={LENS_C.x - 1} x2={LENS_C.x + 1} y1={LENS_C.y} y2={LENS_C.y} />
+                <line x1={LENS_C.x} x2={LENS_C.x} y1={LENS_C.y - 1} y2={LENS_C.y + 1} />
+              </g>
+
+              {/* 03 one cut: the ring grows out of the lens to where c and p stop */}
+              <circle cx={LENS_C.x} cy={LENS_C.y} r={cutR} fill={only(2) ? LIME : 'none'} fillOpacity={0.08} stroke="#fff" strokeWidth={0.1} strokeDasharray="0.6 0.5"
+                style={{ opacity: at(2) && !final ? 1 : 0, transition: `r 1.1s ${ease}, opacity .6s, fill-opacity .6s` }} />
+              <g style={show(only(2), 1)}>
+                <line x1={LENS_C.x + LENS_C.r * Math.cos(-0.5)} y1={LENS_C.y + LENS_C.r * Math.sin(-0.5)} x2={LENS_C.x + CUT_R * Math.cos(-0.5)} y2={LENS_C.y + CUT_R * Math.sin(-0.5)} stroke={LIME} strokeWidth={0.14} />
+                <line x1={LENS_C.x + LENS_C.r * Math.cos(Math.PI + 0.5)} y1={LENS_C.y + LENS_C.r * Math.sin(Math.PI + 0.5)} x2={LENS_C.x + CUT_R * Math.cos(Math.PI + 0.5)} y2={LENS_C.y + CUT_R * Math.sin(Math.PI + 0.5)} stroke={LIME} strokeWidth={0.14} />
+                <text x={LENS_C.x + (CUT_R + 0.8) * Math.cos(-0.5)} y={LENS_C.y + (CUT_R + 0.8) * Math.sin(-0.5)} fill={LIME} {...txt}>1u</text>
+                <text x={LENS_C.x + (CUT_R + 0.8) * Math.cos(Math.PI + 0.5)} y={LENS_C.y + (CUT_R + 0.8) * Math.sin(Math.PI + 0.5)} textAnchor="end" fill={LIME} {...txt}>1u</text>
+              </g>
+
+              {/* the lens fills once it is placed; 04 the glint and its light */}
+              <path d={LENS} fill={LIME} style={{ opacity: at(3) ? 1 : 0, transition: 'opacity .8s' }} />
+              <g style={show(only(3), 0.4)}>
+                <line x1={lx} y1={ly} x2={gx} y2={gy} stroke="#fff" strokeWidth={0.1} pathLength={1} style={draw(only(3), 0.4, 0.9)} />
+                <path d={`M${gx} ${gy}l1.6 -0.2l-0.6 1.5z`} fill="#fff" transform={`rotate(-45 ${gx} ${gy})`} />
+                <circle cx={lx} cy={ly} r={0.9} fill="none" stroke="#fff" strokeWidth={0.1} />
+                <text x={lx - 1.4} y={ly - 0.6} textAnchor="end" fill="#fff" fillOpacity={0.75} {...txt}>45°</text>
+              </g>
+
+              {/* 05 clear space */}
+              <g style={show(at(4) && !final, 0.1)}>
+                {corners.map(([x, y], i) => <rect key={i} x={x} y={y} width={CS} height={CS} fill={LIME} fillOpacity={only(4) ? 0.18 : 0} style={{ transition: 'fill-opacity .6s' }} />)}
+                {corners.map(([x, y], i) => <text key={`t${i}`} x={x + CS / 2} y={y + CS / 2 + fs / 3} textAnchor="middle" fill="#fff" fillOpacity={0.75} {...txt} style={show(only(4), 0.5)}>4u</text>)}
+                <rect x={-CS} y={-CS} width={LOGO_VB.w + 2 * CS} height={DESC + 2 * CS} fill="none" stroke="#fff" strokeOpacity={0.45} strokeWidth={0.08} pathLength={1} style={draw(at(4), 0.1, 1.4)} />
+                <rect x={0} y={0} width={LOGO_VB.w} height={DESC} fill="none" stroke={LIME} strokeOpacity={0.6} strokeWidth={0.08} strokeDasharray="0.6 0.5" />
+              </g>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── Tagline: the swoosh is drawn by hand, stroke by stroke ──────────── */
+
+// the swoosh's own route, in the order the outline runs: a short stroke,
+// a flick back, then the long underline
+const SWOOSH_ROUTE = 'M655 197.5Q715 186 774 178.5Q650 178 526 185.5Q700 163 857 156.5';
+
+function Tagline() {
+  const [ref, on] = useSeen<HTMLDivElement>(0.5);
+  const [run, setRun] = useState(0);
+  const id = useId().replace(/:/g, '');
+  return (
+    <div ref={ref} onPointerEnter={() => setRun((r) => r + 1)} className={`flex aspect-[4/3] items-center justify-center rounded-[4px] bg-[#f2f2ef] ${on ? 'ds-on' : ''}`}>
+      <svg viewBox={TAG_VB} className="w-[72%] h-auto overflow-visible" role="img" aria-label="Target with Scope">
+        <defs>
+          <mask id={`sw-${id}`} maskUnits="userSpaceOnUse" x="490" y="130" width="400" height="90">
+            <path key={run} d={SWOOSH_ROUTE} fill="none" stroke="#fff" strokeWidth={11} strokeLinecap="round" strokeLinejoin="round" pathLength={1} className="ds-draw" style={{ ['--d' as string]: '1.1s', ['--delay' as string]: run ? '0s' : '.35s' }} />
+          </mask>
+        </defs>
+        <path d={TAG} fill={INK} />
+        <path d={SWOOSH} fill="#9ecc3b" mask={`url(#sw-${id})`} />
       </svg>
     </div>
   );
@@ -191,12 +318,51 @@ const POSTS = [
 ].map((p) => `${CLD}/image/upload/f_auto,q_auto,w_1200/${p}`);
 
 /** Website pages from the Figma file; shown once the exports are in */
-const WEB: { src: string; w: number; h: number; en: string; ka: string }[] = [];
+const W = `${P}/web`;
+const WEB = [
+  { key: 'services', h: 2535, en: 'Services', ka: 'სერვისები' },
+  { key: 'cases', h: 3311, en: 'Projects', ka: 'პროექტები' },
+  { key: 'about', h: 4027, en: 'About', ka: 'ჩვენ შესახებ' },
+  { key: 'contact', h: 2995, en: 'Contact', ka: 'კონტაქტი' },
+];
+
+/** a long page inside a frame, scrolled by the page's own scroll */
+function ScrolledPage({ src, srcSet, sizes, ratio, alt, className = '' }: { src: string; srcSet?: string; sizes?: string; ratio: number; alt: string; className?: string }) {
+  const reduce = useReducedMotion();
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start 85%', 'end 15%'] });
+  const y = useTransform(scrollYProgress, [0, 1], ['0%', `${-(1 - ratio) * 100}%`]);
+  return (
+    <div ref={ref} className={`relative overflow-hidden ${className}`}>
+      <motion.img src={src} srcSet={srcSet} sizes={sizes} alt={alt} loading="lazy" decoding="async" style={reduce ? undefined : { y }} className="absolute inset-x-0 top-0 w-full h-auto will-change-transform" />
+    </div>
+  );
+}
+
+/** a page card that scrolls through itself on hover */
+function HoverPage({ k, h, label, onOpen }: { k: string; h: number; label: string; onOpen: () => void }) {
+  const { tx } = useI18n();
+  const travel = Math.max(0, 1 - (1440 * 4) / 3 / h); // part of the page below a 3:4 window
+  return (
+    <figure>
+      <button type="button" onClick={onOpen} aria-label={`${label}, ${tx('enlarge', 'გადიდება')}`}
+        className="group relative block w-full aspect-[3/4] overflow-hidden rounded-[4px] bg-black cursor-zoom-in outline-none focus-visible:shadow-[0_0_0_2px_#9aff01]">
+        <img src={`${W}/${k}-900.jpg`} srcSet={`${W}/${k}-900.jpg 900w, ${W}/${k}.jpg 1440w`} sizes="(min-width: 768px) 25vw, 50vw" alt={label} loading="lazy" decoding="async"
+          className="absolute inset-x-0 top-0 w-full h-auto transition-transform ease-in-out group-hover:[transform:translateY(var(--t))] group-focus-visible:[transform:translateY(var(--t))]"
+          style={{ ['--t' as string]: `${-travel * 100}%`, transitionDuration: `${Math.round(2000 + travel * 6000)}ms` }} />
+      </button>
+      <figcaption className="pt-2 text-[13px] text-black/55">{label}</figcaption>
+    </figure>
+  );
+}
 
 export function ScopeCase() {
   const { tx } = useI18n();
   const [open, setOpen] = useState<number | null>(null);
-  const gallery: LightboxItem[] = POSTS.map((src, i) => ({ src, alt: tx(`Scope social post ${i + 1}`, `Scope-ის პოსტი ${i + 1}`), brand: 'Scope' }));
+  const gallery: LightboxItem[] = [
+    ...POSTS.map((src, i) => ({ src, alt: tx(`Scope social post ${i + 1}`, `Scope-ის პოსტი ${i + 1}`), brand: 'Scope' })),
+    ...WEB.map((w) => ({ src: `${W}/${w.key}.jpg`, alt: tx(`Scope website, ${w.en}`, `Scope-ის ვებსაიტი, ${w.ka}`), brand: 'Scope' })),
+  ];
   const facts: [string, string][] = [
     [tx('Client', 'კლიენტი'), 'Scope'],
     [tx('Year', 'წელი'), '2024'],
@@ -208,6 +374,7 @@ export function ScopeCase() {
     { src: `${P}/marketers.mp4`, poster: `${P}/marketers.jpg`, label: tx("We're not marketers", 'ჩვენ არ ვართ მარკეტერები') },
     { src: `${P}/casting.mp4`, poster: `${P}/casting.jpg`, label: tx('Scope is casting', 'Scope ეძებს მსახიობებს') },
     { src: `${CLD}/video/upload/f_auto,q_auto/v1773267441/scope-partner_wggbwt.mp4`, poster: `${CLD}/video/upload/so_1,w_720/v1773267441/scope-partner_wggbwt.jpg`, label: 'Scope Partner' },
+    { src: `${CLD}/video/upload/f_auto,q_auto/v1773267433/saloni_q98ayn.mp4`, poster: `${CLD}/video/upload/so_1,w_720/v1773267433/saloni_q98ayn.jpg`, label: 'Saloni Furniture' },
     { src: `${CLD}/video/upload/f_auto,q_auto/v1773267408/bog_scope_urad4o.mp4`, poster: `${CLD}/video/upload/so_1,w_720/v1773267408/bog_scope_urad4o.jpg`, label: 'BOG × Scope' },
   ];
 
@@ -244,54 +411,56 @@ export function ScopeCase() {
 
         {/* ── 01 Logo ──────────────────────────────────────────────────── */}
         <Mark no="01" name={tx('Logo', 'ლოგო')} line={tx('The o is a lens.', 'o ლინზაა.')} />
-        <div className="px-1.5">
-          <div className="rounded-[4px] px-[4%] py-[5%]" style={{ background: INK }}><Construction /></div>
-        </div>
+        <ConstructionStory />
         <div className="px-1.5 pt-1.5 grid grid-cols-1 md:grid-cols-3 gap-1.5">
           <Rise><div className="flex aspect-[4/3] items-center justify-center rounded-[4px]" style={{ background: INK }}><ScopeLogo className="w-[62%] h-auto" title="Scope" /></div></Rise>
           <Rise delay={0.05}><div className="flex aspect-[4/3] items-center justify-center rounded-[4px] bg-[#f2f2ef]"><ScopeLogo ink={INK} className="w-[62%] h-auto" title="Scope" /></div></Rise>
-          <Rise delay={0.1}>
-            <div className="flex aspect-[4/3] items-center justify-center rounded-[4px] bg-[#f2f2ef]">
-              <svg viewBox={TAG_VB} className="w-[72%] h-auto" role="img" aria-label="Target with Scope">
-                <path d={TAG} fill={INK} />
-                <path d={SWOOSH} fill="#9ecc3b" />
-              </svg>
-            </div>
-          </Rise>
+          <Rise delay={0.1}><Tagline /></Rise>
         </div>
 
         {/* ── 02 Motion ────────────────────────────────────────────────── */}
         <Mark no="02" name={tx('Motion', 'მოუშენი')} line={tx('The lens underlines what matters.', 'ლინზა ხაზს უსვამს მთავარს.')} />
-        <div className="px-1.5 grid grid-cols-2 md:grid-cols-5 gap-1.5">
-          {reels.map((r, i) => <Rise key={r.src} delay={i * 0.05} className={i === 4 ? 'hidden md:block' : ''}><Reel {...r} /></Rise>)}
+        <div className="px-1.5 grid grid-cols-1 sm:grid-cols-3 gap-1.5">
+          {reels.slice(0, 3).map((r, i) => <Rise key={r.src} delay={i * 0.05}><Reel {...r} /></Rise>)}
         </div>
 
         {/* ── 03 Social ────────────────────────────────────────────────── */}
         <Mark no="03" name={tx('Social', 'სოციალური მედია')} line={tx('One voice across the feed.', 'ერთი ხმა მთელ ფიდში.')} />
         <div className="px-1.5 columns-2 md:columns-3 gap-1.5">
+          {reels.slice(3).map((r) => <div key={r.src} className="mb-1.5 break-inside-avoid"><Reel {...r} /></div>)}
           {POSTS.map((src, i) => (
             <button key={src} type="button" onClick={() => setOpen(i)} aria-label={`${gallery[i].alt}, ${tx('enlarge', 'გადიდება')}`}
-              className="group mb-1.5 block w-full overflow-hidden rounded-[4px] bg-[#eee] cursor-zoom-in outline-none focus-visible:shadow-[0_0_0_2px_#1e1e1e]">
+              className="group mb-1.5 block w-full break-inside-avoid overflow-hidden rounded-[4px] bg-[#eee] cursor-zoom-in outline-none focus-visible:shadow-[0_0_0_2px_#1e1e1e]">
               <img src={src} alt={gallery[i].alt} loading="lazy" decoding="async" className="block w-full h-auto transition-transform duration-[900ms] ease-[cubic-bezier(.2,.7,.2,1)] group-hover:scale-[1.03]" />
             </button>
           ))}
         </div>
 
         {/* ── 04 Web ───────────────────────────────────────────────────── */}
-        {WEB.length > 0 && (
-          <>
-            <Mark no="04" name={tx('Website', 'ვებსაიტი')} line={tx('The agency, page by page.', 'სააგენტო, გვერდ-გვერდ.')} />
-            <div className="px-1.5 grid grid-cols-1 md:grid-cols-2 gap-1.5">
-              {WEB.map((w, i) => (
-                <Rise key={w.src} delay={i * 0.05}>
-                  <div className="overflow-hidden rounded-[4px] bg-[#f2f2ef] p-[5%]">
-                    <img src={w.src} width={w.w} height={w.h} alt={tx(w.en, w.ka)} loading="lazy" decoding="async" className="block w-full h-auto rounded-[6px] shadow-[0_30px_70px_-30px_rgba(0,0,0,0.35)]" />
-                  </div>
-                </Rise>
-              ))}
+        <Mark no="04" name={tx('Website', 'ვებსაიტი')} line={tx('The agency, page by page.', 'სააგენტო, გვერდ-გვერდ.')} />
+        <div className="px-1.5 grid grid-cols-12 gap-1.5">
+          {/* desktop home in a browser window */}
+          <Rise className="col-span-12 md:col-span-9">
+            <div className="h-full rounded-[4px] p-[3%] flex flex-col" style={{ background: INK }}>
+              <div className="flex items-center gap-1.5 rounded-t-[8px] bg-[#2b2b2b] px-3 py-2.5">
+                <span className="h-2.5 w-2.5 rounded-full bg-white/20" /><span className="h-2.5 w-2.5 rounded-full bg-white/20" /><span className="h-2.5 w-2.5 rounded-full bg-white/20" />
+                <span className="mx-auto rounded-full bg-black/40 px-4 py-0.5 text-[11px] text-white/50">scope</span>
+              </div>
+              <ScrolledPage src={`${W}/home.jpg`} srcSet={`${W}/home-900.jpg 900w, ${W}/home.jpg 1440w`} sizes="75vw" ratio={(1440 * 10 / 16) / 4529} alt={tx('Scope website, home page', 'Scope-ის ვებსაიტი, მთავარი გვერდი')} className="aspect-[16/10] rounded-b-[8px] bg-black" />
             </div>
-          </>
-        )}
+          </Rise>
+          {/* the same page on a phone */}
+          <Rise delay={0.05} className="col-span-12 md:col-span-3">
+            <div className="h-full rounded-[4px] flex items-center justify-center p-[8%]" style={{ background: LIME }}>
+              <div className="w-full max-w-[260px] rounded-[30px] bg-black p-[7px] shadow-[0_40px_80px_-30px_rgba(0,0,0,0.5)]">
+                <ScrolledPage src={`${W}/mobile.jpg`} ratio={(390 * 19.5 / 9) / 5675} alt={tx('Scope website on a phone', 'Scope-ის ვებსაიტი ტელეფონზე')} className="aspect-[9/19.5] rounded-[24px] bg-black" />
+              </div>
+            </div>
+          </Rise>
+        </div>
+        <div className="px-1.5 pt-6 grid grid-cols-2 md:grid-cols-4 gap-1.5">
+          {WEB.map((w, i) => <Rise key={w.key} delay={i * 0.05}><HoverPage k={w.key} h={w.h} label={tx(w.en, w.ka)} onOpen={() => setOpen(POSTS.length + i)} /></Rise>)}
+        </div>
 
         {/* ── Close ────────────────────────────────────────────────────── */}
         <div className="px-3 sm:px-5 lg:px-8 py-28 sm:py-40 grid grid-cols-12 gap-x-6 gap-y-8 items-end">

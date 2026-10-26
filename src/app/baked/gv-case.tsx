@@ -4,7 +4,7 @@ import { ArrowLeft, ArrowUpRight } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 import { CaseHeroTarget, CaseLink } from '../components/case-transition';
 import { SEO } from '../components/seo';
-import { RevealLines, Rise } from '../components/case-motion';
+import { ClipReveal, Parallax, RevealLines, Rise } from '../components/case-motion';
 import { IMG } from '../lib/cld';
 import { BakedShell } from './shell';
 import { Caption, CtaLink, Lightbox, type LightboxItem } from './ui';
@@ -59,28 +59,8 @@ const SHOTS: Shot[] = [
 ];
 const idx = (k: string) => SHOTS.findIndex((s) => s.key === k);
 
-/* editorial text, as on the other cases */
-/** the home page type: Avenir Next Georgian for everything */
-const SERIF = 'inherit';
-const LABEL = 'text-[12px] uppercase tracking-[0.06em] text-[#16232A]/70';
-const HEAD = 'text-[26px] sm:text-[32px] leading-[1.12] tracking-[-0.015em]';
-const BODY = 'text-[16px] sm:text-[17px] leading-[1.6] text-[#16232A]';
-
 function Wrap({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return <div className={`w-full px-3 sm:px-5 lg:px-8 ${className}`}>{children}</div>;
-}
-
-function Chapter({ name, title, children, id }: { no?: string; name: string; title: string; children: string; id: string }) {
-  // spread across the full width: label, heading, then the text in its own columns
-  return (
-    <Wrap className="pt-24 sm:pt-32 pb-10 sm:pb-14">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-8 gap-y-3 items-start">
-        <div className={`lg:col-span-2 lg:pt-3 ${LABEL}`}>{name}</div>
-        <RevealLines as="h2" className={`lg:col-span-4 ${HEAD}`} style={{ fontWeight: 500 }}><span id={id}>{title}</span></RevealLines>
-        <Rise delay={0.1} className="lg:col-span-6 lg:col-start-7 lg:pt-2"><p className={`mt-3 lg:mt-0 ${BODY} lg:columns-2 lg:gap-8`}>{children}</p></Rise>
-      </div>
-    </Wrap>
-  );
 }
 
 function Photo({ k, onOpen, sizes = '(min-width: 768px) 33vw, 100vw', className = '', cover }: { k: string; onOpen: (i: number) => void; sizes?: string; className?: string; cover?: boolean }) {
@@ -136,7 +116,7 @@ function ActiveInterval() {
 }
 
 /* ── Colour by proportion ─────────────────────────────────────────────── */
-function Proportions() {
+function Proportions({ dark }: { dark?: boolean }) {
   const { tx } = useI18n();
   const parts = [
     { p: 60, en: 'Mineral beige', ka: 'მინერალური ბეჟი', role: tx('Space, the open field', 'სივრცე, ღია ველი'), bg: FIELD, ink: CARBON },
@@ -154,11 +134,49 @@ function Proportions() {
           <div key={x.en}>
             <div className="flex items-baseline gap-2"><span className="text-[28px] tabular-nums leading-none" style={{ fontWeight: 600 }}>{x.p}%</span></div>
             <div className="mt-2 text-[15px]" style={{ fontWeight: 500 }}>{tx(x.en, x.ka)}</div>
-            <div className="mt-1 text-[13px] leading-[1.45] text-[#16232A]/65">{x.role}</div>
+            <div className={`mt-1 text-[13px] leading-[1.45] ${dark ? 'text-white/60' : 'text-[#16232A]/65'}`}>{x.role}</div>
           </div>
         ))}
       </div>
     </Wrap>
+  );
+}
+
+/* ── Visual-first building blocks ─────────────────────────────────────── */
+
+/** a chapter marker: number and name on the left, one line on the right */
+function Mark({ no, name, line, dark }: { no: string; name: string; line: string; dark?: boolean }) {
+  return (
+    <div className={`grid grid-cols-12 gap-x-6 items-baseline px-3 sm:px-5 lg:px-8 pt-24 sm:pt-32 pb-6 sm:pb-8 ${dark ? 'text-white' : ''}`}>
+      <div className={`col-span-12 sm:col-span-3 text-[12px] uppercase tracking-[0.08em] ${dark ? 'text-white/55' : 'text-[#16232A]/55'}`}>
+        <span className="tabular-nums" style={{ color: dark ? '#7fc4ca' : EMERALD }}>{no}</span>&nbsp;&nbsp;{name}
+      </div>
+      <RevealLines as="h2" className="col-span-12 sm:col-span-9 mt-2 sm:mt-0 text-[24px] sm:text-[34px] lg:text-[40px] leading-[1.08] tracking-[-0.02em]" style={{ fontWeight: 500 }}>
+        <span>{line}</span>
+      </RevealLines>
+    </div>
+  );
+}
+
+/** a full-bleed picture or film, revealed as it scrolls in */
+function Bleed({ children, ratio = '16/9' }: { children: React.ReactNode; ratio?: string }) {
+  return (
+    <div className="px-1.5">
+      <ClipReveal className="overflow-hidden rounded-[4px]"><div className="w-full" style={{ aspectRatio: ratio }}>{children}</div></ClipReveal>
+    </div>
+  );
+}
+
+/** a row of pictures, edge to edge with a hairline gap */
+function Row({ keys, onOpen, ratio, cols }: { keys: string[]; onOpen: (i: number) => void; ratio: string; cols?: string }) {
+  return (
+    <div className={`px-1.5 pt-1.5 grid gap-1.5 ${cols ?? (keys.length === 2 ? 'grid-cols-2' : keys.length === 4 ? 'grid-cols-2 md:grid-cols-4' : 'grid-cols-2 md:grid-cols-3')}`}>
+      {keys.map((k, i) => (
+        <Rise key={k} delay={i * 0.05} y={20} className={keys.length === 3 && i === 2 ? 'col-span-2 md:col-span-1' : ''}>
+          <div style={{ aspectRatio: ratio }}><Photo k={k} onOpen={onOpen} className="!rounded-[4px]" sizes={keys.length === 2 ? '50vw' : '(min-width: 768px) 33vw, 50vw'} cover /></div>
+        </Rise>
+      ))}
+    </div>
   );
 }
 
@@ -169,177 +187,92 @@ export function GvCase() {
   const facts: [string, string][] = [
     [tx('Client', 'კლიენტი'), 'GV Capital'],
     [tx('Year', 'წელი'), '2026'],
-    [tx('Sector', 'სექტორი'), tx('Investment and development, industrial & logistics', 'ინვესტიცია და განვითარება, ინდუსტრია და ლოჯისტიკა')],
-    [tx('Scope', 'სამუშაო'), tx('Brand concept, identity, guidelines', 'ბრენდის კონცეფცია, იდენტობა, გაიდლაინი')],
+    [tx('Sector', 'სექტორი'), tx('Investment & development', 'ინვესტიცია და განვითარება')],
+    [tx('Scope', 'სამუშაო'), tx('Brand concept, identity, guidelines', 'კონცეფცია, იდენტობა, გაიდლაინი')],
   ];
 
   return (
     <BakedShell>
       <SEO
         title="GV Capital | Brand Identity Case Study"
-        description="GV Capital makes space: brand concept, identity and live guidelines for a Georgian investment and development holding. The Active Interval, colour by proportion, holding applications and the first vertical, industrial & logistics."
+        description="GV Capital makes space: brand concept, identity and live guidelines for a Georgian investment and development holding."
         keywords="GV Capital, brand identity, brand guidelines, investment holding, logistics, Georgia, Active Interval, Salome Mosiava"
         type="article"
       />
       <CaseHeroTarget path="/projects/gv-capital" />
 
-      <article className="px-1.5 pt-14 sm:pt-[52px]">
-        <div className="rounded-md overflow-hidden bg-[#F6F4EF]" style={{ color: CARBON }}>
+      <article className="pt-14 sm:pt-[52px]" style={{ color: CARBON }}>
 
-          {/* ── Hero ─────────────────────────────────────────────────── */}
-          <header>
-            <Wrap className="flex items-start justify-between pt-6 sm:pt-8 text-[13px]">
-              <Link to="/work/case-studies" className="inline-flex items-center gap-1.5 text-[#16232A]/55 hover:text-[#16232A] transition-colors">
-                <ArrowLeft size={13} /> {tx('Case studies', 'ქეისები')}
-              </Link>
-              <a href={LIVE} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 rounded-full bg-white px-3 py-1 text-[12px] ring-1 ring-inset ring-black/10 hover:bg-[#f2f2f2]">
-                {tx('Live guidelines', 'ცოცხალი გაიდლაინი')} <ArrowUpRight size={12} />
-              </a>
-            </Wrap>
-            <Wrap className="pt-14 sm:pt-20">
-              <RevealLines as="h1" className="text-[44px] sm:text-[76px] lg:text-[96px] leading-[0.95] tracking-[-0.035em]" style={{ fontWeight: 700 }}>
+        {/* ── Hero: the brand film, full screen, name over it ───────────── */}
+        <header className="px-1.5">
+          <div className="relative h-[calc(100svh-64px)] min-h-[520px] overflow-hidden rounded-[4px] bg-[#16232A] text-white">
+            <Parallax distance={40} className="absolute inset-[-40px_0]"><Film src={`${P}/cover.mp4`} poster={`${P}/facade.jpg`} className="!rounded-none" /></Parallax>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-black/20" />
+            <div className="absolute inset-x-0 top-0 flex items-start justify-between p-4 sm:p-6 text-[13px]">
+              <Link to="/work/case-studies" className="inline-flex items-center gap-1.5 text-white/70 hover:text-white transition-colors"><ArrowLeft size={13} /> {tx('Case studies', 'ქეისები')}</Link>
+              <a href={LIVE} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 rounded-full bg-white/15 backdrop-blur px-3 py-1 text-[12px] hover:bg-white/25">{tx('Live guidelines', 'ცოცხალი გაიდლაინი')} <ArrowUpRight size={12} /></a>
+            </div>
+            <div className="absolute inset-x-0 bottom-0 p-4 sm:p-6 lg:p-8">
+              <RevealLines as="h1" className="text-[48px] sm:text-[88px] lg:text-[120px] leading-[0.9] tracking-[-0.04em]" style={{ fontWeight: 700 }}>
                 <span>GV Capital</span>
-                <span style={{ color: EMERALD }}>{tx('Makes space.', 'ქმნის სივრცეს.')}</span>
+                <span className="text-[#7fc4ca]">{tx('makes space.', 'ქმნის სივრცეს.')}</span>
               </RevealLines>
-            </Wrap>
-            <Wrap className="pt-12 sm:pt-16">
-              <div className="aspect-[16/9] overflow-hidden rounded-[6px] bg-[#16232A]"><Film src={`${P}/cover.mp4`} poster={`${P}/facade.jpg`} /></div>
-            </Wrap>
-            <Wrap className="pt-10 pb-6">
-              <div className="grid grid-cols-2 lg:grid-cols-12 gap-x-8 gap-y-5 pt-6 border-t border-[#16232A]/15 text-[13px]">
-                <p className="col-span-2 lg:col-span-4 text-[18px] sm:text-[20px] leading-[1.35]" style={{ fontWeight: 500 }}>
-                  {tx('A brand for a Georgian investment and development holding, and the live guidelines that run it.', 'ბრენდი ქართული საინვესტიციო და განვითარების ჰოლდინგისთვის და ცოცხალი გაიდლაინი, რომელიც მას მართავს.')}
-                </p>
-                {facts.map(([k, v], i) => (
-                  <div key={k} className={['lg:col-span-2', 'lg:col-span-1', 'lg:col-span-3', 'lg:col-span-2'][i]}>
-                    <div style={{ color: EMERALD }}>{k}</div>
-                    <div className="mt-1 text-[#16232A]/75 leading-[1.5]">{v}</div>
-                  </div>
-                ))}
+              <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-3 border-t border-white/20 pt-4 text-[12.5px]">
+                {facts.map(([k, v]) => (<div key={k}><div className="text-white/55">{k}</div><div className="mt-0.5 text-white/90">{v}</div></div>))}
               </div>
-            </Wrap>
-          </header>
-
-          {/* ── The idea ─────────────────────────────────────────────── */}
-          <Wrap className="pt-28 sm:pt-36 pb-4">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-8 gap-y-3 items-start">
-              <div className={`lg:col-span-2 lg:pt-3 ${LABEL}`}>{tx('Brand idea', 'ბრენდის იდეა')}</div>
-              <RevealLines as="h2" className={`lg:col-span-4 ${HEAD}`} style={{ fontWeight: 500 }}><span>{tx('Space that creates opportunities', 'სივრცე, რომელიც ქმნის შესაძლებლობებს')}</span></RevealLines>
-              <Rise className="lg:col-span-3 lg:col-start-7 lg:pt-2"><p className={`mt-3 lg:mt-0 ${BODY}`}>{tx(
-                'GV Capital builds the ground for projects, partnerships and new lines of business. The brand says it in three words, GV Capital makes space, and keeps the approved Georgian line as its public promise: space that creates opportunities.',
-                'GV Capital ქმნის ადგილს პროექტებისთვის, პარტნიორობებისთვის და ახალი ბიზნეს-მიმართულებებისთვის. ბრენდი ამას სამი სიტყვით ამბობს, GV Capital makes space, საჯარო დაპირებად კი დამტკიცებული სლოგანი რჩება: სივრცე, რომელიც ქმნის შესაძლებლობებს.')}</p></Rise>
-              <Rise delay={0.08} className="lg:col-span-3 lg:pt-2"><p className={`mt-3 lg:mt-0 ${BODY}`}>{tx(
-                'Industrial and logistics is the first real proof. A new direction enters the brand only once the business behind it is real: no ghost icons, no placeholder promises.',
-                'ინდუსტრია და ლოჯისტიკა ამ იდეის პირველი რეალური მტკიცებულებაა. ახალი მიმართულება ბრენდში მხოლოდ მაშინ ჩნდება, როცა მის უკან ბიზნესი რეალურია: არც მოჩვენებითი აიქონები, არც ცარიელი დაპირებები.')}</p></Rise>
             </div>
-          </Wrap>
-          <Wrap className="pt-12"><Photo k="overhead" onOpen={setOpen} sizes="(min-width: 1240px) 1140px, 100vw" className="aspect-[16/9]" cover /></Wrap>
+          </div>
+        </header>
 
-          {/* ── Active Interval ──────────────────────────────────────── */}
-          <Chapter name={tx('Signature device', 'მთავარი ნიშანი')} id="interval" title={tx('The Active Interval', 'მოქმედი შუალედი')}>
-            {tx('One straight emerald gap between two solid planes. It opens space, separates levels, joins the masterbrand to a vertical and points to the main action. One per composition, never a pattern, never more than about a tenth of the surface.',
-              'ერთი სწორი ზურმუხტისფერი შუალედი ორ მყარ სიბრტყეს შორის. ის ხსნის სივრცეს, ყოფს დონეებს, აერთებს მასტერბრენდს მიმართულებასთან და მიუთითებს მთავარ ქმედებაზე. ერთ კომპოზიციაში ერთი, არასდროს pattern, არასდროს ზედაპირის მეათედზე მეტი.')}
-          </Chapter>
+        {/* ── 01 The idea: the strongest picture first ─────────────────── */}
+        <Mark no="01" name={tx('Idea', 'იდეა')} line={tx('Space that creates opportunities.', 'სივრცე, რომელიც ქმნის შესაძლებლობებს.')} />
+        <Bleed><Photo k="reception" onOpen={setOpen} sizes="100vw" className="!rounded-none h-full" cover /></Bleed>
+        <Row keys={['concrete', 'material', 'hoodie']} ratio="4/5" onOpen={setOpen} />
+
+        {/* ── 02 The system, on a carbon band ──────────────────────────── */}
+        <section className="mt-24 sm:mt-32 bg-[#16232A] text-white pb-16 sm:pb-24">
+          <Mark dark no="02" name={tx('System', 'სისტემა')} line={tx('One emerald interval opens the space. Colour by proportion.', 'ერთი ზურმუხტისფერი შუალედი ხსნის სივრცეს. ფერი პროპორციით.')} />
           <ActiveInterval />
+          <div className="pt-10"><Proportions dark /></div>
+        </section>
 
-          {/* ── Colour ───────────────────────────────────────────────── */}
-          <Chapter name={tx('Colour', 'ფერი')} id="colour" title={tx('Colour by proportion', 'ფერი პროპორციით')}>
-            {tx('Colour is a ratio, not a list. A calm mineral field carries most of every layout, carbon holds the structure, emerald marks the decision, and orange appears only as a short live signal.',
-              'ფერი პროპორციაა და არა სია. მშვიდი მინერალური ველი ყოველი კომპოზიციის დიდ ნაწილს იკავებს, ნახშირისფერი სტრუქტურას იჭერს, ზურმუხტისფერი გადაწყვეტილებას აღნიშნავს, ნარინჯისფერი კი მხოლოდ მოკლე სიგნალად ჩნდება.')}
-          </Chapter>
-          <Proportions />
+        {/* ── 03 Holding applications ──────────────────────────────────── */}
+        <Mark no="03" name={tx('Holding', 'ჰოლდინგი')} line={tx('Paper and screen on one grid.', 'ქაღალდი და ეკრანი ერთ ბადეზე.')} />
+        <Row keys={['cards', 'letterhead', 'document', 'profile']} ratio="3/4" onOpen={setOpen} />
+        <Row keys={['company', 'layouts']} ratio="16/9" onOpen={setOpen} />
 
-          {/* ── Holding applications ─────────────────────────────────── */}
-          <Chapter name={tx('Applications', 'გამოყენება')} id="holding" title={tx('The holding, on paper and on screen', 'ჰოლდინგი ქაღალდზე და ეკრანზე')}>
-            {tx('Business cards, letterhead, proposals, the company profile and presentation templates share one grid: carbon panel, emerald interval, the photograph opening into the space.',
-              'სავიზიტოები, ბლანკი, შეთავაზებები, კომპანიის პროფილი და პრეზენტაციის შაბლონები ერთ ბადეზეა: ნახშირისფერი პანელი, ზურმუხტისფერი შუალედი და ფოტო, რომელიც სივრცეში იხსნება.')}
-          </Chapter>
-          <Wrap>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-1.5 sm:gap-2.5">
-              {['cards', 'letterhead', 'document', 'profile'].map((k, i) => (
-                <Rise key={k} delay={i * 0.05}><Photo k={k} onOpen={setOpen} sizes="(min-width: 768px) 25vw, 50vw" className="aspect-[3/4]" cover /></Rise>
-              ))}
-            </div>
-            <div className="mt-1.5 sm:mt-2.5 grid grid-cols-1 md:grid-cols-2 gap-1.5 sm:gap-2.5">
-              <Rise><Photo k="company" onOpen={setOpen} sizes="(min-width: 768px) 50vw, 100vw" /></Rise>
-              <Rise delay={0.06}><Photo k="layouts" onOpen={setOpen} sizes="(min-width: 768px) 50vw, 100vw" /></Rise>
-            </div>
-          </Wrap>
+        {/* ── 04 Space ─────────────────────────────────────────────────── */}
+        <Mark no="04" name={tx('Space', 'სივრცე')} line={tx('The office becomes the idea.', 'ოფისი თავად იქცევა იდეად.')} />
+        <Bleed><Film src={`${P}/reception.mp4`} poster={`${P}/corridor.jpg`} className="!rounded-none" /></Bleed>
+        <Row keys={['corridor', 'wayfinding', 'focus-office']} ratio="3/4" onOpen={setOpen} />
+        <Row keys={['lounge', 'direction']} ratio="16/9" onOpen={setOpen} />
 
-          {/* ── Space ────────────────────────────────────────────────── */}
-          <Chapter name={tx('Space', 'სივრცე')} id="space" title={tx('An office that says it', 'ოფისი, რომელიც ამას ამბობს')}>
-            {tx('In the office the idea becomes the room: the mark on a carbon wall, emerald where a path opens, orange only where you need to turn.',
-              'ოფისში იდეა თავად ოთახად იქცევა: ნიშანი ნახშირისფერ კედელზე, ზურმუხტისფერი იქ, სადაც გზა იხსნება, ნარინჯისფერი მხოლოდ იქ, სადაც მოსახვევია.')}
-          </Chapter>
-          <Wrap>
-            <div className="aspect-[16/9] overflow-hidden rounded-[6px] bg-[#16232A]"><Film src={`${P}/reception.mp4`} poster={`${P}/reception.jpg`} /></div>
-            <div className="mt-1.5 sm:mt-2.5 grid grid-cols-2 md:grid-cols-3 gap-1.5 sm:gap-2.5">
-              {['corridor', 'wayfinding', 'focus-office'].map((k, i) => (
-                <Rise key={k} delay={i * 0.06} className={i === 2 ? 'col-span-2 md:col-span-1' : ''}><Photo k={k} onOpen={setOpen} className="aspect-[3/4]" cover /></Rise>
-              ))}
-            </div>
-            <div className="mt-1.5 sm:mt-2.5 grid grid-cols-1 md:grid-cols-2 gap-1.5 sm:gap-2.5">
-              <Rise><Photo k="lounge" onOpen={setOpen} sizes="(min-width: 768px) 50vw, 100vw" /></Rise>
-              <Rise delay={0.06}><Photo k="direction" onOpen={setOpen} sizes="(min-width: 768px) 50vw, 100vw" /></Rise>
-            </div>
-          </Wrap>
+        {/* ── 05 Objects ───────────────────────────────────────────────── */}
+        <Mark no="05" name={tx('Objects', 'საგნები')} line={tx('The mark holds up on every material.', 'ნიშანი ყველა მასალაზე მუშაობს.')} />
+        <Row keys={['folder', 'packaging', 'hardhat', 'uniform']} ratio="3/4" onOpen={setOpen} />
 
-          {/* ── Objects ──────────────────────────────────────────────── */}
-          <Chapter name={tx('Objects', 'საგნები')} id="objects" title={tx('From the folder to the hard hat', 'საქაღალდიდან ჩაფხუტამდე')}>
-            {tx('The mark holds up in every material the company touches: paper, tape, fabric, concrete and a site helmet.',
-              'ნიშანი ყველა მასალაზე მუშაობს, რასაც კომპანია ეხება: ქაღალდი, ლენტი, ქსოვილი, ბეტონი და სამშენებლო ჩაფხუტი.')}
-          </Chapter>
-          <Wrap>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-1.5 sm:gap-2.5">
-              {['folder', 'packaging', 'hardhat', 'uniform', 'material', 'concrete'].map((k, i) => (
-                <Rise key={k} delay={(i % 3) * 0.06}><Photo k={k} onOpen={setOpen} className="aspect-[3/4]" cover /></Rise>
-              ))}
-            </div>
-          </Wrap>
+        {/* ── 06 First vertical ────────────────────────────────────────── */}
+        <Mark no="06" name={tx('Industrial & Logistics', 'ინდუსტრია და ლოჯისტიკა')} line={tx('The first vertical, the first proof.', 'პირველი მიმართულება, პირველი მტკიცებულება.')} />
+        <Bleed><Film src={`${P}/facade.mp4`} poster={`${P}/facade.jpg`} className="!rounded-none" /></Bleed>
+        <div className="px-1.5 pt-1.5 grid grid-cols-1 md:grid-cols-12 gap-1.5">
+          <Rise className="md:col-span-4"><div className="aspect-[3/4] overflow-hidden rounded-[4px]"><Film src={`${P}/flags.mp4`} poster={`${P}/flags.jpg`} className="!rounded-none" /></div></Rise>
+          <div className="md:col-span-8 grid grid-rows-2 gap-1.5">
+            <Rise delay={0.05}><div className="h-full min-h-[200px]"><Photo k="campus" onOpen={setOpen} sizes="66vw" className="!rounded-[4px] h-full" cover /></div></Rise>
+            <Rise delay={0.1}><div className="h-full min-h-[200px]"><Photo k="fleet" onOpen={setOpen} sizes="66vw" className="!rounded-[4px] h-full" cover /></div></Rise>
+          </div>
+        </div>
 
-          {/* ── First vertical ───────────────────────────────────────── */}
-          <Chapter name={tx('First vertical', 'პირველი მიმართულება')} id="vertical" title={tx('Industrial & Logistics', 'ინდუსტრია და ლოჯისტიკა')}>
-            {tx('The facade, the fleet and the flags come last on purpose. They are the system’s first proof, not its leader: the holding brand stays the same, the vertical brings its own real content.',
-              'ფასადი, ავტოპარკი და დროშები განზრახ ბოლოს მოდის. ისინი სისტემის პირველი მტკიცებულებაა და არა მისი ლიდერი: ჰოლდინგის ბრენდი იგივე რჩება, მიმართულებას კი საკუთარი რეალური კონტენტი მოაქვს.')}
-          </Chapter>
-          <Wrap>
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-1.5 sm:gap-2.5">
-              <div className="md:col-span-8 aspect-[16/9] overflow-hidden rounded-[6px] bg-[#16232A]"><Film src={`${P}/facade.mp4`} poster={`${P}/facade.jpg`} /></div>
-              <div className="md:col-span-4 aspect-[3/4] md:aspect-auto overflow-hidden rounded-[6px] bg-[#16232A]"><Film src={`${P}/flags.mp4`} poster={`${P}/flags.jpg`} /></div>
-            </div>
-            <div className="mt-1.5 sm:mt-2.5 grid grid-cols-1 md:grid-cols-3 gap-1.5 sm:gap-2.5">
-              {['campus', 'fleet', 'digital'].map((k, i) => (
-                <Rise key={k} delay={i * 0.06}><Photo k={k} onOpen={setOpen} /></Rise>
-              ))}
-            </div>
-          </Wrap>
+        {/* ── 07 Social ────────────────────────────────────────────────── */}
+        <Mark no="07" name={tx('Social', 'სოციალური მედია')} line={tx('Claim, proof, next move.', 'მტკიცება, საბუთი, შემდეგი ნაბიჯი.')} />
+        <Row keys={['social-opportunities', 'social-possibility', 'social-perspective', 'social-focus']} ratio="4/5" onOpen={setOpen} />
 
-          {/* ── Social ───────────────────────────────────────────────── */}
-          <Chapter name={tx('Social', 'სოციალური მედია')} id="social" title={tx('Claim, proof, next move', 'მტკიცება, საბუთი, შემდეგი ნაბიჯი')}>
-            {tx('Every post follows the brand’s message order: a claim, the proof behind it, the next move. The interval cuts the frame and leaves the headline its space.',
-              'ყველა პოსტი ბრენდის თანმიმდევრობას მიჰყვება: მტკიცება, მისი საბუთი, შემდეგი ნაბიჯი. შუალედი კადრს ჭრის და სათაურს თავის სივრცეს უტოვებს.')}
-          </Chapter>
-          <Wrap>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-1.5 sm:gap-2.5">
-              {['social-opportunities', 'social-possibility', 'social-perspective', 'social-focus'].map((k, i) => (
-                <Rise key={k} delay={i * 0.06}><Photo k={k} onOpen={setOpen} sizes="(min-width: 768px) 25vw, 50vw" /></Rise>
-              ))}
-            </div>
-          </Wrap>
-
-          {/* ── Close ────────────────────────────────────────────────── */}
-          <Wrap className="py-28 sm:py-40">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-8 gap-y-10 items-end">
-              <div className="lg:col-span-5" style={{ fontFamily: SERIF }}>
-                <div className={LABEL}>{tx('Live guidelines', 'ცოცხალი გაიდლაინი')}</div>
-                <p className={`mt-2 ${HEAD}`}>{tx('The whole system lives online: logo, colour, type, voice, templates and downloads.', 'მთელი სისტემა ონლაინ ცხოვრობს: ლოგო, ფერი, შრიფტი, ტონი, შაბლონები და ჩამოსატვირთი ფაილები.')}</p>
-                <a href={LIVE} target="_blank" rel="noopener noreferrer" className="mt-6 inline-flex items-center gap-1.5 text-[15px] underline underline-offset-4 decoration-[#0A6670]/40 hover:decoration-[#0A6670]" style={{ fontFamily: 'inherit' }}>
-                  gv-capital.vercel.app <ArrowUpRight size={14} />
-                </a>
-              </div>
-              <div className="lg:col-start-9 lg:col-span-4 lg:justify-self-end"><CtaLink /></div>
-            </div>
-          </Wrap>
+        {/* ── Close ────────────────────────────────────────────────────── */}
+        <div className="px-3 sm:px-5 lg:px-8 py-28 sm:py-40 grid grid-cols-12 gap-x-6 gap-y-8 items-end">
+          <RevealLines as="p" className="col-span-12 lg:col-span-7 text-[28px] sm:text-[44px] leading-[1.05] tracking-[-0.025em]" style={{ fontWeight: 500 }}>
+            <span>{tx('The whole system lives online.', 'მთელი სისტემა ონლაინ ცხოვრობს.')}</span>
+            <a href={LIVE} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 underline decoration-2 underline-offset-[6px]" style={{ color: EMERALD }}>gv-capital.vercel.app <ArrowUpRight size={28} /></a>
+          </RevealLines>
+          <div className="col-span-12 lg:col-span-5 lg:justify-self-end"><CtaLink /></div>
         </div>
       </article>
 

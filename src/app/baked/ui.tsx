@@ -178,25 +178,71 @@ export function Lightbox({ items, index, onClose, onIndex }: {
   );
 }
 
-/* ── Logo strip: grey tiles drifting sideways ─────────────────────── */
+/* ── Logo strip: grey tiles riding a wide curve ───────────────────────
+   After baked.design: the cards sit on the inside of a large cylinder, so
+   the ones at the edges swing towards you, and the band drifts left at
+   45px a second (slower under the pointer). */
 export function LogoStrip({ logos, paused }: { logos: { name: string; logo: string }[]; paused: boolean }) {
-  const row = [...logos, ...logos];
+  const box = useRef<HTMLDivElement>(null);
+  const pausedRef = useRef(paused);
+  pausedRef.current = paused;
+  // enough cards to wrap round the visible arc
+  const row = logos.length >= 14 ? logos : [...logos, ...logos];
+
+  useEffect(() => {
+    const el = box.current;
+    if (!el) return;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const cards = Array.from(el.querySelectorAll<HTMLElement>('[data-logo]'));
+    let raf = 0, prev = performance.now(), H = 0, speed = 1, hover = false, inView = false;
+    const tick = (now: number) => {
+      raf = 0;
+      const dt = Math.min(0.05, (now - prev) / 1000); prev = now;
+      const mobile = window.innerWidth < 760;
+      const w = mobile ? 230 : 250, gap = 10, step = w + gap, n = mobile ? 900 : 1600;
+      const T = cards.length * step;
+      speed += ((hover ? 0.3 : 1) - speed) * (1 - 0.05 ** dt);
+      if (!reduced && !pausedRef.current) H -= 45 * speed * dt;
+      for (let i = 0; i < cards.length; i++) {
+        const pos = (((i * step + H) % T) + T) % T - T / 2;
+        const a = pos / n;
+        const c = cards[i];
+        if (Math.abs(a) > 1.25) { c.style.visibility = 'hidden'; continue; }
+        c.style.visibility = 'visible';
+        const x = n * Math.sin(a), z = n * (1 - Math.cos(a));
+        c.style.transform = `translate3d(${(x - w / 2).toFixed(1)}px,0,${z.toFixed(1)}px) rotateY(${(-a * 180 / Math.PI).toFixed(2)}deg)`;
+      }
+      if (inView && !reduced && !pausedRef.current) raf = requestAnimationFrame(tick);
+    };
+    const kick = () => { if (!raf) { prev = performance.now(); raf = requestAnimationFrame(tick); } };
+    const io = new IntersectionObserver(([e]) => { inView = e.isIntersecting; if (inView) kick(); });
+    io.observe(el);
+    const on = () => { hover = true; }, off = () => { hover = false; };
+    el.addEventListener('pointerenter', on); el.addEventListener('pointerleave', off);
+    window.addEventListener('resize', kick);
+    kick();
+    return () => { cancelAnimationFrame(raf); io.disconnect(); el.removeEventListener('pointerenter', on); el.removeEventListener('pointerleave', off); window.removeEventListener('resize', kick); };
+  }, [row.length]);
+
+  // a pause from the motion toggle still needs one frame to settle
+  useEffect(() => { window.dispatchEvent(new Event('resize')); }, [paused]);
+
   return (
-    <div className="overflow-hidden py-2" role="list" aria-label="Clients">
-      <div className="baked-marquee flex w-max gap-2.5" style={{ animationPlayState: paused ? 'paused' : 'running' }}>
-        {row.map((c, i) => (
-          <div
-            key={i}
-            role={i < logos.length ? 'listitem' : undefined}
-            aria-hidden={i >= logos.length || undefined}
-            className="relative h-[120px] w-[230px] sm:h-[136px] sm:w-[250px] flex-shrink-0 rounded-md bg-[#f3f3f3] flex items-center justify-center gap-3"
-            style={{ transform: `rotate(${((i * 37) % 7 - 3) * 0.25}deg)` }}
-          >
-            <img {...IMG.logo(c.logo)} alt="" width="40" height="40" loading="lazy" className="h-10 w-10 rounded-lg object-contain bg-white shadow-[0_1px_3px_rgba(0,0,0,0.08)]" />
-            <span className="text-[17px] text-[#111] tracking-[-0.01em]" style={{ fontWeight: 500 }}>{c.name}</span>
-          </div>
-        ))}
-      </div>
+    <div ref={box} className="relative h-[150px] sm:h-[170px] overflow-hidden" style={{ perspective: '1100px' }} role="list" aria-label="Clients">
+      {row.map((c, i) => (
+        <div
+          key={i}
+          data-logo=""
+          role={i < logos.length ? 'listitem' : undefined}
+          aria-hidden={i >= logos.length || undefined}
+          className="absolute left-1/2 top-1/2 -mt-[60px] sm:-mt-[68px] h-[120px] w-[230px] sm:h-[136px] sm:w-[250px] rounded-md bg-[#f3f3f3] flex items-center justify-center gap-3 will-change-transform"
+          style={{ visibility: 'hidden', backfaceVisibility: 'hidden' }}
+        >
+          <span aria-hidden className="absolute right-2.5 top-2.5 h-1.5 w-1.5 rounded-full bg-[#c9c9c9]" />
+          <img {...IMG.logo(c.logo)} alt="" width="40" height="40" loading="lazy" className="h-10 w-10 rounded-lg object-contain bg-white shadow-[0_1px_3px_rgba(0,0,0,0.08)]" />
+          <span className="text-[17px] text-[#111] tracking-[-0.01em]" style={{ fontWeight: 500 }}>{c.name}</span>
+        </div>
+      ))}
     </div>
   );
 }

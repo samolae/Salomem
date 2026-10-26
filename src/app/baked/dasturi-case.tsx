@@ -188,7 +188,7 @@ export function DasturiCase() {
                 muted loop playsInline autoPlay preload="auto"
                 aria-label="დასტურის ლოგო: ჯიხვი და სიტყვანიშანი, ქრომში"
                 className="h-[min(68svh,640px)] aspect-square object-cover"
-                style={{ WebkitMaskImage: 'radial-gradient(closest-side, #000 72%, transparent 100%)', maskImage: 'radial-gradient(closest-side, #000 72%, transparent 100%)' }}
+                style={{ mixBlendMode: 'lighten' }} // the film's near-black melts into the page
               />
             </div>
             <Wrap className="pb-8 sm:pb-10">

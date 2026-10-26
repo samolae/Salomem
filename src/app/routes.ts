@@ -36,8 +36,9 @@ export const routes: RouteObject[] = [
           { path: '/projects/aurum',           lazy: caseRoutes['/projects/aurum'] },
           { path: '/projects/schenker',        lazy: caseRoutes['/projects/schenker'] },
           { path: '/projects/unispace',        lazy: caseRoutes['/projects/unispace'] },
+          { path: '/projects/gv-capital',      lazy: caseRoutes['/projects/gv-capital'] },
           { path: '/projects/fitmeal',         lazy: caseRoutes['/projects/fitmeal'] },
-          // Dasturi is hidden for now: { path: '/projects/dasturi', lazy: caseRoutes['/projects/dasturi'] },
+          { path: '/projects/dasturi',         lazy: caseRoutes['/projects/dasturi'] },
           { path: '/tools/pixel',              Component: PixelManager },
           { path: '*',                         Component: NotFound },
         ],
@@ -60,5 +61,6 @@ export const PRERENDER_PATHS = [
   '/projects/schenker',
   '/projects/unispace',
   '/projects/fitmeal',
-  // '/projects/dasturi', (hidden for now)
+  '/projects/gv-capital',
+  '/projects/dasturi',
 ];

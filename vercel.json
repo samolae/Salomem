@@ -13,7 +13,7 @@
       "destination": "/:page/index.html"
     },
     {
-      "source": "/projects/:slug(aurum|schenker|unispace|dasturi|fitmeal)",
+      "source": "/projects/:slug(aurum|schenker|unispace|dasturi|fitmeal|gv-capital)",
       "destination": "/projects/:slug/index.html"
     },
     {

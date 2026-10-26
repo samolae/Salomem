@@ -20,7 +20,7 @@ type Study = {
 };
 
 /** Dasturi is hidden until its case is finished */
-const DASTURI_LIVE = false;
+const DASTURI_LIVE = true;
 
 function FitmealCover() {
   const k = ['picnic-bowl', 'blanket-eat', 'table-greek'];
@@ -39,6 +39,13 @@ function DasturiCover() {
 }
 
 const STUDIES: Study[] = [
+  {
+    to: '/projects/gv-capital', title: 'GV Capital',
+    en: 'Brand concept, identity and live guidelines for a Georgian investment and development holding. GV Capital makes space.',
+    ka: 'ბრენდის კონცეფცია, იდენტობა და ცოცხალი გაიდლაინი ქართული საინვესტიციო და განვითარების ჰოლდინგისთვის.',
+    tags: [{ en: 'Branding', ka: 'ბრენდინგი' }, { en: 'Visual identity', ka: 'ვიზუალური იდენტობა' }, { en: 'Brand guidelines', ka: 'გაიდლაინი' }],
+    cover: <img src="/cases/gv/reception-800.jpg" srcSet="/cases/gv/reception-800.jpg 800w, /cases/gv/reception.jpg 1400w" sizes="(min-width: 768px) 50vw, 100vw" alt="" loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]" />,
+  },
   {
     to: '/projects/fitmeal', title: 'FitMeal',
     en: 'A spring campaign for a healthy food brand, made entirely with AI. Real dishes, no faces, cut for the feed and for stories.',

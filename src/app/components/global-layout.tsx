@@ -17,7 +17,7 @@ const F = {
   body: '"Manrope", "Inter", sans-serif',
 };
 
-const BAKED_PATHS = new Set(['/', '/work', '/services', '/contact', '/projects/dasturi', '/projects/fitmeal']);
+const BAKED_PATHS = new Set(['/', '/work', '/services', '/contact', '/projects/dasturi', '/projects/fitmeal', '/projects/gv-capital']);
 
 const bottomNavItems = [
   { id: 'home', label: 'Home', icon: Home, path: '/' },

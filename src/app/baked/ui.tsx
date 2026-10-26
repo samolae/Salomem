@@ -238,7 +238,7 @@ export function LogoStrip({ logos, paused }: { logos: { name: string; logo: stri
           className="absolute left-1/2 top-1/2 -mt-[60px] sm:-mt-[68px] h-[120px] w-[230px] sm:h-[136px] sm:w-[250px] rounded-md bg-[#f3f3f3] flex items-center justify-center gap-3 will-change-transform"
           style={{ visibility: 'hidden' }}
         >
-          <img {...IMG.logo(c.logo)} alt="" width="64" height="64" loading="lazy" className="h-14 w-14 sm:h-16 sm:w-16 rounded-xl object-contain bg-white shadow-[0_1px_3px_rgba(0,0,0,0.08)]" />
+          <img {...IMG.logo(c.logo)} alt="" width="40" height="40" loading="lazy" className="h-10 w-10 rounded-lg object-contain bg-white shadow-[0_1px_3px_rgba(0,0,0,0.08)]" />
           <span className="text-[17px] text-[#111] tracking-[-0.01em]" style={{ fontWeight: 500 }}>{c.name}</span>
         </div>
       ))}

@@ -33,7 +33,7 @@ function Tile({ children }: { children: ReactNode }) {
 }
 
 /** The Dasturi case is hidden until it is finished */
-const DASTURI_LIVE = false;
+const DASTURI_LIVE = true;
 
 export function HomeContent() {
   const { paused } = useMotionPause();

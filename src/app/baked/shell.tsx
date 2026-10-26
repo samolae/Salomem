@@ -225,8 +225,8 @@ function Footer() {
   const groups = [
     { title: tx('Work', 'ნამუშევრები'), links: [
       { l: tx('All work', 'ყველა ნამუშევარი'), to: '/work' },
-      { l: tx('UX/UI Design', 'UX/UI დიზაინი'), to: '/work/ux-ui' },
-      { l: tx('Branding', 'ბრენდინგი'), to: '/projects/dasturi' },
+      { l: tx('UX/UI Design', 'UX/UI დიზაინი'), to: '/work/case-studies?tag=UX%2FUI' },
+      { l: tx('Branding', 'ბრენდინგი'), to: '/work/case-studies?tag=Branding' },
       { l: tx('Case Studies', 'ქეისები'), to: '/work/case-studies' },
       { l: tx('Social Media Ads', 'სოც. მედიის რეკლამა'), to: '/work/social-media-ads' },
       { l: tx('Social Media Motion', 'სოც. მედიის მოუშენი'), to: '/work/social-media-motion' },

@@ -1,11 +1,14 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router';
 import { Eye } from 'lucide-react';
 import { CaseLink } from '../components/case-transition';
-import { CtaLink, PageIntro, Reveal, T, pillCls } from './ui';
+import { CtaLink, PageIntro, Reveal, T } from './ui';
+import { IMG } from '../lib/cld';
+import { screenAurumMainHQ, schenkerSendung, unispaceLogin } from './data';
 import { useI18n } from './i18n';
 
 /*
- * Case studies: branding and campaigns told as whole stories, laid out like
+ * Case studies: product, branding and campaigns told as whole stories, laid out like
  * a studio's works page (after holymotors.com/works). A large cover, the
  * name with "View case", two lines on what it is, and the disciplines as
  * tags. Filters appear once there is more than one case to sort.
@@ -38,6 +41,17 @@ function DasturiCover() {
   return <img src="/cases/dasturi/lineup-1000.jpg" alt="" loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]" />;
 }
 
+/** product work: the main screen on its own stage */
+function ScreenCover({ img, bg }: { img: string; bg: string }) {
+  return (
+    <div className="flex h-full items-center justify-center p-[8%]" style={{ background: bg }}>
+      <img {...IMG.caseMain(img)} alt="" loading="lazy" decoding="async" className="max-h-full w-auto max-w-full rounded-md shadow-[0_24px_60px_rgba(0,0,0,0.35)] transition-transform duration-700 ease-out group-hover:scale-[1.02]" />
+    </div>
+  );
+}
+
+const UX = { en: 'UX/UI', ka: 'UX/UI' };
+
 const STUDIES: Study[] = [
   {
     to: '/projects/gv-capital', title: 'GV Capital',
@@ -53,6 +67,13 @@ const STUDIES: Study[] = [
     tags: [{ en: 'AI campaign', ka: 'AI კამპანია' }, { en: 'Social media', ka: 'სოციალური მედია' }, { en: 'Art direction', ka: 'არტ დირექშენი' }],
     cover: <FitmealCover />,
   },
+  {
+    to: '/projects/aurum', title: 'AURUM',
+    en: 'A crypto exchange for everyday investors: onboarding, trading and the wallet in one calm, trustworthy interface.',
+    ka: 'კრიპტოგაცვლა ყოველდღიური ინვესტორისთვის: რეგისტრაცია, ვაჭრობა და საფულე ერთ მშვიდ, სანდო ინტერფეისში.',
+    tags: [UX, { en: 'Product design', ka: 'პროდუქტის დიზაინი' }, { en: 'Fintech', ka: 'ფინტექი' }],
+    cover: <ScreenCover img={screenAurumMainHQ} bg="linear-gradient(160deg,#16130b,#0b0b0f 70%)" />,
+  },
   ...(DASTURI_LIVE ? [{
     to: '/projects/dasturi', title: 'Dasturi',
     en: 'Identity, labels and packaging for a Georgian wine brand: an ibex built on circles and one label system for five varietals.',
@@ -60,33 +81,54 @@ const STUDIES: Study[] = [
     tags: [{ en: 'Branding', ka: 'ბრენდინგი' }, { en: 'Packaging', ka: 'შეფუთვა' }, { en: 'Visual identity', ka: 'ვიზუალური იდენტობა' }],
     cover: <DasturiCover />,
   }] : []),
+  {
+    to: '/projects/schenker', title: 'Schenker',
+    en: 'An enterprise logistics platform: shipments, parties and documents organised so dispatch teams move faster.',
+    ka: 'კორპორატიული ლოჯისტიკის პლატფორმა: გზავნილები, მხარეები და დოკუმენტები ისე, რომ გუნდი უფრო სწრაფად მუშაობდეს.',
+    tags: [UX, { en: 'Enterprise', ka: 'კორპორატიული' }, { en: 'Logistics', ka: 'ლოჯისტიკა' }],
+    cover: <ScreenCover img={schenkerSendung} bg="linear-gradient(160deg,#e8ecd8,#d4dab8)" />,
+  },
+  {
+    to: '/projects/unispace', title: 'Unispace',
+    en: 'A student management platform for several roles at once: students, lecturers and administrators in one product.',
+    ka: 'სტუდენტების მართვის პლატფორმა რამდენიმე როლისთვის: სტუდენტები, ლექტორები და ადმინისტრაცია ერთ პროდუქტში.',
+    tags: [UX, { en: 'EdTech', ka: 'EdTech' }, { en: 'Web app', ka: 'ვებ აპლიკაცია' }],
+    cover: <ScreenCover img={unispaceLogin} bg="linear-gradient(160deg,#dfe6ff,#eef1ff)" />,
+  },
 ];
 
-export function CaseStudiesContent() {
+const FILTERS = ['UX/UI', 'Branding', 'Visual identity', 'Brand guidelines', 'Packaging', 'AI campaign', 'Social media', 'Art direction'];
+
+/** Holy Motors style tag: a thin outlined pill, filled when chosen */
+const tagCls = (on: boolean) =>
+  `inline-flex items-center h-8 px-3.5 rounded-full text-[13px] leading-none whitespace-nowrap border transition-colors outline-none focus-visible:shadow-[0_0_0_2px_#fff,0_0_0_4px_#111] ${on ? 'bg-[#111] border-[#111] text-white' : 'border-[#111]/80 text-[#111] hover:bg-[#111] hover:text-white'}`;
+
+/** every case, with filters by discipline; the filter lives in ?tag= */
+export function CaseGrid({ initialTag }: { initialTag?: string }) {
   const { tx } = useI18n();
-  const [filter, setFilter] = useState<string | null>(null);
-  const tags = useMemo(() => Array.from(new Set(STUDIES.flatMap((s) => s.tags.map((t) => t.en)))), []);
+  const [params, setParams] = useSearchParams();
+  const [filter, setFilter] = useState<string | null>(params.get('tag') ?? initialTag ?? null);
+  useEffect(() => { const t = params.get('tag'); if (t) setFilter(t); }, [params]);
+  // disciplines only, as on the reference; sectors stay on the cards
+  const tags = useMemo(() => FILTERS.filter((f) => STUDIES.some((s) => s.tags.some((t) => t.en === f))), []);
   const shown = filter ? STUDIES.filter((s) => s.tags.some((t) => t.en === filter)) : STUDIES;
-  const label = (en: string) => {
-    const t = STUDIES.flatMap((s) => s.tags).find((x) => x.en === en);
-    return t ? tx(t.en, t.ka) : en;
+  const label = (en: string) => { const t = STUDIES.flatMap((s) => s.tags).find((x) => x.en === en); return t ? tx(t.en, t.ka) : en; };
+  const pick = (t: string | null) => {
+    setFilter(t);
+    const next = new URLSearchParams(params);
+    if (t) next.set('tag', t); else next.delete('tag');
+    setParams(next, { replace: true, preventScrollReset: true });
   };
 
   return (
     <>
-      <PageIntro title={tx('Case studies', 'ქეისები')}>
-        {tx('Branding and campaigns, each told as one story: the brief, the idea, the work.', 'ბრენდინგი და კამპანიები, თითო ერთ ისტორიად: ბრიფი, იდეა, შედეგი.')}
-      </PageIntro>
-
-      {STUDIES.length > 1 && (
-        <div className="px-1.5 pb-6 flex flex-wrap items-center gap-2">
-          <span className="text-[14px] text-[#6f6f6f] mr-1">{tx('Filter by', 'ფილტრი')} →</span>
-          <button type="button" onClick={() => setFilter(null)} aria-pressed={filter === null} className={pillCls(filter === null)}>{tx('All', 'ყველა')}</button>
-          {tags.map((t) => (
-            <button key={t} type="button" onClick={() => setFilter(t)} aria-pressed={filter === t} className={pillCls(filter === t)}>{label(t)}</button>
-          ))}
-        </div>
-      )}
+      <div className="px-1.5 pb-8 flex items-center gap-2 overflow-x-auto [scrollbar-width:none]">
+        <span className="shrink-0 text-[14px] text-[#111] mr-1">{tx('Filter by', 'ფილტრი')} →</span>
+        <button type="button" onClick={() => pick(null)} aria-pressed={filter === null} className={tagCls(filter === null)}>{tx('All', 'ყველა')}</button>
+        {tags.map((t) => (
+          <button key={t} type="button" onClick={() => pick(filter === t ? null : t)} aria-pressed={filter === t} className={tagCls(filter === t)}>{label(t)}</button>
+        ))}
+      </div>
 
       <section aria-label={tx('Case studies', 'ქეისები')} className="px-1.5 grid grid-cols-1 md:grid-cols-2 gap-x-1.5 gap-y-12">
         {shown.map((s) => (
@@ -100,22 +142,29 @@ export function CaseStudiesContent() {
                   <span className="relative after:absolute after:left-0 after:-bottom-0.5 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-current after:transition-transform after:duration-300 group-hover:after:scale-x-100">{tx('View case', 'ქეისის ნახვა')}</span>
                 </span>
               </div>
-              <p className="mt-2 px-0.5 max-w-[520px] text-[14px] leading-[1.55] text-[#6f6f6f] line-clamp-2">{tx(s.en, s.ka)}</p>
+              <p className="mt-2 px-0.5 max-w-[560px] text-[14px] leading-[1.55] text-[#6f6f6f] line-clamp-2">{tx(s.en, s.ka)}</p>
               <div className="mt-3 px-0.5 flex flex-wrap gap-1.5">
                 {s.tags.map((t) => (
-                  <span key={t.en} className="rounded-full px-3 py-1 text-[12.5px] text-[#111] ring-1 ring-inset ring-[#111]/70">{tx(t.en, t.ka)}</span>
+                  <span key={t.en} className="inline-flex items-center h-7 px-3 rounded-full border border-[#111]/80 text-[12.5px] text-[#111]">{tx(t.en, t.ka)}</span>
                 ))}
               </div>
             </CaseLink>
           </Reveal>
         ))}
-        <Reveal>
-          <div className="aspect-[16/11] rounded-md bg-[#f2f2f2] flex flex-col items-center justify-center text-center px-8">
-            <p className="text-[15px] leading-[1.5] text-[#111] max-w-[320px]">{tx('More cases are on the way. Have a brand or a campaign in mind?', 'სხვა ქეისებიც მალე დაემატება. გაქვს ბრენდი ან კამპანია გეგმაში?')}</p>
-            <div className="mt-6"><CtaLink /></div>
-          </div>
-        </Reveal>
       </section>
+    </>
+  );
+}
+
+export function CaseStudiesContent({ initialTag }: { initialTag?: string }) {
+  const { tx } = useI18n();
+  return (
+    <>
+      <PageIntro title={tx('Case studies', 'ქეისები')}>
+        {tx('Product, branding and campaigns, each told as one story.', 'პროდუქტი, ბრენდინგი და კამპანიები, თითო ერთ ისტორიად.')}
+      </PageIntro>
+      <CaseGrid initialTag={initialTag} />
+      <div className="pt-16 flex justify-center"><CtaLink /></div>
     </>
   );
 }

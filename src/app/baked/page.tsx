@@ -4,7 +4,7 @@ import { HomeSEO, ServicesSEO, ContactSEO, UxUiSEO, SocialMediaAdsSEO, SocialMed
 import { useActiveSection } from '../components/active-section-context';
 import { BakedShell } from './shell';
 import { HomeContent } from './home';
-import { AdsContent, ContactContent, MotionContent, ServicesContent, UxUiContent } from './pages';
+import { AdsContent, ContactContent, MotionContent, ServicesContent } from './pages';
 import { useI18n } from './i18n';
 import { WorkContent } from './work';
 import { CaseStudiesContent } from './case-studies';
@@ -32,7 +32,7 @@ export function BakedPage() {
     section === 'contact' ? [<ContactSEO />, <ContactContent />]
     : section === 'services' ? [<ServicesSEO />, <ServicesContent />]
     : section === 'work' ? [<SEO title="Work" description="Salome Mosiava's work by category: UX/UI, branding, social media ads and motion." />, <WorkContent />]
-    : section === 'ux-ui' ? [<UxUiSEO />, <UxUiContent />]
+    : section === 'ux-ui' ? [<UxUiSEO />, <CaseStudiesContent initialTag="UX/UI" />]
     : section === 'case-studies' ? [<SEO title="Case Studies" description="Branding and campaign case studies by Salome Mosiava, each told as one story: the brief, the idea, the work." />, <CaseStudiesContent />]
     : section === 'social-media-ads' ? [<SocialMediaAdsSEO />, <AdsContent />]
     : section === 'social-media-motion' ? [<SocialMediaMotionSEO />, <MotionContent />]

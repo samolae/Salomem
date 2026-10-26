@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
-import { CaseLink } from '../components/case-transition';
 import { cld } from '../lib/cld';
-import { Caption, CtaLink, PageIntro, Reveal } from './ui';
-import { adsBrands, adsMardi1, adsTerminal1, motionReels, screenAurumMainHQ, schenkerSendung, unispaceLogin } from './data';
+import { CtaLink, PageIntro } from './ui';
+import { adsBrands, adsMardi1, adsTerminal1, motionReels } from './data';
 import { useI18n } from './i18n';
+import { CaseGrid } from './case-studies';
 
 /*
  * All work, as a row of desktop folders in the @areuli.design style. Point
@@ -20,13 +20,11 @@ type Folder = { id: string; to: string; label: string; en: string; ka: string; c
 
 // macOS-style desktop folders with snake_case names, as on @areuli.design
 const FOLDERS: Folder[] = [
-  { id: 'ux', to: '/work/ux-ui', label: 'ui_ux', en: 'UX/UI', ka: 'UX/UI', countEn: '3 products', countKa: '3 პროდუქტი', color: ['#62b5ff', '#3d9bf0', '#2b86dc'],
-    thumbs: [screenAurumMainHQ, schenkerSendung, unispaceLogin].map((s) => cld(s, 240)) },
   /* Dasturi hidden for now
   { id: 'brand', to: '/projects/dasturi', label: 'brand_design', en: 'Branding', ka: 'ბრენდინგი', countEn: '1 brand', countKa: '1 ბრენდი', color: ['#ffd25e', '#f6c03a', '#e5a91d'],
     thumbs: ['/cases/dasturi/labels/saperavi-gold.jpg', '/cases/dasturi/lineup-1000.jpg', '/cases/dasturi/labels/kisi-bordeaux.jpg'] },
   */
-  { id: 'cases', to: '/work/case-studies', label: 'case_studies', en: 'Case studies', ka: 'ქეისები', countEn: '3 cases', countKa: '3 ქეისი', color: ['#ffd25e', '#f6c03a', '#e5a91d'],
+  { id: 'cases', to: '/work/case-studies', label: 'case_studies', en: 'Case studies', ka: 'ქეისები', countEn: '6 cases', countKa: '6 ქეისი', color: ['#ffd25e', '#f6c03a', '#e5a91d'],
     thumbs: ['/cases/gv/reception-1200.jpg', '/cases/fitmeal/picnic-bowl-800.jpg', '/cases/dasturi/lineup-1000.jpg'] },
   { id: 'ads', to: '/work/social-media-ads', label: 'soc_media_ads', en: 'Ads', ka: 'რეკლამა', countEn: `${adsBrands.length} brands`, countKa: `${adsBrands.length} ბრენდი`, color: ['#5fd06e', '#3fb24f', '#2f9a3f'],
     thumbs: [adsTerminal1, adsBrands[0].items[2].src, adsMardi1].map((s) => cld(s, 240)) },
@@ -78,14 +76,6 @@ function FolderCard({ f, open, onOpen }: { f: Folder; open: boolean; onOpen: (id
   );
 }
 
-const FULL_CASES = [
-  { to: '/projects/dasturi', title: 'Dasturi', subEn: 'Georgian wine brand · identity, labels, packaging', subKa: 'ქართული ღვინის ბრენდი · იდენტობა, ეტიკეტები, შეფუთვა', img: '/cases/dasturi/lineup-1000.jpg', bg: '#191A17', local: true },
-  { to: '/projects/gv-capital', title: 'GV Capital', subEn: 'Investment holding · brand concept, identity, guidelines', subKa: 'საინვესტიციო ჰოლდინგი · კონცეფცია, იდენტობა, გაიდლაინი', img: '/cases/gv/reception-1200.jpg', bg: '#16232A', local: true },
-  { to: '/projects/fitmeal', title: 'FitMeal', subEn: 'Spring campaign made with AI · art direction', subKa: 'საგაზაფხულო კამპანია AI-ით · არტ დირექშენი', img: '/cases/fitmeal/picnic-bowl-800.jpg', bg: '#F6F1E7', local: true },
-  { to: '/projects/aurum', title: 'AURUM', subEn: 'Crypto exchange · B2C fintech', subKa: 'კრიპტოგაცვლა · B2C ფინტექი', img: screenAurumMainHQ, bg: 'linear-gradient(160deg,#16130b,#0b0b0f 70%)' },
-  { to: '/projects/schenker', title: 'Schenker', subEn: 'Logistics platform · enterprise UX', subKa: 'ლოჯისტიკის პლატფორმა · კორპორატიული UX', img: schenkerSendung, bg: 'linear-gradient(160deg,#e8ecd8,#d4dab8)' },
-  { to: '/projects/unispace', title: 'Unispace', subEn: 'Student management · EdTech', subKa: 'სტუდენტების მართვა · EdTech', img: unispaceLogin, bg: 'linear-gradient(160deg,#dfe6ff,#eef1ff)' },
-];
 
 export function WorkContent() {
   const { tx } = useI18n();
@@ -115,21 +105,9 @@ export function WorkContent() {
         </div>
       </section>
 
-      <section aria-labelledby="full" className="px-1.5 pt-16">
-        <h2 id="full" className="px-0.5 pb-3 text-[14px] text-[#6f6f6f]">{tx('Told in full', 'დეტალურად აღწერილი პროექტები')}</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-1.5">
-          {FULL_CASES.map((c) => (
-            <Reveal key={c.to}>
-              <CaseLink to={c.to} cardId={`work-${c.title.toLowerCase()}`} className="group block">
-                <div className={`relative overflow-hidden rounded-md ${c.local ? '' : 'p-[8%]'}`} style={{ background: c.bg }}>
-                  <img src={c.local ? c.img : cld(c.img, 1100)} alt={`${c.title}`} loading="lazy" decoding="async"
-                    className={`block w-full h-auto transition-transform duration-700 ease-out group-hover:scale-[1.02] ${c.local ? '' : 'rounded-md shadow-[0_24px_60px_rgba(0,0,0,0.35)]'}`} />
-                </div>
-                <Caption title={c.title} sub={tx(c.subEn, c.subKa)} tag={tx('Full case', 'სრული ქეისი')} />
-              </CaseLink>
-            </Reveal>
-          ))}
-        </div>
+      <section aria-labelledby="full" className="pt-16">
+        <h2 id="full" className="px-2 pb-3 text-[14px] text-[#6f6f6f]">{tx('Case studies', 'ქეისები')}</h2>
+        <CaseGrid />
         <div className="pt-12 flex justify-center"><CtaLink /></div>
       </section>
     </>

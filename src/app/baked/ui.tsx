@@ -102,7 +102,8 @@ export function FadeImg({ src, alt = '', className = '', sizes = 'tileLarge', ea
       draggable={false}
       onLoad={() => setLoaded(true)}
       ref={(el) => { if (el?.complete && el.naturalWidth) setLoaded(true); }}
-      className={`${className} ${contain ? 'object-contain' : 'object-cover'} transition-opacity duration-700 ${loaded ? 'opacity-100' : 'opacity-0'}`}
+      data-loaded={loaded ? '' : undefined}
+      className={`${className} ${contain ? 'object-contain' : 'object-cover'}`}
     />
   );
 }

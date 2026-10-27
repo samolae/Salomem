@@ -5,6 +5,7 @@ import { routes } from './app/routes';
 import { startHydration } from './app/hydration';
 import { homeRoute } from './app/case-routes';
 import './styles/index.css';
+import { startBlurUp } from './app/lib/blur-up';
 
 /*
  * Pages listed in PRERENDER_PATHS arrive as finished HTML (scripts/
@@ -29,6 +30,8 @@ function recover() {
 }
 window.addEventListener('vite:preloadError', (e) => { e.preventDefault(); recover(); });
 window.addEventListener('load', () => { setTimeout(() => { try { sessionStorage.removeItem('chunk-retry'); } catch { /* private mode */ } }, 4000); });
+
+startBlurUp();
 
 async function boot() {
   const container = document.getElementById('root')!;

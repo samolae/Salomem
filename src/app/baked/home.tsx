@@ -6,7 +6,7 @@ import { HeroCanvas } from './hero-canvas';
 import { useMotionPause } from './shell';
 import { AreuliBlock, Caption, CtaLink, FadeImg, LogoStrip, Reveal, T } from './ui';
 import { clients, experiences, spotlights, spotlightsKa } from './content';
-import { StudyCards, StudyCover } from './case-studies';
+import { StudyCard, StudyCover } from './case-studies';
 import { useI18n } from './i18n';
 import {
   adsBrands, adsCarmall1, adsGino4, adsTerminal1,
@@ -187,6 +187,10 @@ export function HomeContent() {
     </Link>,
   ];
 
+  const pick = (k: string) => [...left, ...right].find((n) => String((n as { key?: unknown }).key) === k);
+  const aboutTile = <Reveal className="h-full [&>div]:h-full [&>div]:mb-0 [&>div]:flex [&>div]:flex-col [&>div]:justify-center">{pick('about')}</Reveal>;
+  const expTile = <Reveal className="h-full [&>div]:h-full [&>div]:mb-0">{pick('exp')}</Reveal>;
+
   return (
     <>
       <HeroCanvas />
@@ -224,7 +228,11 @@ export function HomeContent() {
         <h2 id="work-title" className="sr-only">{tx('Selected work', 'რჩეული ნამუშევრები')}</h2>
         {/* every case by its cover, then ads and motion in the same frame: even rows */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-1.5 gap-y-10">
-          <StudyCards />
+          {['/projects/dasturi', '/projects/gv-capital', '/projects/scope'].map((p) => <StudyCard key={p} to={p} />)}
+          {aboutTile}
+          {['/projects/fitmeal', '/projects/aurum'].map((p) => <StudyCard key={p} to={p} />)}
+          <div className="md:col-span-2">{expTile}</div>
+          {['/projects/schenker', '/projects/unispace'].map((p) => <StudyCard key={p} to={p} />)}
           <Reveal>
             <Link to={to('/work/social-media-ads')} className="group block">
               <div className="relative aspect-[16/11] overflow-hidden rounded-md bg-[#111]">
@@ -251,9 +259,6 @@ export function HomeContent() {
               <div className="mt-1 px-0.5 text-[13px] text-[#6f6f6f]">{tx('Reels and brand animations', 'რილსები და ბრენდის ანიმაციები')}</div>
             </Link>
           </Reveal>
-        </div>
-        <div className="pt-12 grid grid-cols-1 md:grid-cols-2 gap-1.5 items-stretch">
-          {[...left, ...right].filter((n) => ['about', 'exp'].includes(String((n as { key?: unknown }).key))).map((n, i) => <Reveal key={i} className="[&>div]:h-full [&>div]:mb-0 h-full">{n}</Reveal>)}
         </div>
       </section>
 

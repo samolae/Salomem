@@ -297,6 +297,12 @@ function StudyCardOf({ x, prefix }: { x: Study; prefix: string }) {
   );
 }
 
+/** one case's card by its path (for the home page) */
+export function StudyCard({ to }: { to: string }) {
+  const x = STUDIES.find((st) => st.to === to);
+  return x ? <Reveal><StudyCardOf x={x} prefix="home" /></Reveal> : null;
+}
+
 /** every case as a cover card, in the grid's order (for the home page) */
 export function StudyCards() {
   return <>{STUDIES.map((x) => <Reveal key={x.to}><StudyCardOf x={x} prefix="home" /></Reveal>)}</>;

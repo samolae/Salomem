@@ -11,7 +11,7 @@ import { MoreCases } from './case-studies';
 export function ProductCase({ current, children }: { current: string; children: ReactNode }) {
   return (
     <BakedShell>
-      <style>{`.product-case nav[aria-label="Case study"]{display:none!important}`}</style>
+      <style>{`.product-case nav[aria-label="Case study"],.product-case [aria-label="Back to top"]{display:none!important}`}</style>
       <div className="product-case">{children}</div>
       <div className="bg-white pb-6"><MoreCases current={current} /></div>
     </BakedShell>

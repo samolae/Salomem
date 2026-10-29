@@ -11,7 +11,6 @@ import { useNavigate } from 'react-router';
 import { ArrowLeft, ChevronUp } from 'lucide-react';
 
 import { CaseHeroTarget } from './case-transition';
-import { NextProjectRecommendation } from './next-project';
 import { CaseStudySectionNav } from './case-study-nav';
 import { SchenkerSEO } from './seo';
 import {
@@ -895,7 +894,7 @@ export function SchenkerCaseStudy() {
           </div>
         </section>
 
-        <NextProjectRecommendation currentProject="schenker" />
+        
       </main>
     </div>
   );

@@ -180,8 +180,8 @@ const STUDIES: Study[] = [
   },
   {
     to: '/projects/fitmeal', title: 'FitMeal',
-    en: 'A spring campaign for a healthy food brand, made entirely with AI. Real dishes, no faces, cut for the feed and for stories.',
-    ka: 'საგაზაფხულო კამპანია ჯანსაღი კვების ბრენდისთვის, მთლიანად AI-ით. ნამდვილი კერძები, სახის გარეშე, ფიდისა და სთორისთვის.',
+    en: 'A spring campaign for a healthy food brand, made entirely with AI. Real dishes, the food always the hero, cut for the feed and for stories.',
+    ka: 'საგაზაფხულო კამპანია ჯანსაღი კვების ბრენდისთვის, მთლიანად AI-ით. ნამდვილი კერძები, მთავარი ყოველთვის კერძია, ფიდისა და სთორისთვის.',
     tags: [{ en: 'AI campaign', ka: 'AI კამპანია' }, { en: 'Social media', ka: 'სოციალური მედია' }, { en: 'Art direction', ka: 'არტ დირექშენი' }],
     cover: <FitmealBento />,
     peek: '/cases/fitmeal/floor-tall-800.jpg',

@@ -254,7 +254,7 @@ export function FitmealCase() {
 
   const rules = [
     { en: 'Real food', ka: 'ნამდვილი საკვები', den: 'As close to a real photo shoot as possible, with food that looks like the real dish.', dka: 'მაქსიმალურად რეალურ ფოტოსესიასთან მიახლოებული, საკვები ნამდვილ კერძს უნდა ჰგავდეს.' },
-    { en: 'No faces', ka: 'სახის გარეშე', den: 'FitMeal works with real people as its faces, so AI never shows one. People come in from the back or as hands.', dka: 'FitMeal სახეებად რეალურ ადამიანებს იყენებს, ამიტომ AI სახეს არ აჩვენებს. ადამიანი ზურგით ან ხელით შემოდის.' },
+    { en: 'Product first', ka: 'პროდუქტი პირველია', den: 'People are in the frame, but the dish is always the hero: faces stay small, turned away or out of focus.', dka: 'ადამიანები კადრში არიან, მაგრამ მთავარი ყოველთვის კერძია: სახე პატარაა, შემობრუნებული ან ფოკუსს მიღმა.' },
     { en: 'Fit bodies', ka: 'ფიტ სხეული', den: 'Where a body is in the frame, it shows what the food does: strong, healthy, fit.', dka: 'სადაც სხეული ჩანს, მან პროდუქტის ძალა უნდა აჩვენოს: ძლიერი, ჯანსაღი, ფიტ.' },
     { en: 'Room for copy', ka: 'ადგილი ტექსტს', den: 'Every frame keeps a calm area for the headline FitMeal adds later.', dka: 'ყველა კადრში დატოვებულია მშვიდი სივრცე სათაურისთვის, რომელსაც FitMeal მერე ჩასვამს.' },
     { en: 'Two formats', ka: 'ორი ფორმატი', den: 'Each picture works at 4:5 for the feed and 9:16 for stories.', dka: 'თითო ვიზუალი მუშაობს 4:5-ზე ფიდისთვის და 9:16-ზე სთორისთვის.' },
@@ -264,7 +264,7 @@ export function FitmealCase() {
     <BakedShell>
       <SEO
         title="FitMeal | AI Spring Campaign Case Study"
-        description="FitMeal: a spring campaign made with AI. Photo-real visuals of real dishes, no faces, room for copy, cut for 4:5 and 9:16. Art direction by Salome Mosiava."
+        description="FitMeal: a spring campaign made with AI. Photo-real visuals of real dishes, the food always the hero, room for copy, cut for 4:5 and 9:16. Art direction by Salome Mosiava."
         keywords="FitMeal, AI campaign, AI visuals, food photography, social media, art direction, healthy food, Salome Mosiava"
         type="article"
       />
@@ -276,8 +276,8 @@ export function FitmealCase() {
           {/* ── Hero ─────────────────────────────────────────────────── */}
           <header className="relative">
             <Wrap className="flex items-start justify-between pt-6 sm:pt-8 text-[13px]">
-              <Link to="/work" className="inline-flex items-center gap-1.5 text-[#0E4B48]/55 hover:text-[#0E4B48] transition-colors">
-                <ArrowLeft size={13} /> {tx('Work', 'ნამუშევრები')}
+              <Link to="/work/case-studies" className="inline-flex items-center gap-1.5 text-[#0E4B48]/55 hover:text-[#0E4B48] transition-colors">
+                <ArrowLeft size={13} /> {tx('Case studies', 'ქეისები')}
               </Link>
               <span className="rounded-full bg-white px-3 py-1 text-[12px] ring-1 ring-inset ring-[#0E4B48]/10">{tx('AI campaign', 'AI კამპანია')}</span>
             </Wrap>
@@ -397,7 +397,7 @@ export function FitmealCase() {
           <DishSwitch onOpen={setOpen} />
 
           {/* ── 06 Hands ─────────────────────────────────────────────── */}
-          <Chapter no="06" name={tx('People', 'ადამიანები')} id="hands" title={tx('Hands, never faces', 'ხელები, არასდროს სახე')}>
+          <Chapter no="06" name={tx('People', 'ადამიანები')} id="hands" title={tx('People in, product first', 'ადამიანები კადრში, პროდუქტი წინ')}>
             {tx('People stay in the story without taking it over: a fork over the box, two friends sharing bowls. Toned arms and a fit silhouette carry the promise of the food.',
               'ადამიანები ისტორიაში რჩებიან, მაგრამ მას არ იპყრობენ: ჩანგალი ყუთთან, ორი მეგობარი ბოულებით. ფიტ ხელები და სილუეტი პროდუქტის დაპირებას ატარებს.')}
           </Chapter>
@@ -419,7 +419,7 @@ export function FitmealCase() {
           <Wrap className="py-28 sm:py-40">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-8 gap-y-10 items-end">
               <div className="lg:col-span-4 grid grid-cols-3 gap-4">
-                {[['20', tx('frames', 'კადრი')], ['9', tx('scenes', 'სცენა')], ['0', tx('faces', 'სახე')]].map(([n, l]) => (
+                {[['20', tx('frames', 'კადრი')], ['9', tx('scenes', 'სცენა')], ['2', tx('formats', 'ფორმატი')]].map(([n, l]) => (
                   <div key={l}>
                     <div className="text-[44px] sm:text-[56px] leading-none tabular-nums" style={{ fontWeight: 600 }}>{n}</div>
                     <div className="mt-2 text-[13px] text-[#0E4B48]/55">{l}</div>

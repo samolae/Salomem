@@ -3,7 +3,7 @@ import { IMG } from '../lib/cld';
 import { adsBrands, motionReels } from './data';
 import { spotlights } from './content';
 import { useMotionPause, PauseButton } from './shell';
-import { CtaLink, Lightbox, type LightboxItem } from './ui';
+import { CtaLink, Lightbox, T, type LightboxItem } from './ui';
 import { brandName, useI18n } from './i18n';
 
 /*
@@ -320,7 +320,7 @@ export function HeroCanvas() {
   useEffect(() => { window.dispatchEvent(new Event('scroll')); }, [paused]);
 
   return (
-    <section ref={heroRef} aria-label={tx('Selected work, moving canvas', 'ნამუშევრები, მოძრავი კანვასი')} className="relative h-[190svh]">
+    <section ref={heroRef} aria-label={tx('Selected work, moving canvas', 'ნამუშევრები, მოძრავი კანვასი')} className="relative h-[100svh] min-h-[560px]">
       <div className="sticky top-0 h-[100svh] min-h-[560px] overflow-hidden bg-white">
         <div ref={stageRef} className="absolute inset-0">
           <div ref={worldRef} className="absolute inset-0 select-none cursor-default" style={{ perspective: g ? `${g.P}px` : '1100px', touchAction: 'pan-y' }}>
@@ -354,18 +354,25 @@ export function HeroCanvas() {
         {/* the brand under the pointer */}
         <div ref={chipRef} aria-hidden className="pointer-events-none fixed left-0 top-0 z-20 rounded-full bg-[#111] px-3 py-1 text-[12px] text-white opacity-0 transition-opacity duration-150 whitespace-nowrap" />
 
-        <h1 className="sr-only">{tx('Salome Mosiava, Senior Product Designer and Art Director', 'სალომე მოსიავა, სენიორ პროდაქტ დიზაინერი და არტ დირექტორი')}</h1>
+
         {/* keyboard and screen readers get a plain list of the work */}
         <ul className="sr-only">
           {pool.slice(0, 24).map((it, i) => (
             <li key={i}><button type="button" onClick={() => setOpen(i)}>{tx('Open', 'გახსენი')} {brandName(it.brand, ka)}</button></li>
           ))}
         </ul>
-        <div className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2"><CtaLink /></div>
+        {/* who this is, on the very first screen */}
+        <div className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center text-center">
+          <h1 className="rounded-[14px] bg-white/85 px-5 py-3 backdrop-blur-md">
+            <span className="block text-[30px] sm:text-[44px] leading-[1] text-[#111]" style={{ fontFamily: T.display, fontWeight: 900 }}>{tx('Salome Mosiava', 'სალომე მოსიავა')}</span>
+            <span className="mt-2 block text-[14px] sm:text-[16px] text-[#3f3f3f]">{tx('Senior Product Designer & Art Director', 'სენიორ პროდაქტ დიზაინერი და არტ დირექტორი')}</span>
+          </h1>
+          <div className="mt-4"><CtaLink /></div>
+        </div>
         <PauseButton className="absolute left-2 bottom-24 sm:bottom-24 z-10" />
         <div className="pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 z-10 rounded-md bg-white/80 px-3 py-1.5 text-[13px] text-[#6f6f6f] backdrop-blur-md whitespace-nowrap">
-          <span className="hidden sm:inline">{tx('Move to look around, scroll to open', 'კურსორით დაათვალიერე, სქროლით გახსენი')}</span>
-          <span className="sm:hidden">{tx('Swipe to spin, scroll to open', 'გაასრიალე, სქროლით გახსენი')}</span>
+          <span className="hidden sm:inline">{tx('Move to look around, click to open', 'კურსორით დაათვალიერე, დააჭირე გასახსნელად')}</span>
+          <span className="sm:hidden">{tx('Swipe to spin, tap to open', 'გაასრიალე, დააჭირე გასახსნელად')}</span>
         </div>
       </div>
 

@@ -8,7 +8,6 @@ import { ArrowLeft, ChevronUp } from 'lucide-react';
 import { DashboardPreview, ExchangeWidget } from './dashboard-preview';
 import { DesignSystemFull } from './color-palette';
 import { UXStories } from './ux-stories';
-import { NextProjectRecommendation } from './next-project';
 import { CaseStudySectionNav } from './case-study-nav';
 import { AurumSEO } from './seo';
 import { RevealLines, Rise, TiltIn, ClipReveal, CountUp, DrawRule, Marquee, ReadProgress } from './case-motion';
@@ -850,7 +849,7 @@ export function AurumCaseStudy() {
           </ChapterHead>
         </Section>
 
-        <NextProjectRecommendation currentProject="aurum" />
+        
       </main>
     </div>
   );

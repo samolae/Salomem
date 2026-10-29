@@ -10,7 +10,6 @@ import {
   LayoutGrid, PenTool, BookOpen, Component,
 } from 'lucide-react';
 import { useTheme } from './theme-provider';
-import { NextProjectRecommendation } from './next-project';
 import { CaseStudySectionNav } from './case-study-nav';
 import { UnispaceSEO } from './seo';
 import { IMG, responsive } from '../lib/cld';
@@ -1404,7 +1403,7 @@ export function UnispaceCaseStudy() {
         </Section>
 
         {/* ─── NEXT PROJECT ───────────────────────────────────────── */}
-        <NextProjectRecommendation currentProject="unispace" />
+        
       </main>
     </div>
   );

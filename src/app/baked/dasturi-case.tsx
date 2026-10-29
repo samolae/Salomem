@@ -191,8 +191,8 @@ export function DasturiCase() {
           {/* ── Hero: the ibex in chrome ─────────────────────────────── */}
           <header className="relative min-h-[calc(100svh-64px)] flex flex-col">
             <Wrap className="flex items-start justify-between pt-6 sm:pt-8 text-[13px]">
-              <Link to="/work" className="inline-flex items-center gap-1.5 text-white/50 hover:text-white transition-colors">
-                <ArrowLeft size={13} /> {tx('Work', 'ნამუშევრები')}
+              <Link to="/work/case-studies" className="inline-flex items-center gap-1.5 text-white/50 hover:text-white transition-colors">
+                <ArrowLeft size={13} /> {tx('Case studies', 'ქეისები')}
               </Link>
               <span className="hidden sm:inline text-white/35">{tx('Brand identity', 'ბრენდის იდენტობა')}</span>
             </Wrap>

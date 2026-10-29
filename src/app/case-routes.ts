@@ -1,3 +1,4 @@
+import { createElement } from 'react';
 /*
  * Case studies are React Router lazy routes: the router waits for the
  * module before committing the navigation, so a view transition always
@@ -9,11 +10,11 @@ export const caseRoutes = {
   // The white case layout (./baked/case-page) is kept for later; the dark
   // case pages stay live
   '/projects/aurum': () =>
-    import('./components/aurum-case-study').then((m) => ({ Component: m.AurumCaseStudy })),
+    Promise.all([import('./components/aurum-case-study'), import('./baked/product-case')]).then(([m, w]) => ({ Component: () => createElement(w.ProductCase, { current: '/projects/aurum' }, createElement(m.AurumCaseStudy)) })),
   '/projects/schenker': () =>
-    import('./components/schenker-case-study').then((m) => ({ Component: m.SchenkerCaseStudy })),
+    Promise.all([import('./components/schenker-case-study'), import('./baked/product-case')]).then(([m, w]) => ({ Component: () => createElement(w.ProductCase, { current: '/projects/schenker' }, createElement(m.SchenkerCaseStudy)) })),
   '/projects/unispace': () =>
-    import('./components/unispace-case-study').then((m) => ({ Component: m.UnispaceCaseStudy })),
+    Promise.all([import('./components/unispace-case-study'), import('./baked/product-case')]).then(([m, w]) => ({ Component: () => createElement(w.ProductCase, { current: '/projects/unispace' }, createElement(m.UnispaceCaseStudy)) })),
   '/projects/gv-capital': () =>
     import('./baked/gv-case').then((m) => ({ Component: m.GvCase })),
   '/projects/fitmeal': () =>

@@ -163,7 +163,7 @@ export function HomeContent() {
       <Caption title={ka ? 'ქარმოლი' : 'Carmall'} sub={tx('Campaign visuals', 'კამპანიის ვიზუალები')} tag={adsTag} />
     </Link>,
     <div key="exp" className="rounded-md bg-[#f2f2f2] px-5 py-6 sm:px-7 sm:py-8 mb-5">
-      <div className="text-[14px] text-[#6f6f6f] mb-4">{tx('Experience', 'გამოცდილება')}</div>
+      <div className="text-[14px] text-[#6f6f6f] mb-4 flex justify-between gap-4"><span>{tx('Experience', 'გამოცდილება')}</span><span className="text-[12px]">{tx('Some roles ran in parallel', 'ზოგი როლი პარალელურად მიმდინარეობდა')}</span></div>
       <ul className="divide-y divide-[#e4e4e4]">
         {experiences.map((e) => (
           <li key={e.company + e.start} className="flex items-center gap-3 py-2.5 text-[14px]">
@@ -171,6 +171,10 @@ export function HomeContent() {
             <span className="min-w-0 flex-1">
               <span className="text-[#111]">{e.company}</span>
               <span className="text-[#6f6f6f]"> · {ka ? e.roleKa : e.role}</span>
+            </span>
+            {/* the kind of role, so overlapping dates read as parallel work, not a mistake */}
+            <span className="rounded-full border border-[#dcdcdc] px-2 py-0.5 text-[11px] text-[#6f6f6f] whitespace-nowrap">
+              {ka ? ({ 'Full-time': 'სრული', 'Part-time': 'ნახევარი', Freelance: 'ფრილანსი', Contract: 'კონტრაქტი' } as Record<string, string>)[e.type] ?? e.type : e.type}
             </span>
             <span className="text-[#9a9a9a] whitespace-nowrap tabular-nums hidden sm:inline">
               {ka ? `${e.startKa} - ${e.endKa}` : `${e.start} - ${e.end}`}
@@ -202,13 +206,13 @@ export function HomeContent() {
           <h2 className="text-[34px] sm:text-[52px] leading-[1] text-[#111] mb-8 max-w-[860px]" style={{ fontFamily: T.display, fontWeight: 900 }}>
             {tx('80+ projects.', '80+ პროექტი.')} <span className="text-[#ff4306]">{tx('Countless sparks.', 'უთვალავი ნაპერწკალი.')}</span>
           </h2>
-          <p className="text-[15px] leading-[1.5] text-[#111] max-w-[390px]" style={{ fontWeight: 500 }}>
+          <p className="text-[18px] sm:text-[20px] leading-[1.45] text-[#111] max-w-[560px]" style={{ fontWeight: 500 }}>
             {tx(
               "I'm Salome, senior product designer & art director in Georgia. I turn the small signals and habits we often miss into ideas that create real business impact.",
               'მე ვარ სალომე, სენიორ პროდაქტ დიზაინერი და არტ დირექტორი საქართველოდან. პატარა სიგნალებსა და ჩვევებს, რომლებსაც ხშირად ვერ ვამჩნევთ, ვაქცევ იდეებად, რომლებიც ბიზნესს რეალურ შედეგს მოუტანს.',
             )}
           </p>
-          <p className="mt-5 text-[15px] leading-[1.5] text-[#6f6f6f] max-w-[390px]">
+          <p className="mt-5 text-[16px] sm:text-[17px] leading-[1.5] text-[#3f3f3f] max-w-[520px]">
             {tx(
               'Work across fintech, logistics, edtech, retail, healthcare and hospitality. Top-Rated Plus on Upwork.',
               'ვმუშაობ ფინტექში, ლოჯისტიკაში, განათლებაში, რითეილში, ჯანდაცვასა და სტუმარმასპინძლობაში. Upwork-ზე Top-Rated Plus სტატუსით.',
@@ -265,7 +269,7 @@ export function HomeContent() {
       {/* Spotlights */}
       <section aria-labelledby="spot-title" className="px-1.5 pt-16">
         <h2 id="spot-title" className="px-0.5 pb-3 text-[14px] text-[#6f6f6f]">{tx('Spotlights of 2025', '2025 წლის მთავარი მომენტები')}</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
           {spotlights.map((s, i) => {
             const t = ka ? spotlightsKa[i] : s;
             return (

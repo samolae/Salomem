@@ -65,7 +65,7 @@ function TopNav() {
             </Link>
           ))}
           <LangSwitch />
-          <Link to={to('/contact')} className={pillCls(true)}>{tx('contact me', 'კონტაქტი')}</Link>
+          <Link to={to('/contact')} className={pillCls(false)}>{tx('contact me', 'კონტაქტი')}</Link>
         </div>
 
         {/* Mobile: navigation lives in the dock at the bottom */}
@@ -160,7 +160,8 @@ function FloatingCta() {
     let pastHero = false;
     const visible = new Set<Element>();
     const update = () => setShow(pastHero && visible.size === 0);
-    const onScroll = () => { pastHero = window.scrollY > window.innerHeight * 0.6; update(); };
+    // it never sits over the work: it only comes up at the end of a page
+    const onScroll = () => { pastHero = window.scrollY + window.innerHeight > document.documentElement.scrollHeight - window.innerHeight * 1.2; update(); };
     const io = new IntersectionObserver((entries) => {
       entries.forEach((e) => (e.isIntersecting ? visible.add(e.target) : visible.delete(e.target)));
       update();

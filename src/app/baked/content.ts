@@ -49,11 +49,6 @@ export const experiences = [
 
 export const spotlights = [
   {
-    img: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773320797/0101_yqkpg2.webp',
-    tag: 'Business', title: 'Driving real impact',
-    desc: 'At Scope, we started from zero and, in less than two years, grew the team, collaborated with 50+ businesses, and delivered measurable results.',
-  },
-  {
     img: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773320796/0202_niubv1.webp',
     tag: 'Education', title: 'After Effects certification',
     desc: 'Expanding skills in motion design and advertising.',
@@ -125,7 +120,6 @@ export const formOptions = {
 
 /* ── Georgian ─────────────────────────────────────────────────────── */
 export const spotlightsKa = [
-  { tag: 'ბიზნესი', title: 'რეალური შედეგები', desc: 'Scope-ში ნულიდან დავიწყეთ და ორ წელზე ნაკლებ დროში გავზარდეთ გუნდი, ვითანამშრომლეთ 50+ ბიზნესთან და მივაღწიეთ გაზომვად შედეგებს.' },
   { tag: 'განათლება', title: 'After Effects სერტიფიკატი', desc: 'მოუშენ დიზაინისა და რეკლამის უნარების გაღრმავება.' },
   { tag: 'მენტორობა', title: 'მენტორობა', desc: 'მოზარდები, ქალები და სხვები დიზაინში: თეორიის რეალურ პრაქტიკად ქცევა პროფესიული აქსელერაციის პროგრამებით.' },
 ];

@@ -178,6 +178,12 @@ export function SocialCase({ d }: { d: SocialCaseData }) {
 
         {/* cover */}
         <section className="px-1.5">
+          {/* a cover picture is shown whole, at its own proportions */}
+          {c.image && !c.reels ? (
+            <div className="overflow-hidden rounded-md" style={{ background: c.bg, aspectRatio: `${c.image.w ?? 16}/${c.image.h ?? 9}` }}>
+              <img src={c.image.src} alt={c.image.alt ?? d.brand} fetchPriority="high" decoding="async" draggable={false} className="block h-full w-full object-cover" />
+            </div>
+          ) : (
           <div className="relative overflow-hidden rounded-md h-[86svh] min-h-[560px] max-h-[1000px] flex flex-col" style={{ background: c.bg, color: c.ink ?? '#fff' }}>
             {c.image && <div className="absolute inset-0"><Piece m={c.image} w={2000} /></div>}
             {c.logo && <div className="relative z-[1] flex justify-center pt-8 sm:pt-10"><img src={c.logo} alt={d.brand} style={{ height: c.logoH ?? 34 }} className="w-auto" /></div>}
@@ -193,6 +199,7 @@ export function SocialCase({ d }: { d: SocialCaseData }) {
             )}
             {c.line && <div className="relative z-[1] mt-auto flex justify-between gap-4 px-5 sm:px-8 pb-5 sm:pb-7 text-[14px] sm:text-[16px] opacity-85"><span>{tx(c.line.en, c.line.ka)}</span><span>{d.handle}</span></div>}
           </div>
+          )}
         </section>
 
         <Chapter label={tx('Brief', 'ბრიფი')}>{tx(d.brief.en, d.brief.ka)}</Chapter>

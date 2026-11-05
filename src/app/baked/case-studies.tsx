@@ -169,21 +169,6 @@ function PostsCover({ bg, posts }: { bg: string; posts: [string, number][] }) {
   );
 }
 
-/** Zummo: three pieces standing on Zummo orange */
-function ZummoCover() {
-  const P = '/cases/zummo';
-  const items = [['blue-machine', 'translateY(6%) rotate(-3deg)'], ['post-quality', 'translateY(-3%)'], ['glasses', 'translateY(5%) rotate(3deg)']];
-  return (
-    <div className="relative h-full w-full flex items-center justify-center gap-[3%] px-[8%]" style={{ background: '#FF6B04' }}>
-      {items.map(([n, t], i) => (
-        <div key={n} className={`${i === 1 ? 'w-[30%] aspect-[4/5]' : 'w-[24%] aspect-[9/16]'} overflow-hidden rounded-[6px] shadow-[0_18px_40px_rgba(0,0,0,.22)] transition-transform duration-700 ease-out group-hover:scale-[1.03]`} style={{ transform: t }}>
-          <img src={`${P}/${n}.jpg`} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" />
-        </div>
-      ))}
-    </div>
-  );
-}
-
 const STUDIES: Study[] = [
   ...(DASTURI_LIVE ? [{
     to: '/projects/dasturi', title: 'Dasturi',
@@ -214,8 +199,8 @@ const STUDIES: Study[] = [
     en: 'Social media for Zummo juicers in Georgia: Georgian reels, posts and AI product scenes that speak to cafés, hotels and restaurants.',
     ka: 'სოციალური მედია Zummo-ს წვენსაწურებისთვის საქართველოში: ქართული რილსები, პოსტები და AI ვიზუალები კაფეებისთვის, სასტუმროებისა და რესტორნებისთვის.',
     tags: [{ en: 'Social media', ka: 'სოციალური მედია' }, { en: 'Motion', ka: 'მოუშენი' }, { en: 'AI campaign', ka: 'AI კამპანია' }],
-    cover: <ZummoCover />,
-    peek: '/cases/zummo/yellow-machine.jpg',
+    cover: <div className="relative h-full w-full bg-[#f9f9f9]"><img src="/cases/zummo/cover.jpg" alt="" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover object-[62%_50%] transition-transform duration-[1200ms] ease-out group-hover:scale-[1.04]" /></div>,
+    peek: '/cases/zummo/bar-01.jpg',
   },
   {
     to: '/projects/fitmeal', title: 'FitMeal',

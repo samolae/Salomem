@@ -15,6 +15,16 @@ const post = {
   finance: img('post-finance', 4, 5, 'Ask for a financial calculation'),
   cta: img('post-cta', 4, 5, 'Zummo post'),
 };
+const film = (n: string, alt: string): Media => ({ src: `${P}/${n}.mp4`, poster: `${P}/${n}.jpg`, video: true, w: 4, h: 5, alt });
+const ig = {
+  where: img('ig-where', 4, 5, 'Where will you meet Zummo?'),
+  hotels: img('ig-hotels', 4, 5, 'Hotels and restaurants'),
+  retail: img('ig-retail', 4, 5, 'Supermarkets and bars'),
+  one: img('ig-one', 4, 5, 'Different businesses, one goal'),
+  business: img('ig-business', 4, 5, 'How long until it pays back?'),
+};
+const aug = [img('aug-01', 4, 5, 'Meet Zummo'), img('aug-02', 4, 5, 'Since 1992'), img('aug-03', 4, 5, 'Hotels, supermarkets, cafés, restaurants'), img('aug-04', 4, 5, 'Zummo in Georgia')];
+const bar = [img('bar-01', 4, 5, 'Bar?'), img('bar-02', 4, 5, 'Cocktails'), img('bar-03', 4, 5, 'Fresh juice'), img('bar-04', 4, 5, 'Want it for your bar?')];
 const reels = {
   natural: reel('reel-natural', '100% natural, in front of you'),
   evs: reel('reel-evs', 'No bitterness from the peel'),
@@ -40,11 +50,8 @@ export const ZUMMO: SocialCaseData = {
     keywords: 'Zummo, Zummo Georgia, social media, reels, B2B content, AI visuals, juicer, HoReCa, Salome Mosiava',
   },
   cover: {
-    bg: '#FF6B04',
-    logo: `${P}/logo-white.png`,
-    logoH: 30,
-    reels: [reels.evs, reels.natural, reels.sept],
-    line: { en: 'Fresh juice, for business', ka: 'ახალი წვენი ბიზნესისთვის' },
+    bg: '#f9f9f9',
+    image: { src: `${P}/cover.jpg`, w: 2688, h: 1152, alt: 'Zummo' },
   },
   brief: {
     en: 'Zummo makes professional citrus juicers in Spain. In Georgia the buyer is not the person drinking the juice but the business serving it, so every post had to speak to owners of cafés, hotels and restaurants, in Georgian, within Zummo’s own fresh look.',
@@ -58,10 +65,10 @@ export const ZUMMO: SocialCaseData = {
     en: 'One clear line per piece, set on an orange pill: 100% natural, no bitterness from the peel, see the process, ask for a calculation. Short reels for the feed, product scenes made with AI in bright studio colours, and posts that end with one action.',
     ka: 'თითო ნამუშევარზე ერთი მკაფიო ფრაზა, ნარინჯისფერ ფირფიტაზე: 100% ნატურალური, კანის სიმწარე არ მოჰყვება, პროცესს თავად ხედავ, მოითხოვეთ კალკულაცია. მოკლე რილსები ფიდისთვის, AI-ით შექმნილი პროდუქტის სცენები ნათელ სტუდიურ ფერებში და პოსტები, რომლებიც ერთი მოქმედებით მთავრდება.',
   },
-  feed: [post.hero, img('blue-machine', 9, 16), post.quality, img('cafe-machine', 2, 3), post.finance, img('yellow-machine', 9, 16), img('breakfast', 2, 3), post.cta, img('glasses', 9, 16), img('pour', 2, 3)],
-  pair: [img('yellow-machine', 9, 16, 'Zummo on yellow'), reels.natural],
-  strip: [post.hero, img('sky-machine', 9, 16), post.quality, img('tap', 2, 3), post.finance, img('plinth', 3, 4), post.cta, img('blue-machine', 9, 16), img('fruit-table', 2, 3), img('glasses', 9, 16)],
-  closing: [img('cafe-machine', 2, 3), img('pour', 2, 3), img('sky-machine-2', 9, 16)],
+  feed: [ig.where, aug[0], bar[0], ig.hotels, aug[2], bar[1], ig.business, aug[1], ig.retail, bar[3], aug[3], post.finance, ig.one, bar[2], post.hero, post.quality],
+  pair: [film('film-night-bar', 'Night Bar'), film('film-hotel', 'Hotels and cafés')],
+  strip: [bar[0], bar[1], bar[2], bar[3], film('film-safe', 'Straight from the orange'), aug[0], aug[1], aug[2], aug[3], img('story-business', 9, 16, 'Story'), img('yellow-machine', 9, 16, 'Zummo on yellow'), img('fb-grid', 1, 1, 'Facebook grid'), img('sky-machine', 9, 16, 'Zummo on blue')],
+  closing: [reels.evs, reels.natural, reels.sept],
   wallBg: '#FF6B04',
 };
 

@@ -30,9 +30,10 @@ const FORMAT: [string, string] = ['Formats', 'ფორმატები'];
 const tm = [im(adsTerminal1, 1, 1, 'Ready for a fresh start?'), im(adsTerminal2, 1, 1, '20% off this month'), im(adsTerminal3, 9, 16, 'Monthly memberships, story'), im(adsTerminal4, 1, 1, 'Discount on Terminal spaces'), im(adsTerminal5, 1, 1, '24/7 access')];
 export const TERMINAL: SocialCaseData = {
   path: '/projects/terminal', brand: 'Terminal', handle: 'terminal.ge',
+  year: '2024',
   avatar: `${CLD}/image/upload/f_auto,q_auto/v1773916799/terminal_hcftru.webp`,
   tags: [SOCIAL, ADS, L('Offers', 'შეთავაზებები')],
-  facts: [fact(CLIENT, ['Terminal', 'ტერმინალი']), fact(SECTOR, ['Coworking and offices', 'ქოვორკინგი და ოფისები']), fact(WORK, ['Offer posts, stories', 'შეთავაზების პოსტები, სთორები']), fact(FORMAT, ['1:1, 9:16', '1:1, 9:16'])],
+  facts: [fact(CLIENT, ['Terminal', 'ტერმინალი']), fact(['Year', 'წელი'], ['2024', '2024']), fact(SECTOR, ['Coworking and offices', 'ქოვორკინგი და ოფისები']), fact(WORK, ['Offer posts, stories', 'შეთავაზების პოსტები, სთორები']), fact(FORMAT, ['1:1, 9:16', '1:1, 9:16'])],
   seo: { title: 'Terminal | Social Media Case Study', description: 'Membership offers for Terminal coworking spaces in Georgia: posts and stories where the space leads and the offer is one line.', keywords: 'Terminal, coworking, social media, ad design, Georgia, Salome Mosiava' },
   cover: { bg: '#121212', reels: [tm[1], tm[2], tm[4]], line: L('Your 24/7 office', 'შენი 24/7 ოფისი') },
   brief: L('Terminal runs coworking and office spaces. The brief: fill memberships with monthly offers, in English and in Georgian, for the feed and for stories.', 'ტერმინალი ქოვორკინგ და საოფისე სივრცეებს მართავს. ამოცანა: ყოველთვიური შეთავაზებებით წევრობების გაყიდვა, ინგლისურად და ქართულად, ფიდისა და სთორისთვის.'),

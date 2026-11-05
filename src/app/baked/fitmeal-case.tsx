@@ -247,7 +247,7 @@ export function FitmealCase() {
 
   const facts: [string, string][] = [
     [tx('Client', 'კლიენტი'), 'FitMeal'],
-    [tx('Year', 'წელი'), '2025'],
+    [tx('Year', 'წელი'), '2026'],
     [tx('Role', 'როლი'), tx('Art direction, AI visuals', 'არტ დირექშენი, AI ვიზუალები')],
     [tx('Formats', 'ფორმატები'), '4:5, 9:16'],
   ];

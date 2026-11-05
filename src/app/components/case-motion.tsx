@@ -50,7 +50,7 @@ export function RevealLines({ as = 'div', className = '', style, children, delay
   return (
     <Tag ref={ref} className={className} style={style}>
       {lines.map((line, i) => (
-        <span key={i} className="block overflow-hidden pb-[0.08em] -mb-[0.08em]">
+        <span key={i} className="block overflow-hidden pt-[0.1em] -mt-[0.1em] pb-[0.14em] -mb-[0.14em]">
           <motion.span
             className="block will-change-transform"
             initial={false}

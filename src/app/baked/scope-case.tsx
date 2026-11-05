@@ -436,11 +436,22 @@ export function ScopeCase() {
         <div className="px-1.5 columns-2 md:columns-3 gap-1.5">
           {reels.slice(3).map((r) => <div key={r.src} className="mb-1.5 break-inside-avoid"><Reel {...r} /></div>)}
           {POSTS.map((src, i) => (
-            <button key={src} type="button" onClick={() => setOpen(i)} aria-label={`${gallery[i].alt}, ${tx('enlarge', 'გადიდება')}`}
+            <motion.button key={src} type="button" onClick={() => setOpen(i)} aria-label={`${gallery[i].alt}, ${tx('enlarge', 'გადიდება')}`}
+              initial={{ opacity: 0, y: 60, rotate: i % 2 ? 4 : -4, scale: 0.92 }}
+              whileInView={{ opacity: 1, y: 0, rotate: 0, scale: 1 }}
+              viewport={{ once: true, margin: '-60px' }}
+              transition={{ duration: 0.9, ease: [0.2, 0.8, 0.2, 1], delay: (i % 3) * 0.12 }}
               className="group mb-1.5 block w-full break-inside-avoid overflow-hidden rounded-[4px] bg-[#eee] cursor-zoom-in outline-none focus-visible:shadow-[0_0_0_2px_#1e1e1e]">
-              <img src={src} alt={gallery[i].alt} loading="lazy" decoding="async" className="block w-full h-auto transition-transform duration-[900ms] ease-[cubic-bezier(.2,.7,.2,1)] group-hover:scale-[1.03]" />
-            </button>
+              {/* a slow push-in keeps each post alive while it is on screen */}
+              <img src={src} alt={gallery[i].alt} loading="lazy" decoding="async" className="sc-post block w-full h-auto" style={{ animationDelay: `${-i * 1.7}s` }} />
+            </motion.button>
           ))}
+          <style>{`
+            @keyframes sc-push { from { transform: scale(1) translate(0,0); } to { transform: scale(1.07) translate(-1.5%, -1.5%); } }
+            .sc-post { animation: sc-push 9s ease-in-out infinite alternate; transform-origin: 50% 50%; }
+            .group:hover .sc-post { animation-play-state: paused; }
+            @media (prefers-reduced-motion: reduce) { .sc-post { animation: none; } }
+          `}</style>
         </div>
 
         {/* ── 04 Web ───────────────────────────────────────────────────── */}

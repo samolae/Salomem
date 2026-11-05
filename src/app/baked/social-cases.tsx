@@ -108,9 +108,10 @@ const ar = [
 ];
 export const ARENA: SocialCaseData = {
   path: '/projects/arena', brand: 'Arena', handle: 'arena.sports',
+  year: '2025',
   avatar: `${CLD}/image/upload/f_auto,q_auto/v1773916799/arena_ydenyt.webp`,
   tags: [SOCIAL, ADS, L('Sport', 'სპორტი')],
-  facts: [fact(CLIENT, ['Arena Sports Complex', 'არენა']), fact(SECTOR, ['Sport and leisure', 'სპორტი და დასვენება']), fact(WORK, ['Posts, events, offers', 'პოსტები, ღონისძიებები, შეთავაზებები']), fact(FORMAT, ['4:5, landscape', '4:5, ჰორიზონტალური'])],
+  facts: [fact(CLIENT, ['Arena Sports Complex', 'არენა']), fact(['Year', 'წელი'], ['2025', '2025']), fact(SECTOR, ['Sport and leisure', 'სპორტი და დასვენება']), fact(WORK, ['Posts, events, offers', 'პოსტები, ღონისძიებები, შეთავაზებები']), fact(FORMAT, ['4:5, landscape', '4:5, ჰორიზონტალური'])],
   seo: { title: 'Arena Sports Complex | Social Media Case Study', description: 'Social media for Arena Sports Complex: one bold Georgian line and one sport per post, from swimming and squash to bowling and dance.', keywords: 'Arena, sports complex, social media, ad design, Georgia, Salome Mosiava' },
   cover: { bg: '#1557d6', reels: [ar[0], ar[8]], line: L('One place, many sports', 'ერთი ადგილი, ბევრი სპორტი') },
   brief: L('Arena is a sports complex with a pool, courts, a climbing wall, bowling, a shooting range and events. The feed had to show how much is under one roof and bring people in for each of them.', 'არენა სპორტული კომპლექსია აუზით, კორტებით, საცოცი კედლით, ბოულინგით, სასროლეთით და ღონისძიებებით. ფიდს უნდა ეჩვენებინა, რამდენი რამაა ერთ სახურავქვეშ, და ხალხი თითოეულისთვის მოეყვანა.'),

@@ -33,6 +33,69 @@ type Item = { src: string; full: string; fullVideo?: boolean; brand: string; log
 /** The same reel, scaled down for a small tile */
 const smallVideo = (src: string) => src.replace('/video/upload/f_auto,q_auto/', '/video/upload/w_360,c_limit,q_auto,f_auto/');
 
+/** case-study visuals, as small hero thumbnails (public/hero) that open the full picture */
+const CASE_BRAND: Record<string, string> = {"zummo": "Zummo Georgia", "gagua": "Gagua Clinic", "fitmeal": "FitMeal", "gv": "GV Capital", "dasturi": "Dasturi", "scope": "Scope"};
+const CASE_SHOTS: [string, string, number][] = [
+  ['zummo', 'bar-02', 0.8],
+  ['zummo', 'story-business', 0.563],
+  ['zummo', 'post-hero', 0.8],
+  ['zummo', 'yellow-machine', 0.563],
+  ['zummo', 'ig-business', 0.8],
+  ['zummo', 'bar-04', 0.8],
+  ['zummo', 'ig-hotels', 0.8],
+  ['zummo', 'aug-02', 0.8],
+  ['zummo', 'sky-machine', 0.563],
+  ['zummo', 'aug-03', 0.8],
+  ['zummo', 'post-quality', 0.8],
+  ['zummo', 'bar-01', 0.8],
+  ['gagua', 'home-grid', 1.013],
+  ['gagua', 'cc-post', 0.8],
+  ['gagua', 'born-cover', 2.623],
+  ['gagua', 'ad-app-story', 0.563],
+  ['gagua', 'ad-birth-story', 0.563],
+  ['gagua', 'vac-it', 1.0],
+  ['gagua', 'li-career-cover', 2.697],
+  ['gagua', 'vac-midwife', 1.0],
+  ['gagua', 'ad-scan-story', 0.563],
+  ['fitmeal', 'table-greek', 0.805],
+  ['fitmeal', 'floor-tall', 0.558],
+  ['fitmeal', 'table-shrimp', 0.805],
+  ['fitmeal', 'stripe-spread', 0.805],
+  ['fitmeal', 'picnic-headphones', 0.805],
+  ['fitmeal', 'blanket-read', 0.805],
+  ['fitmeal', 'office-desk', 0.8],
+  ['fitmeal', 'park-read', 0.805],
+  ['gv', 'overhead', 1.0],
+  ['gv', 'lounge', 1.778],
+  ['gv', 'cards', 0.747],
+  ['gv', 'corridor', 0.747],
+  ['gv', 'packaging', 0.75],
+  ['gv', 'wayfinding', 0.667],
+  ['gv', 'hardhat', 0.75],
+  ['gv', 'uniform', 0.75],
+  ['gv', 'social-opportunities', 0.8],
+  ['gv', 'brochure', 0.707],
+  ['gv', 'fleet', 1.778],
+  ['dasturi', 'terrace-gold', 1.509],
+  ['dasturi', 'duo-gold', 1.509],
+  ['dasturi', 'lineup', 1.509],
+  ['dasturi', 'saperavi-bordeaux', 1.524],
+  ['dasturi', 'labels-gold', 1.611],
+  ['dasturi', 'capsule', 1.348],
+  ['dasturi', 'duo-satsuri', 1.524],
+  ['scope', 'marketers', 0.563],
+  ['scope', 'business', 0.563],
+  ['scope', 'casting', 0.563],
+];
+
+/** a fresh order on every visit (client only, the layout is built after mount) */
+function shuffle<T>(xs: T[]): T[] {
+  const a = [...xs];
+  if (typeof window === 'undefined') return a;
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+
 /** width / height of each picture once it has loaded, so tiles take its shape */
 const RATIO = new Map<string, number>();
 
@@ -46,13 +109,16 @@ function usePool(): Item[] {
       src: videoFrame(r.src, i % 2 ? '35p' : '60p', 600), full: r.src, fullVideo: true, brand: r.brand, logo: (r as { logoImg?: string }).logoImg,
       video: smallVideo(r.src), ratio: 9 / 16,
     }));
-    // interleave so neighbours differ in kind
+    const cases: Item[] = CASE_SHOTS.map(([d, n, r]) => ({
+      src: `/hero/${d}-${n}.jpg`, full: `/cases/${d}/${n}.jpg`, brand: CASE_BRAND[d], ratio: r,
+    }));
+    // interleave so neighbours differ in kind, each kind in a new order every visit
     const out: Item[] = [];
-    const lists = [ads, frames, spots];
+    const lists = [shuffle(ads), shuffle(cases), shuffle(frames), shuffle(spots)];
     for (let k = 0, added = true; added; k++) {
       added = false;
       for (const l of lists) {
-        const take = l === ads ? [l[k * 2], l[k * 2 + 1]] : [l[k]];
+        const take = l === lists[0] || l === lists[1] ? [l[k * 2], l[k * 2 + 1]] : [l[k]];
         for (const t of take) if (t) { out.push(t); added = true; }
       }
     }

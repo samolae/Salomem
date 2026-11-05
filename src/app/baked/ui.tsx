@@ -200,6 +200,8 @@ export function LogoStrip({ logos, paused }: { logos: { name: string; logo: stri
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const cards = Array.from(el.querySelectorAll<HTMLElement>('[data-logo]'));
     let raf = 0, prev = performance.now(), H = 0, speed = 1, hover = false, inView = false;
+    // drag to spin: the band follows the finger, then glides on with inertia
+    let drag: { x: number; t: number; id: number } | null = null, vel = 0;
     const tick = (now: number) => {
       raf = 0;
       const dt = Math.min(0.05, (now - prev) / 1000); prev = now;
@@ -207,7 +209,12 @@ export function LogoStrip({ logos, paused }: { logos: { name: string; logo: stri
       const w = mobile ? 230 : 250, gap = 10, step = w + gap, n = mobile ? 900 : 1600;
       const T = cards.length * step;
       speed += ((hover ? 0.3 : 1) - speed) * (1 - 0.05 ** dt);
-      if (!reduced && !pausedRef.current) H -= 45 * speed * dt;
+      if (!drag) {
+        H += vel * dt;
+        vel *= 0.04 ** dt;
+        if (Math.abs(vel) < 2) vel = 0;
+        if (!reduced && !pausedRef.current) H -= 45 * speed * dt;
+      }
       for (let i = 0; i < cards.length; i++) {
         const pos = (((i * step + H) % T) + T) % T - T / 2;
         const a = pos / n;
@@ -217,8 +224,28 @@ export function LogoStrip({ logos, paused }: { logos: { name: string; logo: stri
         const x = n * Math.sin(a), z = n * (1 - Math.cos(a));
         c.style.transform = `translate3d(${(x - w / 2).toFixed(1)}px,0,${z.toFixed(1)}px) rotateY(${(-a * 180 / Math.PI).toFixed(2)}deg)`;
       }
-      if (inView && !reduced && !pausedRef.current) raf = requestAnimationFrame(tick);
+      if (inView && (drag || vel || (!reduced && !pausedRef.current))) raf = requestAnimationFrame(tick);
     };
+    const down = (e: PointerEvent) => {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      drag = { x: e.clientX, t: performance.now(), id: e.pointerId }; vel = 0;
+      el.setPointerCapture(e.pointerId); el.style.cursor = 'grabbing'; kick();
+    };
+    const move = (e: PointerEvent) => {
+      if (!drag || e.pointerId !== drag.id) return;
+      const now = performance.now(), dx = e.clientX - drag.x, dt = Math.max(1, now - drag.t) / 1000;
+      H += dx;
+      vel = vel * 0.6 + (dx / dt) * 0.4;
+      drag.x = e.clientX; drag.t = now; kick();
+    };
+    const up = (e: PointerEvent) => {
+      if (!drag || e.pointerId !== drag.id) return;
+      if (performance.now() - drag.t > 80) vel = 0; // held still before letting go
+      vel = Math.max(-3000, Math.min(3000, vel));
+      drag = null; el.style.cursor = ''; kick();
+    };
+    el.addEventListener('pointerdown', down); el.addEventListener('pointermove', move);
+    el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
     const kick = () => { if (!raf) { prev = performance.now(); raf = requestAnimationFrame(tick); } };
     const io = new IntersectionObserver(([e]) => { inView = e.isIntersecting; if (inView) kick(); });
     io.observe(el);
@@ -226,14 +253,15 @@ export function LogoStrip({ logos, paused }: { logos: { name: string; logo: stri
     el.addEventListener('pointerenter', on); el.addEventListener('pointerleave', off);
     window.addEventListener('resize', kick);
     kick();
-    return () => { cancelAnimationFrame(raf); io.disconnect(); el.removeEventListener('pointerenter', on); el.removeEventListener('pointerleave', off); window.removeEventListener('resize', kick); };
+    return () => { cancelAnimationFrame(raf); io.disconnect(); el.removeEventListener('pointerenter', on); el.removeEventListener('pointerleave', off); window.removeEventListener('resize', kick);
+      el.removeEventListener('pointerdown', down); el.removeEventListener('pointermove', move); el.removeEventListener('pointerup', up); el.removeEventListener('pointercancel', up); };
   }, [row.length]);
 
   // a pause from the motion toggle still needs one frame to settle
   useEffect(() => { window.dispatchEvent(new Event('resize')); }, [paused]);
 
   return (
-    <div ref={box} className="relative h-[150px] sm:h-[170px] overflow-hidden" style={{ perspective: '1100px' }} role="list" aria-label="Clients">
+    <div ref={box} className="relative h-[150px] sm:h-[170px] overflow-hidden cursor-grab select-none" style={{ perspective: '1100px', touchAction: 'pan-y' }} role="list" aria-label="Clients">
       {row.map((c, i) => (
         <div
           key={i}
@@ -243,7 +271,7 @@ export function LogoStrip({ logos, paused }: { logos: { name: string; logo: stri
           className="absolute left-1/2 top-1/2 -mt-[60px] sm:-mt-[68px] h-[120px] w-[230px] sm:h-[136px] sm:w-[250px] rounded-md bg-[#f3f3f3] flex items-center justify-center gap-3 will-change-transform"
           style={{ visibility: 'hidden' }}
         >
-          <img {...IMG.logo(c.logo)} alt="" width="40" height="40" loading="lazy" className="h-10 w-10 rounded-lg object-contain bg-white shadow-[0_1px_3px_rgba(0,0,0,0.08)]" />
+          <img {...IMG.logo(c.logo)} alt="" width="40" height="40" loading="lazy" draggable={false} className="h-10 w-10 rounded-lg object-contain bg-white shadow-[0_1px_3px_rgba(0,0,0,0.08)]" />
           <span className="text-[17px] text-[#111] tracking-[-0.01em]" style={{ fontWeight: 500 }}>{c.name}</span>
         </div>
       ))}

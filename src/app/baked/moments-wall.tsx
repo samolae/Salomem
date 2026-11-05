@@ -33,21 +33,37 @@ type Props = {
 const GAP = 6;
 const PARTING = false;
 
+const avg = (xs: number[]) => { const f = xs.filter((x) => x > 0); return f.length ? f.reduce((a, b) => a + b, 0) / f.length : 0; };
+const RATIO_KEY = 'mw-ratios';
+function loadRatios() {
+  try { return new Map<string, number>(JSON.parse(localStorage.getItem(RATIO_KEY) || '[]')); } catch { return new Map<string, number>(); }
+}
+function saveRatios(m: Map<string, number>) {
+  try { localStorage.setItem(RATIO_KEY, JSON.stringify([...m].slice(-600))); } catch { /* storage off */ }
+}
+
 export const MomentsWall = ({ items, isDark, onOpen }: Props) => {
   const wallRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
   const tileRefs = useRef<(HTMLButtonElement | null)[]>([]);
-  const [cols, setCols] = useState(4);
   const [width, setWidth] = useState(0);
-  // height / width of every visual, learned as each one loads (4:5 until then)
-  const ratios = useRef(new Map<string, number>());
+  // height / width of every visual, learned as each one loads (4:5 until then).
+  // Kept between visits so a refresh lays the wall out once, and updates
+  // from a burst of loads are folded into one render per frame.
+  const ratios = useRef<Map<string, number>>(loadRatios());
   const [, setRatioTick] = useState(0);
+  const tickRaf = useRef(0);
   const learn = (src: string, w: number, h: number) => {
     if (!w || !h) return;
     const r = h / w;
     if (Math.abs((ratios.current.get(src) ?? 0) - r) < 0.001) return;
     ratios.current.set(src, r);
-    setRatioTick((t) => t + 1);
+    if (tickRaf.current) return;
+    tickRaf.current = requestAnimationFrame(() => {
+      tickRaf.current = 0;
+      setRatioTick((t) => t + 1);
+      saveRatios(ratios.current);
+    });
   };
   const reduceMotion = useReducedMotion();
 
@@ -63,39 +79,19 @@ export const MomentsWall = ({ items, isDark, onOpen }: Props) => {
   });
 
   // The wall fits one screen: start from a width-based column count and add
-  // columns until the masonry is no taller than the viewport (less the nav)
-  const baseCols = useRef(4);
+  // columns until the masonry is no taller than the viewport (less the nav).
+  // Worked out from the known shapes in one pass, so the page never
+  // re-renders column by column while it loads.
+  const [vh, setVh] = useState(() => (typeof window === 'undefined' ? 900 : window.innerHeight));
   useLayoutEffect(() => {
     const el = wallRef.current;
     if (!el) return;
-    const ro = new ResizeObserver(([entry]) => {
-      const w = entry.contentRect.width;
-      setWidth(w);
-      baseCols.current = Math.max(3, Math.min(9, Math.round(w / 112)));
-      setCols(baseCols.current);
-    });
+    const ro = new ResizeObserver(([entry]) => setWidth(entry.contentRect.width));
     ro.observe(el);
-    return () => ro.disconnect();
+    const onResize = () => setVh(window.innerHeight);
+    window.addEventListener('resize', onResize);
+    return () => { ro.disconnect(); window.removeEventListener('resize', onResize); };
   }, []);
-  // A new set of visuals (another brand) starts the fit again
-  const itemsKey = `${items.length}:${items[0]?.src ?? ''}`;
-  useEffect(() => { setCols(baseCols.current); }, [itemsKey]);
-  useEffect(() => {
-    const el = wallRef.current;
-    if (!el) return;
-    const fit = () => {
-      const target = window.innerHeight - 72;
-      const maxCols = Math.max(3, Math.floor(el.clientWidth / 56));
-      if (el.offsetHeight > target) setCols((c) => (c < maxCols ? c + 1 : c));
-    };
-    fit();
-    // Images landing change the height; re-check whenever it does
-    const ro = new ResizeObserver(fit);
-    ro.observe(el);
-    window.addEventListener('resize', fit);
-    return () => { ro.disconnect(); window.removeEventListener('resize', fit); };
-  }, [cols, itemsKey]);
-
   // Tile centres, measured from layout (offsets ignore our transforms)
   const measure = () => {
     const s = sim.current;
@@ -117,7 +113,7 @@ export const MomentsWall = ({ items, isDark, onOpen }: Props) => {
     const onLoad = () => measure();
     el.addEventListener('load', onLoad, true);
     return () => { ro.disconnect(); el.removeEventListener('load', onLoad, true); };
-  }, [items, cols]);
+  }, [items, width]);
 
   const step = () => {
     const s = sim.current;
@@ -188,7 +184,7 @@ export const MomentsWall = ({ items, isDark, onOpen }: Props) => {
     if (!sim.current.raf) sim.current.raf = requestAnimationFrame(step);
   };
 
-  useEffect(() => () => cancelAnimationFrame(sim.current.raf), []);
+  useEffect(() => () => { cancelAnimationFrame(sim.current.raf); cancelAnimationFrame(tickRaf.current); }, []);
 
   // Keep the void glued to the wall while the page scrolls under a still cursor
   useEffect(() => {
@@ -226,16 +222,25 @@ export const MomentsWall = ({ items, isDark, onOpen }: Props) => {
   // Balanced masonry: each visual goes to the shortest column, then every
   // column is eased to the same height (tiles crop a touch, never distort),
   // so the wall ends on one clean line
-  const cw = width > 0 ? (width - GAP * (cols - 1)) / cols : 160;
-  const columns: { i: number; h: number }[][] = Array.from({ length: cols }, () => []);
-  const sums = new Array(cols).fill(0);
-  items.forEach((v, i) => {
-    const h = cw * (ratios.current.get(v.src) ?? 1.25);
-    let c = 0;
-    for (let k = 1; k < cols; k++) if (sums[k] < sums[c]) c = k;
-    columns[c].push({ i, h });
-    sums[c] += h + (columns[c].length > 1 ? GAP : 0);
-  });
+  const pack = (n: number) => {
+    const cw = width > 0 ? (width - GAP * (n - 1)) / n : 160;
+    const columns: { i: number; h: number }[][] = Array.from({ length: n }, () => []);
+    const sums = new Array(n).fill(0);
+    items.forEach((v, i) => {
+      const h = cw * (ratios.current.get(v.src) ?? 1.25);
+      let c = 0;
+      for (let k = 1; k < n; k++) if (sums[k] < sums[c]) c = k;
+      columns[c].push({ i, h });
+      sums[c] += h + (columns[c].length > 1 ? GAP : 0);
+    });
+    return { columns, sums };
+  };
+  const baseCols = Math.max(3, Math.min(9, Math.round(width / 112)));
+  const maxCols = Math.max(3, Math.floor(width / 56));
+  let cols = baseCols;
+  let packed = pack(cols);
+  while (width > 0 && cols < maxCols && avg(packed.sums) > vh - 72) packed = pack(++cols);
+  const { columns, sums } = packed;
   const filled = sums.filter((x) => x > 0);
   const target = filled.length ? filled.reduce((a, b) => a + b, 0) / filled.length : 0;
   const heightOf = (c: number, h: number) => {

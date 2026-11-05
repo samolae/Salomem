@@ -185,7 +185,7 @@ function Campaign({ items, onOpen }: { items: Media[]; onOpen: (i: number) => vo
   }, [hover, reduce]);
   return (
     <div onPointerEnter={() => setHover(true)} onPointerLeave={() => setHover(false)}>
-      <div ref={track} className="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div ref={track} className="flex gap-3 overflow-x-auto snap-x snap-mandatory pt-8 pb-16 -mt-8 -mb-14 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {items.map((m, i) => (
           <figure key={m.key} data-card className="shrink-0 snap-start w-[72%] sm:w-[40%] lg:w-[28%]">
             <button type="button" onClick={() => onOpen(STILLS.indexOf(m))} aria-label={`${tx(m.en, m.ka)}, ${tx('enlarge', 'გადიდება')}`}

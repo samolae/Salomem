@@ -8,6 +8,7 @@ import { EMAIL } from './content';
 import { useI18n } from './i18n';
 import { BookingProvider } from './booking';
 import { LeaningPills, SwingingBadge } from './flourish';
+import { ContactSticker } from './contact-sticker';
 
 /* ── Shared "pause motion" switch ─────────────────────────────────── */
 const PauseCtx = createContext<{ paused: boolean; toggle: () => void }>({ paused: false, toggle: () => {} });
@@ -211,7 +212,7 @@ function BackToTop() {
             window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
           }}
           aria-label={tx('Back to top', 'ზემოთ დაბრუნება')}
-          className="fixed bottom-[96px] sm:bottom-4 right-4 z-[65] h-11 w-11 rounded-full bg-white text-[#111] border border-[#ececec] shadow-[0_8px_24px_rgba(0,0,0,0.12)] flex items-center justify-center hover:bg-[#ffe7de] hover:text-[#b52f03] transition-colors outline-none focus-visible:shadow-[0_0_0_2px_#ff4306]"
+          className="fixed bottom-[96px] sm:bottom-4 left-4 z-[65] h-11 w-11 rounded-full bg-white text-[#111] border border-[#ececec] shadow-[0_8px_24px_rgba(0,0,0,0.12)] flex items-center justify-center hover:bg-[#ffe7de] hover:text-[#b52f03] transition-colors outline-none focus-visible:shadow-[0_0_0_2px_#ff4306]"
           style={{ marginBottom: 'env(safe-area-inset-bottom, 0px)' }}
         >
           <ArrowUp size={18} />
@@ -221,7 +222,7 @@ function BackToTop() {
   );
 }
 
-function Footer() {
+function Footer({ footRef }: { footRef?: React.Ref<HTMLElement> }) {
   const { tx, to } = useI18n();
   const groups = [
     { title: tx('Work', 'ნამუშევრები'), links: [
@@ -244,36 +245,40 @@ function Footer() {
     { l: 'Upwork', href: 'https://www.upwork.com/freelancers/~0163986e2d8967d783' },
   ];
   return (
-    <footer className="px-5 sm:px-8 pt-24 pb-28 text-[14px]">
+    <footer ref={footRef} className="baked-foot bg-[#111] text-white px-5 sm:px-8 pt-20 sm:pt-24 pb-28 text-[14px]">
+      <a href={`mailto:${EMAIL}`} className="group mb-14 sm:mb-20 flex items-center gap-3 sm:gap-4 w-fit text-[28px] sm:text-[52px] leading-none tracking-[-0.01em] text-white hover:text-[#ffd25e] transition-colors" style={{ fontFamily: 'ui-monospace, "SF Mono", Menlo, monospace', fontWeight: 600 }}>
+        {tx('lets_work_together', 'ვითანამშრომლოთ')}
+        <span className="h-3.5 w-3.5 sm:h-5 sm:w-5 rounded-full bg-[#ffd25e] transition-transform group-hover:scale-125" aria-hidden />
+      </a>
       <div className="grid grid-cols-2 sm:grid-cols-5 gap-8 max-w-6xl">
         {groups.map((g) => (
           <div key={g.title}>
-            <div className="text-[#9a9a9a] mb-3">{g.title}</div>
+            <div className="text-white/45 mb-3">{g.title}</div>
             <ul className="space-y-1.5">
-              {g.links.map((x) => <li key={x.to}><Link to={to(x.to)} className="text-[#111] hover:text-[#d93905] transition-colors">{x.l}</Link></li>)}
+              {g.links.map((x) => <li key={x.to}><Link to={to(x.to)} className="text-white hover:text-[#ffd25e] transition-colors">{x.l}</Link></li>)}
             </ul>
           </div>
         ))}
         <div>
-          <div className="text-[#9a9a9a] mb-3">{tx('Elsewhere', 'სხვაგან')}</div>
+          <div className="text-white/45 mb-3">{tx('Elsewhere', 'სხვაგან')}</div>
           <ul className="space-y-1.5">
-            {ext.map((x) => <li key={x.l}><a href={x.href} target="_blank" rel="noopener noreferrer" className="text-[#111] hover:text-[#d93905] transition-colors">{x.l} ↗</a></li>)}
+            {ext.map((x) => <li key={x.l}><a href={x.href} target="_blank" rel="noopener noreferrer" className="text-white hover:text-[#ffd25e] transition-colors">{x.l} ↗</a></li>)}
           </ul>
         </div>
         <div>
-          <div className="text-[#9a9a9a] mb-3">{tx('My brand', 'ჩემი ბრენდი')}</div>
-          <a href="https://www.instagram.com/areuli.design/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-[#111] hover:text-[#d93905] transition-colors">
+          <div className="text-white/45 mb-3">{tx('My brand', 'ჩემი ბრენდი')}</div>
+          <a href="https://www.instagram.com/areuli.design/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-white hover:text-[#ffd25e] transition-colors">
             <img src="/favicon-48.png" alt="" width="20" height="20" className="h-5 w-5 rounded" />
             areuli.design ↗
           </a>
         </div>
         <div>
-          <div className="text-[#9a9a9a] mb-3">{tx('Say hello', 'მომწერე')}</div>
-          <a href={`mailto:${EMAIL}`} className="text-[#111] hover:text-[#d93905] transition-colors break-all">{EMAIL}</a>
-          <div className="text-[#6f6f6f] mt-1.5">{tx('Georgia', 'საქართველო')}</div>
+          <div className="text-white/45 mb-3">{tx('Say hello', 'მომწერე')}</div>
+          <a href={`mailto:${EMAIL}`} className="text-white hover:text-[#ffd25e] transition-colors break-all">{EMAIL}</a>
+          <div className="text-white/55 mt-1.5">{tx('Georgia', 'საქართველო')}</div>
         </div>
       </div>
-      <div className="mt-16 flex flex-wrap justify-between gap-2 text-[#9a9a9a] text-[13px]">
+      <div className="mt-16 flex flex-wrap justify-between gap-2 text-white/45 text-[13px]">
         <span>{tx('Designed and developed by Salome Mosiava', 'დიზაინი და დეველოპმენტი: სალომე მოსიავა')}</span>
         <span>© 2026</span>
       </div>
@@ -285,6 +290,20 @@ function Footer() {
 export function BakedShell({ children }: { children: ReactNode }) {
   const [paused, setPaused] = useState(false);
   const { lang } = useI18n();
+  const footRef = useRef<HTMLElement>(null);
+  const [footH, setFootH] = useState(0);
+  const [reveal, setReveal] = useState(false);
+  // only slide the page off the contact section when it fits on screen
+  useEffect(() => {
+    const f = footRef.current;
+    if (!f) return;
+    const measure = () => { const h = f.offsetHeight; setFootH(h); setReveal(h < window.innerHeight - 40); };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(f);
+    window.addEventListener('resize', measure);
+    return () => { ro.disconnect(); window.removeEventListener('resize', measure); };
+  }, []);
   useEffect(() => { document.documentElement.lang = lang; }, [lang]);
   // Text on the site is not for copying; form fields still work as usual
   useEffect(() => {
@@ -309,18 +328,26 @@ export function BakedShell({ children }: { children: ReactNode }) {
       <BookingProvider>
       <div lang={lang} className="baked min-h-screen bg-white text-[#111] antialiased" style={{ fontFamily: T.font, colorScheme: 'light' }}>
         <TopNav />
-        <main id="main-content" tabIndex={-1} className="outline-none">
-          {children}
-        </main>
-        <SwingingBadge />
-        <Footer />
+        {/* the page lifts off the contact section, which waits underneath */}
+        <div className="relative z-[1] bg-white rounded-b-[28px] sm:rounded-b-[44px]">
+          <main id="main-content" tabIndex={-1} className="outline-none">
+            {children}
+          </main>
+          <SwingingBadge />
+          <div className="h-10 sm:h-16" />
+          <ContactSticker />
+        </div>
+        {reveal && <div aria-hidden style={{ height: footH }} />}
+        <div className={reveal ? 'fixed inset-x-0 bottom-0 z-0' : ''}>
+          <Footer footRef={footRef} />
+        </div>
         <FloatingCta />
         <MobileDock />
         <BackToTop />
         <style>{`
           @font-face { font-family: 'Avenir Next Georgian'; src: url('/fonts/avenir-next-georgian-regular-v2.woff2') format('woff2'); font-weight: 100 700; font-style: normal; font-display: swap; }
           @font-face { font-family: 'Loos Wide Black'; src: url('/fonts/loos-wide-black-v2.woff2') format('woff2'); font-weight: 800 900; font-style: normal; font-display: swap; }
-          html:has(.baked), html:has(.baked) body { background: #fff; color-scheme: light; }
+          html:has(.baked), html:has(.baked) body { background: #111; color-scheme: light; }
           .baked ::selection { background: #ff4306; color: #fff; }
           .baked { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
           .baked input, .baked textarea, .baked select { -webkit-user-select: text; user-select: text; }

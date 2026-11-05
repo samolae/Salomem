@@ -7,6 +7,7 @@ import { IMG, cld } from '../lib/cld';
 import { screenAurumMainHQ, schenkerSendung, unispaceLogin, adsCarmall1, adsCarmall2, adsCarmall3, adsMardi1, adsMardi2, adsMardi3, adsMardi4, adsTerminal1, adsTerminal2, adsTerminal3, adsTerminal5 } from './data';
 import { useI18n } from './i18n';
 import { ScopeCover } from './scope-logo';
+import { GaguaLettering } from './gagua-cover';
 
 /*
  * Case studies: product, branding and campaigns told as whole stories, laid out like
@@ -199,7 +200,7 @@ const STUDIES: Study[] = [
     en: 'A refreshed social media kit for a Tbilisi clinic: hand-drawn Georgian lettering for each campaign, a Medical Concierge guideline and the LinkedIn career page.',
     ka: 'კლინიკის განახლებული სოც. მედიის კიტი: ხელით დახატული ქართული ლეტერინგი ყველა კამპანიისთვის, სამედიცინო კონსიერჟის გაიდლაინი და LinkedIn-ის საკარიერო გვერდი.',
     tags: [{ en: 'Social media', ka: 'სოციალური მედია' }, { en: 'Lettering', ka: 'ლეტერინგი' }, { en: 'Brand guidelines', ka: 'გაიდლაინი' }],
-    cover: <HoverCover img="/cases/gagua/guide-01.jpg" />,
+    cover: <GaguaLettering small />,
     peek: '/cases/gagua/ad-birth.jpg',
   },
   {

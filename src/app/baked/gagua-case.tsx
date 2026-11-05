@@ -6,6 +6,7 @@ import { BakedShell } from './shell';
 import { CtaLink, Reveal, T } from './ui';
 import { useI18n } from './i18n';
 import { MoreCases } from './case-studies';
+import { GaguaLettering } from './gagua-cover';
 
 /*
  * Gagua Clinic: a maternity and family clinic in Tbilisi. Three campaigns,
@@ -32,7 +33,7 @@ function Piece({ m }: { m: M }) {
 /** pieces side by side at their own proportions, nothing cropped */
 function Row({ items, max }: { items: M[]; max?: number }) {
   return (
-    <div className="mx-auto flex flex-col sm:flex-row gap-1.5" style={{ maxWidth: max }}>
+    <div className="mx-auto w-full flex flex-col sm:flex-row gap-1.5" style={{ maxWidth: max ?? 1040 }}>
       {items.map((m, i) => (
         <div key={i} className="overflow-hidden rounded-md" style={{ flex: `${m.w / m.h} 1 0%`, aspectRatio: `${m.w}/${m.h}`, background: m.bg ?? '#f2f2f2' }}>
           <Piece m={m} />
@@ -143,7 +144,7 @@ function Fan() {
   const slides = ['li-01-cover', 'li-02-professionalism', 'li-03-care', 'li-04-development', 'li-05-accountability', 'li-06-closing'];
   return (
     <section className="px-1.5" aria-label={tx('LinkedIn carousel', 'LinkedIn კარუსელი')}>
-      <div ref={ref} className="lf relative overflow-hidden rounded-md py-8 sm:py-14" style={{ background: '#EDEBE4' }} data-on={on || undefined}>
+      <div ref={ref} className="lf relative overflow-hidden rounded-md py-8 sm:py-14" style={{ background: GREEN }} data-on={on || undefined}>
         <div className="flex justify-center gap-2 sm:gap-3 px-3 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {slides.map((n, i) => (
             <div key={n} className="lf-card shrink-0 w-[44%] sm:w-[15%] aspect-[4/5] overflow-hidden rounded-[6px] shadow-[0_14px_30px_rgba(0,0,0,.14)]"
@@ -160,6 +161,38 @@ function Fan() {
         @media (max-width: 639px) { .lf-card { transform: none; } }
         @media (prefers-reduced-motion: reduce) { .lf-card { transform: none; transition: none; } }
       `}</style>
+    </section>
+  );
+}
+
+/** vacancies in the kit's two styles, each frame cycling through its posts */
+function Vacancies() {
+  const { tx } = useI18n();
+  const [k, setK] = useState(0);
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const t = setInterval(() => setK((x) => x + 1), 1800);
+    return () => clearInterval(t);
+  }, []);
+  const sets = [
+    ['vac-it', 'vac-orderly'],                          // white card
+    ['vac-midwife', 'vac-style2', 'li-vacancy'],        // yellow bar
+  ];
+  return (
+    <section className="px-1.5 pt-1.5 mx-auto w-full max-w-[760px] grid grid-cols-2 gap-1.5" aria-label={tx('Vacancy posts', 'ვაკანსიების პოსტები')}>
+      {sets.map((set, si) => {
+        // the two frames change on alternate beats
+        const at = Math.floor((k + si) / 2) % set.length;
+        return (
+          <div key={si} className="relative aspect-square overflow-hidden rounded-md bg-[#f2f2f2]">
+            {set.map((n, i) => (
+              <img key={n} src={`${P}/${n}.jpg`} alt={tx('Gagua vacancy post', 'გაგუას ვაკანსიის პოსტი')} loading="lazy" decoding="async" draggable={false}
+                className="absolute inset-0 h-full w-full object-cover transition-[opacity,transform] duration-700 ease-out"
+                style={{ opacity: i === at ? 1 : 0, transform: i === at ? 'scale(1)' : 'scale(1.06)' }} />
+            ))}
+          </div>
+        );
+      })}
     </section>
   );
 }
@@ -195,10 +228,10 @@ export function GaguaCase() {
           </ul>
         </header>
 
-        {/* cover: the concierge guideline's own cover */}
+        {/* cover: the three hand-drawn names, trading places */}
         <section className="px-1.5">
-          <div className="overflow-hidden rounded-md aspect-[16/9]" style={{ background: GREEN }}>
-            <img src={`${P}/guide-01.jpg`} alt={tx('Gagua Medical Concierge', 'გაგუას სამედიცინო კონსიერჟი')} fetchPriority="high" decoding="async" className="block h-full w-full object-cover" />
+          <div className="overflow-hidden rounded-md aspect-[4/3] sm:aspect-[16/9]">
+            <GaguaLettering />
           </div>
         </section>
 
@@ -254,19 +287,20 @@ export function GaguaCase() {
 
         {/* 05 linkedin */}
         <Chapter n="05" name="LinkedIn" title={tx('Gagua Clinic Career', 'გაგუას კლინიკა, კარიერა')}>
-          {tx('The clinic’s career page: a carousel of the four principles the team works by, the page cover and vacancies in the same kit.', 'კლინიკის საკარიერო გვერდი: კარუსელი ოთხ პრინციპზე, რომლითაც გუნდი მუშაობს, გვერდის ქავერი და ვაკანსიები იმავე კიტში.')}
+          {tx('The clinic’s career page: a carousel of the four principles the team works by, the page cover, and vacancies in two styles that take turns.', 'კლინიკის საკარიერო გვერდი: კარუსელი ოთხ პრინციპზე, რომლითაც გუნდი მუშაობს, გვერდის ქავერი და ვაკანსიები ორ სტილში, რომლებიც ერთმანეთს ცვლიან.')}
         </Chapter>
         <Fan />
         <section className="px-1.5 pt-1.5 flex flex-col gap-1.5">
-          <Row items={[im('li-career-cover', 2000, 740, 'Gagua Clinic Career, LinkedIn cover'), im('li-vacancy', 1, 1, 'Vacancy: security officer')]} />
+          <Row items={[im('li-career-cover', 2000, 740, 'Gagua Clinic Career, LinkedIn cover')]} />
         </section>
+        <Vacancies />
 
         {/* 06 ads */}
         <Chapter n="06" name={tx('Ads', 'რეკლამა')} title={tx('The app, the scan, the birth', 'აპლიკაცია, ექოსკოპია, მშობიარობა')}>
-          {tx('Each service in one square post, the action always in one green bar.', 'თითო სერვისი ერთ კვადრატულ პოსტში, მოქმედება კი ყოველთვის ერთ მწვანე ზოლშია.')}
+          {tx('Each service as a story, the action always in one green bar.', 'თითო სერვისი სთორიში, მოქმედება კი ყოველთვის ერთ მწვანე ზოლშია.')}
         </Chapter>
         <section className="px-1.5 flex flex-col gap-1.5">
-          <Row items={[im('ad-app', 1, 1, 'Download the Gagua app'), im('ad-scan', 1, 1, 'Book a 4D scan'), im('ad-birth', 1, 1, 'Plan your birth at Gagua')]} />
+          <Row items={[im('ad-app-story', 9, 16, 'Download the Gagua app'), im('ad-scan-story', 9, 16, 'Book a 4D scan'), im('ad-birth-story', 9, 16, 'Plan your birth at Gagua')]} max={820} />
         </section>
 
         {/* 07 thirty years */}

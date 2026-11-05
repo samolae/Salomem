@@ -63,7 +63,8 @@ function Guide() {
   const { tx } = useI18n();
   const ref = useRef<HTMLDivElement>(null);
   const [at, setAt] = useState(0);
-  const pages = Array.from({ length: 15 }, (_, i) => `${P}/guide-${String(i + 1).padStart(2, '0')}.jpg`);
+  // page 12 (the newsletter) is left out: its mock-up was squeezed in the source PDF
+  const pages = Array.from({ length: 15 }, (_, i) => i + 1).filter((n) => n !== 12).map((n) => `${P}/guide-${String(n).padStart(2, '0')}.jpg`);
   useEffect(() => {
     const el = ref.current;
     if (!el) return;

@@ -181,7 +181,7 @@ export function GaguaCase() {
         </Chapter>
         <Guide />
         <section className="px-1.5 pt-1.5 flex flex-col gap-1.5">
-          <Row items={[im('cc-post', 4, 5, 'Concierge post'), im('cc-post-en', 4, 5, 'Concierge post, English'), im('cc-story', 9, 16, 'Concierge story'), { src: `${P}/cc-endcard.mp4`, poster: `${P}/cc-endcard.jpg`, video: true, w: 9, h: 16, alt: 'Concierge story end card' }]} />
+          <Row items={[im('cc-post', 4, 5, 'Concierge post'), im('cc-story', 9, 16, 'Concierge story'), { src: `${P}/cc-endcard.mp4`, poster: `${P}/cc-endcard.jpg`, video: true, w: 9, h: 16, alt: 'Concierge story end card' }]} />
           <Row items={[im('cc-newsletter', 6912, 2672, 'Concierge newsletter')]} />
           <Row items={[im('cc-web', 5190, 2310, 'Concierge on the website'), im('cc-app', 1335, 750, 'Concierge in the app')]} />
         </section>

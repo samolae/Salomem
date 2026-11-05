@@ -96,21 +96,89 @@ function Guide() {
   );
 }
 
+/** the palette as moving panels: they rise in one by one, the one you point at opens */
+function Palette() {
+  const { tx } = useI18n();
+  const ref = useRef<HTMLDivElement>(null);
+  const [on, setOn] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setOn(true); io.disconnect(); } }, { threshold: 0.3 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  const sw: [string, string, string][] = [[GREEN, tx('Gagua green', 'გაგუას მწვანე'), '#fff'], [YELLOW, tx('Warm yellow', 'თბილი ყვითელი'), '#111'], [NAVY, tx('Deep navy', 'მუქი ლურჯი'), '#fff'], ['#F7F7F2', tx('Paper', 'ქაღალდი'), '#111']];
+  return (
+    <section className="px-1.5 pt-1.5">
+      <div ref={ref} className="gp flex gap-1.5 h-[180px] sm:h-[260px]" data-on={on || undefined}>
+        {sw.map(([c, name, ink], i) => (
+          <div key={c} className="gp-sw relative overflow-hidden rounded-md p-4 flex flex-col justify-end text-[13px]" style={{ background: c, color: ink, transitionDelay: `${i * 110}ms`, border: c === '#F7F7F2' ? '1px solid #eee' : undefined }}>
+            <div style={{ fontWeight: 600 }}>{name}</div><div className="opacity-70">{c}</div>
+          </div>
+        ))}
+      </div>
+      <style>{`
+        .gp-sw { flex: 1 1 0; transform: translateY(40%); opacity: 0; transition: transform .8s cubic-bezier(.2,.8,.2,1), opacity .5s ease, flex-grow .6s cubic-bezier(.2,.8,.2,1); }
+        .gp[data-on] .gp-sw { transform: none; opacity: 1; }
+        .gp[data-on] .gp-sw:hover { flex-grow: 2.4; transition-delay: 0ms !important; }
+        @media (prefers-reduced-motion: reduce) { .gp-sw { transform: none; opacity: 1; transition: none; } }
+      `}</style>
+    </section>
+  );
+}
+
+/** the LinkedIn carousel: the slides come in stacked and fan out into a row */
+function Fan() {
+  const { tx } = useI18n();
+  const ref = useRef<HTMLDivElement>(null);
+  const [on, setOn] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setOn(true); io.disconnect(); } }, { threshold: 0.35 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  const slides = ['li-01-cover', 'li-02-professionalism', 'li-03-care', 'li-04-development', 'li-05-accountability', 'li-06-closing'];
+  return (
+    <section className="px-1.5" aria-label={tx('LinkedIn carousel', 'LinkedIn კარუსელი')}>
+      <div ref={ref} className="lf relative overflow-hidden rounded-md py-8 sm:py-14" style={{ background: '#EDEBE4' }} data-on={on || undefined}>
+        <div className="flex justify-center gap-2 sm:gap-3 px-3 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {slides.map((n, i) => (
+            <div key={n} className="lf-card shrink-0 w-[44%] sm:w-[15%] aspect-[4/5] overflow-hidden rounded-[6px] shadow-[0_14px_30px_rgba(0,0,0,.14)]"
+              style={{ ['--x' as string]: `${(2.5 - i) * 100}%`, ['--r' as string]: `${(i - 2.5) * 3}deg`, transitionDelay: `${i * 70}ms`, zIndex: 10 - i }}>
+              <img src={`${P}/${n}.jpg`} alt={`${tx('LinkedIn slide', 'LinkedIn სლაიდი')} ${i + 1}`} loading="lazy" decoding="async" className="h-full w-full object-cover" />
+            </div>
+          ))}
+        </div>
+      </div>
+      <style>{`
+        .lf-card { transform: translateX(var(--x)) rotate(var(--r)); transition: transform 1s cubic-bezier(.2,.8,.2,1); }
+        .lf[data-on] .lf-card { transform: none; }
+        .lf[data-on] .lf-card:hover { transform: translateY(-8px); transition-delay: 0ms !important; transition-duration: .35s; }
+        @media (max-width: 639px) { .lf-card { transform: none; } }
+        @media (prefers-reduced-motion: reduce) { .lf-card { transform: none; transition: none; } }
+      `}</style>
+    </section>
+  );
+}
+
 export function GaguaCase() {
   const { tx } = useI18n();
-  const tags = [tx('Lettering', 'ლეტერინგი'), tx('Campaigns', 'კამპანიები'), tx('Brand guideline', 'გაიდლაინი'), tx('Social media', 'სოციალური მედია')];
+  const tags = [tx('Social media kit', 'სოც. მედიის კიტი'), tx('Visual style', 'ვიზუალური სტილი'), tx('Lettering', 'ლეტერინგი'), tx('Brand guideline', 'გაიდლაინი')];
   const facts: [string, string][] = [
     [tx('Client', 'კლიენტი'), tx('Gagua Clinic', 'გაგუას კლინიკა')],
     [tx('Year', 'წელი'), '2026'],
     [tx('Sector', 'სექტორი'), tx('Maternity and family medicine', 'მეანობა და საოჯახო მედიცინა')],
-    [tx('Work', 'სამუშაო'), tx('Lettering, campaigns, guideline, ads', 'ლეტერინგი, კამპანიები, გაიდლაინი, რეკლამა')],
+    [tx('Work', 'სამუშაო'), tx('Social media kit, lettering, guideline, LinkedIn', 'სოც. მედიის კიტი, ლეტერინგი, გაიდლაინი, LinkedIn')],
   ];
 
   return (
     <BakedShell>
       <SEO
-        title="Gagua Clinic | Lettering, Campaigns & Guideline Case Study"
-        description="Gagua Clinic: hand-drawn Georgian lettering for three campaigns (Home Care, Born at Gagua, the Medical Concierge), a concierge guideline and the ads that carried them."
+        title="Gagua Clinic | Social Media Kit Case Study"
+        description="Gagua Clinic: a refreshed social media kit, hand-drawn Georgian lettering for three campaigns, a Medical Concierge guideline and the LinkedIn career page."
         keywords="Gagua Clinic, გაგუას კლინიკა, lettering, Georgian lettering, campaign, brand guideline, medical concierge, social media, Salome Mosiava"
         type="article"
       />
@@ -139,8 +207,8 @@ export function GaguaCase() {
             <h2 className="text-[17px] sm:text-[19px]" style={{ fontWeight: 600 }}>{tx('Brief', 'ბრიფი')}</h2>
             <p className="text-[22px] sm:text-[30px] leading-[1.22] tracking-[-0.01em] max-w-[900px]">
               {tx(
-                'Gagua Clinic has looked after mothers and families for thirty years. Each new service needed to be told warmly, in Georgian, and still feel like one clinic. So every campaign got its own hand-drawn name, set in the clinic’s green and yellow.',
-                'გაგუას კლინიკა ოცდაათი წელია დედებსა და ოჯახებს უვლის. ყოველ ახალ სერვისს თბილად, ქართულად უნდა ეთქვა და მაინც ერთ კლინიკად ჩანდეს. ამიტომ ყველა კამპანიამ საკუთარი, ხელით დახატული სახელი მიიღო, კლინიკის მწვანესა და ყვითელში.'
+                'A refresh of Gagua Clinic’s visual style for social media. One kit for Facebook, Instagram and LinkedIn: the clinic’s green panel, a yellow accent, bold Mtavruli headlines, and a hand-drawn name for every campaign, so each new service feels like the same clinic.',
+                'გაგუას კლინიკის ვიზუალური სტილის განახლება სოციალური მედიისთვის. ერთი კიტი Facebook-ის, Instagram-ისა და LinkedIn-ისთვის: კლინიკის მწვანე პანელი, ყვითელი აქცენტი, თამამი მთავრული სათაურები და ხელით დახატული სახელი ყველა კამპანიისთვის, რომ ყოველი ახალი სერვისი იმავე კლინიკად იკითხებოდეს.'
               )}
             </p>
           </Reveal>
@@ -162,8 +230,6 @@ export function GaguaCase() {
         </Chapter>
         <section className="px-1.5 flex flex-col gap-1.5">
           <Row items={[im('home-grid', 3649, 3600, 'Home Care feed'), im('home-care-en', 4, 5, 'Care continues at home, English')]} />
-          <Row items={[im('home-mother', 1, 1, 'Home Care from Gagua'), im('home-newsletter', 2892, 4096, 'Home Care newsletter')]} />
-          <Row items={[im('home-banner', 16, 9, 'Home Care web banner')]} />
         </section>
 
         {/* 03 born at gagua */}
@@ -172,7 +238,7 @@ export function GaguaCase() {
         </Chapter>
         <section className="px-1.5 flex flex-col gap-1.5">
           <Row items={[im('born-cover', 3280, 1248, 'Born at Gagua, Facebook cover')]} />
-          <Row items={[{ ...im('born-sticker-logo', 1400, 614, 'Born at Gagua sticker with the logo', 'png'), bg: MINT, contain: true }, im('ad-birth', 1, 1, 'Plan your birth at Gagua'), im('ad-birth-story', 9, 16, 'Birth story')]} />
+          <Row items={[im('ad-birth', 1, 1, 'Plan your birth at Gagua')]} max={640} />
         </section>
 
         {/* 04 concierge */}
@@ -181,32 +247,32 @@ export function GaguaCase() {
         </Chapter>
         <Guide />
         <section className="px-1.5 pt-1.5 flex flex-col gap-1.5">
-          <Row items={[im('cc-post', 4, 5, 'Concierge post'), im('cc-story', 9, 16, 'Concierge story'), { src: `${P}/cc-endcard.mp4`, poster: `${P}/cc-endcard.jpg`, video: true, w: 9, h: 16, alt: 'Concierge story end card' }]} />
+          <Row items={[im('cc-post', 4, 5, 'Concierge post'), { src: `${P}/cc-endcard.mp4`, poster: `${P}/cc-endcard.jpg`, video: true, w: 9, h: 16, alt: 'Concierge story end card' }]} />
           <Row items={[im('cc-newsletter', 6912, 2672, 'Concierge newsletter')]} />
-          <Row items={[im('cc-web', 5190, 2310, 'Concierge on the website'), im('cc-app', 1335, 750, 'Concierge in the app')]} />
         </section>
 
-        {/* colours */}
-        <section className="px-1.5 pt-1.5">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-1.5">
-            {[[GREEN, tx('Gagua green', 'გაგუას მწვანე'), '#fff'], [YELLOW, tx('Warm yellow', 'თბილი ყვითელი'), '#111'], [NAVY, tx('Deep navy', 'მუქი ლურჯი'), '#fff'], ['#F7F7F2', tx('Paper', 'ქაღალდი'), '#111']].map(([c, name, ink]) => (
-              <div key={c} className="aspect-[4/3] rounded-md p-4 flex flex-col justify-end text-[13px]" style={{ background: c, color: ink }}>
-                <div style={{ fontWeight: 600 }}>{name}</div><div className="opacity-70">{c}</div>
-              </div>
-            ))}
-          </div>
+        {/* colours, in motion */}
+        <Palette />
+
+        {/* 05 linkedin */}
+        <Chapter n="05" name="LinkedIn" title={tx('Gagua Clinic Career', 'გაგუას კლინიკა, კარიერა')}>
+          {tx('The clinic’s career page: a carousel of the four principles the team works by, the page cover and vacancies in the same kit.', 'კლინიკის საკარიერო გვერდი: კარუსელი ოთხ პრინციპზე, რომლითაც გუნდი მუშაობს, გვერდის ქავერი და ვაკანსიები იმავე კიტში.')}
+        </Chapter>
+        <Fan />
+        <section className="px-1.5 pt-1.5 flex flex-col gap-1.5">
+          <Row items={[im('li-career-cover', 2000, 740, 'Gagua Clinic Career, LinkedIn cover'), im('li-vacancy', 1, 1, 'Vacancy: security officer')]} />
         </section>
 
-        {/* 05 ads */}
-        <Chapter n="05" name={tx('Ads', 'რეკლამა')} title={tx('The app, the scan, the birth', 'აპლიკაცია, ექოსკოპია, მშობიარობა')}>
-          {tx('Three services, each cut square for the feed and tall for stories, with the action always in one green bar.', 'სამი სერვისი, თითო კვადრატულად ფიდისთვის და ვერტიკალურად სთორისთვის, მოქმედება კი ყოველთვის ერთ მწვანე ზოლშია.')}
+        {/* 06 ads */}
+        <Chapter n="06" name={tx('Ads', 'რეკლამა')} title={tx('The app and the scan', 'აპლიკაცია და ექოსკოპია')}>
+          {tx('Each service in one square post, the action always in one green bar.', 'თითო სერვისი ერთ კვადრატულ პოსტში, მოქმედება კი ყოველთვის ერთ მწვანე ზოლშია.')}
         </Chapter>
         <section className="px-1.5 flex flex-col gap-1.5">
-          <Row items={[im('ad-app', 1, 1, 'Download the Gagua app'), im('ad-app-story', 9, 16, 'Gagua app story'), im('ad-scan', 1, 1, 'Book a 4D scan'), im('ad-scan-story', 9, 16, '4D scan story')]} />
+          <Row items={[im('ad-app', 1, 1, 'Download the Gagua app'), im('ad-scan', 1, 1, 'Book a 4D scan')]} />
         </section>
 
-        {/* 06 thirty years */}
-        <Chapter n="06" name={tx('30 years', '30 წელი')} title={tx('Thirty years of Gagua', 'გაგუას ოცდაათი წელი')} />
+        {/* 07 thirty years */}
+        <Chapter n="07" name={tx('30 years', '30 წელი')} title={tx('Thirty years of Gagua', 'გაგუას ოცდაათი წელი')} />
         <section className="px-1.5 flex flex-col gap-1.5">
           <Row items={[im('thirty', 1, 1, 'Gagua Clinic, 30 years'), im('kv', 1730, 770, 'Dedicated to 30 years, key visual')]} />
         </section>

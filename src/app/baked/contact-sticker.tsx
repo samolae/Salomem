@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router';
 import { useI18n } from './i18n';
 
@@ -14,6 +14,14 @@ const MONO = 'ui-monospace, "SF Mono", Menlo, monospace';
 export function ContactSticker() {
   const { tx, to } = useI18n();
   const ring = useRef<SVGGElement>(null);
+  // it waits until the first section has scrolled away
+  const [shown, setShown] = useState(false);
+  useEffect(() => {
+    const on = () => setShown(window.scrollY > window.innerHeight * 0.85);
+    on();
+    window.addEventListener('scroll', on, { passive: true });
+    return () => window.removeEventListener('scroll', on);
+  }, []);
 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -32,11 +40,13 @@ export function ContactSticker() {
   const label = tx('lets_work_together ✦ contact_me ✦ ', 'ვითანამშრომლოთ ✦ მომწერე ✦ ');
 
   return (
-    <div className="pointer-events-none sticky bottom-[84px] sm:bottom-6 z-[60] flex justify-end px-3 sm:px-6 -mt-[124px] sm:-mt-[164px] h-[124px] sm:h-[164px]">
+    <div className="pointer-events-none sticky bottom-[84px] sm:bottom-6 z-[60] flex justify-end px-3 sm:px-6 -mt-[96px] sm:-mt-[124px] h-[96px] sm:h-[124px]">
       <Link
         to={to('/contact')}
         aria-label={tx('Contact me', 'მომწერე')}
-        className="cs pointer-events-auto block h-[112px] w-[112px] sm:h-[150px] sm:w-[150px] rounded-full outline-none focus-visible:shadow-[0_0_0_3px_#ff4306]"
+        data-shown={shown || undefined}
+        tabIndex={shown ? 0 : -1}
+        className="cs pointer-events-auto block h-[84px] w-[84px] sm:h-[112px] sm:w-[112px] rounded-full outline-none focus-visible:shadow-[0_0_0_3px_#ff4306]"
       >
         <svg viewBox="0 0 200 200" className="h-full w-full overflow-visible" aria-hidden>
           <defs>
@@ -48,7 +58,7 @@ export function ContactSticker() {
           </defs>
           {/* sticker: white die-cut edge, folder-blue face */}
           <circle cx="100" cy="100" r="99" fill="#fff" />
-          <circle cx="100" cy="100" r="93" fill="#3d9cf0" />
+          <circle cx="100" cy="100" r="93" fill="#111" />
           <g ref={ring} style={{ transformOrigin: '100px 100px', transition: 'transform .8s ease-out' }}>
             <text fill="#fff" fontSize="17.5" letterSpacing="1.4" style={{ fontFamily: MONO, fontWeight: 600 }}>
               <textPath href="#cs-circle" textLength="458" lengthAdjust="spacing">{label}</textPath>
@@ -64,8 +74,10 @@ export function ContactSticker() {
         </svg>
       </Link>
       <style>{`
-        .cs { transition: transform .35s cubic-bezier(.3,1.6,.5,1); filter: drop-shadow(0 10px 22px rgba(0,0,0,.18)); }
-        .cs:hover { transform: scale(1.06) rotate(-6deg); }
+        .cs { opacity: 0; transform: scale(.6) rotate(-20deg); transition: transform .45s cubic-bezier(.3,1.6,.5,1), opacity .25s ease; filter: drop-shadow(0 8px 18px rgba(0,0,0,.18)); }
+        .cs:not([data-shown]) { pointer-events: none; }
+        .cs[data-shown] { opacity: 1; transform: none; }
+        .cs[data-shown]:hover { transform: scale(1.06) rotate(-6deg); }
         .cs-paper { transition: transform .35s ease; }
         .cs-front { transition: transform .35s ease; transform-origin: 36px 60px; }
         .cs:hover .cs-paper { transform: translateY(-7px); }

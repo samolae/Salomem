@@ -247,7 +247,6 @@ export function GaguaCase() {
         <Guide />
         <section className="px-1.5 pt-1.5 flex flex-col gap-1.5">
           <Row items={[im('cc-post', 4, 5, 'Concierge post'), { src: `${P}/cc-endcard.mp4`, poster: `${P}/cc-endcard.jpg`, video: true, w: 9, h: 16, alt: 'Concierge story end card' }]} />
-          <Row items={[im('cc-newsletter', 6912, 2672, 'Concierge newsletter')]} />
         </section>
 
         {/* colours, in motion */}

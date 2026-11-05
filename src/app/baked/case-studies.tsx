@@ -199,7 +199,7 @@ const STUDIES: Study[] = [
     en: 'Social media for Zummo juicers in Georgia: Georgian reels, posts and AI product scenes that speak to cafés, hotels and restaurants.',
     ka: 'სოციალური მედია Zummo-ს წვენსაწურებისთვის საქართველოში: ქართული რილსები, პოსტები და AI ვიზუალები კაფეებისთვის, სასტუმროებისა და რესტორნებისთვის.',
     tags: [{ en: 'Social media', ka: 'სოციალური მედია' }, { en: 'Motion', ka: 'მოუშენი' }, { en: 'AI campaign', ka: 'AI კამპანია' }],
-    cover: <div className="relative h-full w-full bg-[#f9f9f9]"><img src="/cases/zummo/cover.jpg" alt="" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover object-[62%_50%] transition-transform duration-[1200ms] ease-out group-hover:scale-[1.04]" /></div>,
+    cover: <div className="relative h-full w-full bg-[#f9f9f9]"><img src="/cases/zummo/cover.jpg" alt="" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-contain object-bottom origin-bottom scale-[1.2] transition-transform duration-[1200ms] ease-out group-hover:scale-[1.25]" /></div>,
     peek: '/cases/zummo/bar-01.jpg',
   },
   {

@@ -3,8 +3,8 @@ import { useSearchParams } from 'react-router';
 import { Eye } from 'lucide-react';
 import { CaseLink } from '../components/case-transition';
 import { CtaLink, PageIntro, Reveal, T } from './ui';
-import { IMG } from '../lib/cld';
-import { screenAurumMainHQ, schenkerSendung, unispaceLogin } from './data';
+import { IMG, cld } from '../lib/cld';
+import { screenAurumMainHQ, schenkerSendung, unispaceLogin, adsCarmall1, adsCarmall2, adsCarmall3, adsMardi1, adsMardi2, adsMardi3, adsMardi4, adsTerminal1, adsTerminal2, adsTerminal3, adsTerminal5 } from './data';
 import { useI18n } from './i18n';
 import { ScopeCover } from './scope-logo';
 
@@ -154,6 +154,21 @@ function ScreensCover({ bg, screens, glow }: { bg: string; screens: string[]; gl
 const UX = { en: 'UX/UI', ka: 'UX/UI' };
 
 
+/** a social case: three of its posts standing on the brand colour */
+function PostsCover({ bg, posts }: { bg: string; posts: [string, number][] }) {
+  const t = ['translateY(6%) rotate(-3deg)', 'translateY(-3%)', 'translateY(5%) rotate(3deg)'];
+  return (
+    <div className="relative h-full w-full flex items-center justify-center gap-[3%] px-[7%]" style={{ background: bg }}>
+      {posts.map(([src, r], i) => (
+        <div key={src} className="overflow-hidden rounded-[6px] shadow-[0_18px_40px_rgba(0,0,0,.25)] transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+          style={{ width: posts.length === 2 ? '38%' : i === 1 ? '31%' : '26%', aspectRatio: String(r), transform: t[posts.length === 2 ? i * 2 : i] }}>
+          <img src={cld(src, 500)} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 /** Zummo: three pieces standing on Zummo orange */
 function ZummoCover() {
   const P = '/cases/zummo';
@@ -209,6 +224,46 @@ const STUDIES: Study[] = [
     tags: [{ en: 'AI campaign', ka: 'AI კამპანია' }, { en: 'Social media', ka: 'სოციალური მედია' }, { en: 'Art direction', ka: 'არტ დირექშენი' }],
     cover: <FitmealBento />,
     peek: '/cases/fitmeal/floor-tall-800.jpg',
+  },
+  {
+    to: '/projects/carmall', title: 'Carmall',
+    en: 'Social media for a car dealer in Georgia: price-led car posts, warranty and holiday posts, and short motion reels.',
+    ka: 'სოციალური მედია ავტოდილერისთვის: მანქანების პოსტები ფასით, გარანტია, სადღესასწაულო პოსტები და მოკლე მოუშენ რილსები.',
+    tags: [{ en: 'Social media', ka: 'სოციალური მედია' }, { en: 'Motion', ka: 'მოუშენი' }],
+    cover: <PostsCover bg="#0b1f44" posts={[[adsCarmall2, 1], [adsCarmall1, 1], [adsCarmall3, 1]]} />,
+    peek: adsCarmall1,
+  },
+  {
+    to: '/projects/arena', title: 'Arena',
+    en: 'A sports complex feed: one sport, one person in motion and one bold Georgian line per post.',
+    ka: 'სპორტული კომპლექსის ფიდი: თითო პოსტზე ერთი სპორტი, ერთი ადამიანი მოძრაობაში და ერთი თამამი ქართული ფრაზა.',
+    tags: [{ en: 'Social media', ka: 'სოციალური მედია' }],
+    cover: <PostsCover bg="#1557d6" posts={[['https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773435781/oalcrhtxt4flbp1eduth_qllomh.webp', 0.8], ['https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773435847/Artboard_1_1_ipw9xn.webp', 0.8]]} />,
+    peek: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773435783/osehbfgl6rr2oo4yukpi_htn4qa.webp',
+  },
+  {
+    to: '/projects/gtcc', title: 'GTCC',
+    en: 'A race-week countdown for the Setanta Racing Series: one post a day, the days left set huge.',
+    ka: 'რბოლის კვირის უკუთვლა Setanta Racing Series-ისთვის: დღეში ერთი პოსტი, დარჩენილი დღეები უზარმაზარი ციფრით.',
+    tags: [{ en: 'Social media', ka: 'სოციალური მედია' }, { en: 'Event campaign', ka: 'ღონისძიების კამპანია' }],
+    cover: <PostsCover bg="#b3121f" posts={[['https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773269575/image_8_pdfeca.png', 0.8], ['https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773269575/image_9_yk9ysd.png', 0.8], ['https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773269584/image_11_x2ppb1.png', 0.8]]} />,
+    peek: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773269574/image_10_nai9mn.png',
+  },
+  {
+    to: '/projects/mardi', title: 'Mardi Holding',
+    en: 'Resort real estate in Batumi: AI-made scenes, short English lines and Georgian holiday posts.',
+    ka: 'საკურორტო უძრავი ქონება ბათუმში: AI სცენები, მოკლე ინგლისური ფრაზები და ქართული სადღესასწაულო პოსტები.',
+    tags: [{ en: 'Social media', ka: 'სოციალური მედია' }, { en: 'AI campaign', ka: 'AI კამპანია' }],
+    cover: <PostsCover bg="#1e3328" posts={[[adsMardi2, 0.8], [adsMardi1, 0.8], [adsMardi3, 0.8]]} />,
+    peek: adsMardi4,
+  },
+  {
+    to: '/projects/terminal', title: 'Terminal',
+    en: 'Membership offers for coworking spaces: the space leads, the offer is one line.',
+    ka: 'შეთავაზებები ქოვორკინგ სივრცეებისთვის: მთავარი სივრცეა, შეთავაზება ერთი ხაზია.',
+    tags: [{ en: 'Social media', ka: 'სოციალური მედია' }],
+    cover: <PostsCover bg="#121212" posts={[[adsTerminal2, 1], [adsTerminal3, 0.5625], [adsTerminal5, 1]]} />,
+    peek: adsTerminal1,
   },
   {
     to: '/projects/aurum', title: 'AURUM',

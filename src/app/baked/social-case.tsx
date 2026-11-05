@@ -22,7 +22,7 @@ export type SocialCaseData = {
   brand: string;
   handle: string;
   avatar: string;            // small round logo for the post mock-ups
-  year: string;
+  year?: string;
   tags: L[];
   facts: [L, L][];
   seo: { title: string; description: string; keywords: string };
@@ -69,7 +69,7 @@ function Post({ m, avatar, handle }: { m: Media; avatar: string; handle: string 
         <span className="text-[10.5px] text-[#111]" style={{ fontWeight: 600 }}>{handle}</span>
         <span className="ml-auto text-[#111] text-[12px] leading-none">···</span>
       </div>
-      <div className="aspect-[4/5] bg-[#f2f2f2]"><Piece m={m} w={520} /></div>
+      <div className="bg-[#f2f2f2]" style={{ aspectRatio: `${Math.min(1.91, Math.max(0.8, (m.w ?? 4) / (m.h ?? 5)))}` }}><Piece m={m} w={520} /></div>
       <div className="flex items-center gap-2.5 px-2.5 py-2 text-[#111]">
         <Heart size={13} /><MessageCircle size={13} /><Send size={13} /><Bookmark size={13} className="ml-auto" />
       </div>
@@ -172,7 +172,7 @@ export function SocialCase({ d }: { d: SocialCaseData }) {
           </h1>
           <ul className="mt-6 flex flex-wrap gap-1.5">
             {d.tags.map((t) => <li key={t.en} className="inline-flex items-center h-8 px-3.5 rounded-full border border-[#111]/80 text-[13px]">{tx(t.en, t.ka)}</li>)}
-            <li className="inline-flex items-center h-8 px-3.5 rounded-full bg-[#f2f2f2] text-[13px] text-[#6f6f6f]">{d.year}</li>
+            {d.year && <li className="inline-flex items-center h-8 px-3.5 rounded-full bg-[#f2f2f2] text-[13px] text-[#6f6f6f]">{d.year}</li>}
           </ul>
         </header>
 
@@ -184,8 +184,8 @@ export function SocialCase({ d }: { d: SocialCaseData }) {
             {c.reels && (
               <div className="relative z-[1] flex-1 flex items-center justify-center gap-3 sm:gap-5 px-4 py-6 sm:py-8 min-h-0">
                 {c.reels.map((m, i) => (
-                  <div key={i} className={`h-full max-h-[720px] aspect-[9/16] overflow-hidden rounded-[18px] sm:rounded-[26px] shadow-[0_30px_60px_rgba(0,0,0,.28)] ${i !== 1 ? 'hidden sm:block' : ''}`}
-                    style={{ transform: i === 0 ? 'translateY(4%)' : i === 2 ? 'translateY(-4%)' : undefined }}>
+                  <div key={i} style={{ aspectRatio: `${m.w ?? 9}/${m.h ?? 16}`, transform: i === 0 ? 'translateY(4%) rotate(-2deg)' : i === 2 ? 'translateY(-4%) rotate(2deg)' : undefined }} className={`${(m.w ?? 9) / (m.h ?? 16) > 0.7 ? 'w-[min(30%,440px)] max-md:w-[78%]' : 'h-full max-h-[720px]'} overflow-hidden rounded-[18px] sm:rounded-[26px] shadow-[0_30px_60px_rgba(0,0,0,.28)] ${i !== 1 ? 'hidden sm:block' : ''}`}
+>
                     <Piece m={m} />
                   </div>
                 ))}

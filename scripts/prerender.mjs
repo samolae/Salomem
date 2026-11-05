@@ -41,6 +41,8 @@ const ROUTE_SOURCE = (url) =>
     ? 'src/app/baked/dasturi-case.tsx'
     : url === '/projects/fitmeal'
     ? 'src/app/baked/fitmeal-case.tsx'
+    : ['/projects/terminal', '/projects/mardi', '/projects/carmall', '/projects/gtcc', '/projects/arena'].includes(url)
+    ? 'src/app/baked/social-cases.tsx'
     : url === '/projects/zummo'
     ? 'src/app/baked/zummo-case.tsx'
     : url === '/projects/scope'

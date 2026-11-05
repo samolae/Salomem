@@ -25,6 +25,16 @@ export const caseRoutes = {
     import('./baked/scope-case').then((m) => ({ Component: m.ScopeCase })),
   '/projects/zummo': () =>
     import('./baked/zummo-case').then((m) => ({ Component: m.ZummoCase })),
+  '/projects/terminal': () =>
+    import('./baked/social-cases').then((m) => ({ Component: m.TerminalCase })),
+  '/projects/mardi': () =>
+    import('./baked/social-cases').then((m) => ({ Component: m.MardiCase })),
+  '/projects/carmall': () =>
+    import('./baked/social-cases').then((m) => ({ Component: m.CarmallCase })),
+  '/projects/gtcc': () =>
+    import('./baked/social-cases').then((m) => ({ Component: m.GtccCase })),
+  '/projects/arena': () =>
+    import('./baked/social-cases').then((m) => ({ Component: m.ArenaCase })),
 } as const;
 
 /** Home, work galleries, services and contact all share one page module */

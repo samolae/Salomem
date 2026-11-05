@@ -153,6 +153,22 @@ function ScreensCover({ bg, screens, glow }: { bg: string; screens: string[]; gl
 
 const UX = { en: 'UX/UI', ka: 'UX/UI' };
 
+
+/** Zummo: three pieces standing on Zummo orange */
+function ZummoCover() {
+  const P = '/cases/zummo';
+  const items = [['blue-machine', 'translateY(6%) rotate(-3deg)'], ['post-quality', 'translateY(-3%)'], ['glasses', 'translateY(5%) rotate(3deg)']];
+  return (
+    <div className="relative h-full w-full flex items-center justify-center gap-[3%] px-[8%]" style={{ background: '#FF6B04' }}>
+      {items.map(([n, t], i) => (
+        <div key={n} className={`${i === 1 ? 'w-[30%] aspect-[4/5]' : 'w-[24%] aspect-[9/16]'} overflow-hidden rounded-[6px] shadow-[0_18px_40px_rgba(0,0,0,.22)] transition-transform duration-700 ease-out group-hover:scale-[1.03]`} style={{ transform: t }}>
+          <img src={`${P}/${n}.jpg`} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 const STUDIES: Study[] = [
   ...(DASTURI_LIVE ? [{
     to: '/projects/dasturi', title: 'Dasturi',
@@ -177,6 +193,14 @@ const STUDIES: Study[] = [
     tags: [{ en: 'Logo design', ka: 'ლოგოს დიზაინი' }, { en: 'Visual identity', ka: 'ვიზუალური იდენტობა' }, { en: 'Motion', ka: 'მოუშენი' }, { en: 'Social media', ka: 'სოციალური მედია' }],
     cover: <ScopeCover />,
     peek: '/cases/scope/casting.jpg',
+  },
+  {
+    to: '/projects/zummo', title: 'Zummo Georgia',
+    en: 'Social media for Zummo juicers in Georgia: Georgian reels, posts and AI product scenes that speak to cafés, hotels and restaurants.',
+    ka: 'სოციალური მედია Zummo-ს წვენსაწურებისთვის საქართველოში: ქართული რილსები, პოსტები და AI ვიზუალები კაფეებისთვის, სასტუმროებისა და რესტორნებისთვის.',
+    tags: [{ en: 'Social media', ka: 'სოციალური მედია' }, { en: 'Motion', ka: 'მოუშენი' }, { en: 'AI campaign', ka: 'AI კამპანია' }],
+    cover: <ZummoCover />,
+    peek: '/cases/zummo/yellow-machine.jpg',
   },
   {
     to: '/projects/fitmeal', title: 'FitMeal',

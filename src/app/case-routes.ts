@@ -23,6 +23,8 @@ export const caseRoutes = {
     import('./baked/dasturi-case').then((m) => ({ Component: m.DasturiCase })),
   '/projects/scope': () =>
     import('./baked/scope-case').then((m) => ({ Component: m.ScopeCase })),
+  '/projects/zummo': () =>
+    import('./baked/zummo-case').then((m) => ({ Component: m.ZummoCase })),
 } as const;
 
 /** Home, work galleries, services and contact all share one page module */

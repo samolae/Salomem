@@ -40,6 +40,7 @@ export const routes: RouteObject[] = [
           { path: '/projects/fitmeal',         lazy: caseRoutes['/projects/fitmeal'] },
           { path: '/projects/dasturi',         lazy: caseRoutes['/projects/dasturi'] },
           { path: '/projects/scope',           lazy: caseRoutes['/projects/scope'] },
+          { path: '/projects/zummo',           lazy: caseRoutes['/projects/zummo'] },
           { path: '/tools/pixel',              Component: PixelManager },
           { path: '*',                         Component: NotFound },
         ],
@@ -65,4 +66,5 @@ export const PRERENDER_PATHS = [
   '/projects/gv-capital',
   '/projects/dasturi',
   '/projects/scope',
+  '/projects/zummo',
 ];

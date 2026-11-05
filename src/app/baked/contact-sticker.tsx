@@ -32,7 +32,7 @@ export function ContactSticker() {
   const label = tx('lets_work_together ✦ contact_me ✦ ', 'ვითანამშრომლოთ ✦ მომწერე ✦ ');
 
   return (
-    <div className="pointer-events-none sticky bottom-4 sm:bottom-6 z-[60] flex justify-end px-3 sm:px-6 -mt-[124px] sm:-mt-[164px] h-[124px] sm:h-[164px]">
+    <div className="pointer-events-none sticky bottom-[84px] sm:bottom-6 z-[60] flex justify-end px-3 sm:px-6 -mt-[124px] sm:-mt-[164px] h-[124px] sm:h-[164px]">
       <Link
         to={to('/contact')}
         aria-label={tx('Contact me', 'მომწერე')}

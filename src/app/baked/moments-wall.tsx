@@ -31,6 +31,7 @@ type Props = {
 };
 
 const GAP = 6;
+const PARTING = false;
 
 export const MomentsWall = ({ items, isDark, onOpen }: Props) => {
   const wallRef = useRef<HTMLDivElement>(null);
@@ -197,7 +198,9 @@ export const MomentsWall = ({ items, isDark, onOpen }: Props) => {
   }, []);
 
   const onPointerMove = (e: React.PointerEvent) => {
-    if (reduceMotion || e.pointerType === 'touch') return;
+    // the wall no longer parts around the cursor: tiles jumping under the
+    // pointer read as a glitch, so hover only zooms inside the tile
+    if (!PARTING || reduceMotion || e.pointerType === 'touch') return;
     const s = sim.current;
     if (!s.pointer.inside) {
       // Open the void where the cursor came in, not where it last closed

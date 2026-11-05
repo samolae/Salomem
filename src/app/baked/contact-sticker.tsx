@@ -51,25 +51,15 @@ export function ContactSticker() {
         <svg viewBox="0 0 200 200" className="h-full w-full overflow-visible" aria-hidden>
           <defs>
             <path id="cs-circle" d="M100 100 m-74 0 a74 74 0 1 1 148 0 a74 74 0 1 1 -148 0" />
-            {/* brand orange, lit from above so the folder has body */}
+            {/* brand orange, clean and bright, like a desktop folder icon */}
             <linearGradient id="cs-back" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stopColor="#e2470f" />
-              <stop offset="1" stopColor="#a92b02" />
+              <stop offset="0" stopColor="#ff6a26" />
+              <stop offset="1" stopColor="#f2520c" />
             </linearGradient>
             <linearGradient id="cs-front" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stopColor="#ff8a52" />
-              <stop offset=".45" stopColor="#ff5a1a" />
-              <stop offset="1" stopColor="#e03a03" />
+              <stop offset="0" stopColor="#ff8f55" />
+              <stop offset="1" stopColor="#ff5f1c" />
             </linearGradient>
-            <linearGradient id="cs-paper" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stopColor="#ffffff" />
-              <stop offset="1" stopColor="#e9e6e1" />
-            </linearGradient>
-            <radialGradient id="cs-shine" cx=".3" cy="0" r=".9">
-              <stop offset="0" stopColor="#fff" stopOpacity=".45" />
-              <stop offset=".6" stopColor="#fff" stopOpacity="0" />
-            </radialGradient>
-            <filter id="cs-soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3" /></filter>
           </defs>
           {/* sticker: white die-cut edge, black face */}
           <circle cx="100" cy="100" r="99" fill="#fff" />
@@ -81,20 +71,11 @@ export function ContactSticker() {
           </g>
           {/* the desktop folder, as on @areuli.design, in brand orange */}
           <g className="cs-folder" transform="translate(55 60) scale(1.25)">
-            <ellipse cx="36" cy="63" rx="31" ry="4.5" fill="#000" opacity=".55" filter="url(#cs-soft)" />
             <path d="M6 3h19.5c2.2 0 3.4.7 4.7 2L34 9h32c3.3 0 6 2.7 6 6v40c0 3.3-2.7 6-6 6H6c-3.3 0-6-2.7-6-6V9c0-3.3 2.7-6 6-6z" fill="url(#cs-back)" />
-            <path d="M6 3.6h19.5c2 0 3 .6 4.3 1.8L33.6 9.6" fill="none" stroke="#ff9a6b" strokeOpacity=".55" strokeWidth=".9" />
-            <g className="cs-paper">
-              <rect x="13" y="11" width="46" height="34" rx="2.5" fill="#d9d4cc" transform="rotate(-4 36 28)" />
-              <rect x="11" y="8.5" width="50" height="35" rx="2.5" fill="url(#cs-paper)" />
-              <path d="M17 16h28M17 21h22" stroke="#cfc8be" strokeWidth="1.6" strokeLinecap="round" />
-            </g>
-            <path d="M6 18h60c3.3 0 6 2.7 6 6v31c0 3.3-2.7 6-6 6H6c-3.3 0-6-2.7-6-6V24c0-3.3 2.7-6 6-6z" fill="#7a1f00" opacity=".35" transform="translate(0 -1.4)" />
+            <rect className="cs-paper" x="10" y="8" width="52" height="34" rx="3" fill="#fff" />
             <g className="cs-front">
               <path d="M6 18h60c3.3 0 6 2.7 6 6v31c0 3.3-2.7 6-6 6H6c-3.3 0-6-2.7-6-6V24c0-3.3 2.7-6 6-6z" fill="url(#cs-front)" />
-              <path d="M6 18h60c3.3 0 6 2.7 6 6v31c0 3.3-2.7 6-6 6H6c-3.3 0-6-2.7-6-6V24c0-3.3 2.7-6 6-6z" fill="url(#cs-shine)" />
-              <path d="M6.5 19h59" stroke="#ffd2bd" strokeWidth="1.3" strokeLinecap="round" strokeOpacity=".9" />
-              <path d="M2 56.5c1 2.2 2.4 3.3 4.6 3.3h58.8c2.2 0 3.6-1.1 4.6-3.3" fill="none" stroke="#b02f00" strokeOpacity=".55" strokeWidth="1.2" />
+              <path d="M6.5 19.2h59" stroke="#fff" strokeOpacity=".55" strokeWidth="1.2" strokeLinecap="round" />
             </g>
           </g>
         </svg>

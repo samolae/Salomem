@@ -13,7 +13,7 @@
       "destination": "/:page/index.html"
     },
     {
-      "source": "/projects/:slug(aurum|schenker|unispace|dasturi|fitmeal|gv-capital|scope|zummo|terminal|mardi|carmall|gtcc|arena)",
+      "source": "/projects/:slug(aurum|schenker|unispace|dasturi|fitmeal|gv-capital|scope|zummo|gagua|terminal|mardi|carmall|gtcc|arena)",
       "destination": "/projects/:slug/index.html"
     },
     {

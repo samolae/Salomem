@@ -17,7 +17,7 @@ const F = {
   body: '"Manrope", "Inter", sans-serif',
 };
 
-const BAKED_PATHS = new Set(['/', '/work', '/services', '/contact', '/projects/dasturi', '/projects/fitmeal', '/projects/gv-capital', '/projects/scope', '/projects/zummo', '/projects/terminal', '/projects/mardi', '/projects/carmall', '/projects/gtcc', '/projects/arena', '/projects/aurum', '/projects/schenker', '/projects/unispace']);
+const BAKED_PATHS = new Set(['/', '/work', '/services', '/contact', '/projects/dasturi', '/projects/fitmeal', '/projects/gv-capital', '/projects/scope', '/projects/zummo', '/projects/gagua', '/projects/terminal', '/projects/mardi', '/projects/carmall', '/projects/gtcc', '/projects/arena', '/projects/aurum', '/projects/schenker', '/projects/unispace']);
 
 const bottomNavItems = [
   { id: 'home', label: 'Home', icon: Home, path: '/' },

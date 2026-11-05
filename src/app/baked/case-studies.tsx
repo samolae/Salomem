@@ -195,6 +195,14 @@ const STUDIES: Study[] = [
     peek: '/cases/scope/casting.jpg',
   },
   {
+    to: '/projects/gagua', title: 'Gagua Clinic',
+    en: 'Hand-drawn Georgian lettering for three clinic campaigns, a Medical Concierge guideline and the ads that carried them.',
+    ka: 'ხელით დახატული ქართული ლეტერინგი კლინიკის სამი კამპანიისთვის, სამედიცინო კონსიერჟის გაიდლაინი და რეკლამები.',
+    tags: [{ en: 'Lettering', ka: 'ლეტერინგი' }, { en: 'Brand guidelines', ka: 'გაიდლაინი' }, { en: 'Social media', ka: 'სოციალური მედია' }],
+    cover: <HoverCover img="/cases/gagua/guide-01.jpg" />,
+    peek: '/cases/gagua/ad-birth.jpg',
+  },
+  {
     to: '/projects/zummo', title: 'Zummo Georgia',
     en: 'Social media for Zummo juicers in Georgia: Georgian reels, posts and AI product scenes that speak to cafés, hotels and restaurants.',
     ka: 'სოციალური მედია Zummo-ს წვენსაწურებისთვის საქართველოში: ქართული რილსები, პოსტები და AI ვიზუალები კაფეებისთვის, სასტუმროებისა და რესტორნებისთვის.',
@@ -276,7 +284,7 @@ const STUDIES: Study[] = [
   },
 ];
 
-const FILTERS = ['UX/UI', 'Branding', 'Logo design', 'Visual identity', 'Brand guidelines', 'Packaging', 'AI campaign', 'Social media', 'Motion', 'Art direction'];
+const FILTERS = ['UX/UI', 'Branding', 'Logo design', 'Lettering', 'Visual identity', 'Brand guidelines', 'Packaging', 'AI campaign', 'Social media', 'Motion', 'Art direction'];
 
 /** Holy Motors style tag: a thin outlined pill, filled when chosen */
 const tagCls = (on: boolean) =>

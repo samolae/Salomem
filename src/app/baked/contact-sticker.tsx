@@ -51,12 +51,27 @@ export function ContactSticker() {
         <svg viewBox="0 0 200 200" className="h-full w-full overflow-visible" aria-hidden>
           <defs>
             <path id="cs-circle" d="M100 100 m-74 0 a74 74 0 1 1 148 0 a74 74 0 1 1 -148 0" />
-            <linearGradient id="cs-front" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stopColor="#ffd25e" />
-              <stop offset="1" stopColor="#f6c03a" />
+            {/* brand orange, lit from above so the folder has body */}
+            <linearGradient id="cs-back" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stopColor="#e2470f" />
+              <stop offset="1" stopColor="#a92b02" />
             </linearGradient>
+            <linearGradient id="cs-front" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stopColor="#ff8a52" />
+              <stop offset=".45" stopColor="#ff5a1a" />
+              <stop offset="1" stopColor="#e03a03" />
+            </linearGradient>
+            <linearGradient id="cs-paper" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stopColor="#ffffff" />
+              <stop offset="1" stopColor="#e9e6e1" />
+            </linearGradient>
+            <radialGradient id="cs-shine" cx=".3" cy="0" r=".9">
+              <stop offset="0" stopColor="#fff" stopOpacity=".45" />
+              <stop offset=".6" stopColor="#fff" stopOpacity="0" />
+            </radialGradient>
+            <filter id="cs-soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3" /></filter>
           </defs>
-          {/* sticker: white die-cut edge, folder-blue face */}
+          {/* sticker: white die-cut edge, black face */}
           <circle cx="100" cy="100" r="99" fill="#fff" />
           <circle cx="100" cy="100" r="93" fill="#111" />
           <g ref={ring} style={{ transformOrigin: '100px 100px', transition: 'transform .8s ease-out' }}>
@@ -64,12 +79,23 @@ export function ContactSticker() {
               <textPath href="#cs-circle" textLength="458" lengthAdjust="spacing">{label}</textPath>
             </text>
           </g>
-          {/* the yellow desktop folder, as on @areuli.design */}
-          <g className="cs-folder" transform="translate(64 70)">
-            <path d="M5 4h20c2 0 3 .6 4.2 1.8L33 10h34c3 0 5 2 5 5v40c0 3-2 5-5 5H5c-3 0-5-2-5-5V9c0-3 2-5 5-5z" fill="#e5a91d" />
-            <rect className="cs-paper" x="12" y="9" width="48" height="34" rx="2.5" fill="#fff" />
-            <path className="cs-front" d="M5 17h62c3 0 5 2 5 5v33c0 3-2 5-5 5H5c-3 0-5-2-5-5V22c0-3 2-5 5-5z" fill="url(#cs-front)" />
-            <path d="M5 17.8h62" stroke="rgba(255,255,255,.6)" strokeWidth="1.2" strokeLinecap="round" />
+          {/* the desktop folder, as on @areuli.design, in brand orange */}
+          <g className="cs-folder" transform="translate(55 60) scale(1.25)">
+            <ellipse cx="36" cy="63" rx="31" ry="4.5" fill="#000" opacity=".55" filter="url(#cs-soft)" />
+            <path d="M6 3h19.5c2.2 0 3.4.7 4.7 2L34 9h32c3.3 0 6 2.7 6 6v40c0 3.3-2.7 6-6 6H6c-3.3 0-6-2.7-6-6V9c0-3.3 2.7-6 6-6z" fill="url(#cs-back)" />
+            <path d="M6 3.6h19.5c2 0 3 .6 4.3 1.8L33.6 9.6" fill="none" stroke="#ff9a6b" strokeOpacity=".55" strokeWidth=".9" />
+            <g className="cs-paper">
+              <rect x="13" y="11" width="46" height="34" rx="2.5" fill="#d9d4cc" transform="rotate(-4 36 28)" />
+              <rect x="11" y="8.5" width="50" height="35" rx="2.5" fill="url(#cs-paper)" />
+              <path d="M17 16h28M17 21h22" stroke="#cfc8be" strokeWidth="1.6" strokeLinecap="round" />
+            </g>
+            <path d="M6 18h60c3.3 0 6 2.7 6 6v31c0 3.3-2.7 6-6 6H6c-3.3 0-6-2.7-6-6V24c0-3.3 2.7-6 6-6z" fill="#7a1f00" opacity=".35" transform="translate(0 -1.4)" />
+            <g className="cs-front">
+              <path d="M6 18h60c3.3 0 6 2.7 6 6v31c0 3.3-2.7 6-6 6H6c-3.3 0-6-2.7-6-6V24c0-3.3 2.7-6 6-6z" fill="url(#cs-front)" />
+              <path d="M6 18h60c3.3 0 6 2.7 6 6v31c0 3.3-2.7 6-6 6H6c-3.3 0-6-2.7-6-6V24c0-3.3 2.7-6 6-6z" fill="url(#cs-shine)" />
+              <path d="M6.5 19h59" stroke="#ffd2bd" strokeWidth="1.3" strokeLinecap="round" strokeOpacity=".9" />
+              <path d="M2 56.5c1 2.2 2.4 3.3 4.6 3.3h58.8c2.2 0 3.6-1.1 4.6-3.3" fill="none" stroke="#b02f00" strokeOpacity=".55" strokeWidth="1.2" />
+            </g>
           </g>
         </svg>
       </Link>
@@ -80,7 +106,7 @@ export function ContactSticker() {
         .cs[data-shown]:hover { transform: scale(1.06) rotate(-6deg); }
         .cs-paper { transition: transform .35s ease; }
         .cs-front { transition: transform .35s ease; transform-origin: 36px 60px; }
-        .cs:hover .cs-paper { transform: translateY(-7px); }
+        .cs:hover .cs-paper { transform: translateY(-8px); }
         .cs:hover .cs-front { transform: skewX(-8deg) scaleY(.94); }
         @media (prefers-reduced-motion: reduce) { .cs, .cs-paper, .cs-front { transition: none; } }
       `}</style>

@@ -246,35 +246,35 @@ function Footer({ footRef }: { footRef?: React.Ref<HTMLElement> }) {
   ];
   return (
     <footer ref={footRef} className="baked-foot bg-[#111] text-white px-5 sm:px-8 pt-20 sm:pt-24 pb-28 text-[14px]">
-      <a href={`mailto:${EMAIL}`} className="group mb-14 sm:mb-20 flex items-center gap-3 sm:gap-4 w-fit text-[28px] sm:text-[52px] leading-none tracking-[-0.01em] text-white hover:text-[#ffd25e] transition-colors" style={{ fontFamily: 'ui-monospace, "SF Mono", Menlo, monospace', fontWeight: 600 }}>
+      <a href={`mailto:${EMAIL}`} className="group mb-14 sm:mb-20 flex items-center gap-3 sm:gap-4 w-fit text-[28px] sm:text-[52px] leading-none tracking-[-0.01em] text-white hover:text-[#ff4306] transition-colors" style={{ fontFamily: 'ui-monospace, "SF Mono", Menlo, monospace', fontWeight: 600 }}>
         {tx('lets_work_together', 'ვითანამშრომლოთ')}
-        <span className="h-3.5 w-3.5 sm:h-5 sm:w-5 rounded-full bg-[#ffd25e] transition-transform group-hover:scale-125" aria-hidden />
+        <span className="h-3.5 w-3.5 sm:h-5 sm:w-5 rounded-full bg-[#ff4306] transition-transform group-hover:scale-125" aria-hidden />
       </a>
       <div className="grid grid-cols-2 sm:grid-cols-5 gap-8 max-w-6xl">
         {groups.map((g) => (
           <div key={g.title}>
             <div className="text-white/45 mb-3">{g.title}</div>
             <ul className="space-y-1.5">
-              {g.links.map((x) => <li key={x.to}><Link to={to(x.to)} className="text-white hover:text-[#ffd25e] transition-colors">{x.l}</Link></li>)}
+              {g.links.map((x) => <li key={x.to}><Link to={to(x.to)} className="text-white hover:text-[#ff4306] transition-colors">{x.l}</Link></li>)}
             </ul>
           </div>
         ))}
         <div>
           <div className="text-white/45 mb-3">{tx('Elsewhere', 'სხვაგან')}</div>
           <ul className="space-y-1.5">
-            {ext.map((x) => <li key={x.l}><a href={x.href} target="_blank" rel="noopener noreferrer" className="text-white hover:text-[#ffd25e] transition-colors">{x.l} ↗</a></li>)}
+            {ext.map((x) => <li key={x.l}><a href={x.href} target="_blank" rel="noopener noreferrer" className="text-white hover:text-[#ff4306] transition-colors">{x.l} ↗</a></li>)}
           </ul>
         </div>
         <div>
           <div className="text-white/45 mb-3">{tx('My brand', 'ჩემი ბრენდი')}</div>
-          <a href="https://www.instagram.com/areuli.design/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-white hover:text-[#ffd25e] transition-colors">
+          <a href="https://www.instagram.com/areuli.design/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-white hover:text-[#ff4306] transition-colors">
             <img src="/favicon-48.png" alt="" width="20" height="20" className="h-5 w-5 rounded" />
             areuli.design ↗
           </a>
         </div>
         <div>
           <div className="text-white/45 mb-3">{tx('Say hello', 'მომწერე')}</div>
-          <a href={`mailto:${EMAIL}`} className="text-white hover:text-[#ffd25e] transition-colors break-all">{EMAIL}</a>
+          <a href={`mailto:${EMAIL}`} className="text-white hover:text-[#ff4306] transition-colors break-all">{EMAIL}</a>
           <div className="text-white/55 mt-1.5">{tx('Georgia', 'საქართველო')}</div>
         </div>
       </div>

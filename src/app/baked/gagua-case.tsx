@@ -234,11 +234,10 @@ export function GaguaCase() {
 
         {/* 03 born at gagua */}
         <Chapter n="03" name={tx('Born at Gagua', 'დავიბადე გაგუაში')} title={tx('A sticker every family wants to share', 'სტიკერი, რომლის გაზიარებაც ყველა ოჯახს უნდა')}>
-          {tx('“Born at Gagua” is lettering made to travel: on the Facebook cover, on stickers for new parents, on ads for the maternity ward.', '„დავიბადე გაგუაში“ ლეტერინგია, რომელიც უნდა გავრცელდეს: Facebook-ის ქავერზე, სტიკერებზე ახალი მშობლებისთვის, სამშობიარო განყოფილების რეკლამებში.')}
+          {tx('“Born at Gagua” is lettering made to travel: on the Facebook cover and on stickers for new parents.', '„დავიბადე გაგუაში“ ლეტერინგია, რომელიც უნდა გავრცელდეს: Facebook-ის ქავერზე და სტიკერებზე ახალი მშობლებისთვის.')}
         </Chapter>
         <section className="px-1.5 flex flex-col gap-1.5">
           <Row items={[im('born-cover', 3280, 1248, 'Born at Gagua, Facebook cover')]} />
-          <Row items={[im('ad-birth', 1, 1, 'Plan your birth at Gagua')]} max={640} />
         </section>
 
         {/* 04 concierge */}
@@ -264,11 +263,11 @@ export function GaguaCase() {
         </section>
 
         {/* 06 ads */}
-        <Chapter n="06" name={tx('Ads', 'რეკლამა')} title={tx('The app and the scan', 'აპლიკაცია და ექოსკოპია')}>
+        <Chapter n="06" name={tx('Ads', 'რეკლამა')} title={tx('The app, the scan, the birth', 'აპლიკაცია, ექოსკოპია, მშობიარობა')}>
           {tx('Each service in one square post, the action always in one green bar.', 'თითო სერვისი ერთ კვადრატულ პოსტში, მოქმედება კი ყოველთვის ერთ მწვანე ზოლშია.')}
         </Chapter>
         <section className="px-1.5 flex flex-col gap-1.5">
-          <Row items={[im('ad-app', 1, 1, 'Download the Gagua app'), im('ad-scan', 1, 1, 'Book a 4D scan')]} />
+          <Row items={[im('ad-app', 1, 1, 'Download the Gagua app'), im('ad-scan', 1, 1, 'Book a 4D scan'), im('ad-birth', 1, 1, 'Plan your birth at Gagua')]} />
         </section>
 
         {/* 07 thirty years */}

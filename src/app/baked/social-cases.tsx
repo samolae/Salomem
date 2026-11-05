@@ -61,9 +61,10 @@ const cm = [im(adsCarmall1, 1, 1, 'Ford Fusion Hybrid, $7,000'), im(adsCarmall2,
 const cmReels = [film('carmall-ne_1_u5ewuz', 'Carmall reel'), film('v1773267419/carmall03_vku8z1', 'Carmall motion reel'), film('v1773267418/carmall04_m7zidg', 'Carmall reel'), film('v1773267407/carmall02_nzawuu', 'Carmall reel')];
 export const CARMALL: SocialCaseData = {
   path: '/projects/carmall', brand: 'Carmall', handle: 'carmall.ge',
+  year: '2025',
   avatar: `${CLD}/image/upload/f_auto,q_auto/v1773917412/carmall_m1az2j.webp`,
   tags: [SOCIAL, L('Motion', 'მოუშენი'), ADS],
-  facts: [fact(CLIENT, ['Carmall', 'ქარმოლი']), fact(SECTOR, ['Car sales', 'ავტომობილების გაყიდვა']), fact(WORK, ['Posts, reels, motion', 'პოსტები, რილსები, მოუშენი']), fact(FORMAT, ['1:1, 9:16, cover', '1:1, 9:16, ქავერი'])],
+  facts: [fact(CLIENT, ['Carmall', 'ქარმოლი']), fact(['Year', 'წელი'], ['2025', '2025']), fact(SECTOR, ['Car sales', 'ავტომობილების გაყიდვა']), fact(WORK, ['Posts, reels, motion', 'პოსტები, რილსები, მოუშენი']), fact(FORMAT, ['1:1, 9:16, cover', '1:1, 9:16, ქავერი'])],
   seo: { title: 'Carmall | Social Media Case Study', description: 'Social media for Carmall, a car dealer in Georgia: price-led car posts, warranty and holiday posts, and short motion reels.', keywords: 'Carmall, cars, social media, reels, motion, Georgia, Salome Mosiava' },
   cover: { bg: '#0b1f44', reels: [cmReels[1], cmReels[0], cmReels[3]], line: L('Cars, with a warranty', 'ავტომობილები გარანტიით') },
   brief: L('Carmall sells cars in Georgia. The feed had to move stock, say clearly that every car comes with a warranty, and keep the brand present between offers.', 'ქარმოლი საქართველოში ავტომობილებს ყიდის. ფიდს მანქანები უნდა გაეყიდა, მკაფიოდ ეთქვა, რომ ყველა მანქანას გარანტია აქვს, და ბრენდი შეთავაზებებს შორისაც ჩანდეს.'),

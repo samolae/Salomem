@@ -269,8 +269,8 @@ export function HomeContent() {
       {/* Spotlights */}
       <section aria-labelledby="spot-title" className="px-1.5 pt-16">
         <h2 id="spot-title" className="px-0.5 pb-3 text-[14px] text-[#6f6f6f]">{tx('Spotlights of 2025', '2025 წლის მთავარი მომენტები')}</h2>
-        {/* the source pictures are small, so they are shown small: five across */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-1.5 items-start">
+        {/* the source pictures are small, so they are shown small */}
+        <div className="grid grid-cols-2 gap-1.5 items-start max-w-[820px]">
           {spotlights.map((s, i) => {
             const t = ka ? spotlightsKa[i] : s;
             return (

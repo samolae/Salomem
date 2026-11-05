@@ -71,7 +71,8 @@ export const CARMALL: SocialCaseData = {
   brief: L('Carmall sells cars in Georgia. The feed had to move stock, say clearly that every car comes with a warranty, and keep the brand present between offers.', 'ქარმოლი საქართველოში ავტომობილებს ყიდის. ფიდს მანქანები უნდა გაეყიდა, მკაფიოდ ეთქვა, რომ ყველა მანქანას გარანტია აქვს, და ბრენდი შეთავაზებებს შორისაც ჩანდეს.'),
   challenge: L('Car posts all look alike: a car, a price, a phone number. Carmall needed to be recognised before the price was read.', 'მანქანების პოსტები ერთმანეთს ჰგავს: მანქანა, ფასი, ტელეფონი. ქარმოლი ფასის წაკითხვამდე უნდა გეცნო.'),
   strategy: L('The car large, the model name set big behind it, the price in one corner and the same red bar at the foot of every post. Reels carry the motion, and holiday posts keep the night-time, cinematic mood.', 'მანქანა დიდად, მოდელის სახელი უკან დიდი შრიფტით, ფასი ერთ კუთხეში და ერთი და იგივე წითელი ზოლი ყველა პოსტის ბოლოში. მოძრაობას რილსები ატარებს, სადღესასწაულო პოსტები კი ღამის, კინემატოგრაფიულ განწყობას ინარჩუნებს.'),
-  feed: cm.slice(0, 3), pair: [cmReels[2], cm[0]], strip: [cmReels[0], cm[1], cmReels[1], cm[2], cmReels[3], cm[0]], closing: [cm[3]], wallBg: '#0b1f44',
+  // films keep their own tall proportion inside the feed
+  feed: [cm[0], cmReels[0], cm[1], cmReels[1], cm[2], cmReels[2], cmReels[3]], pair: [cmReels[2], cm[0]], strip: [cmReels[0], cm[1], cmReels[1], cm[2], cmReels[3], cm[0]], closing: [cm[3]], wallBg: '#0b1f44',
 };
 
 /* ── GTCC ─────────────────────────────────────────────────────────── */

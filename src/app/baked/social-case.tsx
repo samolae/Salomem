@@ -69,7 +69,7 @@ function Post({ m, avatar, handle }: { m: Media; avatar: string; handle: string 
         <span className="text-[10.5px] text-[#111]" style={{ fontWeight: 600 }}>{handle}</span>
         <span className="ml-auto text-[#111] text-[12px] leading-none">···</span>
       </div>
-      <div className="bg-[#f2f2f2]" style={{ aspectRatio: `${Math.min(1.91, Math.max(0.8, (m.w ?? 4) / (m.h ?? 5)))}` }}><Piece m={m} w={520} /></div>
+      <div className="bg-[#f2f2f2]" style={{ aspectRatio: isVid(m) ? `${m.w ?? 9}/${m.h ?? 16}` : `${Math.min(1.91, Math.max(0.8, (m.w ?? 4) / (m.h ?? 5)))}` }}><Piece m={m} w={520} /></div>
       <div className="flex items-center gap-2.5 px-2.5 py-2 text-[#111]">
         <Heart size={13} /><MessageCircle size={13} /><Send size={13} /><Bookmark size={13} className="ml-auto" />
       </div>

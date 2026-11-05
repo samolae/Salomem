@@ -8,6 +8,7 @@ import { screenAurumMainHQ, schenkerSendung, unispaceLogin, adsCarmall1, adsCarm
 import { useI18n } from './i18n';
 import { ScopeCover } from './scope-logo';
 import { GaguaLettering } from './gagua-cover';
+import { FeedCover } from './feed-cover';
 
 /*
  * Case studies: product, branding and campaigns told as whole stories, laid out like
@@ -224,7 +225,13 @@ const STUDIES: Study[] = [
     en: 'Social media for a car dealer in Georgia: price-led car posts, warranty and holiday posts, and short motion reels.',
     ka: 'სოციალური მედია ავტოდილერისთვის: მანქანების პოსტები ფასით, გარანტია, სადღესასწაულო პოსტები და მოკლე მოუშენ რილსები.',
     tags: [{ en: 'Social media', ka: 'სოციალური მედია' }, { en: 'Motion', ka: 'მოუშენი' }],
-    cover: <PostsCover bg="#0b1f44" posts={[[adsCarmall2, 1], [adsCarmall1, 1], [adsCarmall3, 1]]} />,
+    cover: <FeedCover bg="#0b1f44" items={[
+      { src: cld(adsCarmall2, 400), ratio: 1 },
+      { src: 'https://res.cloudinary.com/dgfn598qb/video/upload/f_auto,q_auto,w_360/v1773267419/carmall03_vku8z1.mp4', poster: 'https://res.cloudinary.com/dgfn598qb/video/upload/so_1,w_360/v1773267419/carmall03_vku8z1.jpg', ratio: 9 / 16, video: true },
+      { src: cld(adsCarmall1, 400), ratio: 1 },
+      { src: 'https://res.cloudinary.com/dgfn598qb/video/upload/f_auto,q_auto,w_360/carmall-ne_1_u5ewuz.mp4', poster: 'https://res.cloudinary.com/dgfn598qb/video/upload/so_1,w_360/carmall-ne_1_u5ewuz.jpg', ratio: 9 / 16, video: true },
+      { src: cld(adsCarmall3, 400), ratio: 1 },
+    ]} />,
     peek: adsCarmall1,
   },
   {

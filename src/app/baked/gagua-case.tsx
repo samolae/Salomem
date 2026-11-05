@@ -11,7 +11,7 @@ import { GaguaLettering } from './gagua-cover';
 /*
  * Gagua Clinic: a maternity and family clinic in Tbilisi. Three campaigns,
  * each with its own hand-drawn Georgian lettering (Home Care, Born at Gagua,
- * the Medical Concierge), a guideline for the concierge, and the ads that
+ * the Medical Concierge), and the ads that
  * carried all of it.
  */
 const P = '/cases/gagua';
@@ -58,45 +58,6 @@ function Chapter({ n, name, title, children }: { n: string; name: string; title:
   );
 }
 
-/** the concierge guideline, page by page, as a slider */
-function Guide() {
-  const { tx } = useI18n();
-  const ref = useRef<HTMLDivElement>(null);
-  const [at, setAt] = useState(0);
-  // page 12 (the newsletter) is left out: its mock-up was squeezed in the source PDF
-  const pages = Array.from({ length: 15 }, (_, i) => i + 1).filter((n) => n !== 12).map((n) => `${P}/guide-${String(n).padStart(2, '0')}.jpg`);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const on = () => setAt(Math.round(el.scrollLeft / (el.firstElementChild as HTMLElement).offsetWidth));
-    el.addEventListener('scroll', on, { passive: true });
-    return () => el.removeEventListener('scroll', on);
-  }, []);
-  const go = (d: number) => {
-    const el = ref.current;
-    if (!el) return;
-    const w = (el.firstElementChild as HTMLElement).offsetWidth + 6;
-    el.scrollTo({ left: Math.max(0, Math.min(pages.length - 1, at + d)) * w, behavior: 'smooth' });
-  };
-  return (
-    <section className="px-1.5" aria-label={tx('Medical Concierge guideline', 'სამედიცინო კონსიერჟის გაიდლაინი')}>
-      <div ref={ref} className="flex gap-1.5 overflow-x-auto snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {pages.map((src, i) => (
-          <div key={src} className="snap-start shrink-0 w-[92%] md:w-[78%] aspect-[16/9] overflow-hidden rounded-md bg-[#f2f2f2]">
-            <img src={src} alt={`${tx('Guideline page', 'გაიდლაინის გვერდი')} ${i + 1}`} loading={i < 2 ? 'eager' : 'lazy'} decoding="async" draggable={false} className="block h-full w-full object-cover" />
-          </div>
-        ))}
-      </div>
-      <div className="mt-3 flex items-center justify-between px-0.5 text-[13px] text-[#6f6f6f]">
-        <span>{String(at + 1).padStart(2, '0')} / {pages.length}</span>
-        <div className="flex gap-1.5">
-          <button type="button" onClick={() => go(-1)} aria-label={tx('Previous page', 'წინა გვერდი')} className="h-10 w-10 rounded-full border border-[#ddd] flex items-center justify-center hover:bg-[#111] hover:text-white transition-colors"><ArrowLeft size={16} /></button>
-          <button type="button" onClick={() => go(1)} aria-label={tx('Next page', 'შემდეგი გვერდი')} className="h-10 w-10 rounded-full border border-[#ddd] flex items-center justify-center hover:bg-[#111] hover:text-white transition-colors"><ArrowRight size={16} /></button>
-        </div>
-      </div>
-    </section>
-  );
-}
 
 /** the palette as moving panels: they rise in one by one, the one you point at opens */
 function Palette() {
@@ -146,13 +107,15 @@ function Fan() {
   return (
     <section className="px-1.5" aria-label={tx('LinkedIn carousel', 'LinkedIn კარუსელი')}>
       <div ref={ref} className="lf relative overflow-hidden rounded-md py-8 sm:py-14" style={{ background: GREEN }} data-on={on || undefined}>
-        <div className="flex justify-center gap-2 sm:gap-3 px-3 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="overflow-x-auto -my-8 py-8 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="mx-auto flex w-max sm:w-auto sm:justify-center gap-2 sm:gap-3 px-3">
           {slides.map((n, i) => (
-            <div key={n} className="lf-card shrink-0 w-[44%] sm:w-[15%] aspect-[4/5] overflow-hidden rounded-[6px] shadow-[0_14px_30px_rgba(0,0,0,.14)]"
+            <div key={n} className="lf-card shrink-0 w-[42vw] sm:w-[15%] aspect-[4/5] overflow-hidden rounded-[6px] shadow-[0_14px_30px_rgba(0,0,0,.14)]"
               style={{ ['--x' as string]: `${(2.5 - i) * 100}%`, ['--r' as string]: `${(i - 2.5) * 3}deg`, transitionDelay: `${i * 70}ms`, zIndex: 10 - i }}>
               <img src={`${P}/${n}.jpg`} alt={`${tx('LinkedIn slide', 'LinkedIn სლაიდი')} ${i + 1}`} loading="lazy" decoding="async" className="h-full w-full object-cover" />
             </div>
           ))}
+        </div>
         </div>
       </div>
       <style>{`
@@ -180,7 +143,9 @@ function Vacancies() {
     ['vac-midwife', 'vac-style2', 'li-vacancy'],        // yellow bar
   ];
   return (
-    <section className="px-1.5 pt-1.5 mx-auto w-full max-w-[760px] grid grid-cols-2 gap-1.5" aria-label={tx('Vacancy posts', 'ვაკანსიების პოსტები')}>
+    <section className="px-1.5 pt-1.5" aria-label={tx('Vacancy posts', 'ვაკანსიების პოსტები')}>
+      {/* same width and edges as the cover above, one vertical line */}
+      <div className="mx-auto w-full max-w-[1040px] grid grid-cols-2 gap-1.5">
       {sets.map((set, si) => {
         // the two frames change on alternate beats
         const at = Math.floor((k + si) / 2) % set.length;
@@ -194,26 +159,27 @@ function Vacancies() {
           </div>
         );
       })}
+      </div>
     </section>
   );
 }
 
 export function GaguaCase() {
   const { tx } = useI18n();
-  const tags = [tx('Social media kit', 'სოც. მედიის კიტი'), tx('Visual style', 'ვიზუალური სტილი'), tx('Lettering', 'ლეტერინგი'), tx('Brand guideline', 'გაიდლაინი')];
+  const tags = [tx('Social media kit', 'სოც. მედიის კიტი'), tx('Visual style', 'ვიზუალური სტილი'), tx('Lettering', 'ლეტერინგი')];
   const facts: [string, string][] = [
     [tx('Client', 'კლიენტი'), tx('Gagua Clinic', 'გაგუას კლინიკა')],
     [tx('Year', 'წელი'), '2026'],
     [tx('Sector', 'სექტორი'), tx('Maternity and family medicine', 'მეანობა და საოჯახო მედიცინა')],
-    [tx('Work', 'სამუშაო'), tx('Social media kit, lettering, guideline, LinkedIn', 'სოც. მედიის კიტი, ლეტერინგი, გაიდლაინი, LinkedIn')],
+    [tx('Work', 'სამუშაო'), tx('Social media kit, lettering, LinkedIn', 'სოც. მედიის კიტი, ლეტერინგი, LinkedIn')],
   ];
 
   return (
     <BakedShell>
       <SEO
         title="Gagua Clinic | Social Media Kit Case Study"
-        description="Gagua Clinic: a refreshed social media kit, hand-drawn Georgian lettering for three campaigns, a Medical Concierge guideline and the LinkedIn career page."
-        keywords="Gagua Clinic, გაგუას კლინიკა, lettering, Georgian lettering, campaign, brand guideline, medical concierge, social media, Salome Mosiava"
+        description="Gagua Clinic: a refreshed social media kit, hand-drawn Georgian lettering for three campaigns, the Medical Concierge and the LinkedIn career page."
+        keywords="Gagua Clinic, გაგუას კლინიკა, lettering, Georgian lettering, campaign, medical concierge, social media, Salome Mosiava"
         type="article"
       />
       <article className="pt-14 sm:pt-[52px] text-[#111]">
@@ -275,10 +241,9 @@ export function GaguaCase() {
         </section>
 
         {/* 04 concierge */}
-        <Chapter n="04" name={tx('Medical Concierge', 'სამედიცინო კონსიერჟი')} title={tx('A new standard of care, with a guideline', 'ზრუნვის ახალი სტანდარტი, გაიდლაინით')}>
-          {tx('A line where doctors answer patients from 09:00 to 01:00. Bold Mtavruli, a yellow script word, the phone number always in reach. The guideline sets the lockups, colours, type, icons and every format.', 'ხაზი, სადაც ექიმები პაციენტებს 09:00-დან 01:00-მდე პასუხობენ. თამამი მთავრული, ყვითელი ხელწერის სიტყვა, ტელეფონის ნომერი ყოველთვის ხელთ. გაიდლაინი ადგენს ლოკაპებს, ფერებს, შრიფტს, იკონებს და ყველა ფორმატს.')}
+        <Chapter n="04" name={tx('Medical Concierge', 'სამედიცინო კონსიერჟი')} title={tx('A new standard of care', 'ზრუნვის ახალი სტანდარტი')}>
+          {tx('A line where doctors answer patients from 09:00 to 01:00. Bold Mtavruli, a yellow script word, the phone number always in reach.', 'ხაზი, სადაც ექიმები პაციენტებს 09:00-დან 01:00-მდე პასუხობენ. თამამი მთავრული, ყვითელი ხელწერის სიტყვა, ტელეფონის ნომერი ყოველთვის ხელთ.')}
         </Chapter>
-        <Guide />
         <section className="px-1.5 pt-1.5 flex flex-col gap-1.5">
           <Row items={[im('cc-post', 4, 5, 'Concierge post'), { src: `${P}/cc-endcard.mp4`, poster: `${P}/cc-endcard.jpg`, video: true, w: 9, h: 16, alt: 'Concierge story end card' }]} />
         </section>
@@ -302,12 +267,6 @@ export function GaguaCase() {
         </Chapter>
         <section className="px-1.5 flex flex-col gap-1.5">
           <Row items={[im('ad-app-story', 9, 16, 'Download the Gagua app'), im('ad-scan-story', 9, 16, 'Book a 4D scan'), im('ad-birth-story', 9, 16, 'Plan your birth at Gagua')]} max={820} />
-        </section>
-
-        {/* 07 thirty years */}
-        <Chapter n="07" name={tx('30 years', '30 წელი')} title={tx('Thirty years of Gagua', 'გაგუას ოცდაათი წელი')} />
-        <section className="px-1.5 flex flex-col gap-1.5">
-          <Row items={[im('thirty', 1, 1, 'Gagua Clinic, 30 years'), im('kv', 1730, 770, 'Dedicated to 30 years, key visual')]} />
         </section>
 
         {/* facts */}

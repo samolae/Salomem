@@ -144,26 +144,6 @@ function Campaigns() {
   );
 }
 
-/** printed pieces on a light ground. The shadow is drawn here, with room
- *  around it, so it is never cut at the edge */
-const SHADOW = '0 14px 28px rgba(25,40,50,.16), 0 2px 6px rgba(25,40,50,.10)';
-type Sheet = { src: string; alt: string; w: number; h: number; radius?: number };
-function Stage({ items, bg = '#F4F6F7', className = '' }: { items: Sheet[]; bg?: string; className?: string }) {
-  // one justified line: every sheet at the same height, each as wide as its proportion asks;
-  // on a narrow screen the line wraps instead of shrinking the pieces to nothing
-  return (
-    <div className={`gk-stage rounded-md flex flex-wrap items-center justify-center ${className}`} style={{ background: bg }}>
-      {items.map((m) => {
-        const r = m.w / m.h;
-        return (
-          <img key={m.src} src={m.src} alt={m.alt} width={m.w} height={m.h} loading="lazy" decoding="async" draggable={false}
-            className="block h-auto min-w-0" style={{ flex: `${r} 1 calc(${r} * var(--gk-h))`, maxWidth: `calc(${r} * var(--gk-m))`, aspectRatio: `${m.w}/${m.h}`, boxShadow: SHADOW, borderRadius: m.radius ?? 2 }} />
-        );
-      })}
-    </div>
-  );
-}
-
 /** the kit's mockups on one line, drifting slowly sideways. Drag to spin it,
  *  it glides on and settles back into the drift; a pointer resting on it holds it */
 function MockStrip() {
@@ -379,20 +359,8 @@ export function GaguaCase() {
         <section className="px-1.5 pb-1.5"><MockStrip /></section>
         <section className="px-1.5">
           <div className="mx-auto w-full max-w-[1040px] flex flex-col gap-1.5">
-            <Stage items={[
-              { src: `${P}/kit-wrap.jpg`, alt: tx('Notebook cover, opened flat: back, spine and front', 'ბლოკნოტის ყდა გაშლილი: უკანა მხარე, ზურგი და წინა მხარე'), w: 907, h: 610 },
-              { src: `${P}/kit-plan.jpg`, alt: tx('Inside pages: notes and the day plan', 'შიდა გვერდები: ჩანაწერები და დღის გეგმა'), w: 893, h: 632 },
-              { src: `${P}/kit-january.jpg`, alt: tx('January 2027, one sheet: holidays green and named', 'იანვარი 2027, ერთი ფურცელი: უქმეები მწვანე, სახელით'), w: 1153, h: 545 },
-              { src: `${P}/kit-stickers.jpg`, alt: tx('Sheet of twelve window stickers', 'თორმეტი ფანჯრის სტიკერის ფურცელი'), w: 293, h: 372, radius: 8 },
-            ]} />
             <div className="px-4 sm:px-6 pt-6"><KitNotes /></div>
           </div>
-          <style>{`
-            .gk-stage { --gk-h: 96px; --gk-m: 154px; padding: 24px 16px; gap: 14px; }
-            /* from a tablet up: one line, every sheet at one height, nothing wraps */
-            @media (min-width: 640px) { .gk-stage { --gk-h: 0px; --gk-m: 100vw; flex-wrap: nowrap; padding: 36px 32px; gap: 22px; } }
-            @media (min-width: 1024px) { .gk-stage { padding: 40px 36px; gap: 26px; } }
-          `}</style>
         </section>
 
         {/* 07 ads */}

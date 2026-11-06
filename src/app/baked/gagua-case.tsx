@@ -188,7 +188,7 @@ function MockStrip() {
         ))}
       </div>
       <style>{`
-        .gk-shot { height: clamp(300px, 42vw, 440px); aspect-ratio: 1195 / 1800; }
+        .gk-shot { height: clamp(320px, 40vw, 620px); aspect-ratio: 1195 / 1800; }
         .gk-run { animation: gk-run 48s linear infinite; }
         .gk-strip:hover .gk-run { animation-play-state: paused; }
         @keyframes gk-run { to { transform: translateX(-50%); } }
@@ -320,10 +320,10 @@ export function GaguaCase() {
         <Chapter n="06" name={tx('30 years of dedication', 'მიძღვნის 30 წელი')} title={tx('A year on the desk', 'მთელი წელი მაგიდაზე')}>
           {tx('For the clinic’s 30th year, a New Year kit for partners and the team: a notebook, a card and a wall calendar. The anniversary lettering and a drawing of the clinic with its people tie it to the campaign. Every page was planned to be used all year.', 'კლინიკის 30-ე წლისთვის საახალწლო ნაკრები პარტნიორებისა და გუნდისთვის: ბლოკნოტი, ბარათი და კედლის კალენდარი. იუბილეს ლეტერინგი და ხელით დახატული კლინიკა თავისი ხალხით მას კამპანიას უკავშირებს. ყოველი გვერდი ისეა დაგეგმილი, რომ მთელი წელი გამოიყენო.')}
         </Chapter>
+        {/* the pieces in use, in the clinic's own green and yellow, under one hard, direct light: the full width of the page */}
+        <section className="px-1.5 pb-1.5"><MockStrip /></section>
         <section className="px-1.5">
           <div className="mx-auto w-full max-w-[1040px] flex flex-col gap-1.5">
-            {/* the pieces in use, in the clinic's own green and yellow, under one hard, direct light */}
-            <MockStrip />
             <Stage items={[
               { src: `${P}/kit-wrap.jpg`, alt: tx('Notebook cover, opened flat: back, spine and front', 'ბლოკნოტის ყდა გაშლილი: უკანა მხარე, ზურგი და წინა მხარე'), w: 907, h: 610 },
               { src: `${P}/kit-plan.jpg`, alt: tx('Inside pages: notes and the day plan', 'შიდა გვერდები: ჩანაწერები და დღის გეგმა'), w: 893, h: 632 },

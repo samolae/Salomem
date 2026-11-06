@@ -6,9 +6,14 @@ import { CtaLink, PageIntro, Reveal, T } from './ui';
 import { IMG, cld } from '../lib/cld';
 import { screenAurumMainHQ, schenkerSendung, unispaceLogin, adsCarmall1, adsCarmall2, adsCarmall3, adsMardi1, adsMardi2, adsMardi3, adsMardi4, adsTerminal1, adsTerminal2, adsTerminal3, adsTerminal5 } from './data';
 import { useI18n } from './i18n';
+import { MosaicCover } from './mosaic-cover';
+import { ar, gt, md, tm, cmReels } from './social-media';
+import type { Media } from './social-case';
+
+/** a case's pieces with its films mixed in */
+const pool = (...xs: Media[][]): Media[] => xs.flat();
 import { ScopeCover } from './scope-logo';
 import { GaguaLettering } from './gagua-cover';
-import { FeedCover } from './feed-cover';
 
 /*
  * Case studies: product, branding and campaigns told as whole stories, laid out like
@@ -157,19 +162,30 @@ const UX = { en: 'UX/UI', ka: 'UX/UI' };
 
 
 /** a social case: three of its posts standing on the brand colour */
-function PostsCover({ bg, posts }: { bg: string; posts: [string, number][] }) {
-  const t = ['translateY(6%) rotate(-3deg)', 'translateY(-3%)', 'translateY(5%) rotate(3deg)'];
+/** Three tall reels side by side, the outer two tilted, playing on a loop */
+function ReelsCover({ bg, reels }: { bg: string; reels: string[] }) {
+  const box = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = box.current;
+    if (!el) return;
+    const vids = Array.from(el.querySelectorAll('video'));
+    const io = new IntersectionObserver(([e]) => vids.forEach((v) => (e.isIntersecting ? v.play().catch(() => {}) : v.pause())), { rootMargin: '200px' });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
   return (
-    <div className="relative h-full w-full flex items-center justify-center gap-[3%] px-[7%]" style={{ background: bg }}>
-      {posts.map(([src, r], i) => (
-        <div key={src} className="overflow-hidden rounded-[6px] shadow-[0_18px_40px_rgba(0,0,0,.25)] transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-          style={{ width: posts.length === 2 ? '38%' : i === 1 ? '31%' : '26%', aspectRatio: String(r), transform: t[posts.length === 2 ? i * 2 : i] }}>
-          <img src={cld(src, 500)} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" />
+    <div ref={box} className="absolute inset-0 flex items-center justify-center gap-[3%] px-[6%]" style={{ background: bg }}>
+      {reels.map((r, i) => (
+        <div key={r} className="h-[78%] overflow-hidden rounded-[10px] sm:rounded-[14px] shadow-[0_18px_36px_rgba(0,0,0,.3)]"
+          style={{ aspectRatio: '9/16', transform: i === 0 ? 'translateY(4%) rotate(-2deg)' : i === 2 ? 'translateY(-4%) rotate(2deg)' : undefined }}>
+          <video src={`https://res.cloudinary.com/dgfn598qb/video/upload/f_auto,q_auto,w_360/${r}.mp4`} poster={`https://res.cloudinary.com/dgfn598qb/video/upload/so_1,w_360/${r}.jpg`}
+            muted loop playsInline preload="metadata" aria-hidden className="block h-full w-full object-cover" />
         </div>
       ))}
     </div>
   );
 }
+
 
 const STUDIES: Study[] = [
   ...(DASTURI_LIVE ? [{
@@ -225,13 +241,8 @@ const STUDIES: Study[] = [
     en: 'Social media for a car dealer in Georgia: price-led car posts, warranty and holiday posts, and short motion reels.',
     ka: 'სოციალური მედია ავტოდილერისთვის: მანქანების პოსტები ფასით, გარანტია, სადღესასწაულო პოსტები და მოკლე მოუშენ რილსები.',
     tags: [{ en: 'Social media', ka: 'სოციალური მედია' }, { en: 'Motion', ka: 'მოუშენი' }],
-    cover: <FeedCover bg="#0b1f44" items={[
-      { src: cld(adsCarmall2, 400), ratio: 1 },
-      { src: 'https://res.cloudinary.com/dgfn598qb/video/upload/f_auto,q_auto,w_360/v1773267419/carmall03_vku8z1.mp4', poster: 'https://res.cloudinary.com/dgfn598qb/video/upload/so_1,w_360/v1773267419/carmall03_vku8z1.jpg', ratio: 9 / 16, video: true },
-      { src: cld(adsCarmall1, 400), ratio: 1 },
-      { src: 'https://res.cloudinary.com/dgfn598qb/video/upload/f_auto,q_auto,w_360/carmall-ne_1_u5ewuz.mp4', poster: 'https://res.cloudinary.com/dgfn598qb/video/upload/so_1,w_360/carmall-ne_1_u5ewuz.jpg', ratio: 9 / 16, video: true },
-      { src: cld(adsCarmall3, 400), ratio: 1 },
-    ]} />,
+    // the same three moving reels as the case page cover
+    cover: <ReelsCover bg="#0b1f44" reels={['v1773267419/carmall03_vku8z1', 'carmall-ne_1_u5ewuz', 'v1773267407/carmall02_nzawuu']} />,
     peek: adsCarmall1,
   },
   {
@@ -239,7 +250,7 @@ const STUDIES: Study[] = [
     en: 'A sports complex feed: one sport, one person in motion and one bold Georgian line per post.',
     ka: 'სპორტული კომპლექსის ფიდი: თითო პოსტზე ერთი სპორტი, ერთი ადამიანი მოძრაობაში და ერთი თამამი ქართული ფრაზა.',
     tags: [{ en: 'Social media', ka: 'სოციალური მედია' }],
-    cover: <PostsCover bg="#1557d6" posts={[['https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773435781/oalcrhtxt4flbp1eduth_qllomh.webp', 0.8], ['https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773435847/Artboard_1_1_ipw9xn.webp', 0.8]]} />,
+    cover: <MosaicCover bg="#1557d6" items={pool(ar)} widths={[1.3, 1, 1.2]} />,
     peek: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773435783/osehbfgl6rr2oo4yukpi_htn4qa.webp',
   },
   {
@@ -247,7 +258,7 @@ const STUDIES: Study[] = [
     en: 'A race-week countdown for the Setanta Racing Series: one post a day, the days left set huge.',
     ka: 'რბოლის კვირის უკუთვლა Setanta Racing Series-ისთვის: დღეში ერთი პოსტი, დარჩენილი დღეები უზარმაზარი ციფრით.',
     tags: [{ en: 'Social media', ka: 'სოციალური მედია' }, { en: 'Event campaign', ka: 'ღონისძიების კამპანია' }],
-    cover: <PostsCover bg="#b3121f" posts={[['https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773269575/image_8_pdfeca.png', 0.8], ['https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773269575/image_9_yk9ysd.png', 0.8], ['https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773269584/image_11_x2ppb1.png', 0.8]]} />,
+    cover: <MosaicCover bg="#b3121f" items={pool(gt)} widths={[1.3, 0.9, 1.1, 0.95]} shift={1} />,
     peek: 'https://res.cloudinary.com/dgfn598qb/image/upload/f_auto,q_auto/v1773269574/image_10_nai9mn.png',
   },
   {
@@ -255,7 +266,7 @@ const STUDIES: Study[] = [
     en: 'Resort real estate in Batumi: AI-made scenes, short English lines and Georgian holiday posts.',
     ka: 'საკურორტო უძრავი ქონება ბათუმში: AI სცენები, მოკლე ინგლისური ფრაზები და ქართული სადღესასწაულო პოსტები.',
     tags: [{ en: 'Social media', ka: 'სოციალური მედია' }, { en: 'AI campaign', ka: 'AI კამპანია' }],
-    cover: <PostsCover bg="#1e3328" posts={[[adsMardi2, 0.8], [adsMardi1, 0.8], [adsMardi3, 0.8]]} />,
+    cover: <MosaicCover bg="#1e3328" items={pool(md)} widths={[1, 1.3, 0.9, 1.1]} shift={2} />,
     peek: adsMardi4,
   },
   {
@@ -263,7 +274,7 @@ const STUDIES: Study[] = [
     en: 'Membership offers for coworking spaces: the space leads, the offer is one line.',
     ka: 'შეთავაზებები ქოვორკინგ სივრცეებისთვის: მთავარი სივრცეა, შეთავაზება ერთი ხაზია.',
     tags: [{ en: 'Social media', ka: 'სოციალური მედია' }],
-    cover: <PostsCover bg="#121212" posts={[[adsTerminal2, 1], [adsTerminal3, 0.5625], [adsTerminal5, 1]]} />,
+    cover: <MosaicCover bg="#121212" items={pool(tm)} widths={[1.25, 0.8, 1.1, 0.9]} shift={3} />,
     peek: adsTerminal1,
   },
   {

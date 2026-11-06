@@ -430,7 +430,11 @@ export function ScopeCase() {
                 </div>
                 <div className="border-t border-black/10 pt-3">
                   <dt className="text-[#111]" style={{ fontWeight: 600 }}>{tx('My part', 'ჩემი წილი')}</dt>
-                  <dd className="mt-1.5">{tx('I was the agency’s art director. This case shows one part of that work: Scope’s own branding and social media design.', 'სააგენტოს არტ დირექტორი ვიყავი. ეს ქეისი ამ საქმის ერთ ნაწილს აჩვენებს: Scope-ის საკუთარ ბრენდინგსა და სოციალური მედიის დიზაინს.')}</dd>
+                  <dd className="mt-1.5">{tx('Art director from the start. We began from zero; in under two years I helped grow the team, led the design leads, worked with 50+ businesses and managed $70,000+ in monthly ad spend. This case shows one part of that work: Scope’s own branding and social media design.', 'არტ დირექტორი თავიდანვე. ნულიდან დავიწყეთ; ორ წელზე ნაკლებ დროში გუნდის ზრდაში მივიღე მონაწილეობა, ვხელმძღვანელობდი დიზაინის ლიდებს, ვიმუშავე 50+ ბიზნესთან და ვმართავდი თვეში $70,000+ სარეკლამო ბიუჯეტს. ეს ქეისი ამ საქმის ერთ ნაწილს აჩვენებს: Scope-ის საკუთარ ბრენდინგსა და სოციალური მედიის დიზაინს.')}</dd>
+                </div>
+                <div className="border-t border-black/10 pt-3 sm:col-span-2">
+                  <dt className="text-[#111]" style={{ fontWeight: 600 }}>{tx('Decisions I made', 'ჩემი გადაწყვეტილებები')}</dt>
+                  <dd className="mt-1.5">{tx('The o became a lens, because the agency’s job is to see what a business needs. One circle trims both the c and the p, so the wordmark is built from a single rule. In motion the lens underlines what matters, and the feed keeps one voice, so every post reads as Scope before the logo shows.', 'o ლინზად ვაქციე, რადგან სააგენტოს საქმე იმის დანახვაა, რა სჭირდება ბიზნესს. ერთი წრე ჭრის c-საც და p-საც, ამიტომ ნიშანი ერთი წესით არის აგებული. მოუშენში ლინზა ხაზს უსვამს მთავარს, ფიდში კი ერთი ხმაა, რომ ყველა პოსტი Scope-ად იკითხებოდეს ლოგოს გამოჩენამდე.')}</dd>
                 </div>
               </dl>
             </div>

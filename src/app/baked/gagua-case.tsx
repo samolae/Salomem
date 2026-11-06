@@ -91,44 +91,6 @@ function Palette() {
   );
 }
 
-/** the LinkedIn carousel: the slides come in stacked and fan out into a row */
-function Fan() {
-  const { tx } = useI18n();
-  const ref = useRef<HTMLDivElement>(null);
-  const [on, setOn] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setOn(true); io.disconnect(); } }, { threshold: 0.35 });
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-  const slides = ['li-01-cover', 'li-02-professionalism', 'li-03-care', 'li-04-development', 'li-05-accountability', 'li-06-closing'];
-  return (
-    <section className="px-1.5" aria-label={tx('LinkedIn carousel', 'LinkedIn კარუსელი')}>
-      <div ref={ref} className="lf relative overflow-hidden rounded-md py-8 sm:py-14" style={{ background: GREEN }} data-on={on || undefined}>
-        <div className="overflow-x-auto -my-8 py-8 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        <div className="mx-auto flex w-max sm:w-auto sm:justify-center gap-2 sm:gap-3 px-3">
-          {slides.map((n, i) => (
-            <div key={n} className="lf-card shrink-0 w-[42vw] sm:w-[15%] aspect-[4/5] overflow-hidden rounded-[6px] shadow-[0_14px_30px_rgba(0,0,0,.14)]"
-              style={{ ['--x' as string]: `${(2.5 - i) * 100}%`, ['--r' as string]: `${(i - 2.5) * 3}deg`, transitionDelay: `${i * 70}ms`, zIndex: 10 - i }}>
-              <img src={`${P}/${n}.jpg`} alt={`${tx('LinkedIn slide', 'LinkedIn სლაიდი')} ${i + 1}`} loading="lazy" decoding="async" className="h-full w-full object-cover" />
-            </div>
-          ))}
-        </div>
-        </div>
-      </div>
-      <style>{`
-        .lf-card { transform: translateX(var(--x)) rotate(var(--r)); transition: transform 1s cubic-bezier(.2,.8,.2,1); }
-        .lf[data-on] .lf-card { transform: none; }
-        .lf[data-on] .lf-card:hover { transform: translateY(-8px); transition-delay: 0ms !important; transition-duration: .35s; }
-        @media (max-width: 639px) { .lf-card { transform: none; } }
-        @media (prefers-reduced-motion: reduce) { .lf-card { transform: none; transition: none; } }
-      `}</style>
-    </section>
-  );
-}
-
 /** vacancies in the kit's two styles, each frame cycling through its posts */
 function Vacancies() {
   const { tx } = useI18n();
@@ -186,15 +148,18 @@ function Campaigns() {
  *  around it, so it is never cut at the edge */
 const SHADOW = '0 14px 28px rgba(25,40,50,.16), 0 2px 6px rgba(25,40,50,.10)';
 type Sheet = { src: string; alt: string; w: number; h: number; radius?: number };
-function Stage({ items, bg = '#F4F6F7', className = '', pad = 'clamp(28px, 6%, 64px)', gap = 'clamp(16px, 4%, 40px)' }: { items: Sheet[]; bg?: string; className?: string; pad?: string; gap?: string }) {
-  // grow in proportion to each sheet's width at a shared height; the narrowest counts as 1, so the row is always filled
-  const least = Math.min(...items.map((m) => m.w / m.h));
+function Stage({ items, bg = '#F4F6F7', className = '' }: { items: Sheet[]; bg?: string; className?: string }) {
+  // one justified line: every sheet at the same height, each as wide as its proportion asks;
+  // on a narrow screen the line wraps instead of shrinking the pieces to nothing
   return (
-    <div className={`rounded-md flex items-center justify-center ${className}`} style={{ background: bg, padding: pad, gap }}>
-      {items.map((m) => (
-        <img key={m.src} src={m.src} alt={m.alt} width={m.w} height={m.h} loading="lazy" decoding="async" draggable={false}
-          className="block h-auto min-w-0" style={{ flex: `${m.w / m.h / least} 1 0%`, width: items.length > 1 ? undefined : '100%', aspectRatio: `${m.w}/${m.h}`, boxShadow: SHADOW, borderRadius: m.radius ?? 2 }} />
-      ))}
+    <div className={`gk-stage rounded-md flex flex-wrap items-center justify-center ${className}`} style={{ background: bg }}>
+      {items.map((m) => {
+        const r = m.w / m.h;
+        return (
+          <img key={m.src} src={m.src} alt={m.alt} width={m.w} height={m.h} loading="lazy" decoding="async" draggable={false}
+            className="block h-auto min-w-0" style={{ flex: `${r} 1 calc(${r} * var(--gk-h))`, maxWidth: `calc(${r} * var(--gk-m))`, aspectRatio: `${m.w}/${m.h}`, boxShadow: SHADOW, borderRadius: m.radius ?? 2 }} />
+        );
+      })}
     </div>
   );
 }
@@ -209,7 +174,7 @@ function KitNotes() {
     [tx('Kept, not thrown away', 'შესანახი'), tx('The card’s side strip tears off into a bookmark, and the spine reads “Gagua 2027” on a shelf.', 'ბარათის გვერდითი ზოლი სანიშნედ იხევა, ბლოკნოტის ზურგზე კი თაროზეც იკითხება „გაგუა 2027“.')],
   ];
   return (
-    <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6 content-start">
+    <dl className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-6 content-start">
       {notes.map(([k, v], i) => (
         <div key={k} className="border-t border-[#e6e6e6] pt-3">
           <dt className="text-[15px] sm:text-[16px]" style={{ fontWeight: 600 }}><span className="mr-2 text-[12px] tabular-nums" style={{ color: GREEN }}>0{i + 1}</span>{k}</dt>
@@ -310,9 +275,8 @@ export function GaguaCase() {
 
         {/* 05 linkedin */}
         <Chapter n="05" name="LinkedIn" title={tx('Gagua Clinic Career', 'გაგუას კლინიკა, კარიერა')}>
-          {tx('The clinic’s career page: a carousel of the four principles the team works by, the page cover, and vacancies in two styles that take turns.', 'კლინიკის საკარიერო გვერდი: კარუსელი ოთხ პრინციპზე, რომლითაც გუნდი მუშაობს, გვერდის ქავერი და ვაკანსიები ორ სტილში, რომლებიც ერთმანეთს ცვლიან.')}
+          {tx('The clinic’s career page: the page cover and vacancies in two styles that take turns.', 'კლინიკის საკარიერო გვერდი: გვერდის ქავერი და ვაკანსიები ორ სტილში, რომლებიც ერთმანეთს ცვლიან.')}
         </Chapter>
-        <Fan />
         <section className="px-1.5 pt-1.5 flex flex-col gap-1.5">
           <Row items={[im('li-career-cover', 2000, 740, 'Gagua Clinic Career, LinkedIn cover')]} />
         </section>
@@ -322,33 +286,31 @@ export function GaguaCase() {
         <Chapter n="06" name={tx('30 years of dedication', 'მიძღვნის 30 წელი')} title={tx('A year on the desk', 'მთელი წელი მაგიდაზე')}>
           {tx('For the clinic’s 30th year, a New Year kit for partners and the team: a notebook, a card and a wall calendar. The anniversary lettering and a drawing of the clinic with its people tie it to the campaign. Every page was planned to be used all year.', 'კლინიკის 30-ე წლისთვის საახალწლო ნაკრები პარტნიორებისა და გუნდისთვის: ბლოკნოტი, ბარათი და კედლის კალენდარი. იუბილეს ლეტერინგი და ხელით დახატული კლინიკა თავისი ხალხით მას კამპანიას უკავშირებს. ყოველი გვერდი ისეა დაგეგმილი, რომ მთელი წელი გამოიყენო.')}
         </Chapter>
-        <section className="px-1.5 flex flex-col gap-1.5">
-          <div className="overflow-hidden rounded-md" style={{ aspectRatio: '2000/985' }}>
-            <img src={`${P}/kit-mockup.jpg`} alt={tx('The kit on a desk: wall calendar, open notebook with a bookmark, and the card', 'ნაკრები მაგიდაზე: კედლის კალენდარი, გაშლილი ბლოკნოტი სანიშნით და ბარათი')} loading="lazy" decoding="async" className="block h-full w-full object-cover" />
-          </div>
+        <section className="px-1.5">
           <div className="mx-auto w-full max-w-[1040px] flex flex-col gap-1.5">
-            <Stage items={[{ src: `${P}/kit-wrap.jpg`, alt: tx('Notebook cover, opened flat: back, spine and front', 'ბლოკნოტის ყდა გაშლილი: უკანა მხარე, ზურგი და წინა მხარე'), w: 907, h: 610 }]} pad="clamp(28px, 8%, 80px)" />
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-              <Stage items={[{ src: `${P}/kit-spread.jpg`, alt: tx('First spread: the year at a glance', 'პირველი გაშლა: მთელი წელი'), w: 893, h: 632 }]} />
-              <Stage items={[{ src: `${P}/kit-plan.jpg`, alt: tx('Inside pages: notes and the day plan', 'შიდა გვერდები: ჩანაწერები და დღის გეგმა'), w: 893, h: 632 }]} />
+            <div className="overflow-hidden rounded-md" style={{ aspectRatio: '2000/985' }}>
+              <img src={`${P}/kit-mockup.jpg`} alt={tx('The kit on a desk: wall calendar, open notebook with a bookmark, and the card', 'ნაკრები მაგიდაზე: კედლის კალენდარი, გაშლილი ბლოკნოტი სანიშნით და ბარათი')} loading="lazy" decoding="async" className="block h-full w-full object-cover" />
             </div>
-            <Stage className="flex-col sm:flex-row" items={[
+            <Stage items={[
+              { src: `${P}/kit-calendar.jpg`, alt: tx('The wall calendar: three months under the anniversary drawing', 'კედლის კალენდარი: სამი თვე იუბილეს ილუსტრაციის ქვეშ'), w: 645, h: 1550 },
+              { src: `${P}/kit-wrap.jpg`, alt: tx('Notebook cover, opened flat: back, spine and front', 'ბლოკნოტის ყდა გაშლილი: უკანა მხარე, ზურგი და წინა მხარე'), w: 907, h: 610 },
+              { src: `${P}/kit-spread.jpg`, alt: tx('First spread: the year at a glance', 'პირველი გაშლა: მთელი წელი'), w: 893, h: 632 },
+              { src: `${P}/kit-plan.jpg`, alt: tx('Inside pages: notes and the day plan', 'შიდა გვერდები: ჩანაწერები და დღის გეგმა'), w: 893, h: 632 },
+            ]} />
+            <Stage items={[
+              { src: `${P}/kit-january.jpg`, alt: tx('January 2027, one sheet: holidays green and named', 'იანვარი 2027, ერთი ფურცელი: უქმეები მწვანე, სახელით'), w: 1153, h: 545 },
               { src: `${P}/kit-card-front.jpg`, alt: tx('The card, front: the team at the clinic and a tear-off strip', 'ბარათი, წინა მხარე: გუნდი კლინიკასთან და მოსახევი ზოლი'), w: 836, h: 593 },
               { src: `${P}/kit-card-back.jpg`, alt: tx('The card, back: the anniversary lettering and room to write', 'ბარათი, უკანა მხარე: იუბილეს ლეტერინგი და ადგილი წერისთვის'), w: 837, h: 593 },
+              { src: `${P}/kit-stickers.jpg`, alt: tx('Sheet of twelve window stickers', 'თორმეტი ფანჯრის სტიკერის ფურცელი'), w: 293, h: 372, radius: 8 },
             ]} />
+            <div className="px-4 sm:px-6 pt-6"><KitNotes /></div>
           </div>
-        </section>
-        <section className="px-1.5 pt-1.5">
-          <div className="mx-auto w-full max-w-[1040px] grid grid-cols-1 md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.6fr)] gap-1.5">
-            <Stage items={[{ src: `${P}/kit-calendar.jpg`, alt: tx('The wall calendar: three months under the anniversary drawing', 'კედლის კალენდარი: სამი თვე იუბილეს ილუსტრაციის ქვეშ'), w: 645, h: 1550 }]} pad="clamp(28px, 12%, 64px)" />
-            <div className="flex flex-col gap-1.5">
-              <Stage items={[{ src: `${P}/kit-january.jpg`, alt: tx('January 2027, one sheet: holidays green and named', 'იანვარი 2027, ერთი ფურცელი: უქმეები მწვანე, სახელით'), w: 1153, h: 545 }]} />
-              <div className="flex-1 rounded-md bg-white border border-[#eee] p-5 sm:p-7 grid grid-cols-[minmax(0,1fr)_88px] sm:grid-cols-[minmax(0,1fr)_120px] gap-5 sm:gap-7">
-                <KitNotes />
-                <img src={`${P}/kit-stickers.jpg`} alt={tx('Sheet of twelve window stickers', 'თორმეტი ფანჯრის სტიკერის ფურცელი')} width={293} height={372} loading="lazy" decoding="async" className="w-full h-auto self-start" style={{ borderRadius: 8, boxShadow: SHADOW }} />
-              </div>
-            </div>
-          </div>
+          <style>{`
+            .gk-stage { --gk-h: 96px; --gk-m: 154px; padding: 24px 16px; gap: 14px; }
+            /* from a tablet up: one line, every sheet at one height, nothing wraps */
+            @media (min-width: 640px) { .gk-stage { --gk-h: 0px; --gk-m: 100vw; flex-wrap: nowrap; padding: 36px 32px; gap: 22px; } }
+            @media (min-width: 1024px) { .gk-stage { padding: 40px 36px; gap: 26px; } }
+          `}</style>
         </section>
 
         {/* 07 ads */}

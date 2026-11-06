@@ -288,15 +288,21 @@ export function GaguaCase() {
         </Chapter>
         <section className="px-1.5">
           <div className="mx-auto w-full max-w-[1040px] flex flex-col gap-1.5">
-            {/* the pieces in use: one light, one surface, the same sun across every shot */}
-            <Row items={[
-              im('mock-notebook', 2200, 1244, tx('The notebook on a travertine table in the morning sun', 'ბლოკნოტი ტრავერტინის მაგიდაზე, დილის მზეზე')),
-              im('mock-calendar', 1760, 2200, tx('The wall calendar on a plaster wall, the red frame on today', 'კედლის კალენდარი თაბაშირის კედელზე, წითელი ჩარჩო დღეზე')),
-            ]} />
-            <Row items={[
-              im('mock-card', 2200, 1244, tx('The card, front and back, its strip torn off into a bookmark', 'ბარათი, წინა და უკანა მხარე, ზოლი სანიშნედ მოხეული')),
-              im('mock-spread', 2200, 1244, tx('The notebook open on the year at a glance', 'ბლოკნოტი გაშლილი მთელი წლის გვერდზე')),
-            ]} />
+            {/* the pieces in use, in the clinic's own green and yellow, under one hard, direct light */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
+              {([
+                ['mock-notebook-held', tx('The notebook held close', 'ბლოკნოტი ხელში')],
+                ['mock-notebook-yellow', tx('The notebook on yellow, with window stickers on the cover', 'ბლოკნოტი ყვითელზე, ყდაზე ფანჯრის სტიკერებით')],
+                ['mock-calendar-green', tx('The wall calendar held against the clinic green', 'კედლის კალენდარი კლინიკის მწვანეზე')],
+                ['mock-card', tx('The card, front and back, and the strip torn off into a bookmark', 'ბარათი, წინა და უკანა მხარე, და სანიშნედ მოხეული ზოლი')],
+                ['mock-calendar-wall', tx('The calendar on the wall above a desk', 'კალენდარი კედელზე, მაგიდის ზემოთ')],
+                ['mock-spread-held', tx('The notebook open on the year at a glance', 'ბლოკნოტი გაშლილი მთელი წლის გვერდზე')],
+              ] as [string, string][]).map(([n, alt]) => (
+                <div key={n} className="overflow-hidden rounded-md bg-[#f2f2f2]" style={{ aspectRatio: '1195/1800' }}>
+                  <img src={`${P}/${n}.jpg`} alt={alt} loading="lazy" decoding="async" draggable={false} className="block h-full w-full object-cover" />
+                </div>
+              ))}
+            </div>
             <Stage items={[
               { src: `${P}/kit-wrap.jpg`, alt: tx('Notebook cover, opened flat: back, spine and front', 'ბლოკნოტის ყდა გაშლილი: უკანა მხარე, ზურგი და წინა მხარე'), w: 907, h: 610 },
               { src: `${P}/kit-plan.jpg`, alt: tx('Inside pages: notes and the day plan', 'შიდა გვერდები: ჩანაწერები და დღის გეგმა'), w: 893, h: 632 },

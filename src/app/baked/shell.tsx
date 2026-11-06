@@ -272,13 +272,14 @@ function Footer({ footRef }: { footRef?: React.Ref<HTMLElement> }) {
             areuli.design ↗
           </a>
         </div>
-        <div>
+        <div className="col-span-2 sm:col-span-1 min-w-0">
           <div className="text-white/45 mb-3">{tx('Say hello', 'მომწერე')}</div>
-          <a href={`mailto:${EMAIL}`} className="text-white hover:text-[#ff4306] transition-colors break-all">{EMAIL}</a>
+          {/* the address stays whole: its own row on a phone, never split mid-word */}
+          <a href={`mailto:${EMAIL}`} className="text-white hover:text-[#ff4306] transition-colors whitespace-nowrap">{EMAIL}</a>
           <div className="text-white/55 mt-1.5">{tx('Georgia', 'საქართველო')}</div>
         </div>
       </div>
-      <div className="mt-16 flex flex-wrap justify-between gap-2 text-white/45 text-[13px]">
+      <div className="mt-16 pl-16 sm:pl-0 flex flex-wrap justify-between gap-2 text-white/45 text-[13px]">
         <span>{tx('Designed and developed by Salome Mosiava', 'დიზაინი და დეველოპმენტი: სალომე მოსიავა')}</span>
         <span>© 2026</span>
       </div>

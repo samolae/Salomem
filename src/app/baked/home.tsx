@@ -6,6 +6,18 @@ import { HeroCanvas } from './hero-canvas';
 import { useMotionPause } from './shell';
 import { AreuliBlock, Caption, CtaLink, FadeImg, LogoStrip, Reveal, T } from './ui';
 import { clients, experiences, spotlights, spotlightsKa } from './content';
+
+/** a role's span in years, from 'Jan 2026', '2021' or 'Now' */
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const when = (v: string, end: boolean) => {
+  if (v === 'Now') return new Date().getFullYear() + new Date().getMonth() / 12;
+  const [a, b] = v.split(' ');
+  if (!b) return Number(a) + (end ? 0.99 : 0);
+  return Number(b) + Math.max(0, MONTHS.indexOf(a)) / 12 + (end ? 1 / 12 : 0);
+};
+type Exp = (typeof experiences)[number];
+/** true when this role overlapped another one in time */
+const concurrent = (e: Exp) => experiences.some((o) => o !== e && when(o.start, false) < when(e.end, true) && when(e.start, false) < when(o.end, true));
 import { StudyCard, StudyCover } from './case-studies';
 import { useI18n } from './i18n';
 import {
@@ -163,20 +175,24 @@ export function HomeContent() {
       <Caption title={ka ? 'ქარმოლი' : 'Carmall'} sub={tx('Campaign visuals', 'კამპანიის ვიზუალები')} tag={adsTag} />
     </Link>,
     <div key="exp" className="rounded-md bg-[#f2f2f2] px-5 py-6 sm:px-7 sm:py-8 mb-5">
-      <div className="text-[14px] text-[#6f6f6f] mb-4 flex justify-between gap-4"><span>{tx('Experience', 'გამოცდილება')}</span><span className="text-[12px]">{tx('Some roles ran in parallel', 'ზოგი როლი პარალელურად მიმდინარეობდა')}</span></div>
+      <div className="text-[14px] text-[#6f6f6f] mb-4"><span>{tx('Experience', 'გამოცდილება')}</span></div>
       <ul className="divide-y divide-[#e4e4e4]">
         {experiences.map((e) => (
-          <li key={e.company + e.start} className="flex items-center gap-3 py-2.5 text-[14px]">
+          <li key={e.company + e.start} className="flex flex-wrap sm:flex-nowrap items-center gap-x-3 gap-y-1.5 py-2.5 text-[14px]">
             <img {...IMG.logo(e.logo)} alt="" width="24" height="24" className="h-6 w-6 rounded object-cover flex-shrink-0" />
-            <span className="min-w-0 flex-1">
+            <span className="min-w-0 flex-1 basis-[calc(100%-36px)] sm:basis-auto">
               <span className="text-[#111]">{e.company}</span>
               <span className="text-[#6f6f6f]"> · {ka ? e.roleKa : e.role}</span>
             </span>
             {/* the kind of role, so overlapping dates read as parallel work, not a mistake */}
-            <span className="rounded-full border border-[#dcdcdc] px-2 py-0.5 text-[11px] text-[#6f6f6f] whitespace-nowrap">
+            <span className="ml-9 sm:ml-0 rounded-full border border-[#dcdcdc] px-2 py-0.5 text-[11px] text-[#6f6f6f] whitespace-nowrap">
               {ka ? ({ 'Full-time': 'სრული', 'Part-time': 'ნახევარი', Freelance: 'ფრილანსი', Contract: 'კონტრაქტი' } as Record<string, string>)[e.type] ?? e.type : e.type}
             </span>
-            <span className="text-[#9a9a9a] whitespace-nowrap tabular-nums hidden sm:inline">
+            {/* overlapping dates are parallel work, said on the role itself */}
+            {concurrent(e) && (
+              <span className="rounded-full bg-[#111] px-2 py-0.5 text-[11px] text-white whitespace-nowrap">{tx('Concurrent', 'პარალელური')}</span>
+            )}
+            <span className="text-[#9a9a9a] text-[12px] sm:text-[14px] whitespace-nowrap tabular-nums">
               {ka ? `${e.startKa} - ${e.endKa}` : `${e.start} - ${e.end}`}
             </span>
           </li>
@@ -212,14 +228,14 @@ export function HomeContent() {
               'მე ვარ სალომე, სენიორ პროდაქტ დიზაინერი და არტ დირექტორი საქართველოდან. პატარა სიგნალებსა და ჩვევებს, რომლებსაც ხშირად ვერ ვამჩნევთ, ვაქცევ იდეებად, რომლებიც ბიზნესს რეალურ შედეგს მოუტანს.',
             )}
           </p>
-          <p className="mt-5 text-[16px] sm:text-[17px] leading-[1.5] text-[#3f3f3f] max-w-[520px]">
+          <p className="mt-5 text-[16px] sm:text-[17px] leading-[1.5] text-[#222] max-w-[520px]">
             {tx(
               'Work across fintech, logistics, edtech, retail, healthcare and hospitality. Top-Rated Plus on Upwork.',
               'ვმუშაობ ფინტექში, ლოჯისტიკაში, განათლებაში, რითეილში, ჯანდაცვასა და სტუმარმასპინძლობაში. Upwork-ზე Top-Rated Plus სტატუსით.',
             )}
           </p>
           <div className="mt-9"><CtaLink /></div>
-          <div className="mt-5 flex items-center gap-2 text-[13px] text-[#6f6f6f]">
+          <div className="mt-5 flex items-center gap-2 text-[13px] text-[#444]">
             <span className="h-1.5 w-1.5 rounded-full bg-[#22c55e]" /> {tx('Available for new projects', 'ახალი პროექტებისთვის თავისუფალი ვარ')}
           </div>
         </Reveal>

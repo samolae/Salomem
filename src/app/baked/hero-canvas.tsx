@@ -149,7 +149,7 @@ const MIX = (() => {
 
 function layout(g: Geo, pool: Item[]) {
   const nCols = Math.round(360 / (((g.W + g.GAP + 14) / g.R) * 180 / Math.PI));
-  const L = g.mobile ? Math.max(1100, window.innerHeight * 2.4) : 2300 * Math.max(1, window.innerWidth / 1440);
+  const L = g.mobile ? Math.max(900, window.innerHeight * 1.6) : 2300 * Math.max(1, window.innerWidth / 1440);
   const cols: Col[] = [];
   const slots: Slot[] = [];
   const gcd = (a: number, b: number): number => (b ? gcd(b, a % b) : a);
@@ -388,7 +388,8 @@ export function HeroCanvas() {
   return (
     <section ref={heroRef} aria-label={tx('Selected work, moving canvas', 'ნამუშევრები, მოძრავი კანვასი')} className="relative h-[100svh] min-h-[560px]">
       <div className="sticky top-0 h-[100svh] min-h-[560px] overflow-hidden bg-white">
-        <div ref={stageRef} className="absolute inset-0">
+        {/* on a phone the drum sits between the top pills and the bottom dock, so neither covers it */}
+        <div ref={stageRef} className="absolute inset-x-0 top-[68px] bottom-[108px] overflow-hidden sm:inset-0">
           <div ref={worldRef} className="absolute inset-0 select-none cursor-default" style={{ perspective: g ? `${g.P}px` : '1100px', touchAction: 'pan-y' }}>
             {g && plan && plan.slots.map((sl, i) => {
               const it = pool[sl.item];
@@ -402,13 +403,17 @@ export function HeroCanvas() {
                   data-src={it.src}
                   tabIndex={-1}
                   aria-hidden
-                  className="absolute left-1/2 top-1/2 block overflow-hidden rounded-[10px] bg-[#f2f2f2] will-change-transform"
+                  className="absolute left-1/2 top-1/2 block overflow-hidden rounded-[10px] will-change-transform"
                   style={{ width: g.W, height: sl.h, visibility: 'hidden', opacity: 0 }}
                 >
                   {it.video ? (
                     <video src={it.video} poster={it.src} muted loop playsInline preload="none" aria-hidden className="pointer-events-none h-full w-full object-cover" style={{ filter: 'saturate(1.22) brightness(0.95) contrast(1.03)' }} />
                   ) : (
-                    <img {...IMG.tileLarge(it.src)} alt="" loading="lazy" decoding="async" draggable={false} className="pointer-events-none h-full w-full object-cover" style={{ filter: 'saturate(1.22) brightness(0.95) contrast(1.03)' }} />
+                    <img {...IMG.tileLarge(it.src)} alt="" loading={g.mobile ? 'eager' : 'lazy'} decoding="async" draggable={false}
+                      // no grey box while it loads: the picture fades in once it is there
+                      onLoad={(e) => { e.currentTarget.style.opacity = '1'; }}
+                      ref={(el) => { if (el && el.complete && el.naturalWidth) el.style.opacity = '1'; }}
+                      className="pointer-events-none h-full w-full object-cover transition-opacity duration-500" style={{ opacity: 0, filter: 'saturate(1.22) brightness(0.95) contrast(1.03)' }} />
                   )}
                 </button>
               );
@@ -429,8 +434,8 @@ export function HeroCanvas() {
         </ul>
         <h1 className="sr-only">{tx('Salome Mosiava, Senior Product Designer and Art Director', 'სალომე მოსიავა, სენიორ პროდაქტ დიზაინერი და არტ დირექტორი')}</h1>
         <div className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2"><CtaLink /></div>
-        <PauseButton className="absolute left-2 bottom-24 sm:bottom-24 z-10" />
-        <div className="pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 z-10 rounded-md bg-white/80 px-3 py-1.5 text-[13px] text-[#6f6f6f] backdrop-blur-md whitespace-nowrap">
+        <PauseButton className="absolute right-3 top-3 sm:right-auto sm:top-auto sm:left-2 sm:bottom-24 z-10" />
+        <div className="pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 z-10 hidden sm:block rounded-md bg-white/80 px-3 py-1.5 text-[13px] text-[#6f6f6f] backdrop-blur-md whitespace-nowrap">
           <span className="hidden sm:inline">{tx('Move to look around, click to open', 'კურსორით დაათვალიერე, დააჭირე გასახსნელად')}</span>
           <span className="sm:hidden">{tx('Swipe to spin, tap to open', 'გაასრიალე, დააჭირე გასახსნელად')}</span>
         </div>

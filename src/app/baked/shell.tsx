@@ -212,7 +212,7 @@ function BackToTop() {
             window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
           }}
           aria-label={tx('Back to top', 'ზემოთ დაბრუნება')}
-          className="fixed bottom-[96px] sm:bottom-4 left-4 z-[65] h-11 w-11 rounded-full bg-white text-[#111] border border-[#ececec] shadow-[0_8px_24px_rgba(0,0,0,0.12)] flex items-center justify-center hover:bg-[#ffe7de] hover:text-[#b52f03] transition-colors outline-none focus-visible:shadow-[0_0_0_2px_#ff4306]"
+          className="fixed bottom-[96px] sm:bottom-4 left-4 z-[65] h-11 w-11 rounded-full bg-white text-[#111] border border-[#ececec] shadow-[0_8px_24px_rgba(0,0,0,0.12)] hidden sm:flex items-center justify-center hover:bg-[#ffe7de] hover:text-[#b52f03] transition-colors outline-none focus-visible:shadow-[0_0_0_2px_#ff4306]"
           style={{ marginBottom: 'env(safe-area-inset-bottom, 0px)' }}
         >
           <ArrowUp size={18} />
@@ -335,7 +335,8 @@ export function BakedShell({ children }: { children: ReactNode }) {
             {children}
           </main>
           <SwingingBadge />
-          <div className="h-10 sm:h-16" />
+          {/* room at the end so the phone dock never sits on the last captions */}
+          <div className="h-28 sm:h-16" />
           <ContactSticker />
         </div>
         {reveal && <div aria-hidden style={{ height: footH }} />}

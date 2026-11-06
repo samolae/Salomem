@@ -317,8 +317,8 @@ export function FitmealCase() {
                 <span>{tx('Spring that passes for a real shoot', 'გაზაფხული, რომელიც ნამდვილ გადაღებად აღიქმება')}</span>
               </RevealLines>
               <Rise className="lg:col-span-3 lg:col-start-7 lg:pt-2"><p className={`mt-3 lg:mt-0 ${BODY}`}>{tx(
-                'FitMeal wanted spring on its feed: its dishes out in the sun, on a picnic blanket, at a desk, on a quiet morning. A shoot across that many settings costs days. AI let us build every one of them around the real packaging and the real menu, with real-looking dishes and not a single face.',
-                'FitMeal-ს გაზაფხული უნდოდა თავის ფიდზე: კერძები მზეზე, პიკნიკის პლედზე, სამუშაო მაგიდასთან, მშვიდ დილას. ამდენ გარემოში ფოტოსესიას დღეები სჭირდება. AI-ით თითოეული მათგანი ნამდვილი შეფუთვისა და ნამდვილი მენიუს გარშემო ავაწყვეთ, ნამდვილი კერძებით და არც ერთი სახით.')}</p></Rise>
+                'FitMeal wanted spring on its feed: its dishes out in the sun, on a picnic blanket, at a desk, on a quiet morning. A shoot across that many settings costs days. AI let us build every one of them around the real packaging and the real menu, with real-looking dishes, and people only ever in the background.',
+                'FitMeal-ს გაზაფხული უნდოდა თავის ფიდზე: კერძები მზეზე, პიკნიკის პლედზე, სამუშაო მაგიდასთან, მშვიდ დილას. ამდენ გარემოში ფოტოსესიას დღეები სჭირდება. AI-ით თითოეული მათგანი ნამდვილი შეფუთვისა და ნამდვილი მენიუს გარშემო ავაწყვეთ, ნამდვილი კერძებით, ადამიანები კი მხოლოდ მეორე პლანზე.')}</p></Rise>
               <Rise delay={0.08} className="lg:col-span-3 lg:pt-2"><p className={`mt-3 lg:mt-0 ${BODY}`}>{tx(
                 'The brief set two moods. A picnic: grass, flowers, sun, fresh and light. And a healthy spring routine: calm, morning, a book, a coffee, the meal close at hand. Every frame keeps the food as the hero and the light natural.',
                 'ბრიფში ორი განწყობა იყო. პიკნიკი: ბალახი, ყვავილები, მზე, სიახლე და სიმსუბუქე. და ჯანსაღი გაზაფხულის რუტინა: სიმშვიდე, დილა, წიგნი, ყავა და კერძი ხელთ. ყველა კადრში საკვებია მთავარი გმირი და შუქი ბუნებრივია.')}</p></Rise>
@@ -418,13 +418,17 @@ export function FitmealCase() {
           {/* ── Close ────────────────────────────────────────────────── */}
           <Wrap className="py-28 sm:py-40">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-8 gap-y-10 items-end">
-              <div className="lg:col-span-4 grid grid-cols-3 gap-4">
+              {/* the size of the job, not a result of the campaign */}
+              <div className="lg:col-span-4">
+              <div className="mb-4 text-[13px] text-[#0E4B48]/55">{tx('What was produced', 'რა დამზადდა')}</div>
+              <div className="grid grid-cols-3 gap-4">
                 {[['20', tx('frames', 'კადრი')], ['9', tx('scenes', 'სცენა')], ['2', tx('formats', 'ფორმატი')]].map(([n, l]) => (
                   <div key={l}>
                     <div className="text-[44px] sm:text-[56px] leading-none tabular-nums" style={{ fontWeight: 600 }}>{n}</div>
                     <div className="mt-2 text-[13px] text-[#0E4B48]/55">{l}</div>
                   </div>
                 ))}
+              </div>
               </div>
               <RevealLines as="p" className="lg:col-span-4 text-[22px] sm:text-[26px] leading-[1.2] tracking-[-0.015em]" style={{ fontWeight: 500 }}>
                 <span>{tx('A whole season of content,', 'მთელი სეზონის კონტენტი,')}</span>

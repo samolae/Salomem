@@ -471,14 +471,7 @@ export function SchenkerCaseStudy() {
       <nav aria-label="Case study" className="fixed inset-x-0 top-0 z-50 border-b border-white/[0.05] bg-[#080B0F]/80 backdrop-blur-xl">
         <div className={`${WRAP} flex h-16 items-center justify-between`}>
           <div className="flex items-center gap-4">
-            <button
-              onClick={() => navigate('/', { viewTransition: true })}
-              className={`-ml-2 flex min-h-[44px] items-center gap-2 rounded-lg px-2 text-[13px] text-[#9295A6] hover:text-white ${FOCUS}`}
-            >
-              <ArrowLeft size={15} aria-hidden />
-              <span>Back to Portfolio</span>
-            </button>
-            <div className="h-5 w-px bg-white/10" aria-hidden="true" />
+            {/* the way back to all the work is one link at the end of the case */}
             <svg className="h-[20px] lg:h-[22px] w-auto" fill="none" viewBox="0 0 227.898 36.56" role="img" aria-label="SCHENKER">
               <g clipPath="url(#schenkerNavClip)">
                 <path d={schenkerSvgPaths.p21938980} fill="white" />
@@ -561,7 +554,7 @@ export function SchenkerCaseStudy() {
             <ol className="grid gap-x-12 md:grid-cols-2">
               {[
                 { step: 'Hook', number: '00.1', text: 'What if enterprise logistics software could feel intuitive, not like a spreadsheet with buttons?' },
-                { step: 'Friction', number: '00.2', text: 'Schenker\'s internal tools drowned operators in form complexity, scattered workflows, and inconsistent UI patterns. Training costs soared. Error rates climbed.' },
+                { step: 'Friction', number: '00.2', text: 'Schenker\'s internal tools drowned operators in form complexity, scattered workflows, and inconsistent UI patterns. The tool was slow to learn and easy to get wrong.' },
                 { step: 'Pivot', number: '00.3', text: 'We unified shipment creation, label management, and settings into one coherent design language, progressive disclosure over cognitive overload.' },
                 { step: 'Proof', number: '00.4', text: 'Desktop-first enterprise platform. Streamlined multi-step forms. Contextual help system. One design system for the entire logistics workflow.' },
               ].map((item, i) => (
@@ -600,7 +593,7 @@ export function SchenkerCaseStudy() {
 
             <dl className="mt-16 lg:mt-24 grid grid-cols-2 gap-x-6 gap-y-12 sm:gap-x-8 lg:grid-cols-4">
               {[
-                { value: '9', label: 'Modules', sub: 'Product Areas' },
+                { value: '7', label: 'Modules', sub: 'Shipment, labels, packing lists, waybills, settings, help, developer' },
                 { value: '5', label: 'Shipment Steps', sub: 'Multi-step flow' },
                 { value: '3', label: 'Document Types', sub: 'Labels · Lists · Waybills' },
                 { value: '1', label: 'Platform', sub: 'Desktop App' },
@@ -678,9 +671,9 @@ export function SchenkerCaseStudy() {
                   ))}
                 </div>
                 <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-3 border-t border-white/[0.06] px-6 py-5 sm:px-8 lg:px-10">
-                  <span className={CAPTION}>Complexity controlled across</span>
+                  <span className={CAPTION}>Designed in this case: 9+ screens across the 7 modules, 47 form fields</span>
                   <div className="flex flex-wrap items-baseline gap-x-6 gap-y-2 text-[13px] text-[#8C8FA0]">
-                    {[['9+', 'screens'], ['47', 'fields'], ['7', 'modules']].map(([n, l]) => (
+                    {([] as string[][]).map(([n, l]) => (
                       <span key={l}>
                         <CountUp value={n} className="mr-1.5 text-[18px] font-semibold text-[#F2F3F5]" />
                         {l}

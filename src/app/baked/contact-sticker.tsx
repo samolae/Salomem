@@ -11,6 +11,7 @@ import { useI18n } from './i18n';
  */
 const MONO = 'ui-monospace, "SF Mono", Menlo, monospace';
 
+// Desktop only: on a phone the dock already holds contact, and nothing else floats over the work.
 export function ContactSticker() {
   const { tx, to } = useI18n();
   const ring = useRef<SVGGElement>(null);
@@ -40,7 +41,7 @@ export function ContactSticker() {
   const label = tx('lets_work_together ✦ contact_me ✦ ', 'ვითანამშრომლოთ ✦ მომწერე ✦ ');
 
   return (
-    <div className="pointer-events-none sticky bottom-[84px] sm:bottom-6 z-[60] flex justify-end px-3 sm:px-6 -mt-[96px] sm:-mt-[124px] h-[96px] sm:h-[124px]">
+    <div className="pointer-events-none sticky bottom-[84px] sm:bottom-6 z-[60] hidden sm:flex justify-end px-3 sm:px-6 -mt-[96px] sm:-mt-[124px] h-[96px] sm:h-[124px]">
       <Link
         to={to('/contact')}
         aria-label={tx('Contact me', 'მომწერე')}

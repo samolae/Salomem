@@ -532,16 +532,7 @@ export function AurumCaseStudy() {
       <nav aria-label="Case study" className="fixed left-0 right-0 top-0 z-50 border-b border-white/[0.06] bg-[#080B0F]/80 backdrop-blur-xl">
         <div className={`${CONTAINER} flex h-16 items-center justify-between`}>
           <div className="flex items-center gap-3 md:gap-4">
-            <button
-              type="button"
-              onClick={() => navigate('/', { viewTransition: true })}
-              className={`-ml-2 flex min-h-[44px] items-center gap-2 rounded-lg px-2 text-[13px] text-[#9295A6] transition-colors hover:text-white ${FOCUS}`}
-            >
-              <ArrowLeft size={15} aria-hidden />
-              <span className="hidden sm:inline">Back to Portfolio</span>
-              <span className="sm:hidden">Back</span>
-            </button>
-            <span aria-hidden className="h-5 w-px bg-white/10" />
+            {/* the way back to all the work is one link at the end of the case */}
             <AurumLogo />
           </div>
           <div className="hidden gap-6 md:flex">
@@ -564,6 +555,25 @@ export function AurumCaseStudy() {
         <AurumHero />
 
         <StorySection />
+
+        {/* ─── In short: the case in four lines, before the long read ── */}
+        <section aria-label="In short" className="border-b border-white/[0.06]">
+          <div className={`${CONTAINER} py-14 md:py-20`}>
+            <div className={`mb-8 ${T.label}`}>In short</div>
+            <dl lang="en" className="grid grid-cols-1 gap-x-10 gap-y-8 md:grid-cols-3">
+              {[
+                ['Problem', 'Crypto trading felt cluttered and unsafe: new users stalled, experienced traders lost time switching between features.'],
+                ['Key flow', 'Verification. A long, opaque KYC step was split into a guided sequence, one action per screen, with security status shown at every step.'],
+                ['What shipped', 'Onboarding and KYC, trading, portfolio and transfers on mobile first, built on one design system of 64+ components.'],
+              ].map(([k, v]) => (
+                <div key={k} className="border-t border-white/10 pt-4">
+                  <dt className={T.h3} style={HEAD}>{k}</dt>
+                  <dd className={`mt-2 ${T.body}`}>{v}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </section>
 
         {/* ─── 01 OVERVIEW ─────────────────────────────────────────── */}
         <Section id="overview">

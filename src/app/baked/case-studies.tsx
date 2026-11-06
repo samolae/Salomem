@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useSearchParams } from 'react-router';
+import { Link, useSearchParams } from 'react-router';
 import { Eye } from 'lucide-react';
 import { CaseLink } from '../components/case-transition';
 import { CtaLink, PageIntro, Reveal, T } from './ui';
@@ -374,6 +374,22 @@ export function CaseStudiesContent({ initialTag }: { initialTag?: string }) {
 
 /** "More case studies" at the end of every case: the same covers as the grid, three at a time */
 /** one case as a card: its cover, name with "View case", two tags */
+/** the problem each case solved, in one line, taken from the case's own brief */
+const SOLVED: Record<string, [string, string]> = {
+  '/projects/dasturi': ['Five varietals had to read as one family on the shelf.', 'ხუთი ჯიში თაროზე ერთ ოჯახად უნდა წაკითხულიყო.'],
+  '/projects/gagua': ['Many services, each with its own voice, still had to read as one clinic.', 'ბევრი სერვისი, თითო თავისი ხმით, მაინც ერთ კლინიკად უნდა წაკითხულიყო.'],
+  '/projects/zummo': ['Talk margin and payback without losing what sells the machine.', 'მოგებასა და ამოგებაზე საუბარი ისე, რომ აპარატის მთავარი ხიბლი არ დაიკარგოს.'],
+  '/projects/fitmeal': ['A season of spring settings without days of shoots.', 'გაზაფხულის ბევრი გარემო, გადაღების დღეების გარეშე.'],
+  '/projects/carmall': ['Car posts all look alike; Carmall had to be known before the price was read.', 'მანქანის პოსტები ერთნაირია; ქარმოლი ფასის წაკითხვამდე უნდა ეცნოთ.'],
+  '/projects/arena': ['Many sports and audiences, one recognisable brand.', 'ბევრი სპორტი და აუდიტორია, ერთი საცნობი ბრენდი.'],
+  '/projects/gtcc': ['Five posts about one race, each with a reason to stop.', 'ხუთი პოსტი ერთ რბოლაზე, თითოს გაჩერების თავისი მიზეზით.'],
+  '/projects/mardi': ['Sell homes still being built as a way of life, not a price per square metre.', 'ჯერ კიდევ მშენებარე სახლების გაყიდვა ცხოვრების წესად, და არა კვადრატულის ფასად.'],
+  '/projects/terminal': ['A discount every month, without looking like a flyer.', 'ყოველთვიური ფასდაკლება ისე, რომ ფლაერს არ დაემსგავსოს.'],
+  '/projects/aurum': ['Crypto trading that feels calm and safe to a first-time investor.', 'კრიპტოვაჭრობა, რომელიც დამწყებ ინვესტორს მშვიდად და უსაფრთხოდ ეჩვენება.'],
+  '/projects/schenker': ['Dense shipment forms turned into a clear step-by-step flow.', 'რთული გადაზიდვის ფორმები, ნაბიჯ-ნაბიჯ გასაგებ ნაკადად.'],
+  '/projects/unispace': ['Students, lecturers and admins in one product, none of them crowded.', 'სტუდენტები, ლექტორები და ადმინისტრაცია ერთ პროდუქტში, ისე რომ არცერთს არ შეეშალოს ხელი.'],
+};
+
 function StudyCardOf({ x, prefix }: { x: Study; prefix: string }) {
   const { tx } = useI18n();
   return (
@@ -383,6 +399,7 @@ function StudyCardOf({ x, prefix }: { x: Study; prefix: string }) {
         <h3 className="text-[18px] leading-[1.1] text-[#111]" style={{ fontFamily: T.display, fontWeight: 900 }}>{x.title}</h3>
         <ViewCase small />
       </div>
+      {SOLVED[x.to] && <p className="mt-1.5 px-0.5 text-[14px] leading-[1.4] text-[#222] max-w-[46ch]">{tx(SOLVED[x.to][0], SOLVED[x.to][1])}</p>}
       <div className="mt-1 px-0.5 text-[13px] text-[#6f6f6f]">{x.tags.slice(0, 2).map((t) => tx(t.en, t.ka)).join(' · ')}</div>
     </CaseLink>
   );
@@ -399,15 +416,26 @@ export function StudyCards() {
   return <>{STUDIES.map((x) => <Reveal key={x.to}><StudyCardOf x={x} prefix="home" /></Reveal>)}</>;
 }
 
+/**
+ * The end of every case: the next project in the grid's order, large, one
+ * more beside it, and a single real way back to all the work.
+ */
 export function MoreCases({ current }: { current: string }) {
-  const { tx } = useI18n();
+  const { tx, to } = useI18n();
   const i = STUDIES.findIndex((x) => x.to === current);
-  const rest = [...STUDIES.slice(i + 1), ...STUDIES.slice(0, Math.max(0, i))].filter((x) => x.to !== current).slice(0, 3);
+  const rest = [...STUDIES.slice(i + 1), ...STUDIES.slice(0, Math.max(0, i))].filter((x) => x.to !== current);
+  const [next, after] = rest;
   return (
-    <section aria-labelledby="more" className="px-1.5 pt-24">
-      <h2 id="more" className="px-0.5 pb-3 text-[14px] text-[#6f6f6f]">{tx('More case studies', 'სხვა ქეისები')}</h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-x-1.5 gap-y-10">
-        {rest.map((x) => <StudyCardOf key={x.to} x={x} prefix="more" />)}
+    <section aria-labelledby="next" className="px-1.5 pt-24">
+      <div className="px-0.5 pb-3 flex items-baseline justify-between gap-4">
+        <h2 id="next" className="text-[14px] text-[#6f6f6f]">{tx('Next project', 'შემდეგი პროექტი')}</h2>
+        <Link to={to('/work')} viewTransition className="group inline-flex items-center gap-1.5 text-[14px] text-[#111] hover:text-[#ff4306] transition-colors">
+          <span aria-hidden className="transition-transform group-hover:-translate-x-0.5">←</span>{tx('Back to work', 'ყველა ნამუშევარი')}
+        </Link>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-x-1.5 gap-y-10 items-start">
+        {next && <div className="md:col-span-2"><StudyCardOf x={next} prefix="next" /></div>}
+        {after && <StudyCardOf x={after} prefix="more" />}
       </div>
     </section>
   );

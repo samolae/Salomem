@@ -214,9 +214,9 @@ const STUDIES: Study[] = [
   },
   {
     to: '/projects/gagua', title: 'Gagua Clinic',
-    en: 'A refreshed social media kit for a Tbilisi clinic: hand-drawn Georgian lettering for each campaign, the Medical Concierge and the LinkedIn career page.',
-    ka: 'კლინიკის განახლებული სოც. მედიის კიტი: ხელით დახატული ქართული ლეტერინგი ყველა კამპანიისთვის, სამედიცინო კონსიერჟი და LinkedIn-ის საკარიერო გვერდი.',
-    tags: [{ en: 'Social media', ka: 'სოციალური მედია' }, { en: 'Lettering', ka: 'ლეტერინგი' }],
+    en: 'One clinic, many campaigns: Home Care, Born at Gagua, the Medical Concierge, the career page and a 30th anniversary New Year kit, each with its own hand-drawn voice.',
+    ka: 'ერთი კლინიკა, ბევრი კამპანია: შინ ზრუნვა, „დავიბადე გაგუაში“, სამედიცინო კონსიერჟი, საკარიერო გვერდი და 30 წლის საახალწლო ნაკრები, თითო თავისი ხელწერით.',
+    tags: [{ en: 'Brand campaigns', ka: 'ბრენდის კამპანიები' }, { en: 'Lettering', ka: 'ლეტერინგი' }, { en: 'Print', ka: 'ბეჭდვითი' }],
     cover: <GaguaLettering small />,
     peek: '/cases/gagua/ad-birth.jpg',
   },

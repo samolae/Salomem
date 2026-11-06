@@ -9,10 +9,10 @@ import { MoreCases } from './case-studies';
 import { GaguaLettering } from './gagua-cover';
 
 /*
- * Gagua Clinic: a maternity and family clinic in Tbilisi. Three campaigns,
- * each with its own hand-drawn Georgian lettering (Home Care, Born at Gagua,
- * the Medical Concierge), and the ads that
- * carried all of it.
+ * Gagua Clinic: a maternity and family clinic in Tbilisi, told as one brand
+ * with many campaigns: Home Care, Born at Gagua, the Medical Concierge, the
+ * career page, the 30th anniversary New Year kit and the ads. Each keeps its
+ * own voice, mostly a hand-drawn name, inside one system.
  */
 const P = '/cases/gagua';
 const GREEN = '#40A750';
@@ -46,7 +46,7 @@ function Row({ items, max }: { items: M[]; max?: number }) {
 /** a chapter: number and name, a large title, a few words */
 function Chapter({ n, name, title, children }: { n: string; name: string; title: string; children?: ReactNode }) {
   return (
-    <header className="px-5 sm:px-8 pt-24 sm:pt-32 pb-8 sm:pb-10">
+    <header id={`c${n}`} className="scroll-mt-20 px-5 sm:px-8 pt-24 sm:pt-32 pb-8 sm:pb-10">
       <Reveal className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(0,2.1fr)] gap-4 md:gap-10 max-w-[1400px]">
         <div className="text-[13px] tracking-[0.08em] uppercase" style={{ color: GREEN, fontWeight: 600 }}>{n} / {name}</div>
         <div>
@@ -164,21 +164,69 @@ function Vacancies() {
   );
 }
 
+/** the campaigns, one line: each jumps to its chapter */
+function Campaigns() {
+  const { tx } = useI18n();
+  const list: [string, string][] = [
+    ['01', tx('Lettering', 'ლეტერინგი')], ['02', tx('Home Care', 'შინ ზრუნვა')], ['03', tx('Born at Gagua', 'დავიბადე გაგუაში')],
+    ['04', tx('Medical Concierge', 'სამედიცინო კონსიერჟი')], ['05', tx('Career', 'კარიერა')], ['06', tx('30 years', '30 წელი')], ['07', tx('Ads', 'რეკლამა')],
+  ];
+  return (
+    <nav aria-label={tx('Campaigns in this case', 'კამპანიები ამ ქეისში')} className="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-[14px] sm:text-[15px]">
+      {list.map(([n, name]) => (
+        <a key={n} href={`#c${n}`} className="group inline-flex items-baseline gap-1.5 text-[#111] hover:text-[#40A750] transition-colors">
+          <span className="text-[11px] tabular-nums text-[#9a9a9a] group-hover:text-current">{n}</span>{name}
+        </a>
+      ))}
+    </nav>
+  );
+}
+
+/** a printed piece on the light ground it was laid out on */
+function Stage({ src, alt, w, h, pad = '6%', bg = '#F4F6F7', className = '' }: { src: string; alt: string; w: number; h: number; pad?: string; bg?: string; className?: string }) {
+  return (
+    <div className={`overflow-hidden rounded-md flex items-center justify-center ${className}`} style={{ background: bg, padding: pad }}>
+      <img src={src} alt={alt} width={w} height={h} loading="lazy" decoding="async" draggable={false} className="block h-auto w-full max-h-full object-contain" style={{ aspectRatio: `${w}/${h}` }} />
+    </div>
+  );
+}
+
+/** the New Year kit: what each piece is for, in a few words */
+function KitNotes() {
+  const { tx } = useI18n();
+  const notes: [string, string][] = [
+    [tx('Three months at once', 'სამი თვე ერთად'), tx('The wall calendar shows last, this and next month. A red frame slides to today, a yellow band marks the week.', 'კედლის კალენდარზე ერთად ჩანს წინა, მიმდინარე და შემდეგი თვე. წითელი ჩარჩო დღეზე გადაადგილდება, ყვითელი ზოლი კვირას აჩვენებს.')],
+    [tx('Days worth marking', 'მნიშვნელოვანი დღეები'), tx('Twelve removable window stickers mark a date without hiding it. Weekends and holidays are green, each holiday named.', 'თორმეტი მოსახსნელი ფანჯრის სტიკერი თარიღს ნიშნავს და არ ფარავს. შაბათ-კვირა და უქმეები მწვანეა, უქმე სახელით.')],
+    [tx('A notebook for the day', 'ბლოკნოტი ყოველდღისთვის'), tx('The year on the first spread, then a day plan: the one main thing, the hours, a checklist and notes.', 'პირველ გაშლაზე მთელი წელი, შემდეგ დღის გეგმა: დღის მთავარი, საათები, გასაკეთებელი და შენიშვნები.')],
+    [tx('Kept, not thrown away', 'შესანახი'), tx('The card tears into a bookmark, and the spine reads “Gagua 2027” on a shelf.', 'ბარათი სანიშნედ იხევა, ბლოკნოტის ზურგზე კი თაროზეც იკითხება „გაგუა 2027“.')],
+  ];
+  return (
+    <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6 content-start">
+      {notes.map(([k, v], i) => (
+        <div key={k} className="border-t border-[#e6e6e6] pt-3">
+          <dt className="text-[15px] sm:text-[16px]" style={{ fontWeight: 600 }}><span className="mr-2 text-[12px] tabular-nums" style={{ color: GREEN }}>0{i + 1}</span>{k}</dt>
+          <dd className="mt-1.5 text-[14px] sm:text-[15px] leading-[1.5] text-[#555]">{v}</dd>
+        </div>
+      ))}
+    </dl>
+  );
+}
+
 export function GaguaCase() {
   const { tx } = useI18n();
-  const tags = [tx('Social media kit', 'სოც. მედიის კიტი'), tx('Visual style', 'ვიზუალური სტილი'), tx('Lettering', 'ლეტერინგი')];
+  const tags = [tx('Brand campaigns', 'ბრენდის კამპანიები'), tx('Social media kit', 'სოც. მედიის კიტი'), tx('Lettering', 'ლეტერინგი'), tx('Print', 'ბეჭდვითი')];
   const facts: [string, string][] = [
     [tx('Client', 'კლიენტი'), tx('Gagua Clinic', 'გაგუას კლინიკა')],
     [tx('Year', 'წელი'), '2026'],
     [tx('Sector', 'სექტორი'), tx('Maternity and family medicine', 'მეანობა და საოჯახო მედიცინა')],
-    [tx('Work', 'სამუშაო'), tx('Social media kit, lettering, LinkedIn', 'სოც. მედიის კიტი, ლეტერინგი, LinkedIn')],
+    [tx('Work', 'სამუშაო'), tx('Campaigns, social media kit, lettering, print', 'კამპანიები, სოც. მედიის კიტი, ლეტერინგი, ბეჭდვითი')],
   ];
 
   return (
     <BakedShell>
       <SEO
-        title="Gagua Clinic | Social Media Kit Case Study"
-        description="Gagua Clinic: a refreshed social media kit, hand-drawn Georgian lettering for three campaigns, the Medical Concierge and the LinkedIn career page."
+        title="Gagua Clinic | One Brand, Many Campaigns"
+        description="Gagua Clinic as one brand with many campaigns: Home Care, Born at Gagua, the Medical Concierge, the career page, a 30th anniversary New Year kit and the ads, each with its own hand-drawn voice in one system."
         keywords="Gagua Clinic, გაგუას კლინიკა, lettering, Georgian lettering, campaign, medical concierge, social media, Salome Mosiava"
         type="article"
       />
@@ -193,6 +241,7 @@ export function GaguaCase() {
             {tags.map((t) => <li key={t} className="inline-flex items-center h-8 px-3.5 rounded-full border border-[#111]/80 text-[13px]">{t}</li>)}
             <li className="inline-flex items-center h-8 px-3.5 rounded-full bg-[#f2f2f2] text-[13px] text-[#6f6f6f]">2026</li>
           </ul>
+          <Campaigns />
         </header>
 
         {/* cover: the three hand-drawn names, trading places */}
@@ -207,8 +256,8 @@ export function GaguaCase() {
             <h2 className="text-[17px] sm:text-[19px]" style={{ fontWeight: 600 }}>{tx('Brief', 'ბრიფი')}</h2>
             <p className="text-[22px] sm:text-[30px] leading-[1.22] tracking-[-0.01em] max-w-[900px]">
               {tx(
-                'A refresh of Gagua Clinic’s visual style for social media. One kit for Facebook, Instagram and LinkedIn: the clinic’s green panel, a yellow accent, bold Mtavruli headlines, and a hand-drawn name for every campaign, so each new service feels like the same clinic.',
-                'გაგუას კლინიკის ვიზუალური სტილის განახლება სოციალური მედიისთვის. ერთი კიტი Facebook-ის, Instagram-ისა და LinkedIn-ისთვის: კლინიკის მწვანე პანელი, ყვითელი აქცენტი, თამამი მთავრული სათაურები და ხელით დახატული სახელი ყველა კამპანიისთვის, რომ ყოველი ახალი სერვისი იმავე კლინიკად იკითხებოდეს.'
+                'One clinic, many campaigns. Home Care, Born at Gagua, the Medical Concierge, the career page, the 30th anniversary and the ads each needed their own voice, usually a name drawn by hand. They all sit in one system: the clinic’s green, a yellow accent, bold Mtavruli and a refreshed social media kit, so every service still reads as Gagua.',
+                'ერთი კლინიკა, ბევრი კამპანია. შინ ზრუნვას, „დავიბადე გაგუაში“-ს, სამედიცინო კონსიერჟს, საკარიერო გვერდს, 30 წლის იუბილესა და რეკლამებს თავისი ხმა სჭირდებოდა, ხშირად ხელით დახატული სახელი. ყველა ერთ სისტემაშია: კლინიკის მწვანე, ყვითელი აქცენტი, თამამი მთავრული და განახლებული სოციალური მედიის კიტი, რომ ყოველი სერვისი მაინც გაგუად იკითხებოდეს.'
               )}
             </p>
           </Reveal>
@@ -261,8 +310,38 @@ export function GaguaCase() {
         </section>
         <Vacancies />
 
-        {/* 06 ads */}
-        <Chapter n="06" name={tx('Ads', 'რეკლამა')} title={tx('The app, the scan, the birth', 'აპლიკაცია, ექოსკოპია, მშობიარობა')}>
+        {/* 06 the 30th year: a New Year kit for the desk */}
+        <Chapter n="06" name={tx('30 years of dedication', 'მიძღვნის 30 წელი')} title={tx('A year on the desk', 'მთელი წელი მაგიდაზე')}>
+          {tx('For the clinic’s 30th year, a New Year kit for partners and the team: a notebook, a card and a wall calendar. The anniversary lettering and a drawing of the clinic with its people tie it to the campaign. Every page was planned to be used all year.', 'კლინიკის 30-ე წლისთვის საახალწლო ნაკრები პარტნიორებისა და გუნდისთვის: ბლოკნოტი, ბარათი და კედლის კალენდარი. იუბილეს ლეტერინგი და ხელით დახატული კლინიკა თავისი ხალხით მას კამპანიას უკავშირებს. ყოველი გვერდი ისეა დაგეგმილი, რომ მთელი წელი გამოიყენო.')}
+        </Chapter>
+        <section className="px-1.5 flex flex-col gap-1.5">
+          <div className="overflow-hidden rounded-md" style={{ aspectRatio: '2000/985' }}>
+            <img src={`${P}/kit-mockup.jpg`} alt={tx('The kit on a desk: wall calendar, open notebook with a bookmark, and the card', 'ნაკრები მაგიდაზე: კედლის კალენდარი, გაშლილი ბლოკნოტი სანიშნით და ბარათი')} loading="lazy" decoding="async" className="block h-full w-full object-cover" />
+          </div>
+          <div className="mx-auto w-full max-w-[1040px] flex flex-col gap-1.5">
+            <Stage src={`${P}/kit-wrap.jpg`} alt={tx('Notebook cover, opened flat: back, spine and front', 'ბლოკნოტის ყდა გაშლილი: უკანა მხარე, ზურგი და წინა მხარე')} w={953} h={650} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+              <Stage src={`${P}/kit-spread.jpg`} alt={tx('First spread: the year at a glance', 'პირველი გაშლა: მთელი წელი')} w={1007} h={726} pad="5%" />
+              <Stage src={`${P}/kit-plan.jpg`} alt={tx('Inside pages: notes and the day plan', 'შიდა გვერდები: ჩანაწერები და დღის გეგმა')} w={1007} h={726} pad="5%" />
+            </div>
+            <Stage src={`${P}/kit-card.jpg`} alt={tx('The card, front and back, and its tear-off bookmark', 'ბარათი, წინა და უკანა მხარე, და მოსახევი სანიშნე')} w={1411} h={442} pad="5% 4%" />
+          </div>
+        </section>
+        <section className="px-1.5 pt-1.5">
+          <div className="mx-auto w-full max-w-[1040px] grid grid-cols-1 md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.6fr)] gap-1.5">
+            <Stage src={`${P}/kit-calendar.jpg`} alt={tx('The wall calendar: three months under the anniversary drawing', 'კედლის კალენდარი: სამი თვე იუბილეს ილუსტრაციის ქვეშ')} w={474} h={1146} bg="#E8ECEE" pad="7% 12%" />
+            <div className="flex flex-col gap-1.5">
+              <Stage src={`${P}/kit-january.jpg`} alt={tx('January 2027 up close: the red frame on today and a window sticker', 'იანვარი 2027 ახლოდან: წითელი ჩარჩო დღეზე და ფანჯრის სტიკერი')} w={1016} h={506} pad="4%" />
+              <div className="flex-1 rounded-md bg-white border border-[#eee] p-5 sm:p-7 grid grid-cols-[minmax(0,1fr)_88px] sm:grid-cols-[minmax(0,1fr)_120px] gap-5 sm:gap-7">
+                <KitNotes />
+                <img src={`${P}/kit-stickers.jpg`} alt={tx('Sheet of twelve window stickers', 'თორმეტი ფანჯრის სტიკერის ფურცელი')} width={195} height={225} loading="lazy" decoding="async" className="w-full h-auto rounded-md self-start" />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 07 ads */}
+        <Chapter n="07" name={tx('Ads', 'რეკლამა')} title={tx('The app, the scan, the birth', 'აპლიკაცია, ექოსკოპია, მშობიარობა')}>
           {tx('Each service as a story, the action always in one green bar.', 'თითო სერვისი სთორიში, მოქმედება კი ყოველთვის ერთ მწვანე ზოლშია.')}
         </Chapter>
         <section className="px-1.5 flex flex-col gap-1.5">

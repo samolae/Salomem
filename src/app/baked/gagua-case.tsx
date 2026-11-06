@@ -182,11 +182,19 @@ function Campaigns() {
   );
 }
 
-/** a printed piece on the light ground it was laid out on */
-function Stage({ src, alt, w, h, pad = '6%', bg = '#F4F6F7', className = '' }: { src: string; alt: string; w: number; h: number; pad?: string; bg?: string; className?: string }) {
+/** printed pieces on a light ground. The shadow is drawn here, with room
+ *  around it, so it is never cut at the edge */
+const SHADOW = '0 14px 28px rgba(25,40,50,.16), 0 2px 6px rgba(25,40,50,.10)';
+type Sheet = { src: string; alt: string; w: number; h: number; radius?: number };
+function Stage({ items, bg = '#F4F6F7', className = '', pad = 'clamp(28px, 6%, 64px)', gap = 'clamp(16px, 4%, 40px)' }: { items: Sheet[]; bg?: string; className?: string; pad?: string; gap?: string }) {
+  // grow in proportion to each sheet's width at a shared height; the narrowest counts as 1, so the row is always filled
+  const least = Math.min(...items.map((m) => m.w / m.h));
   return (
-    <div className={`overflow-hidden rounded-md flex items-center justify-center ${className}`} style={{ background: bg, padding: pad }}>
-      <img src={src} alt={alt} width={w} height={h} loading="lazy" decoding="async" draggable={false} className="block h-auto w-full max-h-full object-contain" style={{ aspectRatio: `${w}/${h}` }} />
+    <div className={`rounded-md flex items-center justify-center ${className}`} style={{ background: bg, padding: pad, gap }}>
+      {items.map((m) => (
+        <img key={m.src} src={m.src} alt={m.alt} width={m.w} height={m.h} loading="lazy" decoding="async" draggable={false}
+          className="block h-auto min-w-0" style={{ flex: `${m.w / m.h / least} 1 0%`, width: items.length > 1 ? undefined : '100%', aspectRatio: `${m.w}/${m.h}`, boxShadow: SHADOW, borderRadius: m.radius ?? 2 }} />
+      ))}
     </div>
   );
 }
@@ -198,7 +206,7 @@ function KitNotes() {
     [tx('Three months at once', 'სამი თვე ერთად'), tx('The wall calendar shows last, this and next month. A red frame slides to today, a yellow band marks the week.', 'კედლის კალენდარზე ერთად ჩანს წინა, მიმდინარე და შემდეგი თვე. წითელი ჩარჩო დღეზე გადაადგილდება, ყვითელი ზოლი კვირას აჩვენებს.')],
     [tx('Days worth marking', 'მნიშვნელოვანი დღეები'), tx('Twelve removable window stickers mark a date without hiding it. Weekends and holidays are green, each holiday named.', 'თორმეტი მოსახსნელი ფანჯრის სტიკერი თარიღს ნიშნავს და არ ფარავს. შაბათ-კვირა და უქმეები მწვანეა, უქმე სახელით.')],
     [tx('A notebook for the day', 'ბლოკნოტი ყოველდღისთვის'), tx('The year on the first spread, then a day plan: the one main thing, the hours, a checklist and notes.', 'პირველ გაშლაზე მთელი წელი, შემდეგ დღის გეგმა: დღის მთავარი, საათები, გასაკეთებელი და შენიშვნები.')],
-    [tx('Kept, not thrown away', 'შესანახი'), tx('The card tears into a bookmark, and the spine reads “Gagua 2027” on a shelf.', 'ბარათი სანიშნედ იხევა, ბლოკნოტის ზურგზე კი თაროზეც იკითხება „გაგუა 2027“.')],
+    [tx('Kept, not thrown away', 'შესანახი'), tx('The card’s side strip tears off into a bookmark, and the spine reads “Gagua 2027” on a shelf.', 'ბარათის გვერდითი ზოლი სანიშნედ იხევა, ბლოკნოტის ზურგზე კი თაროზეც იკითხება „გაგუა 2027“.')],
   ];
   return (
     <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6 content-start">
@@ -319,22 +327,25 @@ export function GaguaCase() {
             <img src={`${P}/kit-mockup.jpg`} alt={tx('The kit on a desk: wall calendar, open notebook with a bookmark, and the card', 'ნაკრები მაგიდაზე: კედლის კალენდარი, გაშლილი ბლოკნოტი სანიშნით და ბარათი')} loading="lazy" decoding="async" className="block h-full w-full object-cover" />
           </div>
           <div className="mx-auto w-full max-w-[1040px] flex flex-col gap-1.5">
-            <Stage src={`${P}/kit-wrap.jpg`} alt={tx('Notebook cover, opened flat: back, spine and front', 'ბლოკნოტის ყდა გაშლილი: უკანა მხარე, ზურგი და წინა მხარე')} w={953} h={650} />
+            <Stage items={[{ src: `${P}/kit-wrap.jpg`, alt: tx('Notebook cover, opened flat: back, spine and front', 'ბლოკნოტის ყდა გაშლილი: უკანა მხარე, ზურგი და წინა მხარე'), w: 907, h: 610 }]} pad="clamp(28px, 8%, 80px)" />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-              <Stage src={`${P}/kit-spread.jpg`} alt={tx('First spread: the year at a glance', 'პირველი გაშლა: მთელი წელი')} w={1007} h={726} pad="5%" />
-              <Stage src={`${P}/kit-plan.jpg`} alt={tx('Inside pages: notes and the day plan', 'შიდა გვერდები: ჩანაწერები და დღის გეგმა')} w={1007} h={726} pad="5%" />
+              <Stage items={[{ src: `${P}/kit-spread.jpg`, alt: tx('First spread: the year at a glance', 'პირველი გაშლა: მთელი წელი'), w: 893, h: 632 }]} />
+              <Stage items={[{ src: `${P}/kit-plan.jpg`, alt: tx('Inside pages: notes and the day plan', 'შიდა გვერდები: ჩანაწერები და დღის გეგმა'), w: 893, h: 632 }]} />
             </div>
-            <Stage src={`${P}/kit-card.jpg`} alt={tx('The card, front and back, and its tear-off bookmark', 'ბარათი, წინა და უკანა მხარე, და მოსახევი სანიშნე')} w={1411} h={442} pad="5% 4%" />
+            <Stage className="flex-col sm:flex-row" items={[
+              { src: `${P}/kit-card-front.jpg`, alt: tx('The card, front: the team at the clinic and a tear-off strip', 'ბარათი, წინა მხარე: გუნდი კლინიკასთან და მოსახევი ზოლი'), w: 836, h: 593 },
+              { src: `${P}/kit-card-back.jpg`, alt: tx('The card, back: the anniversary lettering and room to write', 'ბარათი, უკანა მხარე: იუბილეს ლეტერინგი და ადგილი წერისთვის'), w: 837, h: 593 },
+            ]} />
           </div>
         </section>
         <section className="px-1.5 pt-1.5">
           <div className="mx-auto w-full max-w-[1040px] grid grid-cols-1 md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.6fr)] gap-1.5">
-            <Stage src={`${P}/kit-calendar.jpg`} alt={tx('The wall calendar: three months under the anniversary drawing', 'კედლის კალენდარი: სამი თვე იუბილეს ილუსტრაციის ქვეშ')} w={474} h={1146} bg="#E8ECEE" pad="7% 12%" />
+            <Stage items={[{ src: `${P}/kit-calendar.jpg`, alt: tx('The wall calendar: three months under the anniversary drawing', 'კედლის კალენდარი: სამი თვე იუბილეს ილუსტრაციის ქვეშ'), w: 645, h: 1550 }]} pad="clamp(28px, 12%, 64px)" />
             <div className="flex flex-col gap-1.5">
-              <Stage src={`${P}/kit-january.jpg`} alt={tx('January 2027 up close: the red frame on today and a window sticker', 'იანვარი 2027 ახლოდან: წითელი ჩარჩო დღეზე და ფანჯრის სტიკერი')} w={1016} h={506} pad="4%" />
+              <Stage items={[{ src: `${P}/kit-january.jpg`, alt: tx('January 2027, one sheet: holidays green and named', 'იანვარი 2027, ერთი ფურცელი: უქმეები მწვანე, სახელით'), w: 1153, h: 545 }]} />
               <div className="flex-1 rounded-md bg-white border border-[#eee] p-5 sm:p-7 grid grid-cols-[minmax(0,1fr)_88px] sm:grid-cols-[minmax(0,1fr)_120px] gap-5 sm:gap-7">
                 <KitNotes />
-                <img src={`${P}/kit-stickers.jpg`} alt={tx('Sheet of twelve window stickers', 'თორმეტი ფანჯრის სტიკერის ფურცელი')} width={195} height={225} loading="lazy" decoding="async" className="w-full h-auto rounded-md self-start" />
+                <img src={`${P}/kit-stickers.jpg`} alt={tx('Sheet of twelve window stickers', 'თორმეტი ფანჯრის სტიკერის ფურცელი')} width={293} height={372} loading="lazy" decoding="async" className="w-full h-auto self-start" style={{ borderRadius: 8, boxShadow: SHADOW }} />
               </div>
             </div>
           </div>

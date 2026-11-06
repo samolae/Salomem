@@ -166,7 +166,7 @@ export function SocialCase({ d }: { d: SocialCaseData }) {
       <article className="pt-14 sm:pt-[52px] text-[#111]">
         {/* title and tags */}
         <header className="px-5 sm:px-8 pt-10 sm:pt-16 pb-6 sm:pb-8">
-          <Link to="/work/case-studies" className="inline-flex items-center gap-1.5 text-[13px] text-[#6f6f6f] hover:text-[#111] transition-colors"><ArrowLeft size={13} /> {tx('Case studies', 'ქეისები')}</Link>
+          <span aria-hidden />
           <h1 className="mt-6 text-[40px] sm:text-[72px] leading-[0.95] tracking-[-0.02em]" style={{ fontFamily: T.display, fontWeight: 900 }}>
             {d.brand}<span className="text-[#9a9a9a]">, {tx('Social Media', 'სოციალური მედია')}</span>
           </h1>

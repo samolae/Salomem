@@ -372,8 +372,8 @@ export function ScopeCase() {
   ];
   const facts: [string, string][] = [
     [tx('Client', 'კლიენტი'), 'Scope'],
-    [tx('Year', 'წელი'), '2024'],
-    [tx('Sector', 'სექტორი'), tx('Marketing agency', 'მარკეტინგული სააგენტო')],
+    [tx('Years', 'წლები'), '2024-2025'],
+    [tx('My role', 'ჩემი როლი'), tx('Art director', 'არტ დირექტორი')],
     [tx('Work', 'სამუშაო'), tx('Logo, identity, motion, social, web', 'ლოგო, იდენტობა, მოუშენი, სოც. მედია, ვები')],
   ];
   const reels = [
@@ -402,7 +402,7 @@ export function ScopeCase() {
         <header className="px-1.5">
           <div className="relative flex h-[calc(100svh-64px)] min-h-[520px] flex-col overflow-hidden rounded-[4px] text-white" style={{ background: INK }}>
             <div className="flex items-start justify-between p-4 sm:p-6 text-[13px]">
-              <Link to="/work/case-studies" className="inline-flex items-center gap-1.5 text-white/70 hover:text-white transition-colors"><ArrowLeft size={13} /> {tx('Case studies', 'ქეისები')}</Link>
+              <span aria-hidden />
               <span className="text-white/55">{tx('Logo design', 'ლოგოს დიზაინი')}</span>
             </div>
             <div className="flex flex-1 items-center justify-center px-[8%]">
@@ -415,6 +415,27 @@ export function ScopeCase() {
             </div>
           </div>
         </header>
+
+        {/* ── In short: who Scope is, and what of my work this case shows ── */}
+        <section className="px-1.5 pt-1.5">
+          <div className="rounded-[4px] bg-[#f4f4f2] px-5 py-14 sm:px-10 sm:py-20">
+            <div className="mx-auto grid max-w-[1100px] grid-cols-1 gap-x-10 gap-y-8 lg:grid-cols-12">
+              <p className="lg:col-span-5 text-[22px] sm:text-[26px] leading-[1.2] tracking-[-0.01em]" style={{ fontWeight: 600 }}>
+                {tx('A fast-growing marketing agency in Tbilisi, and its own brand.', 'სწრაფად მზარდი მარკეტინგული სააგენტო თბილისში და მისი საკუთარი ბრენდი.')}
+              </p>
+              <dl className="lg:col-span-6 lg:col-start-7 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6 text-[15px] leading-[1.55] text-[#3a3a3a]">
+                <div className="border-t border-black/10 pt-3">
+                  <dt className="text-[#111]" style={{ fontWeight: 600 }}>{tx('The agency', 'სააგენტო')}</dt>
+                  <dd className="mt-1.5">{tx('Scope sells results, not posts: strategy, content, video and ads for medium and large businesses. By its own count, 35+ people in one office and 250+ businesses served.', 'Scope შედეგს ყიდის და არა პოსტებს: სტრატეგია, კონტენტი, ვიდეო და რეკლამა საშუალო და დიდი ბიზნესისთვის. საკუთარი მონაცემებით, 35+ ადამიანი ერთ ოფისში და 250+ ბიზნესი.')}</dd>
+                </div>
+                <div className="border-t border-black/10 pt-3">
+                  <dt className="text-[#111]" style={{ fontWeight: 600 }}>{tx('My part', 'ჩემი წილი')}</dt>
+                  <dd className="mt-1.5">{tx('I was the agency’s art director. This case shows one part of that work: Scope’s own branding and social media design.', 'სააგენტოს არტ დირექტორი ვიყავი. ეს ქეისი ამ საქმის ერთ ნაწილს აჩვენებს: Scope-ის საკუთარ ბრენდინგსა და სოციალური მედიის დიზაინს.')}</dd>
+                </div>
+              </dl>
+            </div>
+          </div>
+        </section>
 
         {/* ── 01 Logo ──────────────────────────────────────────────────── */}
         <Mark no="01" name={tx('Logo', 'ლოგო')} line={tx('The o is a lens.', 'o ლინზაა.')} />

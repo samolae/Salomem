@@ -523,10 +523,10 @@ export function SchenkerCaseStudy() {
               </p>
               <dl className="lg:col-span-5 lg:col-start-8 grid grid-cols-2 gap-x-6 gap-y-5 self-end">
                 {[
-                  ['Discipline', 'UI/UX Design'],
+                  ['Year', '2023'],
+                  ['My role', 'UI/UX Designer'],
                   ['Domain', 'Enterprise logistics'],
                   ['Platform', 'Desktop app'],
-                  ['Focus', 'Form systems'],
                 ].map(([k, v]) => (
                   <div key={k} className={`border-t ${RULE} pt-3`}>
                     <dt className={`${LABEL} text-[#8C8FA0]`}>{k}</dt>
@@ -534,6 +534,25 @@ export function SchenkerCaseStudy() {
                   </div>
                 ))}
               </dl>
+            </div>
+
+            {/* where the error risk comes from: the typical shipping slips, from industry sources, and the screen that answers each */}
+            <div className="sk-rise sk-d3 mt-12 lg:mt-16 border-t border-white/[0.06] pt-6">
+              <div className={`${LABEL} text-[#8C8FA0]`}>Where shipments usually go wrong, and the answer in the design</div>
+              <dl className="mt-5 grid gap-x-10 gap-y-5 sm:grid-cols-2 lg:grid-cols-4 text-[14px] leading-[1.55]">
+                {[
+                  ['Addresses', 'Typos, a missing unit, the wrong party. Sender and receiver each get their own step.'],
+                  ['Weight and size', 'Guessed figures mean surcharges. Packages and pallets have a step of their own.'],
+                  ['Labels', 'An incomplete label can lose a parcel. Labels are generated in the app from the shipment itself.'],
+                  ['Documents', 'Missing details on a waybill delay it. Packing lists and waybills share one table view to review.'],
+                ].map(([k, v]) => (
+                  <div key={k}>
+                    <dt className="text-[#E6E7EB]">{k}</dt>
+                    <dd className="mt-1 text-[#A9ACB9]">{v}</dd>
+                  </div>
+                ))}
+              </dl>
+              <p className={`mt-5 ${CAPTION}`}>Typical errors: <a href="https://www.netsuite.com/portal/resource/articles/erp/prevent-shipping-errors.shtml" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-white">NetSuite, How to prevent shipping errors</a>. The client's own error figures were not measured in this project.</p>
             </div>
 
             <div className="sk-screen sk-d4 mt-14 lg:mt-20">
@@ -554,7 +573,7 @@ export function SchenkerCaseStudy() {
             <ol className="grid gap-x-12 md:grid-cols-2">
               {[
                 { step: 'Hook', number: '00.1', text: 'What if enterprise logistics software could feel intuitive, not like a spreadsheet with buttons?' },
-                { step: 'Friction', number: '00.2', text: 'Schenker\'s internal tools drowned operators in form complexity, scattered workflows, and inconsistent UI patterns. The tool was slow to learn and easy to get wrong.' },
+                { step: 'Friction', number: '00.2', text: 'Schenker\'s internal tools drowned operators in form complexity, scattered workflows, and inconsistent UI patterns. The tool was slow to learn and easy to get wrong, and in shipping the usual slips are costly: a mistyped address or postcode, a wrong weight or size, an incomplete label or waybill.' },
                 { step: 'Pivot', number: '00.3', text: 'We unified shipment creation, label management, and settings into one coherent design language, progressive disclosure over cognitive overload.' },
                 { step: 'Proof', number: '00.4', text: 'Desktop-first enterprise platform. Streamlined multi-step forms. Contextual help system. One design system for the entire logistics workflow.' },
               ].map((item, i) => (

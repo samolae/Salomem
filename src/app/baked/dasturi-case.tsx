@@ -167,7 +167,7 @@ export function DasturiCase() {
   const facts: [string, string][] = [
     [tx('Client', 'კლიენტი'), tx('Dasturi', 'დასტური')],
     [tx('Year', 'წელი'), '2026'],
-    [tx('Service', 'სერვისი'), tx('Logo, labels, packaging', 'ლოგო, ეტიკეტები, შეფუთვა')],
+    [tx('My role', 'ჩემი როლი'), tx('Brand identity: mark, labels, packaging', 'ბრენდის იდენტობა: ნიშანი, ეტიკეტები, შეფუთვა')],
     [tx('Varietals', 'ჯიშები'), tx('Saperavi, Manavi Mtsvane, Kisi, Satsuri, Tsolikouri', 'საფერავი, მანავის მწვანე, ქისი, საწური, ცოლიკაური')],
   ];
 
@@ -191,9 +191,7 @@ export function DasturiCase() {
           {/* ── Hero: the ibex in chrome ─────────────────────────────── */}
           <header className="relative min-h-[calc(100svh-64px)] flex flex-col">
             <Wrap className="flex items-start justify-between pt-6 sm:pt-8 text-[13px]">
-              <Link to="/work/case-studies" className="inline-flex items-center gap-1.5 text-white/50 hover:text-white transition-colors">
-                <ArrowLeft size={13} /> {tx('Case studies', 'ქეისები')}
-              </Link>
+              <span aria-hidden />
               <span className="hidden sm:inline text-white/35">{tx('Brand identity', 'ბრენდის იდენტობა')}</span>
             </Wrap>
             <div className="flex-1 flex items-center justify-center px-6 py-10">
@@ -228,6 +226,7 @@ export function DasturiCase() {
                 {tx('The mark is a Caucasian ibex: calm, proud stance, rounded horns.', 'ნიშნად ავირჩიეთ კავკასიური ჯიხვი: მშვიდი, ამაყი დგომით და მომრგვალებული რქებით.')}
               </p>
               <div className="lg:col-start-4 lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6">
+                <Col className="!max-w-none">{tx('The brief: branding for a new wine company. It already knew its character and its animal, the Caucasian ibex. Everything else is mine: the mark, the wordmark, the label system and the packaging.', 'ბრიფი: ბრენდინგი ახალი ღვინის კომპანიისთვის. კომპანიამ ზუსტად იცოდა თავისი ხასიათი და ცხოველი, კავკასიური ჯიხვი. დანარჩენი მე შევქმენი: ნიშანი, სიტყვანიშანი, ეტიკეტების სისტემა და შეფუთვა.')}</Col>
                 <Col className="!max-w-none">{tx('A gold panel, a black frame and a red cross turn five varietals into one family, while each keeps the colour of its wine.', 'ოქროსფერი პანელი, შავი არშია და წითელი ჯვარი ხუთ ჯიშს ერთ ოჯახად აერთიანებს, თითოეული კი თავისი ღვინის ფერს ინარჩუნებს.')}</Col>
               </div>
             </div>

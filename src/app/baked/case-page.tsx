@@ -40,9 +40,7 @@ function CaseBody({ c }: { c: CaseStudy }) {
 
       {/* Title */}
       <header className="px-5 pt-28 pb-12 sm:pt-36 sm:pb-16 flex flex-col items-center text-center">
-        <Link to="/work/ux-ui" className="mb-8 inline-flex items-center gap-1.5 text-[14px] text-[#6f6f6f] hover:text-[#d93905] transition-colors">
-          <ArrowLeft size={14} /> UX/UI case studies
-        </Link>
+        <span aria-hidden />
         <div className="text-[14px] text-[#d93905] mb-4">Case study · {c.year}</div>
         <h1 className="text-[44px] sm:text-[88px] leading-[0.95] tracking-[-0.01em] text-[#111]" style={{ fontFamily: T.display, fontWeight: 900 }}>
           {c.title}{dot}

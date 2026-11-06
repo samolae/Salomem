@@ -276,9 +276,7 @@ export function FitmealCase() {
           {/* ── Hero ─────────────────────────────────────────────────── */}
           <header className="relative">
             <Wrap className="flex items-start justify-between pt-6 sm:pt-8 text-[13px]">
-              <Link to="/work/case-studies" className="inline-flex items-center gap-1.5 text-[#0E4B48]/55 hover:text-[#0E4B48] transition-colors">
-                <ArrowLeft size={13} /> {tx('Case studies', 'ქეისები')}
-              </Link>
+              <span aria-hidden />
               <span className="rounded-full bg-white px-3 py-1 text-[12px] ring-1 ring-inset ring-[#0E4B48]/10">{tx('AI campaign', 'AI კამპანია')}</span>
             </Wrap>
             <Wrap className="pt-14 sm:pt-20">

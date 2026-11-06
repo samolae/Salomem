@@ -560,11 +560,13 @@ export function AurumCaseStudy() {
         <section aria-label="In short" className="border-b border-white/[0.06]">
           <div className={`${CONTAINER} py-14 md:py-20`}>
             <div className={`mb-8 ${T.label}`}>In short</div>
-            <dl lang="en" className="grid grid-cols-1 gap-x-10 gap-y-8 md:grid-cols-3">
+            <dl lang="en" className="grid grid-cols-1 gap-x-10 gap-y-8 md:grid-cols-3 xl:grid-cols-5">
               {[
                 ['Problem', 'Crypto trading felt cluttered and unsafe: new users stalled, experienced traders lost time switching between features.'],
                 ['Key flow', 'Verification. A long, opaque KYC step was split into a guided sequence, one action per screen, with security status shown at every step.'],
                 ['What shipped', 'Onboarding and KYC, trading, portfolio and transfers on mobile first, built on one design system of 64+ components.'],
+                ['My role', 'UI/UX designer in a large team, the link between the PM, the client and the developers through every round of decisions.'],
+                ['Where it stands', 'Launching now. Usability testing comes after launch; the first real use will show where verification still stalls.'],
               ].map(([k, v]) => (
                 <div key={k} className="border-t border-white/10 pt-4">
                   <dt className={T.h3} style={HEAD}>{k}</dt>

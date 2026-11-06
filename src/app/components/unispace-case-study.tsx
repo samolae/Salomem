@@ -345,10 +345,10 @@ const CHALLENGES = [
 ];
 
 const PHASES = [
-  { phase: 'Phase 01', weeks: 'Weeks 1-2',   title: 'Discover', items: ['Stakeholder interviews (Unilab team, 4 sessions)', 'Competitive audit of EdTech learning platforms, student portals, and online portfolio tools', 'Technical spec analysis', 'User role mapping (student, lecturer, admin)', '17 edge cases identified and documented'] },
+  { phase: 'Phase 01', weeks: 'Weeks 1-2',   title: 'Discover', items: ['Stakeholder interviews with the Unilab team', 'Competitive audit of EdTech learning platforms, student portals, and online portfolio tools', 'Technical spec analysis', 'User role mapping (student, lecturer, admin)', '17 edge cases identified and documented'] },
   { phase: 'Phase 02', weeks: 'Weeks 3-4',   title: 'Define',   items: ['Information architecture (3 role-specific IA maps)', 'User flow mapping per role (9 flows total)', 'Conditional form logic matrix', 'State inventory: 12 states per key screen', 'Design principles established'] },
   { phase: 'Phase 03', weeks: 'Weeks 5-10',  title: 'Design',   items: ['Lo-fi wireframes (42 screens)', 'Dark design system, 38+ components built', 'High-fidelity screens (42 total, 3 roles)', 'Micro-interactions prototyped for key flows', 'Responsive adaptation (1440 / 768 / 375px)'] },
-  { phase: 'Phase 04', weeks: 'Weeks 11-12', title: 'Deliver',  items: ['Usability testing: 8 participants, 2 rounds', '14 issues identified, 11 resolved pre-handoff', 'Dev handoff with Figma annotations', 'Component spec documentation', 'Design QA with engineering team'] },
+  { phase: 'Phase 04', weeks: 'Weeks 11-12', title: 'Deliver',  items: ['Dev handoff with Figma annotations', 'Component spec documentation', 'Design QA with engineering team'] },
 ];
 
 const PRACTICES = [
@@ -394,8 +394,8 @@ const COLOR_GROUPS = [
 
 const OUTCOMES = [
   { title: '3 Roles Live',             body: 'Student, Lecturer, and Admin dashboards fully designed, documented, and handed off to development.' },
-  { title: '11 of 14 Issues Resolved', body: 'Two rounds of usability testing with 8 participants. 14 friction points identified; 11 resolved before final handoff.' },
-  { title: '38+ Component Library',    body: 'Reusable, documented component library with full state coverage. Reduced dev estimation time by ~30%.' },
+  { title: 'One Place for Information', body: 'Projects, documents, statuses and certificates that used to live in different places now sit in one work platform, each role seeing its own part.' },
+  { title: '38+ Component Library',    body: 'Reusable, documented component library with full state coverage.' },
   { title: '42 Screens Delivered',     body: 'From registration to portfolio, every screen for every role across three breakpoints (1440 / 768 / 375px).' },
   { title: 'Clean Figma Handoff',      body: 'Full Figma annotations, component specs, spacing tokens, and interaction notes. Engineers had everything they needed on day one.' },
   { title: '17 Edge Cases Covered',    body: 'Every form state, empty state, loading state, error state, and conditional path documented and designed before handoff.' },
@@ -414,7 +414,7 @@ const REFLECTION = [
   {
     label: "What I'd do differently",
     items: [
-      'Run usability testing earlier, Week 5 instead of Week 11, to catch friction before high-fidelity production',
+      'Plan usability testing into the project, so friction is caught before high-fidelity production',
       'Design mobile-first instead of adapting from desktop; the 375px breakpoint required more rework than expected',
       'Involve an admin user earlier in the research phase, most insights came from students and lecturers',
       'Create a more detailed motion spec alongside the component library for better dev alignment',
@@ -601,9 +601,9 @@ export function UnispaceCaseStudy() {
                 </div>
                 <dl className={`divide-y ${isDark ? 'divide-white/[0.06]' : 'divide-zinc-200'}`}>
                   {[
-                    { label: 'Challenge', value: 'Three roles, one system, zero compromises' },
+                    { label: 'Challenge', value: 'Information lived in many places; students, lecturers and admins needed one work platform' },
                     { label: 'Role',      value: 'Lead UX/UI · 12 weeks · 42+ screens · 38+ components' },
-                    { label: 'Impact',    value: '~60% fewer handoff tickets · 0 design-QA issues on form components post-launch' },
+                    { label: 'Delivered', value: 'Every flow for all three roles, a documented component library and a full Figma handoff' },
                   ].map((row) => (
                     <div key={row.label} className="grid gap-1 sm:grid-cols-[160px_1fr] sm:gap-6 px-6 lg:px-8 py-5">
                       <dt className={`text-[12px] uppercase tracking-[0.14em] sm:pt-1 ${t.muted}`}>{row.label}</dt>
@@ -849,9 +849,9 @@ export function UnispaceCaseStudy() {
                 </dl>
               </div>
               <div className={`border-t ${t.line} p-6 md:p-8 lg:px-10 grid gap-8 sm:grid-cols-3`}>
-                <Stat n="~60%" label="Fewer handoff clarification tickets" />
-                <Stat n="12 wks" label="Total timeline · vs. 16-18 typical for scope" />
-                <Stat n="0" label="Design QA issues on form components post-launch" />
+                <Stat n="42+" label="Screens handed off with annotations" />
+                <Stat n="12 wks" label="Research to handoff" />
+                <Stat n="38+" label="Components mapped 1:1 to code" />
               </div>
             </div>
           </Rise>
@@ -1353,16 +1353,16 @@ export function UnispaceCaseStudy() {
           <ChapterHeader
             number="07"
             label="Outcome"
-            lines={['Delivered, tested,', 'and handed off']}
-            intro="Unispace launched as an active internal platform for Unilab students and staff. All three user roles went live with complete flows, tested with real users before handoff."
+            lines={['One place,', 'every role']}
+            intro="Before Unispace, the information students, lecturers and administrators needed was spread across different places. Unispace brings it into one work platform, with complete flows for all three roles."
           />
 
           <Rise>
             <div className={`rounded-2xl border p-6 md:p-8 lg:p-10 grid grid-cols-2 md:grid-cols-4 gap-8 ${t.surface}`}>
-              <Stat size="lg" n="8" label="Test Participants" />
-              <Stat size="lg" n="2" label="Testing Rounds" />
-              <Stat size="lg" n="14" label="Issues Found" />
-              <Stat size="lg" n="11" label="Resolved Pre-Handoff" />
+              <Stat size="lg" n="3" label="Roles in one platform" />
+              <Stat size="lg" n="9" label="UX flows" />
+              <Stat size="lg" n="42+" label="Screens" />
+              <Stat size="lg" n="17" label="Edge cases designed" />
             </div>
           </Rise>
 

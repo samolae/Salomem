@@ -377,6 +377,8 @@ export function CaseStudiesContent({ initialTag }: { initialTag?: string }) {
 /** the problem each case solved, in one line, taken from the case's own brief */
 const SOLVED: Record<string, [string, string]> = {
   '/projects/dasturi': ['Five varietals had to read as one family on the shelf.', 'ხუთი ჯიში თაროზე ერთ ოჯახად უნდა წაკითხულიყო.'],
+  '/projects/gv-capital': ['A holding growing in many directions, each looking like the same company from day one.', 'ბევრი მიმართულებით მზარდი ჰოლდინგი, სადაც თითო მიმართულება პირველივე დღიდან ერთ კომპანიად იკითხება.'],
+  '/projects/scope': ['A fast-growing agency that needed its own brand to look as sharp as its clients’.', 'სწრაფად მზარდი სააგენტო, რომლის საკუთარი ბრენდიც კლიენტებისას არ უნდა ჩამოუვარდებოდეს.'],
   '/projects/gagua': ['Many services, each with its own voice, still had to read as one clinic.', 'ბევრი სერვისი, თითო თავისი ხმით, მაინც ერთ კლინიკად უნდა წაკითხულიყო.'],
   '/projects/zummo': ['Talk margin and payback without losing what sells the machine.', 'მოგებასა და ამოგებაზე საუბარი ისე, რომ აპარატის მთავარი ხიბლი არ დაიკარგოს.'],
   '/projects/fitmeal': ['A season of spring settings without days of shoots.', 'გაზაფხულის ბევრი გარემო, გადაღების დღეების გარეშე.'],
@@ -387,7 +389,7 @@ const SOLVED: Record<string, [string, string]> = {
   '/projects/terminal': ['A discount every month, without looking like a flyer.', 'ყოველთვიური ფასდაკლება ისე, რომ ფლაერს არ დაემსგავსოს.'],
   '/projects/aurum': ['Crypto trading that feels calm and safe to a first-time investor.', 'კრიპტოვაჭრობა, რომელიც დამწყებ ინვესტორს მშვიდად და უსაფრთხოდ ეჩვენება.'],
   '/projects/schenker': ['Dense shipment forms turned into a clear step-by-step flow.', 'რთული გადაზიდვის ფორმები, ნაბიჯ-ნაბიჯ გასაგებ ნაკადად.'],
-  '/projects/unispace': ['Students, lecturers and admins in one product, none of them crowded.', 'სტუდენტები, ლექტორები და ადმინისტრაცია ერთ პროდუქტში, ისე რომ არცერთს არ შეეშალოს ხელი.'],
+  '/projects/unispace': ['One work platform, so information no longer lives in many places.', 'ერთი სამუშაო პლატფორმა, რომ ინფორმაცია აღარ იყოს მიმოფანტული.'],
 };
 
 function StudyCardOf({ x, prefix }: { x: Study; prefix: string }) {

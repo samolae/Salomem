@@ -482,7 +482,7 @@ export function GvCase() {
         <header className="px-1.5">
           <div className="relative flex min-h-[calc(100svh-64px)] flex-col overflow-hidden rounded-[10px] text-white" style={{ background: `linear-gradient(180deg, #1d2730 0%, ${B.midnight} 55%, #0f171c 100%)` }}>
             <Wrap className="flex items-start justify-between pt-6 sm:pt-8 text-[13px]">
-              <Link to="/work/case-studies" className="inline-flex items-center gap-1.5 text-white/60 hover:text-white transition-colors"><ArrowLeft size={13} /> {tx('Case studies', 'ქეისები')}</Link>
+              <span aria-hidden />
               <a href={LIVE} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[12px] uppercase tracking-[0.12em] hover:bg-white/15" style={{ background: 'rgba(255,255,255,0.08)', fontFamily: TITLE, fontWeight: 500 }}>{tx('Live guidelines', 'ცოცხალი გაიდლაინი')} <ArrowUpRight size={12} /></a>
             </Wrap>
             <Wrap className="mt-auto pb-8 sm:pb-10">
@@ -511,6 +511,36 @@ export function GvCase() {
 
         {/* the brand film at its own size */}
         <section className="px-1.5 pt-1.5"><div className="rounded-[10px] py-10 sm:py-14" style={{ background: B.paper }}><Wrap><Row items={[m.cover]} onOpen={setOpen} /></Wrap></div></section>
+
+        {/* ── In short: the brief, and the system at work once, before the long read ── */}
+        <section className="px-1.5 pt-1.5">
+          <div className="rounded-[10px] bg-white py-16 sm:py-24">
+            <Wrap>
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-8 gap-y-10">
+                <div className="lg:col-span-4">
+                  <div className="text-[11px] uppercase tracking-[0.14em] text-[#5b6b73]" style={{ fontFamily: TITLE, fontWeight: 500 }}>{tx('In short', 'მოკლედ')}</div>
+                  <p className="mt-4 text-[22px] sm:text-[26px] leading-[1.2] tracking-[-0.01em] text-[#16212a]" style={{ fontFamily: TITLE, fontWeight: 600 }}>
+                    {tx('Brand guidelines for a holding that plans to work in many directions.', 'ბრენდის გაიდლაინი ჰოლდინგისთვის, რომელიც ბევრი მიმართულებით გეგმავს მუშაობას.')}
+                  </p>
+                </div>
+                <dl className="lg:col-span-7 lg:col-start-6 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6 text-[15px] leading-[1.55] text-[#3b4950]">
+                  <div className="border-t border-[#16212a]/10 pt-3">
+                    <dt className="text-[#16212a]" style={{ fontWeight: 600 }}>{tx('The brief', 'ბრიფი')}</dt>
+                    <dd className="mt-1.5">{tx('GV Capital starts with industrial and logistics space, and more directions are planned. Each one needs to look like the same holding from day one.', 'GV Capital იწყებს ინდუსტრიული და ლოჯისტიკური სივრცით, დაგეგმილია სხვა მიმართულებებიც. თითოეული პირველივე დღიდან ერთი ჰოლდინგის ნაწილად უნდა იკითხებოდეს.')}</dd>
+                  </div>
+                  <div className="border-t border-[#16212a]/10 pt-3">
+                    <dt className="text-[#16212a]" style={{ fontWeight: 600 }}>{tx('What it makes simple', 'რას ამარტივებს')}</dt>
+                    <dd className="mt-1.5">{tx('A new project takes the mark, the colours, the interval and the page from the live guidelines, so the team adds a place, not a new look.', 'ახალი პროექტი ნიშანს, ფერებს, ინტერვალსა და გვერდს ცოცხალი გაიდლაინიდან იღებს, ასე რომ გუნდი ამატებს ახალ ადგილს და არა ახალ სახეს.')}</dd>
+                  </div>
+                </dl>
+              </div>
+              <div className="mt-10">
+                <div className="mb-3 text-[13px] text-[#5b6b73]">{tx('One use: three projects, one frame', 'ერთი გამოყენება: სამი პროექტი, ერთი ჩარჩო')}</div>
+                <Row items={[m.lilo, m.phonichala, m.teleti]} onOpen={setOpen} />
+              </div>
+            </Wrap>
+          </div>
+        </section>
 
         <Band tone="white" no="01" name={tx('The brand', 'ბრენდი')} title={tx('Space for projects, partners and growth.', 'სივრცე პროექტებისთვის, პარტნიორებისა და ზრდისთვის.')}
           lead={tx('GV Capital is an investment and development holding. It starts with industrial and logistics space in Georgia.', 'GV Capital საინვესტიციო და განვითარების ჰოლდინგია. იწყებს ინდუსტრიული და ლოჯისტიკური სივრცით საქართველოში.')}

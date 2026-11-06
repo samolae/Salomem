@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Link } from 'react-router';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { SEO } from '../components/seo';
-import { BakedShell } from './shell';
+import { BakedShell, useMotionPause } from './shell';
 import { CtaLink, Reveal, T } from './ui';
 import { useI18n } from './i18n';
 import { MoreCases } from './case-studies';
@@ -164,6 +164,40 @@ function Stage({ items, bg = '#F4F6F7', className = '' }: { items: Sheet[]; bg?:
   );
 }
 
+/** the kit's mockups on one line, running slowly sideways; a pointer on it holds it still */
+function MockStrip() {
+  const { tx } = useI18n();
+  const { paused } = useMotionPause();
+  const shots: [string, string][] = [
+    ['mock-notebook-held', tx('The notebook held close', 'ბლოკნოტი ხელში')],
+    ['mock-calendar-green', tx('The wall calendar held against the clinic green', 'კედლის კალენდარი კლინიკის მწვანეზე')],
+    ['mock-card', tx('The card, front and back, and the strip torn off into a bookmark', 'ბარათი, წინა და უკანა მხარე, და სანიშნედ მოხეული ზოლი')],
+    ['mock-calendar-wall', tx('The calendar on the wall above a desk', 'კალენდარი კედელზე, მაგიდის ზემოთ')],
+    ['mock-spread-held', tx('The notebook open on the year at a glance', 'ბლოკნოტი გაშლილი მთელი წლის გვერდზე')],
+  ];
+  return (
+    <div className="gk-strip overflow-hidden rounded-md" aria-label={tx('Mockups of the kit', 'ნაკრების მოქაფები')}>
+      <div className="gk-run flex w-max" style={{ animationPlayState: paused ? 'paused' : undefined }}>
+        {[0, 1].map((copy) => (
+          <div key={copy} className="flex gap-1.5 pr-1.5" aria-hidden={copy === 1 || undefined}>
+            {shots.map(([n, alt]) => (
+              <img key={n} src={`${P}/${n}.jpg`} alt={copy ? '' : alt} width={1195} height={1800} loading="lazy" decoding="async" draggable={false}
+                className="gk-shot block w-auto rounded-md object-cover" />
+            ))}
+          </div>
+        ))}
+      </div>
+      <style>{`
+        .gk-shot { height: clamp(300px, 42vw, 440px); aspect-ratio: 1195 / 1800; }
+        .gk-run { animation: gk-run 48s linear infinite; }
+        .gk-strip:hover .gk-run { animation-play-state: paused; }
+        @keyframes gk-run { to { transform: translateX(-50%); } }
+        @media (prefers-reduced-motion: reduce) { .gk-run { animation: none; } .gk-strip { overflow-x: auto; } }
+      `}</style>
+    </div>
+  );
+}
+
 /** the New Year kit: what each piece is for, in a few words */
 function KitNotes() {
   const { tx } = useI18n();
@@ -289,20 +323,7 @@ export function GaguaCase() {
         <section className="px-1.5">
           <div className="mx-auto w-full max-w-[1040px] flex flex-col gap-1.5">
             {/* the pieces in use, in the clinic's own green and yellow, under one hard, direct light */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
-              {([
-                ['mock-notebook-held', tx('The notebook held close', 'ბლოკნოტი ხელში')],
-                ['mock-notebook-yellow', tx('The notebook on yellow, with window stickers on the cover', 'ბლოკნოტი ყვითელზე, ყდაზე ფანჯრის სტიკერებით')],
-                ['mock-calendar-green', tx('The wall calendar held against the clinic green', 'კედლის კალენდარი კლინიკის მწვანეზე')],
-                ['mock-card', tx('The card, front and back, and the strip torn off into a bookmark', 'ბარათი, წინა და უკანა მხარე, და სანიშნედ მოხეული ზოლი')],
-                ['mock-calendar-wall', tx('The calendar on the wall above a desk', 'კალენდარი კედელზე, მაგიდის ზემოთ')],
-                ['mock-spread-held', tx('The notebook open on the year at a glance', 'ბლოკნოტი გაშლილი მთელი წლის გვერდზე')],
-              ] as [string, string][]).map(([n, alt]) => (
-                <div key={n} className="overflow-hidden rounded-md bg-[#f2f2f2]" style={{ aspectRatio: '1195/1800' }}>
-                  <img src={`${P}/${n}.jpg`} alt={alt} loading="lazy" decoding="async" draggable={false} className="block h-full w-full object-cover" />
-                </div>
-              ))}
-            </div>
+            <MockStrip />
             <Stage items={[
               { src: `${P}/kit-wrap.jpg`, alt: tx('Notebook cover, opened flat: back, spine and front', 'ბლოკნოტის ყდა გაშლილი: უკანა მხარე, ზურგი და წინა მხარე'), w: 907, h: 610 },
               { src: `${P}/kit-plan.jpg`, alt: tx('Inside pages: notes and the day plan', 'შიდა გვერდები: ჩანაწერები და დღის გეგმა'), w: 893, h: 632 },

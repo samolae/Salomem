@@ -185,12 +185,53 @@ function restack(g: Geo, plan: ReturnType<typeof layout>, pool: Item[], els: HTM
   plan.cols.forEach((c, i) => { c.L = ys[i]; });
 }
 
+/*
+ * A still taken at a fixed point of a reel can land on a blank transition or
+ * an end slate, which reads as a tile that never loaded. Each reel's still is
+ * checked once in a tiny copy; if it is one flat colour the next point is tried.
+ */
+const OFFSETS = ['35p', '60p', '20p', '80p', '50p', '10p'];
+const flat = (img: HTMLImageElement) => {
+  try {
+    const c = document.createElement('canvas'); c.width = 12; c.height = 20;
+    const x = c.getContext('2d', { willReadFrequently: true }); if (!x) return false;
+    x.drawImage(img, 0, 0, 12, 20);
+    const d = x.getImageData(0, 0, 12, 20).data;
+    let sum = 0, sq = 0; const n = d.length / 4;
+    for (let i = 0; i < d.length; i += 4) { const l = d[i] * 0.3 + d[i + 1] * 0.59 + d[i + 2] * 0.11; sum += l; sq += l * l; }
+    const mean = sum / n; return Math.sqrt(sq / n - mean * mean) < 9; // almost no detail
+  } catch { return false; } // cannot read it: keep it
+};
+function useLiveStills(pool: Item[]) {
+  const [stills, setStills] = useState<Record<string, string>>({});
+  useEffect(() => {
+    let alive = true;
+    const reels = [...new Set(pool.filter((p) => p.video && p.fullVideo).map((p) => p.full))];
+    reels.forEach((full) => {
+      const tryAt = (k: number) => {
+        if (k >= OFFSETS.length || !alive) return;
+        const probe = new Image(); probe.crossOrigin = 'anonymous';
+        probe.onload = () => {
+          if (!alive) return;
+          if (flat(probe)) tryAt(k + 1);
+          else setStills((m) => ({ ...m, [full]: videoFrame(full, OFFSETS[k], 600) }));
+        };
+        probe.src = videoFrame(full, OFFSETS[k], 60);
+      };
+      tryAt(0);
+    });
+    return () => { alive = false; };
+  }, [pool]);
+  return stills;
+}
+
 const clamp = (v: number) => Math.max(0, Math.min(1, v));
 const smooth = (v: number) => v * v * (3 - 2 * v);
 
 export function HeroCanvas() {
   const { tx, ka } = useI18n();
   const pool = usePool();
+  const stills = useLiveStills(pool);
   const [open, setOpen] = useState<number | null>(null);
   const lightbox: LightboxItem[] = useMemo(() => pool.map((t) => ({
     src: t.full, video: t.fullVideo, alt: brandName(t.brand, ka), brand: brandName(t.brand, ka), logo: t.logo,
@@ -407,7 +448,7 @@ export function HeroCanvas() {
                   style={{ width: g.W, height: sl.h, visibility: 'hidden', opacity: 0 }}
                 >
                   {it.video ? (
-                    <video src={it.video} poster={it.src} muted loop playsInline preload="none" aria-hidden className="pointer-events-none h-full w-full object-cover" style={{ filter: 'saturate(1.22) brightness(0.95) contrast(1.03)' }} />
+                    <video src={it.video} poster={stills[it.full] ?? it.src} muted loop playsInline preload="none" aria-hidden className="pointer-events-none h-full w-full object-cover" style={{ filter: 'saturate(1.22) brightness(0.95) contrast(1.03)' }} />
                   ) : (
                     <img {...IMG.tileLarge(it.src)} alt="" loading={g.mobile ? 'eager' : 'lazy'} decoding="async" draggable={false}
                       // no grey box while it loads: the picture fades in once it is there

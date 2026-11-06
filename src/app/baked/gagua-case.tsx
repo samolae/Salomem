@@ -288,19 +288,19 @@ export function GaguaCase() {
         </Chapter>
         <section className="px-1.5">
           <div className="mx-auto w-full max-w-[1040px] flex flex-col gap-1.5">
-            <div className="overflow-hidden rounded-md" style={{ aspectRatio: '2000/985' }}>
-              <img src={`${P}/kit-mockup.jpg`} alt={tx('The kit on a desk: wall calendar, open notebook with a bookmark, and the card', 'ნაკრები მაგიდაზე: კედლის კალენდარი, გაშლილი ბლოკნოტი სანიშნით და ბარათი')} loading="lazy" decoding="async" className="block h-full w-full object-cover" />
-            </div>
-            <Stage items={[
-              { src: `${P}/kit-calendar.jpg`, alt: tx('The wall calendar: three months under the anniversary drawing', 'კედლის კალენდარი: სამი თვე იუბილეს ილუსტრაციის ქვეშ'), w: 645, h: 1550 },
-              { src: `${P}/kit-wrap.jpg`, alt: tx('Notebook cover, opened flat: back, spine and front', 'ბლოკნოტის ყდა გაშლილი: უკანა მხარე, ზურგი და წინა მხარე'), w: 907, h: 610 },
-              { src: `${P}/kit-spread.jpg`, alt: tx('First spread: the year at a glance', 'პირველი გაშლა: მთელი წელი'), w: 893, h: 632 },
-              { src: `${P}/kit-plan.jpg`, alt: tx('Inside pages: notes and the day plan', 'შიდა გვერდები: ჩანაწერები და დღის გეგმა'), w: 893, h: 632 },
+            {/* the pieces in use: one light, one surface, the same sun across every shot */}
+            <Row items={[
+              im('mock-notebook', 2200, 1244, tx('The notebook on a travertine table in the morning sun', 'ბლოკნოტი ტრავერტინის მაგიდაზე, დილის მზეზე')),
+              im('mock-calendar', 1760, 2200, tx('The wall calendar on a plaster wall, the red frame on today', 'კედლის კალენდარი თაბაშირის კედელზე, წითელი ჩარჩო დღეზე')),
+            ]} />
+            <Row items={[
+              im('mock-card', 2200, 1244, tx('The card, front and back, its strip torn off into a bookmark', 'ბარათი, წინა და უკანა მხარე, ზოლი სანიშნედ მოხეული')),
+              im('mock-spread', 2200, 1244, tx('The notebook open on the year at a glance', 'ბლოკნოტი გაშლილი მთელი წლის გვერდზე')),
             ]} />
             <Stage items={[
+              { src: `${P}/kit-wrap.jpg`, alt: tx('Notebook cover, opened flat: back, spine and front', 'ბლოკნოტის ყდა გაშლილი: უკანა მხარე, ზურგი და წინა მხარე'), w: 907, h: 610 },
+              { src: `${P}/kit-plan.jpg`, alt: tx('Inside pages: notes and the day plan', 'შიდა გვერდები: ჩანაწერები და დღის გეგმა'), w: 893, h: 632 },
               { src: `${P}/kit-january.jpg`, alt: tx('January 2027, one sheet: holidays green and named', 'იანვარი 2027, ერთი ფურცელი: უქმეები მწვანე, სახელით'), w: 1153, h: 545 },
-              { src: `${P}/kit-card-front.jpg`, alt: tx('The card, front: the team at the clinic and a tear-off strip', 'ბარათი, წინა მხარე: გუნდი კლინიკასთან და მოსახევი ზოლი'), w: 836, h: 593 },
-              { src: `${P}/kit-card-back.jpg`, alt: tx('The card, back: the anniversary lettering and room to write', 'ბარათი, უკანა მხარე: იუბილეს ლეტერინგი და ადგილი წერისთვის'), w: 837, h: 593 },
               { src: `${P}/kit-stickers.jpg`, alt: tx('Sheet of twelve window stickers', 'თორმეტი ფანჯრის სტიკერის ფურცელი'), w: 293, h: 372, radius: 8 },
             ]} />
             <div className="px-4 sm:px-6 pt-6"><KitNotes /></div>

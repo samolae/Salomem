@@ -164,10 +164,15 @@ function Stage({ items, bg = '#F4F6F7', className = '' }: { items: Sheet[]; bg?:
   );
 }
 
-/** the kit's mockups on one line, running slowly sideways; a pointer on it holds it still */
+/** the kit's mockups on one line, drifting slowly sideways. Drag to spin it,
+ *  it glides on and settles back into the drift; a pointer resting on it holds it */
 function MockStrip() {
   const { tx } = useI18n();
   const { paused } = useMotionPause();
+  const box = useRef<HTMLDivElement>(null);
+  const track = useRef<HTMLDivElement>(null);
+  const pausedRef = useRef(paused);
+  pausedRef.current = paused;
   const shots: [string, string][] = [
     ['mock-notebook-held', tx('The notebook held close', 'ბლოკნოტი ხელში')],
     ['mock-calendar-green', tx('The wall calendar held against the clinic green', 'კედლის კალენდარი კლინიკის მწვანეზე')],
@@ -175,25 +180,75 @@ function MockStrip() {
     ['mock-calendar-wall', tx('The calendar on the wall above a desk', 'კალენდარი კედელზე, მაგიდის ზემოთ')],
     ['mock-spread-held', tx('The notebook open on the year at a glance', 'ბლოკნოტი გაშლილი მთელი წლის გვერდზე')],
   ];
+
+  useEffect(() => {
+    const el = box.current, tr = track.current;
+    if (!el || !tr) return;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let x = 0, vel = 0, raf = 0, prev = performance.now(), hover = false, inView = false;
+    let drag: { x: number; t: number; id: number; moved: number } | null = null;
+    const tick = (now: number) => {
+      raf = 0;
+      const dt = Math.min(0.05, (now - prev) / 1000); prev = now;
+      const half = tr.scrollWidth / 2;
+      if (!drag) {
+        x += vel * dt;
+        vel *= 0.05 ** dt;
+        if (Math.abs(vel) < 4) vel = 0;
+        if (!reduced && !pausedRef.current && !hover) x -= 28 * dt;
+      }
+      if (half > 0) x = ((x % half) - half) % half; // keep it inside one copy, so it loops without a seam
+      tr.style.transform = `translate3d(${x.toFixed(1)}px,0,0)`;
+      if (inView && (drag || vel || (!reduced && !pausedRef.current && !hover))) raf = requestAnimationFrame(tick);
+    };
+    const kick = () => { if (!raf) { prev = performance.now(); raf = requestAnimationFrame(tick); } };
+    const io = new IntersectionObserver(([e]) => { inView = e.isIntersecting; if (inView) kick(); });
+    io.observe(el);
+    const down = (e: PointerEvent) => {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      drag = { x: e.clientX, t: performance.now(), id: e.pointerId, moved: 0 }; vel = 0;
+      el.setPointerCapture(e.pointerId); el.style.cursor = 'grabbing'; kick();
+    };
+    const move = (e: PointerEvent) => {
+      if (!drag || e.pointerId !== drag.id) return;
+      const now = performance.now(), dx = e.clientX - drag.x, dt = Math.max(1, now - drag.t) / 1000;
+      x += dx; drag.moved += Math.abs(dx);
+      vel = vel * 0.6 + (dx / dt) * 0.4;
+      drag.x = e.clientX; drag.t = now; kick();
+    };
+    const up = (e: PointerEvent) => {
+      if (!drag || e.pointerId !== drag.id) return;
+      if (performance.now() - drag.t > 80) vel = 0; // held still before letting go
+      vel = Math.max(-4000, Math.min(4000, vel));
+      drag = null; el.style.cursor = ''; kick();
+    };
+    const on = () => { hover = true; }, off = () => { hover = false; kick(); };
+    el.addEventListener('pointerdown', down); el.addEventListener('pointermove', move);
+    el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
+    el.addEventListener('pointerenter', on); el.addEventListener('pointerleave', off);
+    kick();
+    return () => {
+      cancelAnimationFrame(raf); io.disconnect();
+      el.removeEventListener('pointerdown', down); el.removeEventListener('pointermove', move);
+      el.removeEventListener('pointerup', up); el.removeEventListener('pointercancel', up);
+      el.removeEventListener('pointerenter', on); el.removeEventListener('pointerleave', off);
+    };
+  }, []);
+  useEffect(() => { window.dispatchEvent(new Event('resize')); }, [paused]);
+
   return (
-    <div className="gk-strip overflow-hidden rounded-md" aria-label={tx('Mockups of the kit', 'ნაკრების მოქაფები')}>
-      <div className="gk-run flex w-max" style={{ animationPlayState: paused ? 'paused' : undefined }}>
+    <div ref={box} className="gk-strip overflow-hidden rounded-md cursor-grab select-none" style={{ touchAction: 'pan-y' }} aria-label={tx('Mockups of the kit, drag to spin', 'ნაკრების მოქაფები, გადაატრიალე')}>
+      <div ref={track} className="flex w-max will-change-transform">
         {[0, 1].map((copy) => (
           <div key={copy} className="flex gap-1.5 pr-1.5" aria-hidden={copy === 1 || undefined}>
             {shots.map(([n, alt]) => (
-              <img key={n} src={`${P}/${n}.jpg`} alt={copy ? '' : alt} width={1195} height={1800} loading="lazy" decoding="async" draggable={false}
-                className="gk-shot block w-auto rounded-md object-cover" />
+              <img key={n} src={`${P}/${n}.jpg`} alt={copy ? '' : alt} width={1360} height={2048} loading="lazy" decoding="async" draggable={false}
+                className="gk-shot block w-auto rounded-md object-cover pointer-events-none" />
             ))}
           </div>
         ))}
       </div>
-      <style>{`
-        .gk-shot { height: clamp(320px, 40vw, 620px); aspect-ratio: 1195 / 1800; }
-        .gk-run { animation: gk-run 48s linear infinite; }
-        .gk-strip:hover .gk-run { animation-play-state: paused; }
-        @keyframes gk-run { to { transform: translateX(-50%); } }
-        @media (prefers-reduced-motion: reduce) { .gk-run { animation: none; } .gk-strip { overflow-x: auto; } }
-      `}</style>
+      <style>{`.gk-shot { height: clamp(280px, 30vw, 480px); aspect-ratio: 1360 / 2048; }`}</style>
     </div>
   );
 }

@@ -392,11 +392,12 @@ const SOLVED: Record<string, [string, string]> = {
   '/projects/unispace': ['One work platform, so information no longer lives in many places.', 'ერთი სამუშაო პლატფორმა, რომ ინფორმაცია აღარ იყოს მიმოფანტული.'],
 };
 
-function StudyCardOf({ x, prefix }: { x: Study; prefix: string }) {
+function StudyCardOf({ x, prefix, wide }: { x: Study; prefix: string; wide?: boolean }) {
   const { tx } = useI18n();
   return (
     <CaseLink to={x.to} cardId={`${prefix}-${x.title.toLowerCase().replace(/\s+/g, '-')}`} className="group block">
-      <PeekCover cover={x.cover} peek={x.peek} className="relative aspect-[16/11] overflow-hidden rounded-md" />
+      {/* wide: two columns of the 3-column grid, at the height of one card */}
+      <PeekCover cover={x.cover} peek={x.peek} className={`relative aspect-[16/11] ${wide ? 'xl:aspect-[32.2/11]' : ''} overflow-hidden rounded-md`} />
       <div className="mt-3 flex items-baseline justify-between gap-4 px-0.5">
         <h3 className="text-[18px] leading-[1.1] text-[#111]" style={{ fontFamily: T.display, fontWeight: 900 }}>{x.title}</h3>
         <ViewCase small />
@@ -408,9 +409,9 @@ function StudyCardOf({ x, prefix }: { x: Study; prefix: string }) {
 }
 
 /** one case's card by its path (for the home page) */
-export function StudyCard({ to }: { to: string }) {
+export function StudyCard({ to, wide }: { to: string; wide?: boolean }) {
   const x = STUDIES.find((st) => st.to === to);
-  return x ? <Reveal><StudyCardOf x={x} prefix="home" /></Reveal> : null;
+  return x ? <Reveal className={wide ? 'xl:col-span-2' : undefined}><StudyCardOf x={x} prefix="home" wide={wide} /></Reveal> : null;
 }
 
 /** every case as a cover card, in the grid's order (for the home page) */

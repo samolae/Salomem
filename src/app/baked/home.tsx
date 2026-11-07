@@ -246,9 +246,11 @@ export function HomeContent() {
       {/* Selected work */}
       <section aria-labelledby="work-title" className="px-1.5 pt-24 sm:pt-32">
         <h2 id="work-title" className="sr-only">{tx('Selected work', 'რჩეული ნამუშევრები')}</h2>
-        {/* every case by its cover, then ads and motion in the same frame: even rows */}
+        {/* every case by its cover, then ads and motion in the same frame: even rows.
+            Gagua leads, two columns wide on the 3-column grid, so rows stay full at 2 and 3 */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-1.5 gap-y-10">
-          {['/projects/dasturi', '/projects/gv-capital', '/projects/scope'].map((p) => <StudyCard key={p} to={p} />)}
+          <StudyCard to="/projects/gagua" wide />
+          {['/projects/zummo', '/projects/dasturi', '/projects/gv-capital', '/projects/scope'].map((p) => <StudyCard key={p} to={p} />)}
           {aboutTile}
           {['/projects/fitmeal', '/projects/aurum'].map((p) => <StudyCard key={p} to={p} />)}
           <div className="md:col-span-2">{expTile}</div>

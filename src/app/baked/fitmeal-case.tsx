@@ -11,6 +11,7 @@ import { Caption, CtaLink, Lightbox, type LightboxItem } from './ui';
 import { CASES } from './cases';
 import { useI18n } from './i18n';
 import { MoreCases } from './case-studies';
+import { enhance } from '../media';
 
 /*
  * FitMeal: a spring campaign made with AI. The page is as light as the
@@ -124,9 +125,9 @@ function SwapTile({ keys, onOpen, sizes = '(min-width: 768px) 50vw, 100vw', aspe
       <button type="button" onClick={() => onOpen(idx(k))} aria-label={`${tx(sh.en, sh.ka)}, ${tx('enlarge', 'გადიდება')}`}
         className="relative block w-full overflow-hidden rounded-[6px] bg-[#e9e2d3] cursor-zoom-in outline-none focus-visible:shadow-[0_0_0_2px_#0E4B48]" style={{ aspectRatio: aspect }}>
         {keys.map((kk, i) => (
-          <motion.img key={kk} src={`${P}/${kk}.jpg`} srcSet={SHOTS[idx(kk)].w > 900 ? `${P}/${kk}-800.jpg 800w, ${P}/${kk}-1200.jpg 1200w, ${P}/${kk}.jpg ${SHOTS[idx(kk)].w}w` : undefined} sizes={sizes}
-            alt={i === cur ? tx(SHOTS[idx(kk)].en, SHOTS[idx(kk)].ka) : ''} aria-hidden={i !== cur || undefined} loading="lazy" decoding="async"
-            className="absolute inset-0 h-full w-full object-cover"
+          <motion.img key={kk} {...enhance('img', { src: `${P}/${kk}.jpg`, srcSet: SHOTS[idx(kk)].w > 900 ? `${P}/${kk}-800.jpg 800w, ${P}/${kk}-1200.jpg 1200w, ${P}/${kk}.jpg ${SHOTS[idx(kk)].w}w` : undefined, sizes,
+              className: 'absolute inset-0 h-full w-full object-cover' })}
+            alt={i === cur ? tx(SHOTS[idx(kk)].en, SHOTS[idx(kk)].ka) : ''} aria-hidden={i !== cur || undefined} loading="lazy"
             initial={false}
             animate={{ opacity: i === cur ? 1 : 0, scale: i === cur ? 1 : 1.035 }}
             transition={{ duration: reduce ? 0 : 0.9, ease: [0.2, 0.7, 0.2, 1] }} />

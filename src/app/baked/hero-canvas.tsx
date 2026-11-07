@@ -451,10 +451,11 @@ export function HeroCanvas() {
                     <video src={it.video} poster={stills[it.full] ?? it.src} muted loop playsInline preload="none" aria-hidden className="pointer-events-none h-full w-full object-cover" style={{ filter: 'saturate(1.22) brightness(0.95) contrast(1.03)' }} />
                   ) : (
                     <img {...IMG.tileLarge(it.src)} alt="" loading={g.mobile ? 'eager' : 'lazy'} decoding="async" draggable={false}
-                      // no grey box while it loads: the picture fades in once it is there
+                      // no grey box while it loads: our own pictures show their soft preview
+                      // (app/media.ts) at once, the rest fade in once they are there
                       onLoad={(e) => { e.currentTarget.style.opacity = '1'; }}
                       ref={(el) => { if (el && el.complete && el.naturalWidth) el.style.opacity = '1'; }}
-                      className="pointer-events-none h-full w-full object-cover transition-opacity duration-500" style={{ opacity: 0, filter: 'saturate(1.22) brightness(0.95) contrast(1.03)' }} />
+                      className="pointer-events-none h-full w-full object-cover transition-opacity duration-500" style={{ opacity: it.src.startsWith('/hero/') ? 1 : 0, filter: 'saturate(1.22) brightness(0.95) contrast(1.03)' }} />
                   )}
                 </button>
               );

@@ -6,6 +6,7 @@ import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { IMG } from '../lib/cld';
 import { LeaningPills } from './flourish';
 import { useI18n } from './i18n';
+import { enhance } from '../media';
 
 /* ── Tokens ───────────────────────────────────────────────────────── */
 export const T = {
@@ -152,7 +153,7 @@ export function Lightbox({ items, index, onClose, onIndex }: {
               />
             ) : (
               <motion.img
-                key={item.src} {...IMG.full(item.src)} alt={item.alt}
+                key={item.src} {...enhance('img', { ...IMG.full(item.src), className: 'object-contain' })} alt={item.alt}
                 initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }}
                 transition={{ duration: 0.2 }}
                 onClick={(e) => e.stopPropagation()}

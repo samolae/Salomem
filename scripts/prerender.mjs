@@ -87,12 +87,23 @@ function headFrom(helmet) {
 }
 
 for (const url of PRERENDER_PATHS) {
-  const { html, helmet } = await render(url);
+  const { html: raw, helmet } = await render(url);
+  // The soft previews behind each picture (src/app/media.ts) come inline,
+  // once each, so a page shows every picture at once with no extra request
+  const lq = new Map();
+  const html = raw.replace(/background-image:url\((\/m\/[^)]+\.lq\.webp)\)/g, (_m, u) => {
+    if (!lq.has(u)) lq.set(u, lq.size);
+    return `background-image:var(--lq${lq.get(u)})`;
+  });
+  const lqCss = lq.size
+    ? `<style>:root{${(await Promise.all([...lq].map(async ([u, i]) =>
+        `--lq${i}:url(data:image/webp;base64,${(await fs.readFile(path.join(dist, u))).toString('base64')})`))).join(';')}}</style>`
+    : '';
   if (!html.includes('<main')) throw new Error(`prerender: no <main> in ${url}`);
   const head = headFrom(helmet);
   let page = template
     .replace(EMPTY_ROOT, `<div id="root">${html}</div>`)
-    .replace('</head>', `  ${preloadsFor(url)}\n</head>`);
+    .replace('</head>', `  ${preloadsFor(url)}\n  ${lqCss}\n</head>`);
   if (head) {
     page = page
       .replace(/\s*<title>[\s\S]*?<\/title>/, '')

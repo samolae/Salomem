@@ -20,14 +20,16 @@ export default defineConfig({
     figmaAssetResolver(),
     // The React and Tailwind plugins are both required for Make, even if
     // Tailwind is not being actively used - do not remove them
-    react(),
+    // local pictures load light first, then sharp: src/app/media.ts
+    react({ jsxImportSource: 'samole-jsx' }),
     tailwindcss(),
   ],
   resolve: {
-    alias: {
+    alias: [
       // Alias @ to the src directory
-      '@': path.resolve(__dirname, './src'),
-    },
+      { find: '@', replacement: path.resolve(__dirname, './src') },
+      { find: /^samole-jsx\/(.*)$/, replacement: path.resolve(__dirname, './src/jsx/$1') },
+    ],
   },
 
   // File types to support raw imports. Never add .css, .tsx, or .ts files to this.

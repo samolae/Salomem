@@ -25,6 +25,7 @@ const ig = {
 };
 const aug = [img('aug-01', 4, 5, 'Meet Zummo'), img('aug-02', 4, 5, 'Since 1992'), img('aug-03', 4, 5, 'Hotels, supermarkets, cafés, restaurants'), img('aug-04', 4, 5, 'Zummo in Georgia')];
 const bar = [img('bar-01', 4, 5, 'Bar?'), img('bar-02', 4, 5, 'Cocktails'), img('bar-03', 4, 5, 'Fresh juice'), img('bar-04', 4, 5, 'Want it for your bar?')];
+const hotel = [img('hotel-01', 4, 5, 'Do you have a hotel?'), img('hotel-02', 4, 5, 'Fresh juice at breakfast'), img('hotel-03', 4, 5, 'Comfortable service'), img('hotel-04', 4, 5, 'For your hotel')];
 const reels = {
   natural: reel('reel-natural', '100% natural, in front of you'),
   evs: reel('reel-evs', 'No bitterness from the peel'),
@@ -67,7 +68,8 @@ export const ZUMMO: SocialCaseData = {
   },
   feed: [ig.where, aug[0], bar[0], ig.hotels, aug[2], bar[1], ig.business, aug[1], ig.retail, bar[3], aug[3], post.finance, ig.one, bar[2], post.hero, post.quality],
   pair: [film('film-night-bar', 'Night Bar'), film('film-hotel', 'Hotels and cafés')],
-  strip: [bar[0], bar[1], bar[2], bar[3], film('film-safe', 'Straight from the orange'), aug[0], aug[1], aug[2], aug[3], img('story-business', 9, 16, 'Story'), img('yellow-machine', 9, 16, 'Zummo on yellow'), img('fb-grid', 1, 1, 'Facebook grid'), img('sky-machine', 9, 16, 'Zummo on blue')],
+  // the hotel carousel and pieces the feed above does not show, so nothing appears twice
+  strip: [hotel[0], hotel[1], hotel[2], hotel[3], film('film-safe', 'Straight from the orange'), img('story-business', 9, 16, 'Story'), img('yellow-machine', 9, 16, 'Zummo on yellow'), img('fb-grid', 1, 1, 'Facebook grid'), img('sky-machine', 9, 16, 'Zummo on blue')],
   closing: [reels.evs, reels.natural, reels.sept],
   wallBg: '#FF6B04',
 };

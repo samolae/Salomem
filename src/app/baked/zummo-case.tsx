@@ -66,7 +66,8 @@ export const ZUMMO: SocialCaseData = {
     en: 'One clear line per piece, set on an orange pill: 100% natural, no bitterness from the peel, see the process, ask for a calculation. Short reels for the feed, product scenes made with AI in bright studio colours, and posts that end with one action.',
     ka: 'თითო ნამუშევარზე ერთი მკაფიო ფრაზა, ნარინჯისფერ ფირფიტაზე: 100% ნატურალური, კანის სიმწარე არ მოჰყვება, პროცესს თავად ხედავ, მოითხოვეთ კალკულაცია. მოკლე რილსები ფიდისთვის, AI-ით შექმნილი პროდუქტის სცენები ნათელ სტუდიურ ფერებში და პოსტები, რომლებიც ერთი მოქმედებით მთავრდება.',
   },
-  feed: [ig.where, aug[0], bar[0], ig.hotels, aug[2], bar[1], ig.business, aug[1], ig.retail, bar[3], aug[3], post.finance, ig.one, bar[2], post.hero, post.quality],
+  // dealt across the wall's columns (5, or 3 on a phone) in this order: no campaign twice in a column
+  feed: [hotel[0], ig.one, aug[3], bar[2], bar[0], ig.business, post.hero, hotel[2], aug[0], aug[2], post.quality, hotel[3], bar[1], ig.hotels, post.finance, aug[1], bar[3], ig.where, hotel[1], ig.retail],
   pair: [film('film-night-bar', 'Night Bar'), film('film-hotel', 'Hotels and cafés')],
   // the hotel carousel and pieces the feed above does not show, so nothing appears twice
   strip: [hotel[0], hotel[1], hotel[2], hotel[3], film('film-safe', 'Straight from the orange'), img('story-business', 9, 16, 'Story'), img('yellow-machine', 9, 16, 'Zummo on yellow'), img('fb-grid', 1, 1, 'Facebook grid'), img('sky-machine', 9, 16, 'Zummo on blue')],

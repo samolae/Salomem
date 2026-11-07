@@ -1,4 +1,4 @@
-import { useEffect, useRef, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Link } from 'react-router';
 import { ArrowLeft, Bookmark, Heart, MessageCircle, Send } from 'lucide-react';
 import { SEO } from '../components/seo';
@@ -79,15 +79,27 @@ function Post({ m, avatar, handle }: { m: Media; avatar: string; handle: string 
 
 /** the feed as a wall: columns drifting up and down */
 function FeedWall({ d }: { d: SocialCaseData }) {
-  const cols = 5;
+  // 5 columns, 3 on a phone (set after mount, so the first paint matches the prerender)
+  const [cols, setCols] = useState(5);
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 768px)');
+    const on = () => setCols(mq.matches ? 5 : 3);
+    on(); mq.addEventListener('change', on);
+    return () => mq.removeEventListener('change', on);
+  }, []);
   const posts = d.feed.length ? d.feed : [];
-  // each column starts at a different post so neighbours never match
-  const col = (c: number) => Array.from({ length: Math.max(4, posts.length) }, (_, i) => posts[(i + c * 2) % posts.length]);
+  // with enough posts each one lives in a single column, so the same post is
+  // never on screen twice; a short feed runs whole in every column instead,
+  // each column starting at a different post
+  const dealt = Array.from({ length: cols }, (_, c) => posts.filter((_, i) => i % cols === c));
+  const col = (c: number) => dealt.every((x) => x.length >= 3)
+    ? dealt[c]
+    : Array.from({ length: Math.max(4, posts.length) }, (_, i) => posts[(i + c * 2) % posts.length]);
   return (
     <section className="px-1.5">
       <div className="relative h-[78svh] min-h-[520px] max-h-[980px] overflow-hidden rounded-md" style={{ background: d.wallBg ?? '#0d0d0d' }} aria-label={`${d.brand} feed`}>
         <div className="absolute inset-0 grid grid-cols-3 md:grid-cols-5 gap-3 sm:gap-4 px-3 sm:px-6 -rotate-0">
-          {Array.from({ length: cols }, (_, c) => (
+          {Array.from({ length: 5 }, (_, c) => c < cols && (
             <div key={c} className={`${c >= 3 ? 'hidden md:block' : ''} overflow-hidden`}>
               <div className={c % 2 ? 'baked-col-down' : 'baked-col-up'} style={{ ['--dur' as string]: `${46 + c * 7}s` }}>
                 {[0, 1].map((k) => (

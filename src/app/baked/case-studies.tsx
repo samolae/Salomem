@@ -14,6 +14,7 @@ import type { Media } from './social-case';
 const pool = (...xs: Media[][]): Media[] => xs.flat();
 import { ScopeCover } from './scope-logo';
 import { GaguaLettering } from './gagua-cover';
+import { GooeyFilter } from './gooey-filter';
 
 /*
  * Case studies: product, branding and campaigns told as whole stories, laid out like
@@ -305,10 +306,6 @@ const STUDIES: Study[] = [
 
 const FILTERS = ['UX/UI', 'Branding', 'Logo design', 'Lettering', 'Visual identity', 'Brand guidelines', 'Packaging', 'AI campaign', 'Social media', 'Motion', 'Art direction'];
 
-/** Holy Motors style tag: a thin outlined pill, filled when chosen */
-const tagCls = (on: boolean) =>
-  `inline-flex items-center h-8 px-3.5 rounded-full text-[13px] leading-none whitespace-nowrap border transition-colors outline-none focus-visible:shadow-[0_0_0_2px_#fff,0_0_0_4px_#111] ${on ? 'bg-[#111] border-[#111] text-white' : 'border-[#111]/80 text-[#111] hover:bg-[#111] hover:text-white'}`;
-
 /** every case, with filters by discipline; the filter lives in ?tag= */
 export function CaseGrid({ initialTag }: { initialTag?: string }) {
   const { tx } = useI18n();
@@ -328,13 +325,8 @@ export function CaseGrid({ initialTag }: { initialTag?: string }) {
 
   return (
     <>
-      <div className="px-1.5 pb-8 flex items-center gap-2 overflow-x-auto [scrollbar-width:none]">
-        <span className="shrink-0 text-[14px] text-[#111] mr-1">{tx('Filter by', 'ფილტრი')} →</span>
-        <button type="button" onClick={() => pick(null)} aria-pressed={filter === null} className={tagCls(filter === null)}>{tx('All', 'ყველა')}</button>
-        {tags.map((t) => (
-          <button key={t} type="button" onClick={() => pick(filter === t ? null : t)} aria-pressed={filter === t} className={tagCls(filter === t)}>{label(t)}</button>
-        ))}
-      </div>
+      <GooeyFilter tags={tags} value={filter} onChange={pick} label={label} count={shown.length}
+        unit={(n) => tx(n === 1 ? 'case' : 'cases', 'ქეისი')} allLabel={tx('Show all cases', 'ყველა ქეისის ჩვენება')} />
 
       <section aria-label={tx('Case studies', 'ქეისები')} className="px-1.5 grid grid-cols-1 md:grid-cols-2 gap-x-1.5 gap-y-12">
         {shown.map((s) => (

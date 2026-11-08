@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router';
-import { AnimatePresence, motion } from 'motion/react';
-import { ArrowUp, Pause, Play, House, FolderOpen, Sparkles, Mail } from 'lucide-react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { ArrowUp, ArrowUpRight, ChevronLeft, ChevronRight, Copy, Globe, Instagram, Linkedin, MessageSquare, Pause, Play, House, FolderOpen, Sparkles, Mail, X } from 'lucide-react';
 import { useRef } from 'react';
 import { T, pillCls, darkPillCls } from './ui';
 import { EMAIL } from './content';
@@ -89,65 +89,159 @@ const MAGNIFY = 1.32, LIFT = 8, REACH = 2;
 function MobileDock() {
   const { tx, to, bare } = useI18n();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const reduce = useReducedMotion();
   const bar = useRef<HTMLDivElement>(null);
   const [px, setPx] = useState<number | null>(null); // finger x inside the dock
   const moved = useRef(false);
+  // the last icon does not leave the page: the dock itself becomes the contact menu
+  const [open, setOpen] = useState<null | 'menu' | 'social'>(null);
   const ITEM = 64;
+  const LAST = DOCK.length - 1;
+
+  useEffect(() => { setOpen(null); }, [pathname]);
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(null); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [open]);
 
   const near = (x: number | null) => (x == null ? -1 : Math.max(0, Math.min(DOCK.length - 1, Math.floor((x - 8) / ITEM))));
   const local = (e: React.PointerEvent) => e.clientX - (bar.current?.getBoundingClientRect().left ?? 0);
   const hovered = near(px);
   const activeIdx = DOCK.findIndex((d) => (d.to === '/' ? bare === '/' : isActive(bare, d.to)));
+  const spring = reduce ? { duration: 0 } : { type: 'spring' as const, stiffness: 380, damping: 34, mass: 0.9 };
+  const fade = reduce ? { duration: 0 } : { duration: 0.18, delay: 0.06 };
 
   return (
     <nav aria-label={tx('Primary', 'მთავარი ნავიგაცია')} className="sm:hidden fixed inset-x-0 bottom-0 z-[75] flex justify-center pointer-events-none"
       style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 12px)' }}>
-      <div
+      {/* a tap anywhere else folds the menu back into the dock */}
+      {open && <div className="fixed inset-0 pointer-events-auto" aria-hidden onClick={() => setOpen(null)} />}
+      <motion.div
         ref={bar}
-        className="pointer-events-auto relative flex items-end rounded-[26px] px-2 h-[64px] bg-[#1c1c1c] border border-white/[0.06] shadow-[0_18px_40px_-12px_rgba(0,0,0,0.55)]"
-        style={{ touchAction: 'none' }}
-        onPointerDown={(e) => { moved.current = false; setPx(local(e)); }}
-        onPointerMove={(e) => { if (e.pointerType === 'mouse' || e.buttons) { if (px != null && Math.abs(local(e) - px) > 4) moved.current = true; setPx(local(e)); } }}
-        onPointerUp={(e) => {
+        layout
+        transition={spring}
+        className="pointer-events-auto relative overflow-hidden bg-[#1c1c1c] border border-white/[0.06] shadow-[0_18px_40px_-12px_rgba(0,0,0,0.55)]"
+        style={{ borderRadius: open ? 24 : 26, width: open ? 'min(340px, calc(100vw - 24px))' : undefined, touchAction: open ? 'auto' : 'none' }}
+        onPointerDown={open ? undefined : (e) => { moved.current = false; setPx(local(e)); }}
+        onPointerMove={open ? undefined : (e) => { if (e.pointerType === 'mouse' || e.buttons) { if (px != null && Math.abs(local(e) - px) > 4) moved.current = true; setPx(local(e)); } }}
+        onPointerUp={open ? undefined : (e) => {
           const i = near(local(e));
-          if (moved.current && i >= 0) navigate(to(DOCK[i].to));
+          if (moved.current && i >= 0) { if (i === LAST) setOpen('menu'); else navigate(to(DOCK[i].to)); }
           setPx(null);
         }}
         onPointerLeave={() => setPx(null)}
         onPointerCancel={() => setPx(null)}
       >
-        {DOCK.map((d, i) => {
-          const center = 8 + i * ITEM + ITEM / 2;
-          const t = px == null ? 0 : Math.max(0, 1 - Math.abs(px - center) / (ITEM * REACH));
-          const k = t * t * (3 - 2 * t); // smooth falloff
-          const active = i === activeIdx;
-          return (
-            <Link
-              key={d.to}
-              to={to(d.to)}
-              aria-label={tx(d.label, d.ka)}
-              aria-current={active ? 'page' : undefined}
-              onClick={(e) => { if (moved.current) e.preventDefault(); }}
-              className="relative flex flex-col items-center justify-center outline-none focus-visible:[&>svg]:text-white"
-              style={{ width: ITEM, height: 64 }}
-            >
-              {i === hovered && px != null && (
-                <span className="absolute -top-9 whitespace-nowrap rounded-full bg-white px-3 py-1 text-[12px] text-[#111] shadow-[0_6px_18px_rgba(0,0,0,0.25)]">
-                  {tx(d.label, d.ka)}
-                </span>
-              )}
-              <d.Icon
-                size={24}
-                strokeWidth={1.75}
-                className={`transition-[transform,color] duration-150 ease-out ${active || i === hovered ? 'text-white' : 'text-[#8b8b8b]'}`}
-                style={{ transform: `translateY(${-LIFT * k}px) scale(${1 + (MAGNIFY - 1) * k})`, transformOrigin: 'bottom center' }}
-              />
-              <span className={`mt-1.5 h-1 w-1 rounded-full ${active ? 'bg-white/70' : 'bg-transparent'}`} />
-            </Link>
-          );
-        })}
-      </div>
+        <AnimatePresence mode="popLayout" initial={false}>
+          {open ? (
+            <motion.div key={open} layout="position"
+              initial={{ opacity: 0, filter: 'blur(6px)', y: 8 }} animate={{ opacity: 1, filter: 'blur(0px)', y: 0 }} exit={{ opacity: 0, filter: 'blur(6px)', y: 8 }}
+              transition={fade} className="p-2">
+              <DockMenu level={open} setLevel={setOpen} />
+            </motion.div>
+          ) : (
+            <motion.div key="row" layout="position"
+              initial={{ opacity: 0, filter: 'blur(6px)' }} animate={{ opacity: 1, filter: 'blur(0px)' }} exit={{ opacity: 0, filter: 'blur(6px)' }}
+              transition={fade} className="flex items-end px-2 h-[64px]">
+              {DOCK.map((d, i) => {
+                const center = 8 + i * ITEM + ITEM / 2;
+                const t = px == null ? 0 : Math.max(0, 1 - Math.abs(px - center) / (ITEM * REACH));
+                const k = t * t * (3 - 2 * t); // smooth falloff
+                const active = i === activeIdx;
+                const inner = (
+                  <>
+                    {i === hovered && px != null && (
+                      <span className="absolute -top-9 whitespace-nowrap rounded-full bg-white px-3 py-1 text-[12px] text-[#111] shadow-[0_6px_18px_rgba(0,0,0,0.25)]">
+                        {tx(d.label, d.ka)}
+                      </span>
+                    )}
+                    <d.Icon
+                      size={24}
+                      strokeWidth={1.75}
+                      className={`transition-[transform,color] duration-150 ease-out ${active || i === hovered ? 'text-white' : 'text-[#8b8b8b]'}`}
+                      style={{ transform: `translateY(${-LIFT * k}px) scale(${1 + (MAGNIFY - 1) * k})`, transformOrigin: 'bottom center' }}
+                    />
+                    <span className={`mt-1.5 h-1 w-1 rounded-full ${active ? 'bg-white/70' : 'bg-transparent'}`} />
+                  </>
+                );
+                const cls = 'relative flex flex-col items-center justify-center outline-none focus-visible:[&>svg]:text-white';
+                return i === LAST ? (
+                  <button key={d.to} type="button" aria-label={tx(d.label, d.ka)} aria-haspopup="menu" aria-expanded={false}
+                    onClick={() => { if (!moved.current) setOpen('menu'); }} className={cls} style={{ width: ITEM, height: 64 }}>
+                    {inner}
+                  </button>
+                ) : (
+                  <Link key={d.to} to={to(d.to)} aria-label={tx(d.label, d.ka)} aria-current={active ? 'page' : undefined}
+                    onClick={(e) => { if (moved.current) e.preventDefault(); }} className={cls} style={{ width: ITEM, height: 64 }}>
+                    {inner}
+                  </Link>
+                );
+              })}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
     </nav>
+  );
+}
+
+/* the contact menu the dock grows into: rows, and socials one level deeper */
+const SOCIAL = [
+  { l: 'LinkedIn', href: 'https://www.linkedin.com/in/samole/', Icon: Linkedin },
+  { l: 'Behance', href: 'https://www.behance.net/samole', Icon: Globe },
+  { l: 'Instagram', href: 'https://www.instagram.com/areuli.design/', Icon: Instagram },
+];
+
+function DockMenu({ level, setLevel }: { level: 'menu' | 'social'; setLevel: (l: null | 'menu' | 'social') => void }) {
+  const { tx, to } = useI18n();
+  const [copied, setCopied] = useState(false);
+  const row = 'flex w-full items-center gap-3 h-12 px-3 rounded-[16px] text-left text-[15px] text-white active:bg-white/10 hover:bg-white/[0.06] outline-none focus-visible:bg-white/10 transition-colors';
+  const icon = 'shrink-0 text-[#8b8b8b]';
+  const copy = async () => {
+    try { await navigator.clipboard.writeText(EMAIL); setCopied(true); window.setTimeout(() => setCopied(false), 1600); } catch { window.location.href = `mailto:${EMAIL}`; }
+  };
+
+  if (level === 'social') {
+    return (
+      <div role="menu" aria-label={tx('Socials', 'სოციალური ქსელები')}>
+        <button type="button" role="menuitem" onClick={() => setLevel('menu')} className={`${row} text-[#b5b5b5]`}>
+          <ChevronLeft size={18} className={icon} /> {tx('Back', 'უკან')}
+        </button>
+        {SOCIAL.map((x) => (
+          <a key={x.l} role="menuitem" href={x.href} target="_blank" rel="noopener noreferrer" className={row}>
+            <x.Icon size={18} strokeWidth={1.75} className={icon} /> {x.l}
+            <ArrowUpRight size={15} className="ml-auto text-[#6f6f6f]" />
+          </a>
+        ))}
+      </div>
+    );
+  }
+  return (
+    <div role="menu" aria-label={tx('Contact', 'კონტაქტი')}>
+      <div className="flex items-center justify-between h-10 pl-3 pr-1 text-[12px] uppercase tracking-[0.08em] text-[#8b8b8b]">
+        {tx('Contact', 'კონტაქტი')}
+        <button type="button" onClick={() => setLevel(null)} aria-label={tx('Close', 'დახურვა')} className="grid place-items-center h-9 w-9 rounded-full text-[#b5b5b5] hover:bg-white/10 outline-none focus-visible:bg-white/10">
+          <X size={18} />
+        </button>
+      </div>
+      <Link role="menuitem" to={to('/contact')} className={row}>
+        <MessageSquare size={18} strokeWidth={1.75} className={icon} /> {tx('Write to me', 'მომწერე')}
+        <ChevronRight size={16} className="ml-auto text-[#6f6f6f]" />
+      </Link>
+      <a role="menuitem" href={`mailto:${EMAIL}`} className={row}>
+        <Mail size={18} strokeWidth={1.75} className={icon} /> <span className="truncate">{EMAIL}</span>
+      </a>
+      <button type="button" role="menuitem" onClick={copy} className={row}>
+        <Copy size={18} strokeWidth={1.75} className={icon} /> {copied ? tx('Copied', 'დაკოპირდა') : tx('Copy email', 'იმეილის კოპირება')}
+      </button>
+      <button type="button" role="menuitem" onClick={() => setLevel('social')} className={row}>
+        <Globe size={18} strokeWidth={1.75} className={icon} /> {tx('Socials', 'სოციალური ქსელები')}
+        <ChevronRight size={16} className="ml-auto text-[#6f6f6f]" />
+      </button>
+    </div>
   );
 }
 

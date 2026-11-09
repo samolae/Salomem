@@ -303,6 +303,9 @@ const STUDIES: Study[] = [
     peek: unispaceLogin,
   },
 ];
+/** how many cases there are, for the counts shown elsewhere (the Work folders) */
+export const STUDY_COUNT = STUDIES.length;
+
 
 const FILTERS = ['UX/UI', 'Branding', 'Logo design', 'Lettering', 'Visual identity', 'Brand guidelines', 'Packaging', 'AI campaign', 'Social media', 'Motion', 'Art direction'];
 

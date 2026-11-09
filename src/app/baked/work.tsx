@@ -4,7 +4,7 @@ import { cld } from '../lib/cld';
 import { CtaLink, PageIntro } from './ui';
 import { adsBrands, adsMardi1, adsTerminal1, motionReels } from './data';
 import { useI18n } from './i18n';
-import { CaseGrid } from './case-studies';
+import { CaseGrid, STUDY_COUNT } from './case-studies';
 
 /*
  * All work, as a row of desktop folders in the @areuli.design style. Point
@@ -24,7 +24,7 @@ const FOLDERS: Folder[] = [
   { id: 'brand', to: '/projects/dasturi', label: 'brand_design', en: 'Branding', ka: 'ბრენდინგი', countEn: '1 brand', countKa: '1 ბრენდი', color: ['#ffd25e', '#f6c03a', '#e5a91d'],
     thumbs: ['/cases/dasturi/labels/saperavi-gold.jpg', '/cases/dasturi/lineup-1000.jpg', '/cases/dasturi/labels/kisi-bordeaux.jpg'] },
   */
-  { id: 'cases', to: '/work/case-studies', label: 'case_studies', en: 'Case studies', ka: 'ქეისები', countEn: '6 cases', countKa: '6 ქეისი', color: ['#ffd25e', '#f6c03a', '#e5a91d'],
+  { id: 'cases', to: '/work/case-studies', label: 'case_studies', en: 'Case studies', ka: 'ქეისები', countEn: `${STUDY_COUNT} cases`, countKa: `${STUDY_COUNT} ქეისი`, color: ['#ffd25e', '#f6c03a', '#e5a91d'],
     thumbs: ['/cases/gv/lounge-1200.jpg', '/cases/fitmeal/picnic-bowl-800.jpg', '/cases/dasturi/lineup-1000.jpg'] },
   { id: 'ads', to: '/work/social-media-ads', label: 'soc_media_ads', en: 'Ads', ka: 'რეკლამა', countEn: `${adsBrands.length} brands`, countKa: `${adsBrands.length} ბრენდი`, color: ['#5fd06e', '#3fb24f', '#2f9a3f'],
     thumbs: [adsTerminal1, adsBrands[0].items[2].src, adsMardi1].map((s) => cld(s, 240)) },

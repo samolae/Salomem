@@ -7,17 +7,6 @@ import { useMotionPause } from './shell';
 import { AreuliBlock, Caption, CtaLink, FadeImg, LogoStrip, Reveal, T } from './ui';
 import { clients, experiences, spotlights, spotlightsKa } from './content';
 
-/** a role's span in years, from 'Jan 2026', '2021' or 'Now' */
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-const when = (v: string, end: boolean) => {
-  if (v === 'Now') return new Date().getFullYear() + new Date().getMonth() / 12;
-  const [a, b] = v.split(' ');
-  if (!b) return Number(a) + (end ? 0.99 : 0);
-  return Number(b) + Math.max(0, MONTHS.indexOf(a)) / 12 + (end ? 1 / 12 : 0);
-};
-type Exp = (typeof experiences)[number];
-/** true when this role overlapped another one in time */
-const concurrent = (e: Exp) => experiences.some((o) => o !== e && when(o.start, false) < when(e.end, true) && when(e.start, false) < when(o.end, true));
 import { StudyCard, StudyCover } from './case-studies';
 import { useI18n } from './i18n';
 import {
@@ -188,10 +177,6 @@ export function HomeContent() {
             <span className="ml-9 sm:ml-0 rounded-full border border-[#dcdcdc] px-2 py-0.5 text-[11px] text-[#6f6f6f] whitespace-nowrap">
               {ka ? ({ 'Full-time': 'სრული', 'Part-time': 'ნახევარი', Freelance: 'ფრილანსი', Contract: 'კონტრაქტი' } as Record<string, string>)[e.type] ?? e.type : e.type}
             </span>
-            {/* overlapping dates are parallel work, said on the role itself */}
-            {concurrent(e) && (
-              <span className="rounded-full bg-[#111] px-2 py-0.5 text-[11px] text-white whitespace-nowrap">{tx('Concurrent', 'პარალელური')}</span>
-            )}
             <span className="text-[#9a9a9a] text-[12px] sm:text-[14px] whitespace-nowrap tabular-nums">
               {ka ? `${e.startKa} - ${e.endKa}` : `${e.start} - ${e.end}`}
             </span>

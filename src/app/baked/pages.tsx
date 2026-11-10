@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router';
 import { Check, Copy } from 'lucide-react';
 import { CaseLink } from '../components/case-transition';
@@ -59,6 +59,31 @@ export function AdsContent() {
 }
 
 /* ══ Social Media Motion ════════════════════════════════════════════ */
+/* films made with AI, finished and cut for social: shown apart from the motion reels */
+const AI_FILMS = [
+  { src: '/ai/scanomat-hotel.mp4', brand: 'Scanomat', en: 'Hotel campaign', ka: 'სასტუმროს კამპანია' },
+  { src: '/ai/areuli-newspaper.mp4', brand: 'AREULI', en: 'Another brand has a newspaper', ka: 'კიდევ ერთ ბრენდს აქვს გაზეთი' },
+  { src: '/ai/zummo-pour.mp4', brand: 'Zummo', en: 'Straight from the orange', ka: 'პირდაპირ ფორთოხლიდან' },
+  { src: '/ai/prime-square.mp4', brand: 'Prime Square', en: 'Modern living', ka: 'თანამედროვე ცხოვრება' },
+  { src: '/ai/scanomat-coffee-bar.mp4', brand: 'Scanomat', en: 'Coffee bar', ka: 'ყავის ბარი' },
+  { src: '/ai/areuli-thinker.mp4', brand: 'AREULI', en: 'Full creative control', ka: 'სრული კრეატიული კონტროლი' },
+  { src: '/ai/sharp-parcel.mp4', brand: 'SHARP', en: 'Parcel scam explainer', ka: 'ამანათის თაღლითობა' },
+  { src: '/ai/zummo-hotel.mp4', brand: 'Zummo', en: 'Do you have a hotel?', ka: 'გაქვს სასტუმრო?', ratio: '4/5' },
+];
+
+/** a film that plays only while it is on screen, so the page does not pull them all at once */
+function InViewVideo({ src, poster, paused }: { src: string; poster: string; paused: boolean }) {
+  const ref = useRef<HTMLVideoElement>(null);
+  useEffect(() => {
+    const v = ref.current;
+    if (!v) return;
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting && !paused) v.play().catch(() => {}); else v.pause(); }, { rootMargin: '200px 0px' });
+    io.observe(v);
+    return () => io.disconnect();
+  }, [paused]);
+  return <video ref={ref} src={src} poster={poster} loop muted playsInline preload="none" className="block w-full h-full object-cover" />;
+}
+
 export function MotionContent() {
   const { tx, ka } = useI18n();
   const bn = (n: string) => brandName(n, ka);
@@ -93,7 +118,28 @@ export function MotionContent() {
           </Reveal>
         ))}
       </section>
-      <Lightbox items={lightbox} index={open} onClose={() => setOpen(null)} onIndex={setOpen} />
+      <section aria-labelledby="ai-films" className="pt-16 sm:pt-24">
+        <div className="px-2 pb-3 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+          <h2 id="ai-films" className="text-[14px] text-[#6f6f6f]">{tx('AI films', 'AI ვიდეოები')}</h2>
+          <p className="text-[14px] text-[#6f6f6f]">{tx('Directed, generated and edited with AI, for brands', 'ბრენდებისთვის: რეჟისურა, გენერაცია და მონტაჟი AI-ით')}</p>
+        </div>
+        <div className="px-1.5 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 items-start">
+          {AI_FILMS.map((f, i) => (
+            <Reveal key={f.src}>
+              <button type="button" onClick={() => setOpen(motionReels.length + i)} className="group block w-full text-left outline-none focus-visible:shadow-[0_0_0_2px_#ff4306] rounded-md"
+                aria-label={tx(`Watch ${f.brand}: ${f.en}`, `ნახე ${f.brand}: ${f.ka}`)}>
+                <div className="relative overflow-hidden rounded-md bg-[#f2f2f2]" style={{ aspectRatio: f.ratio ?? '9/16' }}>
+                  <InViewVideo src={f.src} poster={f.src.replace('.mp4', '.jpg')} paused={paused} />
+                  <span className="absolute bottom-2 left-2 rounded-md bg-white/85 px-2 py-1 text-[12px] text-[#111] opacity-0 backdrop-blur-md transition-opacity group-hover:opacity-100">{tx('Play with sound', 'ხმით ნახვა')}</span>
+                </div>
+                <Caption title={f.brand} sub={tx(f.en, f.ka)} tag="AI" />
+              </button>
+            </Reveal>
+          ))}
+        </div>
+      </section>
+      <Lightbox items={[...lightbox, ...AI_FILMS.map((f) => ({ src: f.src, alt: `${f.brand}: ${tx(f.en, f.ka)}`, video: true, brand: f.brand }))]}
+        index={open} onClose={() => setOpen(null)} onIndex={setOpen} />
     </>
   );
 }
@@ -208,6 +254,12 @@ function WhatsAppIcon() {
   );
 }
 
+/* the networks' own marks, on their own colour, like the WhatsApp one */
+const BRAND_ICON: Record<string, { bg: string; hover: string; path: string }> = {
+  LinkedIn: { bg: '#0A66C2', hover: '#0957a5', path: 'M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452z' },
+  Behance: { bg: '#1769FF', hover: '#0f57dd', path: 'M6.938 4.503c.702 0 1.34.06 1.92.188.577.13 1.07.33 1.485.61.41.28.733.65.96 1.12.225.47.34 1.05.34 1.73 0 .74-.17 1.36-.507 1.86-.338.5-.837.9-1.502 1.22.906.26 1.576.72 2.022 1.37.448.66.665 1.45.665 2.36 0 .75-.13 1.39-.41 1.93-.28.55-.67 1-1.16 1.35-.48.348-1.05.6-1.67.767-.61.165-1.252.254-1.91.254H0V4.51h6.938v-.007zM16.94 16.665c.44.428 1.073.643 1.894.643.59 0 1.1-.148 1.53-.447.424-.29.68-.61.78-.94h2.588c-.403 1.28-1.048 2.2-1.9 2.75-.85.56-1.884.83-3.08.83-.837 0-1.584-.13-2.272-.4-.673-.27-1.24-.65-1.72-1.14-.464-.49-.823-1.08-1.077-1.77-.253-.69-.373-1.45-.373-2.27 0-.803.135-1.54.403-2.23.27-.7.644-1.28 1.12-1.79.495-.51 1.063-.9 1.736-1.194s1.4-.433 2.22-.433c.91 0 1.69.164 2.38.523.67.34 1.22.82 1.66 1.4.44.586.75 1.26.94 2.02.19.75.25 1.54.21 2.38h-7.69c0 .84.28 1.632.71 2.065l-.08.03zm-10.24.05c.317 0 .62-.03.906-.093.29-.06.548-.165.763-.3.21-.135.39-.328.52-.583.13-.24.19-.57.19-.96 0-.78-.22-1.33-.663-1.66-.44-.33-1.03-.49-1.75-.49H3.24v4.08h3.46v.006zm13.64-5.4c-.334-.36-.92-.557-1.6-.557-.45 0-.817.074-1.11.226-.29.15-.523.335-.7.553-.175.22-.296.45-.37.69-.07.24-.11.45-.12.64h4.67c-.07-.73-.32-1.26-.65-1.55l-.12.01zM6.52 10.45c.574 0 1.05-.134 1.425-.412.374-.27.554-.72.554-1.338 0-.344-.07-.625-.18-.846-.13-.22-.3-.39-.5-.512-.21-.124-.45-.21-.72-.252-.27-.05-.56-.07-.84-.07H3.24v3.43h3.28zm8.98-4.86h5.98v1.45H15.5V5.59z' },
+};
+
 /* ══ Contact ════════════════════════════════════════════════════════ */
 const fieldCls = 'w-full rounded-md bg-[#f2f2f2] px-3.5 py-3 text-[15px] text-[#111] placeholder-[#9a9a9a] outline-none border border-transparent focus:border-[#ff4306] transition-colors';
 
@@ -297,6 +349,14 @@ export function ContactContent() {
                     {copied === c.label ? <Check size={13} /> : <Copy size={13} />}
                     {copied === c.label ? tx('copied', 'დაკოპირდა') : tx('copy', 'კოპირება')}
                   </button>
+                ) : BRAND_ICON[c.label] ? (
+                  <a href={c.href} target="_blank" rel="noopener noreferrer" aria-label={tx(`Open ${c.label}`, `${c.label}-ის გახსნა`)} title={c.label}
+                    className="inline-flex items-center justify-center h-8 w-8 rounded-md text-white transition-colors outline-none focus-visible:shadow-[0_0_0_2px_#ff4306]"
+                    style={{ background: BRAND_ICON[c.label].bg }}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = BRAND_ICON[c.label].hover; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = BRAND_ICON[c.label].bg; }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d={BRAND_ICON[c.label].path} /></svg>
+                  </a>
                 ) : <span className="text-[#9a9a9a]" aria-hidden>↗</span>}
               </li>
             ))}

@@ -595,16 +595,7 @@ export function GvCase() {
           <Row items={[{ ...m.card, w: 3, h: 4 }, { ...m.folder, w: 711, h: 660 }]} onOpen={setOpen} />
         </Band>
 
-        <Band tone="midnight" no="10" name={tx('Portfolio', 'პორტფოლიო')} title={tx('Space for your next move.', 'სივრცე შენი შემდეგი ნაბიჯისთვის.')}
-          lead={tx('The first projects in the identity: Lilo, Phonichala and Teleti.', 'პირველი პროექტები იდენტობაში: ლილო, ფონიჭალა და თელეთი.')}>
-          <div className="space-y-1.5">
-            <Row items={[m.phHero]} onOpen={setOpen} />
-            <Row items={[m.lilo, m.phonichala, m.teleti]} onOpen={setOpen} />
-            <div className="max-w-[720px]"><Row items={[m.liloPlan]} onOpen={setOpen} /></div>
-          </div>
-        </Band>
-
-        <Band tone="paper" no="11" name={tx('Everyday identity', 'ყოველდღიური იდენტობა')} title={tx('People first.', 'ადამიანები პირველ რიგში.')}
+        <Band tone="paper" no="10" name={tx('Everyday identity', 'ყოველდღიური იდენტობა')} title={tx('People first.', 'ადამიანები პირველ რიგში.')}
           lead={tx('Uniform, site gear, packaging and badges: the mark holds up on every material.', 'უნიფორმა, სამშენებლო აღჭურვილობა, შეფუთვა და ბეჯები: ნიშანი ყველა მასალაზე მუშაობს.')}>
           <div className="space-y-1.5">
             <Row items={[m.uniform, m.material, m.hardhat, m.packaging]} onOpen={setOpen} />
@@ -612,7 +603,7 @@ export function GvCase() {
           </div>
         </Band>
 
-        <Band tone="mist" no="12" name={tx('Paper and screen', 'ქაღალდი და ეკრანი')} title={tx('One grid for print and slides.', 'ერთი ბადე ბეჭდვისა და სლაიდებისთვის.')}>
+        <Band tone="mist" no="11" name={tx('Paper and screen', 'ქაღალდი და ეკრანი')} title={tx('One grid for print and slides.', 'ერთი ბადე ბეჭდვისა და სლაიდებისთვის.')}>
           <div className="max-w-[860px] space-y-1.5">
             <Row items={[m.cards, m.letterhead, m.document, m.profile, m.brochure]} onOpen={setOpen} />
             <Row items={[m.company, m.layouts]} onOpen={setOpen} />

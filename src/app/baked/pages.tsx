@@ -60,15 +60,19 @@ export function AdsContent() {
 
 /* ══ Social Media Motion ════════════════════════════════════════════ */
 /* films made with AI, finished and cut for social: shown apart from the motion reels */
-const AI_FILMS = [
-  { src: '/ai/scanomat-hotel.mp4', brand: 'Scanomat', en: 'Hotel campaign', ka: 'სასტუმროს კამპანია' },
+const AI_FILMS: { src: string; brand: string; en: string; ka: string }[] = [
+  { src: '/ai/scanomat-cafe.mp4', brand: 'Scanomat', en: 'A café in Tbilisi, paying by hand', ka: 'კაფე თბილისში, ხელით გადახდა' },
+  { src: '/ai/zummo-night-bar.mp4', brand: 'Zummo', en: 'Why bars choose Zummo', ka: 'რატომ ირჩევენ ბარები ZUMMO-ს' },
   { src: '/ai/areuli-newspaper.mp4', brand: 'AREULI', en: 'Another brand has a newspaper', ka: 'კიდევ ერთ ბრენდს აქვს გაზეთი' },
-  { src: '/ai/zummo-pour.mp4', brand: 'Zummo', en: 'Straight from the orange', ka: 'პირდაპირ ფორთოხლიდან' },
+  { src: '/ai/zummo-georgia.mp4', brand: 'Zummo', en: 'Zummo, now in Georgia', ka: 'ZUMMO უკვე საქართველოშიც' },
+  { src: '/ai/sharp-mobile-data.mp4', brand: 'SHARP', en: 'Mobile data is calling', ka: 'მობილური ინტერნეტი რეკავს' },
+  { src: '/ai/zummo-hotel.mp4', brand: 'Zummo', en: 'Do you have a hotel?', ka: 'გაქვს სასტუმრო?' },
   { src: '/ai/prime-square.mp4', brand: 'Prime Square', en: 'Modern living', ka: 'თანამედროვე ცხოვრება' },
-  { src: '/ai/scanomat-coffee-bar.mp4', brand: 'Scanomat', en: 'Coffee bar', ka: 'ყავის ბარი' },
+  { src: '/ai/zummo-pour.mp4', brand: 'Zummo', en: 'Why the world chooses Zummo', ka: 'რატომ ირჩევს მსოფლიო ZUMMO-ს' },
   { src: '/ai/areuli-thinker.mp4', brand: 'AREULI', en: 'Full creative control', ka: 'სრული კრეატიული კონტროლი' },
-  { src: '/ai/sharp-parcel.mp4', brand: 'SHARP', en: 'Parcel scam explainer', ka: 'ამანათის თაღლითობა' },
-  { src: '/ai/zummo-hotel.mp4', brand: 'Zummo', en: 'Do you have a hotel?', ka: 'გაქვს სასტუმრო?', ratio: '4/5' },
+  { src: '/ai/sharp-kaizer.mp4', brand: 'SHARP', en: 'Kaizer Chiefs quiz', ka: 'Kaizer Chiefs-ის ქვიზი' },
+  { src: '/ai/zummo-safe.mp4', brand: 'Zummo', en: 'Straight from the orange', ka: 'პირდაპირ ფორთოხლიდან' },
+  { src: '/ai/sharp-parcel.mp4', brand: 'SHARP', en: 'Parcel scam, four red flags', ka: 'ამანათის თაღლითობა, ოთხი ნიშანი' },
 ];
 
 /** a film that plays only while it is on screen, so the page does not pull them all at once */
@@ -123,12 +127,13 @@ export function MotionContent() {
           <h2 id="ai-films" className="text-[14px] text-[#6f6f6f]">{tx('AI films', 'AI ვიდეოები')}</h2>
           <p className="text-[14px] text-[#6f6f6f]">{tx('Directed, generated and edited with AI, for brands', 'ბრენდებისთვის: რეჟისურა, გენერაცია და მონტაჟი AI-ით')}</p>
         </div>
+        {/* twelve upright films: full rows at 2, 3 and 4 columns */}
         <div className="px-1.5 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 items-start">
           {AI_FILMS.map((f, i) => (
             <Reveal key={f.src}>
               <button type="button" onClick={() => setOpen(motionReels.length + i)} className="group block w-full text-left outline-none focus-visible:shadow-[0_0_0_2px_#ff4306] rounded-md"
                 aria-label={tx(`Watch ${f.brand}: ${f.en}`, `ნახე ${f.brand}: ${f.ka}`)}>
-                <div className="relative overflow-hidden rounded-md bg-[#f2f2f2]" style={{ aspectRatio: f.ratio ?? '9/16' }}>
+                <div className="relative overflow-hidden rounded-md bg-[#f2f2f2]" style={{ aspectRatio: '9/16' }}>
                   <InViewVideo src={f.src} poster={f.src.replace('.mp4', '.jpg')} paused={paused} />
                   <span className="absolute bottom-2 left-2 rounded-md bg-white/85 px-2 py-1 text-[12px] text-[#111] opacity-0 backdrop-blur-md transition-opacity group-hover:opacity-100">{tx('Play with sound', 'ხმით ნახვა')}</span>
                 </div>

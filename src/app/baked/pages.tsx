@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router';
-import { Check, Copy } from 'lucide-react';
+import { Check, Copy, Mail, Phone } from 'lucide-react';
 import { CaseLink } from '../components/case-transition';
 import { IMG } from '../lib/cld';
 import { AreuliBlock, Caption, CtaLink, FadeImg, Lightbox, PageIntro, Reveal, T, pillCls, darkPillCls, type LightboxItem } from './ui';
@@ -333,9 +333,18 @@ export function ContactContent() {
           <ul>
             {contactLinks.map((c) => (
               <li key={c.label} className="flex items-center justify-between gap-3 rounded-md px-3 py-3.5 hover:bg-[#e8e8e8] transition-colors">
-                <a href={c.href} {...(c.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})} className="min-w-0 flex-1 text-[15px] outline-none focus-visible:underline flex flex-col sm:flex-row sm:gap-3">
-                  <span className="text-[#6f6f6f]">{ka ? contactLabelsKa[c.label] ?? c.label : c.label}</span>
-                  <span className="text-[#111] truncate">{c.value}</span>
+                <a href={c.href} {...(c.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})} className="min-w-0 flex-1 text-[15px] outline-none focus-visible:underline flex items-center gap-3">
+                  {/* each row starts with its mark: the network's own for LinkedIn and Behance */}
+                  <span aria-hidden className="shrink-0 inline-flex items-center justify-center h-8 w-8 rounded-md text-white"
+                    style={{ background: BRAND_ICON[c.label]?.bg ?? '#111' }}>
+                    {BRAND_ICON[c.label]
+                      ? <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d={BRAND_ICON[c.label].path} /></svg>
+                      : c.label === 'Phone' ? <Phone size={14} strokeWidth={2} /> : <Mail size={14} strokeWidth={2} />}
+                  </span>
+                  <span className="min-w-0 flex flex-col sm:flex-row sm:gap-3">
+                    <span className="text-[#6f6f6f]">{ka ? contactLabelsKa[c.label] ?? c.label : c.label}</span>
+                    <span className="text-[#111] truncate">{c.value}</span>
+                  </span>
                 </a>
                 {'whatsapp' in c && c.whatsapp && (
                   <a
@@ -354,14 +363,6 @@ export function ContactContent() {
                     {copied === c.label ? <Check size={13} /> : <Copy size={13} />}
                     {copied === c.label ? tx('copied', 'დაკოპირდა') : tx('copy', 'კოპირება')}
                   </button>
-                ) : BRAND_ICON[c.label] ? (
-                  <a href={c.href} target="_blank" rel="noopener noreferrer" aria-label={tx(`Open ${c.label}`, `${c.label}-ის გახსნა`)} title={c.label}
-                    className="inline-flex items-center justify-center h-8 w-8 rounded-md text-white transition-colors outline-none focus-visible:shadow-[0_0_0_2px_#ff4306]"
-                    style={{ background: BRAND_ICON[c.label].bg }}
-                    onMouseEnter={(e) => { e.currentTarget.style.background = BRAND_ICON[c.label].hover; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.background = BRAND_ICON[c.label].bg; }}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d={BRAND_ICON[c.label].path} /></svg>
-                  </a>
                 ) : <span className="text-[#9a9a9a]" aria-hidden>↗</span>}
               </li>
             ))}

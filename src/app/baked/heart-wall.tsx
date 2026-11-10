@@ -70,6 +70,8 @@ export const HeartWall = ({ reels, isDark, onOpen, replayLabel = 'Replay' }: Pro
   const [width, setWidth] = useState(0);
   const [phase, setPhase] = useState<Phase>('dark');
   const [run, setRun] = useState(0);
+  // only the tile under the pointer plays: 70+ reels playing at once made the page crawl
+  const [live, setLive] = useState<number | null>(null);
 
   useLayoutEffect(() => {
     const el = stageRef.current;
@@ -187,6 +189,10 @@ export const HeartWall = ({ reels, isDark, onOpen, replayLabel = 'Replay' }: Pro
               type="button"
               disabled={phase !== 'wall'}
               onClick={() => onOpen(t.reelIndex)}
+              onPointerEnter={(e) => { if (e.pointerType === 'mouse') setLive(t.i); }}
+              onPointerLeave={() => setLive((v) => (v === t.i ? null : v))}
+              onFocus={() => setLive(t.i)}
+              onBlur={() => setLive((v) => (v === t.i ? null : v))}
               data-cursor="play"
               data-cursor-label="Play with sound"
               aria-label={`Watch ${reels[t.reelIndex].brand.split(' · ')[0]} reel`}
@@ -213,14 +219,14 @@ export const HeartWall = ({ reels, isDark, onOpen, replayLabel = 'Replay' }: Pro
                 draggable={false}
                 className="absolute inset-0 h-full w-full object-cover"
               />
-              {/* Once the heart has burst, every tile plays its reel from the
-                  point its still came from; the still stays as the poster */}
-              {phase === 'wall' && !reduceMotion && (
+              {/* Once the heart has burst, the tile under the pointer plays its
+                  reel from the point its still came from; the still is the poster */}
+              {phase === 'wall' && !reduceMotion && live === t.i && (
                 <video
                   src={t.video}
                   poster={t.img}
                   muted loop playsInline autoPlay={!paused}
-                  preload="auto"
+                  preload="metadata"
                   aria-hidden
                   ref={(v) => {
                     if (!v) return;

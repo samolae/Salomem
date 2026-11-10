@@ -72,8 +72,13 @@ const AI_FILMS: { src: string; brand: string; en: string; ka: string }[] = [
   { src: '/ai/areuli-thinker.mp4', brand: 'AREULI', en: 'Full creative control', ka: 'სრული კრეატიული კონტროლი' },
   { src: '/ai/sharp-kaizer.mp4', brand: 'SHARP', en: 'Kaizer Chiefs quiz', ka: 'Kaizer Chiefs-ის ქვიზი' },
   { src: '/ai/zummo-safe.mp4', brand: 'Zummo', en: 'Straight from the orange', ka: 'პირდაპირ ფორთოხლიდან' },
-  { src: '/ai/sharp-parcel.mp4', brand: 'SHARP', en: 'Parcel scam, four red flags', ka: 'ამანათის თაღლითობა, ოთხი ნიშანი' },
+  { src: '/ai/sharp-original.mp4', brand: 'SHARP', en: 'Keepers who stay in the middle', ka: 'მეკარე, რომელიც ცენტრში რჩება' },
 ];
+
+/** a Cloudinary reel's first-second still, as its poster */
+const reelStill = (src: string) => src.includes('/video/upload/')
+  ? src.replace(/\/video\/upload\/(f_auto,q_auto\/)?/, '/video/upload/so_1,w_480,c_limit,q_auto,f_auto/').replace(/\.(mp4|mov|webm)$/i, '.jpg')
+  : src.replace(/\.mp4$/, '.jpg');
 
 /** a film that plays only while it is on screen, so the page does not pull them all at once */
 function InViewVideo({ src, poster, paused }: { src: string; poster: string; paused: boolean }) {
@@ -110,11 +115,8 @@ export function MotionContent() {
           <Reveal key={r.src} className="break-inside-avoid">
             <button type="button" onClick={() => setOpen(i)} className="group block w-full text-left outline-none focus-visible:shadow-[0_0_0_2px_#ff4306] rounded-md" aria-label={tx(`Watch ${bn(r.brand)} reel with sound`, `${bn(r.brand)}: რილსის ხმით ნახვა`)}>
               <div className="relative overflow-hidden rounded-md bg-[#f2f2f2] aspect-[9/16]">
-                <video
-                  src={r.src} loop muted playsInline preload="metadata" autoPlay={!paused}
-                  ref={(v) => { if (v) { paused ? v.pause() : v.play().catch(() => {}); } }}
-                  className="block w-full h-full object-cover"
-                />
+                {/* plays only while on screen, from a still, so the page does not pull every reel at once */}
+                <InViewVideo src={r.src} poster={reelStill(r.src)} paused={paused} />
                 <span className="absolute bottom-2 left-2 rounded-md bg-white/85 px-2 py-1 text-[12px] text-[#111] opacity-0 backdrop-blur-md transition-opacity group-hover:opacity-100">{tx('Play with sound', 'ხმით ნახვა')}</span>
               </div>
               <Caption title={bn(r.brand)} sub={ka ? reelLabelsKa[r.label] ?? r.label : r.label} />

@@ -281,7 +281,7 @@ export function GaguaCase() {
           </h1>
           <ul className="mt-6 flex flex-wrap gap-1.5">
             {tags.map((t) => <li key={t} className="inline-flex items-center h-8 px-3.5 rounded-full border border-[#111]/80 text-[13px]">{t}</li>)}
-            <li className="inline-flex items-center h-8 px-3.5 rounded-full bg-[#f2f2f2] text-[13px] text-[#6f6f6f]">2026</li>
+            <li className="inline-flex items-center h-8 px-3.5 rounded-full bg-[#f2f2f2] text-[13px] text-[#6e6e6e]">2026</li>
           </ul>
           <Campaigns />
         </header>

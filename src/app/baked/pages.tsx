@@ -126,8 +126,8 @@ export function MotionContent() {
       </section>
       <section aria-labelledby="ai-films" className="pt-16 sm:pt-24">
         <div className="px-2 pb-3 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-          <h2 id="ai-films" className="text-[14px] text-[#6f6f6f]">{tx('AI films', 'AI ვიდეოები')}</h2>
-          <p className="text-[14px] text-[#6f6f6f]">{tx('Directed, generated and edited with AI, for brands', 'ბრენდებისთვის: რეჟისურა, გენერაცია და მონტაჟი AI-ით')}</p>
+          <h2 id="ai-films" className="text-[14px] text-[#6e6e6e]">{tx('AI films', 'AI ვიდეოები')}</h2>
+          <p className="text-[14px] text-[#6e6e6e]">{tx('Directed, generated and edited with AI, for brands', 'ბრენდებისთვის: რეჟისურა, გენერაცია და მონტაჟი AI-ით')}</p>
         </div>
         {/* twelve upright films: full rows at 2, 3 and 4 columns */}
         <div className="px-1.5 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 items-start">
@@ -204,29 +204,29 @@ export function ServicesContent() {
             <article className="h-full rounded-md bg-[#f2f2f2] p-6 sm:p-9 flex flex-col">
               <div className="flex items-start justify-between gap-4">
                 <h2 className="text-[18px] leading-tight text-[#111]" style={{ fontFamily: T.display, fontWeight: 900 }}>{s.title}</h2>
-                <span className="text-[13px] text-[#6f6f6f] whitespace-nowrap">{s.timeline}</span>
+                <span className="text-[13px] text-[#6e6e6e] whitespace-nowrap">{s.timeline}</span>
               </div>
-              <p className="mt-2 text-[15px] leading-[1.5] text-[#6f6f6f] max-w-[420px]">{s.tagline}</p>
+              <p className="mt-2 text-[15px] leading-[1.5] text-[#6e6e6e] max-w-[420px]">{s.tagline}</p>
               <ul className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 text-[14px] text-[#111]">
                 {s.deliverables.map((d) => (
                   <li key={d} className="flex items-start gap-2"><Check size={14} className="mt-[3px] flex-shrink-0 text-[#ff4306]" />{d}</li>
                 ))}
               </ul>
-              <p className="mt-auto pt-8 text-[13px] text-[#6f6f6f]">{s.outcome}</p>
+              <p className="mt-auto pt-8 text-[13px] text-[#6e6e6e]">{s.outcome}</p>
             </article>
           </Reveal>
         ))}
       </section>
 
       <section aria-labelledby="process-title" className="px-1.5 pt-24">
-        <h2 id="process-title" className="px-0.5 pb-3 text-[14px] text-[#6f6f6f]">{tx('How we work together', 'როგორ ვმუშაობთ ერთად')}</h2>
+        <h2 id="process-title" className="px-0.5 pb-3 text-[14px] text-[#6e6e6e]">{tx('How we work together', 'როგორ ვმუშაობთ ერთად')}</h2>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-1.5">
           {(ka ? processStepsKa : processSteps).map((p) => (
             <Reveal key={p.step}>
               <div className="h-full rounded-md bg-[#f2f2f2] p-6">
                 <div className="text-[13px] text-[#d93905] tabular-nums">{p.step}</div>
                 <div className="mt-8 text-[15px] text-[#111]" style={{ fontWeight: 500 }}>{p.title}</div>
-                <p className="mt-1 text-[14px] leading-[1.45] text-[#6f6f6f]">{p.desc}</p>
+                <p className="mt-1 text-[14px] leading-[1.45] text-[#6e6e6e]">{p.desc}</p>
               </div>
             </Reveal>
           ))}
@@ -238,7 +238,7 @@ export function ServicesContent() {
           {(ka ? statsKa : stats).map((s) => (
             <div key={s.label} className="rounded-md border border-[#ececec] p-6">
               <div className="text-[30px] leading-none text-[#ff4306]" style={{ fontFamily: T.display, fontWeight: 900 }}>{s.num}</div>
-              <div className="mt-1 text-[14px] text-[#6f6f6f]">{s.label}</div>
+              <div className="mt-1 text-[14px] text-[#6e6e6e]">{s.label}</div>
             </div>
           ))}
         </div>
@@ -286,9 +286,13 @@ export function ContactContent() {
       setForm({ name: '', email: '', type: '', budget: '', timeline: '', message: '' });
       setTimeout(() => setState('idle'), 4000);
     };
-    // Bots fill the hidden field or submit within a second or two; drop those quietly
-    if (honey || Date.now() - startedAt < 2500) { done(); return; }
+    // Bots fill the hidden field: drop those quietly
+    if (honey) { done(); return; }
     setState('sending');
+    // A very quick send (autofill) is held until 2.5 s after opening, then
+    // goes out for real: "Sent" only ever follows a real answer
+    const wait = 2500 - (Date.now() - startedAt);
+    if (wait > 0) await new Promise((r) => setTimeout(r, wait));
     try {
       const res = await fetch(`https://formsubmit.co/ajax/${EMAIL}`, {
         method: 'POST',
@@ -315,8 +319,8 @@ export function ContactContent() {
 
   const select = (field: 'type' | 'budget' | 'timeline', label: string) => (
     <label className="block">
-      <span className="block text-[13px] text-[#6f6f6f] mb-1.5">{label}</span>
-      <select value={form[field]} onChange={(e) => setForm({ ...form, [field]: e.target.value })} className={`${fieldCls} appearance-none`}>
+      <span className="block text-[13px] text-[#6e6e6e] mb-1.5">{label}</span>
+      <select name={field} value={form[field]} onChange={(e) => setForm({ ...form, [field]: e.target.value })} className={`${fieldCls} appearance-none`}>
         <option value="">{tx('Select…', 'აირჩიე…')}</option>
         {formOptions[field].map((o, i) => <option key={o} value={o}>{ka ? formOptionsKa[field][i] : o}</option>)}
       </select>
@@ -344,7 +348,7 @@ export function ContactContent() {
                       : c.label === 'Phone' ? <Phone size={14} strokeWidth={2} /> : <Mail size={14} strokeWidth={2} />}
                   </span>
                   <span className="min-w-0 flex flex-col sm:flex-row sm:gap-3">
-                    <span className="text-[#6f6f6f]">{ka ? contactLabelsKa[c.label] ?? c.label : c.label}</span>
+                    <span className="text-[#6e6e6e]">{ka ? contactLabelsKa[c.label] ?? c.label : c.label}</span>
                     <span className="text-[#111] truncate">{c.value}</span>
                   </span>
                 </a>
@@ -369,7 +373,7 @@ export function ContactContent() {
               </li>
             ))}
           </ul>
-          <div className="px-3 pt-4 pb-2 flex items-center gap-2 text-[13px] text-[#6f6f6f]">
+          <div className="px-3 pt-4 pb-2 flex items-center gap-2 text-[13px] text-[#6e6e6e]">
             <span className="h-1.5 w-1.5 rounded-full bg-[#22c55e]" /> {tx('Available for new projects · Georgia, GMT+4', 'ახალი პროექტებისთვის თავისუფალი ვარ · საქართველო, GMT+4')}
           </div>
         </div>
@@ -379,11 +383,11 @@ export function ContactContent() {
         <form onSubmit={submit} className="relative rounded-md border border-[#ececec] p-5 sm:p-7 space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <label className="block">
-              <span className="block text-[13px] text-[#6f6f6f] mb-1.5">{tx('Name', 'სახელი')}</span>
+              <span className="block text-[13px] text-[#6e6e6e] mb-1.5">{tx('Name', 'სახელი')}</span>
               <input required name="name" autoComplete="name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className={fieldCls} placeholder={tx('Your name', 'შენი სახელი')} />
             </label>
             <label className="block">
-              <span className="block text-[13px] text-[#6f6f6f] mb-1.5">{tx('Email', 'ელფოსტა')}</span>
+              <span className="block text-[13px] text-[#6e6e6e] mb-1.5">{tx('Email', 'ელფოსტა')}</span>
               <input required type="email" name="email" autoComplete="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className={fieldCls} placeholder="you@company.com" />
             </label>
           </div>
@@ -393,7 +397,7 @@ export function ContactContent() {
             {select('timeline', tx('Timeline', 'ვადები'))}
           </div>
           <label className="block">
-            <span className="block text-[13px] text-[#6f6f6f] mb-1.5">{tx('Message', 'შეტყობინება')}</span>
+            <span className="block text-[13px] text-[#6e6e6e] mb-1.5">{tx('Message', 'შეტყობინება')}</span>
             <textarea name="message" rows={5} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className={`${fieldCls} resize-y min-h-[120px]`} placeholder={tx('Tell me about your project…', 'მომიყევი პროექტის შესახებ…')} />
           </label>
           <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
@@ -412,7 +416,7 @@ export function ContactContent() {
         </form>
       </section>
 
-      <div className="px-5 pt-16 text-center text-[14px] text-[#6f6f6f]">
+      <div className="px-5 pt-16 text-center text-[14px] text-[#6e6e6e]">
         {tx('Prefer to look around first?', 'ჯერ დათვალიერება გირჩევნია?')} <Link to={to('/work/ux-ui')} className="text-[#111] underline underline-offset-4 decoration-[#ccc] hover:decoration-[#ff4306]">{tx('See the work', 'ნახე ნამუშევრები')}</Link>
       </div>
     </>

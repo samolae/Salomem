@@ -14,7 +14,9 @@ function lowFor(src: string): string | null {
     const at = src.indexOf(UP) + UP.length;
     return `${src.slice(0, at)}w_64,q_40,e_blur:600,f_jpg/${src.slice(at)}`;
   }
-  const m = src.match(/^(?:https?:\/\/[^/]+)?(\/(?:cases|logos)\/.+?)(?:-(?:1200|1100|1000|800))?\.(?:jpg|jpeg|webp|png)(?:\?.*)?$/i);
+  // PNGs have transparency and no "-lq.jpg" next to them: a preview would
+  // only be a failed request (and would show through the clear parts)
+  const m = src.match(/^(?:https?:\/\/[^/]+)?(\/(?:cases|logos)\/.+?)(?:-(?:1200|1100|1000|800))?\.(?:jpg|jpeg|webp)(?:\?.*)?$/i);
   if (m && !m[1].endsWith('-lq')) return `${m[1]}-lq.jpg`;
   return null;
 }
@@ -23,6 +25,8 @@ function dress(img: HTMLImageElement) {
   if (img.dataset.lq) return;
   img.dataset.lq = '1';
   if (img.complete && img.naturalWidth > 0) return; // already here
+  // app/media.ts already put its own soft preview behind this picture
+  if (img.style.backgroundImage) return;
   const low = lowFor(img.getAttribute('src') || img.currentSrc);
   if (!low) return;
   const s = img.style;
@@ -38,11 +42,31 @@ function dress(img: HTMLImageElement) {
 /*
  * Videos that play on their own only play while on screen: off-screen ones
  * are paused (and do not start downloading), and resume when scrolled to.
- * A video someone paused on purpose is left alone.
+ * A video someone paused on purpose is left alone. A video marked
+ * data-autoplay (instead of autoplay) waits for the screen from the start,
+ * so a film far down the page does not download during the first load.
  */
 let io: IntersectionObserver | null = null;
+
+/*
+ * Ref for a data-autoplay video that follows the site's motion switch:
+ * switched off, it stops and stays stopped; switched back on while it is
+ * already being watched, it plays again. It never starts a download by
+ * itself; the observer below starts it once it is on screen.
+ */
+export function motionRef(v: HTMLVideoElement | null, paused: boolean) {
+  if (!v) return;
+  if (paused) { v.pause(); v.dataset.autoPaused = ''; return; }
+  if (v.paused && v.dataset.lazyPlay && v.dataset.autoPaused !== '1') {
+    const r = v.getBoundingClientRect();
+    if (r.bottom > -200 && r.top < window.innerHeight + 200) v.play().catch(() => {});
+    else v.dataset.autoPaused = '1'; // the observer starts it when it comes on screen
+  }
+}
 function watchVideo(v: HTMLVideoElement) {
   if (v.dataset.lazyPlay || v.controls || !v.muted) return;
+  // data-autoplay: starts once it comes on screen, and downloads nothing before
+  if (v.dataset.autoplay !== undefined && v.paused) v.dataset.autoPaused = '1';
   if (!v.autoplay && v.paused && v.dataset.autoPaused !== '1') { v.dataset.lazyPlay = '1'; io?.observe(v); return; }
   v.dataset.lazyPlay = '1';
   io?.observe(v);

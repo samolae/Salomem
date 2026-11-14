@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Link } from 'react-router';
 import { CaseLink } from '../components/case-transition';
 import { IMG } from '../lib/cld';
+import { motionRef } from '../lib/blur-up';
 import { HeroCanvas } from './hero-canvas';
 import { useMotionPause } from './shell';
 import { AreuliBlock, Caption, CtaLink, FadeImg, LogoStrip, Reveal, T } from './ui';
@@ -89,8 +90,8 @@ export function HomeContent() {
       <div className="relative overflow-hidden rounded-md bg-[#f2f2f2] aspect-[9/16]">
         <video
           src="https://res.cloudinary.com/dgfn598qb/video/upload/f_auto,q_auto/carmall-ne_1_u5ewuz.mp4"
-          autoPlay={!paused} loop muted playsInline preload="metadata"
-          ref={(v) => { if (v) { paused ? v.pause() : v.play().catch(() => {}); } }}
+          loop muted playsInline preload="none" data-autoplay={paused ? undefined : ''}
+          ref={(v) => motionRef(v, paused)}
           className="block w-full h-full object-cover"
         />
       </div>
@@ -107,7 +108,7 @@ export function HomeContent() {
           'Scope-ში ნულიდან დავიწყეთ. ორ წელზე ნაკლებ დროში გუნდის ზრდაში მივიღე მონაწილეობა, ვხელმძღვანელობდი დიზაინის ლიდებს, ვიმუშავე 50+ ბიზნესთან და ვმართავდი თვეში $70,000+ სარეკლამო ბიუჯეტს.',
         )}
       </p>
-      <div className="mt-5 flex items-center justify-center gap-2 text-[14px] text-[#6f6f6f]">
+      <div className="mt-5 flex items-center justify-center gap-2 text-[14px] text-[#6e6e6e]">
         <img {...IMG.logo(experiences[2].logo)} alt="" width="24" height="24" className="h-6 w-6 rounded-full object-cover" />
         {tx('Art Director, Scope', 'არტ დირექტორი, Scope')}
       </div>
@@ -164,17 +165,17 @@ export function HomeContent() {
       <Caption title={ka ? 'ქარმოლი' : 'Carmall'} sub={tx('Campaign visuals', 'კამპანიის ვიზუალები')} tag={adsTag} />
     </Link>,
     <div key="exp" className="rounded-md bg-[#f2f2f2] px-5 py-6 sm:px-7 sm:py-8 mb-5">
-      <div className="text-[14px] text-[#6f6f6f] mb-4"><span>{tx('Experience', 'გამოცდილება')}</span></div>
+      <div className="text-[14px] text-[#6e6e6e] mb-4"><span>{tx('Experience', 'გამოცდილება')}</span></div>
       <ul className="divide-y divide-[#e4e4e4]">
         {experiences.map((e) => (
           <li key={e.company + e.start} className="flex flex-wrap sm:flex-nowrap items-center gap-x-3 gap-y-1.5 py-2.5 text-[14px]">
             <img {...IMG.logo(e.logo)} alt="" width="24" height="24" className="h-6 w-6 rounded object-cover flex-shrink-0" />
             <span className="min-w-0 flex-1 basis-[calc(100%-36px)] sm:basis-auto">
               <span className="text-[#111]">{e.company}</span>
-              <span className="text-[#6f6f6f]"> · {ka ? e.roleKa : e.role}</span>
+              <span className="text-[#6e6e6e]"> · {ka ? e.roleKa : e.role}</span>
             </span>
             {/* the kind of role, so overlapping dates read as parallel work, not a mistake */}
-            <span className="ml-9 sm:ml-0 rounded-full border border-[#dcdcdc] px-2 py-0.5 text-[11px] text-[#6f6f6f] whitespace-nowrap">
+            <span className="ml-9 sm:ml-0 rounded-full border border-[#dcdcdc] px-2 py-0.5 text-[11px] text-[#6e6e6e] whitespace-nowrap">
               {ka ? ({ 'Full-time': 'სრული', 'Part-time': 'ნახევარი', Freelance: 'ფრილანსი', Contract: 'კონტრაქტი' } as Record<string, string>)[e.type] ?? e.type : e.type}
             </span>
             <span className="text-[#9a9a9a] text-[12px] sm:text-[14px] whitespace-nowrap tabular-nums">
@@ -249,21 +250,21 @@ export function HomeContent() {
                 <h3 className="text-[18px] leading-[1.1] text-[#111]" style={{ fontFamily: T.display, fontWeight: 900 }}>{tx('Social Media Ads', 'სოც. მედიის რეკლამა')}</h3>
                 <span className="text-[13px] text-[#111]">{tx(`${brandCount} brands`, `${brandCount} ბრენდი`)}</span>
               </div>
-              <div className="mt-1 px-0.5 text-[13px] text-[#6f6f6f]">{tx('Terminal, Mardi, Crystal Leasing and more', 'Terminal, Mardi, Crystal Leasing და სხვები')}</div>
+              <div className="mt-1 px-0.5 text-[13px] text-[#6e6e6e]">{tx('Terminal, Mardi, Crystal Leasing and more', 'Terminal, Mardi, Crystal Leasing და სხვები')}</div>
             </Link>
           </Reveal>
           <Reveal>
             <Link to={to('/work/social-media-motion')} className="group block">
               <div className="relative aspect-[16/11] overflow-hidden rounded-md bg-[#111]">
-                <video src="https://res.cloudinary.com/dgfn598qb/video/upload/f_auto,q_auto/carmall-ne_1_u5ewuz.mp4" autoPlay={!paused} loop muted playsInline preload="metadata"
-                  ref={(v) => { if (v) { paused ? v.pause() : v.play().catch(() => {}); } }}
+                <video src="https://res.cloudinary.com/dgfn598qb/video/upload/f_auto,q_auto/carmall-ne_1_u5ewuz.mp4" loop muted playsInline preload="none" data-autoplay={paused ? undefined : ''}
+                  ref={(v) => motionRef(v, paused)}
                   className="absolute inset-0 h-full w-full object-cover" />
               </div>
               <div className="mt-3 flex items-baseline justify-between gap-4 px-0.5">
                 <h3 className="text-[18px] leading-[1.1] text-[#111]" style={{ fontFamily: T.display, fontWeight: 900 }}>{tx('Social Media Motion', 'სოც. მედიის მოუშენი')}</h3>
                 <span className="text-[13px] text-[#111]">{tx('12 reels', '12 რილსი')}</span>
               </div>
-              <div className="mt-1 px-0.5 text-[13px] text-[#6f6f6f]">{tx('Reels and brand animations', 'რილსები და ბრენდის ანიმაციები')}</div>
+              <div className="mt-1 px-0.5 text-[13px] text-[#6e6e6e]">{tx('Reels and brand animations', 'რილსები და ბრენდის ანიმაციები')}</div>
             </Link>
           </Reveal>
         </div>
@@ -271,7 +272,7 @@ export function HomeContent() {
 
       {/* Spotlights */}
       <section aria-labelledby="spot-title" className="px-1.5 pt-16">
-        <h2 id="spot-title" className="px-0.5 pb-3 text-[14px] text-[#6f6f6f]">{tx('Spotlights of 2025', '2025 წლის მთავარი მომენტები')}</h2>
+        <h2 id="spot-title" className="px-0.5 pb-3 text-[14px] text-[#6e6e6e]">{tx('Spotlights of 2025', '2025 წლის მთავარი მომენტები')}</h2>
         {/* the source pictures are small, so they are shown small */}
         <div className="grid grid-cols-2 gap-1.5 items-start max-w-[820px]">
           {spotlights.map((s, i) => {

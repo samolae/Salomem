@@ -171,6 +171,37 @@ function layout(g: Geo, pool: Item[]) {
   return { cols, slots };
 }
 
+/** tiles on a phone's screen at the start, or within the first ~3 s of spin (7deg/s) and drift (22px/s) */
+function onScreenAtStart(g: Geo, plan: ReturnType<typeof layout>) {
+  const halfW = window.innerWidth / 2 + 40;
+  const halfH = (window.innerHeight - 68 - 108) / 2 + 40; // the phone stage sits between the pills and the dock
+  const seen = (sDeg: number, l: number, h: number) => {
+    const s = ((sDeg % 360) + 540) % 360 - 180;
+    if (Math.abs(s) > 82) return false;
+    const th = (s * Math.PI) / 180;
+    const a = g.P / (g.P - (g.Z - g.R * Math.cos(th)));
+    const x = g.R * Math.sin(th) * a, hw = (g.W / 2) * a * Math.abs(Math.cos(th));
+    return Math.abs(x) - hw < halfW && Math.abs(l * a) - (h / 2) * a < halfH;
+  };
+  const set = new Set<number>();
+  plan.slots.forEach((sl, i) => {
+    const col = plan.cols[sl.col];
+    const l = ((sl.y + col.off) % col.L + col.L) % col.L - col.L / 2 + sl.h / 2;
+    if (seen(col.phi, l, sl.h) || seen(col.phi + 21, l - 66, sl.h)) set.add(i);
+  });
+  return set;
+}
+
+/** columns that spin round to the front within ~15 s; the rest of the drum is asked for at low priority */
+function arrivingSoon(plan: ReturnType<typeof layout>) {
+  const set = new Set<number>();
+  plan.slots.forEach((sl, i) => {
+    const s0 = ((plan.cols[sl.col].phi % 360) + 540) % 360 - 180;
+    if ((((-35 - s0) % 360) + 360) % 360 < 105) set.add(i); // the drum turns 7deg/s towards +s
+  });
+  return set;
+}
+
 /** once real picture shapes are known, re-stack each column so every tile shows its whole picture */
 function restack(g: Geo, plan: ReturnType<typeof layout>, pool: Item[], els: HTMLElement[]) {
   const ys = plan.cols.map(() => 0);
@@ -247,6 +278,41 @@ export function HeroCanvas() {
   const [g, setG] = useState<Geo | null>(null);
   const [plan, setPlan] = useState<ReturnType<typeof layout> | null>(null);
 
+  /*
+   * On a phone only a handful of tiles face the screen at once, yet the
+   * drum holds ~300. The tiles on screen now (or within the next few
+   * seconds of spin and drift) load first; the rest follow once those
+   * pictures are in (or the page has loaded, or on the first drag,
+   * whichever comes first). Desktop keeps the browser's own lazy loading.
+   */
+  const [rest, setRest] = useState(false);
+  const restRef = useRef(rest);
+  restRef.current = rest;
+  const firstView = useMemo(() => (g && plan && g.mobile ? onScreenAtStart(g, plan) : null), [g, plan]);
+  const soonView = useMemo(() => (g && plan && g.mobile ? arrivingSoon(plan) : null), [g, plan]);
+  useEffect(() => {
+    const world = worldRef.current;
+    if (!g?.mobile || rest || !world || !firstView) return;
+    let t = 0;
+    const go = () => setRest(true);
+    const soon = () => { if (!t) t = window.setTimeout(go, 300); };
+    // done when every first-view picture has arrived (or failed)
+    const check = () => {
+      const tiles = world.querySelectorAll<HTMLElement>('[data-slot]');
+      for (const i of firstView) { const im = tiles[i]?.querySelector('img'); if (im && !im.complete) return; }
+      soon();
+    };
+    world.addEventListener('load', check, true);
+    world.addEventListener('error', check, true);
+    const raf = requestAnimationFrame(check);
+    if (document.readyState === 'complete') soon(); else window.addEventListener('load', soon, { once: true });
+    const cap = window.setTimeout(go, 8000); // never longer than this
+    return () => {
+      world.removeEventListener('load', check, true); world.removeEventListener('error', check, true);
+      window.removeEventListener('load', soon); cancelAnimationFrame(raf); clearTimeout(t); clearTimeout(cap);
+    };
+  }, [g, rest, firstView]);
+
   // build the drum for this screen size
   useEffect(() => {
     let t = 0, last = '';
@@ -285,6 +351,9 @@ export function HeroCanvas() {
     world.addEventListener('load', onLoad, true);
     // anything already loaded before the listener
     els.forEach((el) => { const im = el.querySelector('img'); if (im?.complete && im.naturalWidth) onLoad({ target: im } as unknown as Event); });
+    let stageW = stage.clientWidth, stageH = stage.clientHeight;
+    const onStageResize = () => { stageW = stage.clientWidth; stageH = stage.clientHeight; };
+    window.addEventListener('resize', onStageResize);
     const lift = new Float32Array(els.length);
     const start = performance.now();
     let prev = start, raf = 0;
@@ -338,10 +407,12 @@ export function HeroCanvas() {
         el.style.visibility = 'visible';
         el.style.transform = `translate3d(${(u - g.W / 2).toFixed(1)}px,${(l - sl.h / 2).toFixed(1)}px,${d.toFixed(1)}px) rotateY(${(-s).toFixed(2)}deg)`;
         el.style.opacity = Math.max(0, f).toFixed(3);
-        // reels play while they face you
+        // reels play while they face you and are on screen (on a phone, once the first pictures are in)
         const v = vids[i];
         if (v) {
-          const want = !motionOff && f > 0.4 && Math.abs(s) < 70;
+          const k = g.P / (g.P - d);
+          const onScreen = Math.abs(u * k) < stageW / 2 + g.W && Math.abs(l * k) < stageH / 2 + sl.h;
+          const want = !motionOff && f > 0.4 && Math.abs(s) < 70 && onScreen && (!g.mobile || restRef.current);
           if (want && v.paused) { if (v.preload !== 'auto') v.preload = 'auto'; v.play().catch(() => {}); }
           else if (!want && !v.paused) v.pause();
         }
@@ -374,7 +445,10 @@ export function HeroCanvas() {
     };
     // drag to spin, tap to open
     let down: { x: number; y: number; last: number; t: number } | null = null;
-    const onDown = (e: PointerEvent) => { down = { x: e.clientX, y: e.clientY, last: e.clientX, t: performance.now() }; };
+    const onDown = (e: PointerEvent) => {
+      down = { x: e.clientX, y: e.clientY, last: e.clientX, t: performance.now() };
+      if (g.mobile && !restRef.current) setRest(true); // spinning by hand brings the rest round
+    };
     const onUp = (e: PointerEvent) => {
       const d = down; down = null;
       const wasDrag = dragging;
@@ -420,6 +494,7 @@ export function HeroCanvas() {
       world.removeEventListener('load', onLoad, true);
       vids.forEach((v) => v?.pause());
       window.removeEventListener('scroll', kick);
+      window.removeEventListener('resize', onStageResize);
     };
   }, [g, plan, pool]);
 
@@ -434,6 +509,11 @@ export function HeroCanvas() {
           <div ref={worldRef} className="absolute inset-0 select-none cursor-default" style={{ perspective: g ? `${g.P}px` : '1100px', touchAction: 'pan-y' }}>
             {g && plan && plan.slots.map((sl, i) => {
               const it = pool[sl.item];
+              // a phone loads the tiles on screen first, the rest once the page is in;
+              // reel stills always come (a dozen small pictures, shared by their tiles)
+              const load = !firstView || rest || firstView.has(i);
+              const low = !!firstView && !firstView.has(i) && !soonView?.has(i);
+              const still = stills[it.full] ?? it.src;
               return (
                 <button
                   key={i}
@@ -448,9 +528,11 @@ export function HeroCanvas() {
                   style={{ width: g.W, height: sl.h, visibility: 'hidden', opacity: 0 }}
                 >
                   {it.video ? (
-                    <video src={it.video} poster={stills[it.full] ?? it.src} muted loop playsInline preload="none" aria-hidden className="pointer-events-none h-full w-full object-cover" style={{ filter: 'saturate(1.22) brightness(0.95) contrast(1.03)' }} />
+                    <video src={it.video} poster={g.mobile ? still.replace('w_600,c_limit', 'w_360,c_limit') : still} muted loop playsInline preload="none" aria-hidden className="pointer-events-none h-full w-full object-cover" style={{ filter: 'saturate(1.22) brightness(0.95) contrast(1.03)' }} />
                   ) : (
-                    <img {...IMG.tileLarge(it.src)} alt="" loading={g.mobile ? 'eager' : 'lazy'} decoding="async" draggable={false}
+                    <img {...(load ? IMG.tileLarge(it.src) : {})} {...(load && g.mobile ? { sizes: `${g.W}px` } : {})}
+                      {...(low ? { fetchpriority: 'low' } : {})}
+                      alt="" loading={g.mobile ? 'eager' : 'lazy'} decoding="async" draggable={false}
                       // no grey box while it loads: our own pictures show their soft preview
                       // (app/media.ts) at once, the rest fade in once they are there
                       onLoad={(e) => { e.currentTarget.style.opacity = '1'; }}
@@ -477,7 +559,7 @@ export function HeroCanvas() {
         <h1 className="sr-only">{tx('Salome Mosiava, Senior Product Designer and Art Director', 'სალომე მოსიავა, სენიორ პროდაქტ დიზაინერი და არტ დირექტორი')}</h1>
         <div className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2"><CtaLink /></div>
         <PauseButton className="absolute right-3 top-3 sm:right-auto sm:top-auto sm:left-2 sm:bottom-24 z-10" />
-        <div className="pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 z-10 hidden sm:block rounded-md bg-white/80 px-3 py-1.5 text-[13px] text-[#6f6f6f] backdrop-blur-md whitespace-nowrap">
+        <div className="pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 z-10 hidden sm:block rounded-md bg-white/80 px-3 py-1.5 text-[13px] text-[#6e6e6e] backdrop-blur-md whitespace-nowrap">
           <span className="hidden sm:inline">{tx('Move to look around, click to open', 'კურსორით დაათვალიერე, დააჭირე გასახსნელად')}</span>
           <span className="sm:hidden">{tx('Swipe to spin, tap to open', 'გაასრიალე, დააჭირე გასახსნელად')}</span>
         </div>

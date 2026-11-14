@@ -184,7 +184,7 @@ export function SocialCase({ d }: { d: SocialCaseData }) {
           </h1>
           <ul className="mt-6 flex flex-wrap gap-1.5">
             {d.tags.map((t) => <li key={t.en} className="inline-flex items-center h-8 px-3.5 rounded-full border border-[#111]/80 text-[13px]">{tx(t.en, t.ka)}</li>)}
-            {d.year && <li className="inline-flex items-center h-8 px-3.5 rounded-full bg-[#f2f2f2] text-[13px] text-[#6f6f6f]">{d.year}</li>}
+            {d.year && <li className="inline-flex items-center h-8 px-3.5 rounded-full bg-[#f2f2f2] text-[13px] text-[#6e6e6e]">{d.year}</li>}
           </ul>
         </header>
 

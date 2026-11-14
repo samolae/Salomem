@@ -25,7 +25,7 @@ function Stage({ src, bg, alt, eager, pad = '7%' }: { src: string; bg: string; a
 }
 
 function SectionLabel({ children }: { children: string }) {
-  return <h2 className="px-0.5 pb-3 text-[14px] text-[#6f6f6f]">{children}</h2>;
+  return <h2 className="px-0.5 pb-3 text-[14px] text-[#6e6e6e]">{children}</h2>;
 }
 
 function CaseBody({ c }: { c: CaseStudy }) {
@@ -53,7 +53,7 @@ function CaseBody({ c }: { c: CaseStudy }) {
         <dl className="grid grid-cols-2 sm:grid-cols-5 gap-1.5">
           {c.meta.map((m) => (
             <div key={m.label} className="rounded-md bg-[#f2f2f2] px-4 py-3.5">
-              <dt className="text-[13px] text-[#6f6f6f]">{m.label}</dt>
+              <dt className="text-[13px] text-[#6e6e6e]">{m.label}</dt>
               <dd className="mt-0.5 text-[14px] text-[#111]">{m.value}</dd>
             </div>
           ))}
@@ -71,7 +71,7 @@ function CaseBody({ c }: { c: CaseStudy }) {
           {c.stats.map((s) => (
             <div key={s.label} className="rounded-md border border-[#ececec] p-6">
               <div className="text-[34px] leading-none" style={{ fontFamily: T.display, fontWeight: 900, color: c.accent }}>{s.num}</div>
-              <div className="mt-1.5 text-[14px] text-[#6f6f6f]">{s.label}</div>
+              <div className="mt-1.5 text-[14px] text-[#6e6e6e]">{s.label}</div>
             </div>
           ))}
         </div>
@@ -79,7 +79,7 @@ function CaseBody({ c }: { c: CaseStudy }) {
 
       {/* Overview */}
       <section aria-labelledby="overview" className="px-5 pt-24 pb-8 flex flex-col items-center text-center">
-        <h2 id="overview" className="text-[14px] text-[#6f6f6f] mb-6">Overview</h2>
+        <h2 id="overview" className="text-[14px] text-[#6e6e6e] mb-6">Overview</h2>
         <div className="max-w-[620px] space-y-5 text-[17px] leading-[1.6] text-[#111]">
           {c.intro.map((p) => <p key={p.slice(0, 20)}>{p}</p>)}
         </div>
@@ -93,7 +93,7 @@ function CaseBody({ c }: { c: CaseStudy }) {
               <div className="h-full rounded-md bg-[#f2f2f2] p-6 sm:p-9">
                 <div className="flex items-baseline gap-2 text-[13px]">
                   <span className="tabular-nums" style={{ color: c.accent }}>0{i + 1}</span>
-                  <span className="text-[#6f6f6f]">{s.label}</span>
+                  <span className="text-[#6e6e6e]">{s.label}</span>
                 </div>
                 <p className="mt-6 text-[18px] sm:text-[20px] leading-[1.45] text-[#111]">{s.text}</p>
               </div>
@@ -124,7 +124,7 @@ function CaseBody({ c }: { c: CaseStudy }) {
           <h2 id="cards" className="text-[28px] sm:text-[40px] leading-[1.05] text-[#111] max-w-[760px]" style={{ fontFamily: T.display, fontWeight: 900 }}>
             {c.cardsTitle}{dot}
           </h2>
-          {c.cardsIntro && <p className="mt-5 text-[15px] leading-[1.5] text-[#6f6f6f] max-w-[460px]">{c.cardsIntro}</p>}
+          {c.cardsIntro && <p className="mt-5 text-[15px] leading-[1.5] text-[#6e6e6e] max-w-[460px]">{c.cardsIntro}</p>}
         </div>
         <div className={`grid grid-cols-1 sm:grid-cols-2 ${c.cards.length > 4 ? 'lg:grid-cols-3' : 'lg:grid-cols-4'} gap-1.5`}>
           {c.cards.map((k, i) => (
@@ -132,7 +132,7 @@ function CaseBody({ c }: { c: CaseStudy }) {
               <div className="h-full rounded-md bg-[#f2f2f2] p-6">
                 <div className="text-[13px] tabular-nums" style={{ color: c.accent }}>0{i + 1}</div>
                 <div className="mt-8 text-[16px] leading-snug text-[#111]" style={{ fontWeight: 500 }}>{k.title}</div>
-                <p className="mt-2 text-[14px] leading-[1.5] text-[#6f6f6f]">{k.desc}</p>
+                <p className="mt-2 text-[14px] leading-[1.5] text-[#6e6e6e]">{k.desc}</p>
               </div>
             </Reveal>
           ))}
@@ -168,7 +168,7 @@ function CaseBody({ c }: { c: CaseStudy }) {
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-1.5 items-start">
             <div className="rounded-md bg-[#f2f2f2] p-6 sm:p-9">
               <h2 id="extra" className="text-[22px] leading-tight text-[#111]" style={{ fontFamily: T.display, fontWeight: 900 }}>{c.extra.title}{dot}</h2>
-              <p className="mt-4 text-[15px] leading-[1.55] text-[#6f6f6f]">{c.extra.text}</p>
+              <p className="mt-4 text-[15px] leading-[1.55] text-[#6e6e6e]">{c.extra.text}</p>
             </div>
             {c.extra.src && (
               <Reveal>
@@ -183,7 +183,7 @@ function CaseBody({ c }: { c: CaseStudy }) {
 
       {/* Outcome */}
       <section aria-labelledby="outcome" className="px-5 pt-28 flex flex-col items-center text-center">
-        <div className="text-[14px] text-[#6f6f6f] mb-4">Outcome</div>
+        <div className="text-[14px] text-[#6e6e6e] mb-4">Outcome</div>
         <h2 id="outcome" className="text-[32px] sm:text-[52px] leading-[1] text-[#111] max-w-[860px]" style={{ fontFamily: T.display, fontWeight: 900 }}>
           {c.outcomeTitle}{dot}
         </h2>
@@ -195,7 +195,7 @@ function CaseBody({ c }: { c: CaseStudy }) {
             {c.outcomeCards.map((k) => (
               <div key={k.title} className="rounded-md bg-[#f2f2f2] p-6 sm:p-9">
                 <div className="text-[16px] text-[#111]" style={{ fontWeight: 500 }}>{k.title}</div>
-                <p className="mt-2 text-[15px] leading-[1.55] text-[#6f6f6f]">{k.desc}</p>
+                <p className="mt-2 text-[15px] leading-[1.55] text-[#6e6e6e]">{k.desc}</p>
               </div>
             ))}
           </div>

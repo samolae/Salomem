@@ -69,12 +69,23 @@ function preloadsFor(url) {
   return [...files].map((f) => `<link rel="modulepreload" crossorigin href="/${f}">`).join('\n  ');
 }
 
-// Client-only shell for paths without static HTML
+// Client-only shell for paths without static HTML (/tools/pixel)
 await fs.writeFile(path.join(dist, 'app.html'), template);
 
+// Every other unknown path: there is no catch-all rewrite (vercel.json), so
+// Vercel serves this file with a real 404 status. The browser app renders
+// the Not Found page into it, as before.
+await fs.writeFile(
+  path.join(dist, '404.html'),
+  template
+    .replace(/<title>[\s\S]*?<\/title>/, '<title>Page not found | Salome Mosiava</title>')
+    .replace(/\s*<!--[^>]*canonical[^>]*-->/, '')
+    .replace(/\s*<link rel="canonical"[^>]*>/, '')
+    .replace('</head>', '  <meta name="robots" content="noindex" />\n</head>')
+);
+
 // Page tags from <Helmet> that belong in static HTML. Open Graph and Twitter
-// tags stay as the template defines them (what link previews show today),
-// and preconnects are already in the template.
+// tags are handled apart (OG below), and preconnects are already in the template.
 const KEEP = (tag) =>
   !/property="og:|name="twitter:|rel="preconnect"|name="color-scheme"/.test(tag);
 
@@ -84,6 +95,33 @@ function headFrom(helmet) {
   const tags =
     parts.join('').match(/<(title|script)\b[^>]*>[\s\S]*?<\/\1>|<(?:meta|link)\b[^>]*>/g) ?? [];
   return tags.filter(KEEP).join('\n  ');
+}
+
+/*
+ * Link previews: each inner page shares with its own title, description and
+ * address; the picture stays the template's one for every page. Only the
+ * values of the template's tags change, so nothing is added or doubled.
+ */
+const OWN = ['og:title', 'og:description', 'og:url', 'og:type', 'twitter:title', 'twitter:description'];
+function ogFrom(helmet) {
+  const meta = helmet ? helmet.meta.toString() : '';
+  const out = {};
+  for (const key of OWN) {
+    const attr = key.startsWith('og:') ? 'property' : 'name';
+    const tag = meta.match(new RegExp(`<meta\\b[^>]*\\b${attr}="${key}"[^>]*>`));
+    const content = tag && tag[0].match(/\bcontent="([^"]*)"/);
+    if (content) out[key] = content[1];
+  }
+  return out;
+}
+function withOwnPreview(page, og, url) {
+  for (const [key, value] of Object.entries(og)) {
+    const attr = key.startsWith('og:') ? 'property' : 'name';
+    const re = new RegExp(`(<meta ${attr}="${key}" content=")[^"]*(")`);
+    if (!re.test(page)) throw new Error(`prerender: template has no ${key} tag (${url})`);
+    page = page.replace(re, (_m, a, b) => `${a}${value}${b}`);
+  }
+  return page;
 }
 
 for (const url of PRERENDER_PATHS) {
@@ -111,6 +149,8 @@ for (const url of PRERENDER_PATHS) {
       .replace(/\s*<link rel="canonical"[^>]*>/, '')
       .replace('</head>', `  ${head}\n</head>`);
   }
+  // the home page keeps the template's card exactly as it was
+  if (url !== '/') page = withOwnPreview(page, ogFrom(helmet), url);
   // Georgian pages (/ka…): Georgian lang, their own canonical, and both
   // language versions announced to search engines on every bilingual page
   const isKa = url === '/ka' || url.startsWith('/ka/');
@@ -132,3 +172,16 @@ for (const url of PRERENDER_PATHS) {
   await fs.writeFile(file, page);
   console.log(`prerendered ${url.padEnd(28)} ${(Buffer.byteLength(page) / 1024).toFixed(1)} kB`);
 }
+
+/*
+ * The sitemap lists every page that has static HTML, so a new case study is
+ * in it as soon as it is in PRERENDER_PATHS (src/app/routes.ts).
+ */
+const priority = (u) => (u === '/' ? '1.0' : u === '/services' || u === '/contact' ? '0.8' : '0.9');
+const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${PRERENDER_PATHS.map((u) => `  <url><loc>https://samole.ge${u}</loc><changefreq>monthly</changefreq><priority>${priority(u)}</priority></url>`).join('\n')}
+</urlset>
+`;
+await fs.writeFile(path.join(dist, 'sitemap.xml'), sitemap);
+console.log(`sitemap.xml                  ${PRERENDER_PATHS.length} pages`);

@@ -209,7 +209,7 @@ export function FoldingCards({ items: base, label }: { items: { img: string; tit
               <div className="p-5 bg-white">
                 <div className="text-[12px] text-[#d93905]">{s.tag}</div>
                 <h3 className="mt-1 text-[17px] text-[#111]" style={{ fontWeight: 500 }}>{s.title}</h3>
-                <p className="mt-1 text-[14px] leading-[1.5] text-[#6f6f6f]">{s.desc}</p>
+                <p className="mt-1 text-[14px] leading-[1.5] text-[#6e6e6e]">{s.desc}</p>
               </div>
             </article>
           </div>

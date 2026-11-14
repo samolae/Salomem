@@ -1,4 +1,5 @@
 {
+  "trailingSlash": false,
   "rewrites": [
     {
       "source": "/",
@@ -17,7 +18,7 @@
       "destination": "/projects/:slug/index.html"
     },
     {
-      "source": "/((?!.*\\.[a-zA-Z0-9]+$).*)",
+      "source": "/tools/pixel",
       "destination": "/app.html"
     }
   ],

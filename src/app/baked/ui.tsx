@@ -13,7 +13,7 @@ export const T = {
   font: '"Avenir Next Georgian", "Inter", system-ui, sans-serif',
   display: '"Loos Wide Black", "Avenir Next Georgian", system-ui, sans-serif',
   ink: '#111111',
-  muted: '#6f6f6f',
+  muted: '#6e6e6e',
   faint: '#9a9a9a',
   card: '#f2f2f2',
   line: '#e8e8e8',
@@ -71,7 +71,7 @@ export function PageIntro({ title, children, icon }: { title: string; children?:
     <header className="px-5 pt-32 pb-16 sm:pt-40 sm:pb-20 flex flex-col items-center text-center">
       {icon && <div className="mb-6">{icon}</div>}
       <h1 className="text-[30px] sm:text-[44px] leading-[1.05] tracking-[-0.01em] text-[#111] max-w-[720px]" style={{ fontFamily: T.display, fontWeight: 900 }}>{title}<span className="text-[#ff4306]">.</span></h1>
-      {children && <div className="mt-5 text-[15px] leading-[1.5] text-[#6f6f6f] max-w-[380px]">{children}</div>}
+      {children && <div className="mt-5 text-[15px] leading-[1.5] text-[#6e6e6e] max-w-[380px]">{children}</div>}
     </header>
   );
 }
@@ -82,7 +82,7 @@ export function Caption({ title, sub, tag }: { title: string; sub?: string; tag?
     <div className="pt-2 pb-5 px-0.5 flex items-start justify-between gap-3 text-[14px] leading-[1.4]">
       <div className="min-w-0">
         <div className="text-[#111] truncate">{title}</div>
-        {sub && <div className="text-[#6f6f6f]">{sub}</div>}
+        {sub && <div className="text-[#6e6e6e]">{sub}</div>}
       </div>
       {tag && <div className="text-[#d93905] whitespace-nowrap flex-shrink-0">{tag}</div>}
     </div>
@@ -173,7 +173,7 @@ export function Lightbox({ items, index, onClose, onIndex }: {
           {items.length > 1 && (
             <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
               <button aria-label={tx("Previous", "წინა")} disabled={index === 0} onClick={() => onIndex(index! - 1)} className={`${pillCls()} disabled:opacity-40`}><ChevronLeft size={15} /></button>
-              <span className="text-[13px] text-[#6f6f6f] tabular-nums px-2">{index! + 1} / {items.length}</span>
+              <span className="text-[13px] text-[#6e6e6e] tabular-nums px-2">{index! + 1} / {items.length}</span>
               <button aria-label={tx("Next", "შემდეგი")} disabled={index === items.length - 1} onClick={() => onIndex(index! + 1)} className={`${pillCls()} disabled:opacity-40`}><ChevronRight size={15} /></button>
             </div>
           )}
@@ -291,7 +291,10 @@ export function AreuliBlock({ compact = false }: { compact?: boolean }) {
       className={`group grid ${compact ? 'grid-cols-[112px_1fr] sm:grid-cols-[150px_1fr]' : 'grid-cols-1 md:grid-cols-2'} overflow-hidden rounded-md bg-[#111] text-white outline-none focus-visible:shadow-[0_0_0_3px_#ff4306]`}
     >
       <div className="relative overflow-hidden">
-        <img src="/areuli.jpg" alt="areuli.design" loading="lazy" decoding="async" width="960" height="960"
+        {/* light WebP copies (scripts/media.py); the compact card crops a square
+            into a tall box, so it asks for its height (~210px), not its width */}
+        <img src="/areuli.jpg" alt="areuli.design" loading={compact ? 'eager' : 'lazy'} decoding="async" width="960" height="960"
+          sizes={compact ? '210px' : '(min-width: 768px) 50vw, 100vw'}
           className="block w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]" />
       </div>
       <div className={`flex flex-col justify-center ${compact ? 'p-5 sm:p-6' : 'p-8 sm:p-14'}`}>

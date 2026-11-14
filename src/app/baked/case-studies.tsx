@@ -84,7 +84,8 @@ function UnispaceCover() {
 function DasturiCover() {
   return (
     <div className="flex h-full items-center justify-center bg-[#111111]">
-      <video src="/cases/dasturi/chrome-logo.mp4" poster="/cases/dasturi/chrome-logo.jpg" muted loop playsInline autoPlay preload="metadata" aria-hidden
+      {/* plays once it is on screen (lib/blur-up.ts), so the film is not part of the first load */}
+      <video src="/cases/dasturi/chrome-logo.mp4" poster="/cases/dasturi/chrome-logo.jpg" muted loop playsInline data-autoplay="" preload="none" aria-hidden
         className="h-full aspect-square object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]" style={{ mixBlendMode: 'lighten' }} />
     </div>
   );
@@ -340,7 +341,7 @@ export function CaseGrid({ initialTag }: { initialTag?: string }) {
                 <h2 className="text-[22px] sm:text-[26px] leading-[1.1] text-[#111]" style={{ fontFamily: T.display, fontWeight: 900 }}>{s.title}</h2>
                 <ViewCase />
               </div>
-              <p className="mt-2 px-0.5 max-w-[560px] text-[14px] leading-[1.55] text-[#6f6f6f] line-clamp-2">{tx(s.en, s.ka)}</p>
+              <p className="mt-2 px-0.5 max-w-[560px] text-[14px] leading-[1.55] text-[#6e6e6e] line-clamp-2">{tx(s.en, s.ka)}</p>
               <div className="mt-3 px-0.5 flex flex-wrap gap-1.5">
                 {s.tags.map((t) => (
                   <span key={t.en} className="inline-flex items-center h-7 px-3 rounded-full border border-[#111]/80 text-[12.5px] text-[#111]">{tx(t.en, t.ka)}</span>
@@ -398,7 +399,7 @@ function StudyCardOf({ x, prefix, wide }: { x: Study; prefix: string; wide?: boo
         <ViewCase small />
       </div>
       {SOLVED[x.to] && <p className="mt-1.5 px-0.5 text-[14px] leading-[1.4] text-[#222] max-w-[46ch]">{tx(SOLVED[x.to][0], SOLVED[x.to][1])}</p>}
-      <div className="mt-1 px-0.5 text-[13px] text-[#6f6f6f]">{x.tags.slice(0, 2).map((t) => tx(t.en, t.ka)).join(' · ')}</div>
+      <div className="mt-1 px-0.5 text-[13px] text-[#6e6e6e]">{x.tags.slice(0, 2).map((t) => tx(t.en, t.ka)).join(' · ')}</div>
     </CaseLink>
   );
 }
@@ -426,7 +427,7 @@ export function MoreCases({ current }: { current: string }) {
   return (
     <section aria-labelledby="next" className="px-1.5 pt-24">
       <div className="px-0.5 pb-3 flex items-baseline justify-between gap-4">
-        <h2 id="next" className="text-[14px] text-[#6f6f6f]">{tx('Next project', 'შემდეგი პროექტი')}</h2>
+        <h2 id="next" className="text-[14px] text-[#6e6e6e]">{tx('Next project', 'შემდეგი პროექტი')}</h2>
         <Link to={to('/work')} viewTransition className="group inline-flex items-center gap-1.5 text-[14px] text-[#111] hover:text-[#ff4306] transition-colors">
           <span aria-hidden className="transition-transform group-hover:-translate-x-0.5">←</span>{tx('Back to work', 'ყველა ნამუშევარი')}
         </Link>

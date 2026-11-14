@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router';
+import { Helmet } from 'react-helmet-async';
 import { motion, AnimatePresence } from 'motion/react';
 import { Home, ArrowLeft, Search, Layers, Image, Video, Briefcase } from 'lucide-react';
 import { useTheme } from './theme-provider';
@@ -54,6 +55,10 @@ export function NotFound() {
 
   return (
     <main id="main-content" tabIndex={-1} className="min-h-screen flex items-center justify-center px-4 py-16 relative z-10 outline-none">
+      <Helmet>
+        <title>Page not found | Salome Mosiava</title>
+        <meta name="robots" content="noindex" />
+      </Helmet>
       <div className="max-w-lg w-full">
         {/* 404 number */}
         <FadeIn>

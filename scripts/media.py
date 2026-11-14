@@ -2,7 +2,8 @@
 """
 Light copies of every local picture, for fast first paint.
 
-For each .jpg / .png under public/cases and public/hero it writes, under
+For each .jpg / .png under public/cases and public/hero (and the single
+pictures in FILES) it writes, under
 public/m/<same path>:
   <name>.<w>.webp  for w in WIDTHS smaller than the original, and
   <name>.<W>.webp  at the original width (capped at MAX), all WebP q80
@@ -21,6 +22,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PUB = os.path.join(ROOT, 'public')
 OUT = os.path.join(PUB, 'm')
 DIRS = ['cases', 'hero']
+FILES = ['areuli.jpg']  # single pictures at the top of public/
 WIDTHS = [480, 960, 1600]
 MAX = 2400
 Q = 80
@@ -31,40 +33,44 @@ def opaque(im):
         return a.getextrema()[0] == 255
     return True
 
+def sources():
+    for d in DIRS:
+        for base, _, files in os.walk(os.path.join(PUB, d)):
+            for f in sorted(files):
+                if f.lower().endswith(('.jpg', '.jpeg', '.png')):
+                    yield os.path.join(base, f)
+    for f in FILES:
+        yield os.path.join(PUB, f)
+
 manifest = {}
 made = 0
-for d in DIRS:
-    for base, _, files in os.walk(os.path.join(PUB, d)):
-        for f in sorted(files):
-            if not f.lower().endswith(('.jpg', '.jpeg', '.png')):
-                continue
-            src = os.path.join(base, f)
-            rel = os.path.relpath(src, PUB).replace(os.sep, '/')
-            stem = os.path.splitext(rel)[0]
-            im = Image.open(src)
-            w, h = im.size
-            op = opaque(im)
-            top = min(w, MAX)
-            sizes = [x for x in WIDTHS if x < top * 0.9] + [top]
-            manifest[rel] = [top, round(h * top / w), op]
-            mt = os.path.getmtime(src)
-            todo = []
-            for x in sizes:
-                todo.append((os.path.join(OUT, f'{stem}.{x}.webp'), x))
-            todo.append((os.path.join(OUT, f'{stem}.lq.webp'), 40))
-            if all(os.path.exists(p) and os.path.getmtime(p) >= mt for p, _ in todo):
-                continue
-            im.load()
-            rgb = im.convert('RGBA' if not op else 'RGB')
-            for p, x in todo:
-                os.makedirs(os.path.dirname(p), exist_ok=True)
-                hh = max(1, round(h * x / w))
-                r = rgb.resize((x, hh), Image.LANCZOS) if x != w else rgb
-                if x == 40:
-                    r.save(p, 'WEBP', quality=50, method=6)
-                else:
-                    r.save(p, 'WEBP', quality=Q, method=6)
-                made += 1
+for src in sources():
+    rel = os.path.relpath(src, PUB).replace(os.sep, '/')
+    stem = os.path.splitext(rel)[0]
+    im = Image.open(src)
+    w, h = im.size
+    op = opaque(im)
+    top = min(w, MAX)
+    sizes = [x for x in WIDTHS if x < top * 0.9] + [top]
+    manifest[rel] = [top, round(h * top / w), op]
+    mt = os.path.getmtime(src)
+    todo = []
+    for x in sizes:
+        todo.append((os.path.join(OUT, f'{stem}.{x}.webp'), x))
+    todo.append((os.path.join(OUT, f'{stem}.lq.webp'), 40))
+    if all(os.path.exists(p) and os.path.getmtime(p) >= mt for p, _ in todo):
+        continue
+    im.load()
+    rgb = im.convert('RGBA' if not op else 'RGB')
+    for p, x in todo:
+        os.makedirs(os.path.dirname(p), exist_ok=True)
+        hh = max(1, round(h * x / w))
+        r = rgb.resize((x, hh), Image.LANCZOS) if x != w else rgb
+        if x == 40:
+            r.save(p, 'WEBP', quality=50, method=6)
+        else:
+            r.save(p, 'WEBP', quality=Q, method=6)
+        made += 1
 
 # compact: "path": width, negative when the picture has transparency
 lines = ',\n'.join(f'  {json.dumps(k)}: [{v[0] if v[2] else -v[0]}, {v[1]}]' for k, v in sorted(manifest.items()))

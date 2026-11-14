@@ -106,7 +106,7 @@ export function WorkContent() {
       </section>
 
       <section aria-labelledby="full" className="pt-16">
-        <h2 id="full" className="px-2 pb-3 text-[14px] text-[#6f6f6f]">{tx('Case studies', 'ქეისები')}</h2>
+        <h2 id="full" className="px-2 pb-3 text-[14px] text-[#6e6e6e]">{tx('Case studies', 'ქეისები')}</h2>
         <CaseGrid />
         <div className="pt-12 flex justify-center"><CtaLink /></div>
       </section>

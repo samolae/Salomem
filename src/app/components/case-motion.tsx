@@ -219,7 +219,7 @@ export function Marquee({ items, className = '', speed = 40, separator = '·' }:
       <div className="flex w-max" style={reduce ? undefined : { animation: `case-marquee ${speed}s linear infinite` }} aria-hidden>
         {row}{row}
       </div>
-      <style>{'@keyframes case-marquee{to{transform:translateX(-50%)}}'}</style>
+      <style dangerouslySetInnerHTML={{ __html: '@keyframes case-marquee{to{transform:translateX(-50%)}}' }} />
     </div>
   );
 }

@@ -81,7 +81,7 @@ export function ContactSticker() {
           </g>
         </svg>
       </Link>
-      <style>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         .cs { opacity: 0; transform: scale(.6) rotate(-20deg); transition: transform .45s cubic-bezier(.3,1.6,.5,1), opacity .25s ease; filter: drop-shadow(0 8px 18px rgba(0,0,0,.18)); }
         .cs:not([data-shown]) { pointer-events: none; }
         .cs[data-shown] { opacity: 1; transform: none; }
@@ -91,7 +91,7 @@ export function ContactSticker() {
         .cs:hover .cs-paper { transform: translateY(-8px); }
         .cs:hover .cs-front { transform: skewX(-8deg) scaleY(.94); }
         @media (prefers-reduced-motion: reduce) { .cs, .cs-paper, .cs-front { transition: none; } }
-      `}</style>
+      ` }} />
     </div>
   );
 }

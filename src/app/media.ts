@@ -15,6 +15,8 @@ import { MEDIA } from './media-manifest';
  * (src/jsx), so no page has to remember to use it.
  */
 const WIDTHS = [480, 960, 1600];
+// the drum's thumbnails are shown 112-220 px wide on a phone: they have a 240 px copy too (scripts/media.py SMALL)
+const SMALL: Record<string, number[]> = { hero: [240] };
 
 function local(src: unknown) {
   if (typeof src !== 'string' || src[0] !== '/') return null;
@@ -24,7 +26,7 @@ function local(src: unknown) {
   const [w, h] = m;
   const W = Math.abs(w);
   const stem = key.replace(/\.[a-z]+$/i, '');
-  const widths = WIDTHS.filter((x) => x < W * 0.9).concat(W);
+  const widths = (SMALL[key.split('/')[0]] ?? []).concat(WIDTHS).filter((x) => x < W * 0.9).concat(W);
   return { W, h, opaque: w > 0, stem, widths };
 }
 

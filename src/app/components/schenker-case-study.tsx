@@ -446,7 +446,7 @@ export function SchenkerCaseStudy() {
 
   return (
     <div className="relative min-h-screen bg-[#080B0F] text-white antialiased" style={{ fontFamily: BRAND.bodyFont }}>
-      <style>{HERO_CSS}</style>
+      <style dangerouslySetInnerHTML={{ __html: HERO_CSS }} />
       <SchenkerSEO />
       <CaseHeroTarget path="/projects/schenker" />
       <ReadProgress color={BRAND.oliveLight} />

@@ -475,7 +475,7 @@ export function GvCase() {
       />
       <CaseHeroTarget path="/projects/gv-capital" />
 
-      <style>{FONTS}</style>
+      <style dangerouslySetInnerHTML={{ __html: FONTS }} />
       <article className="pt-14 sm:pt-[52px]" style={{ color: CARBON, fontFamily: TEXT }}>
 
         {/* ── Hero: the brand's own cover, midnight and huge extended type ── */}

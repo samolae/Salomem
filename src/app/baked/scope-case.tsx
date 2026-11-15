@@ -344,7 +344,7 @@ function DiagonalScreens() {
     <div className="px-1.5">
       <ClipReveal className="overflow-hidden rounded-[4px]">
         <div className="relative w-full aspect-[4/3] md:aspect-[21/9] overflow-hidden" style={{ background: INK }} role="img" aria-label={tx('Scope website pages laid out on a diagonal', 'Scope-ის ვებსაიტის გვერდები დიაგონალზე')}>
-          <style>{`@keyframes sc-up{from{transform:translateY(0)}to{transform:translateY(-50%)}}@keyframes sc-down{from{transform:translateY(-50%)}to{transform:translateY(0)}}`}</style>
+          <style dangerouslySetInnerHTML={{ __html: `@keyframes sc-up{from{transform:translateY(0)}to{transform:translateY(-50%)}}@keyframes sc-down{from{transform:translateY(-50%)}to{transform:translateY(0)}}` }} />
           <div className="absolute left-1/2 top-1/2 flex items-center gap-[1.2%] w-[175%] md:w-[135%]"
             style={{ transform: 'translate(-50%,-50%) rotateX(52deg) rotateZ(-38deg)' }}>
             {COLS.map((pages, c) => (
@@ -471,12 +471,12 @@ export function ScopeCase() {
               <img src={src} alt={gallery[i].alt} loading="lazy" decoding="async" className="sc-post block w-full h-auto" style={{ animationDelay: `${-i * 1.7}s` }} />
             </motion.button>
           ))}
-          <style>{`
+          <style dangerouslySetInnerHTML={{ __html: `
             @keyframes sc-push { from { transform: scale(1) translate(0,0); } to { transform: scale(1.07) translate(-1.5%, -1.5%); } }
             .sc-post { animation: sc-push 9s ease-in-out infinite alternate; transform-origin: 50% 50%; }
             .group:hover .sc-post { animation-play-state: paused; }
             @media (prefers-reduced-motion: reduce) { .sc-post { animation: none; } }
-          `}</style>
+          ` }} />
         </div>
 
         {/* ── 04 Web ───────────────────────────────────────────────────── */}

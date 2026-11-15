@@ -742,7 +742,7 @@ export function UnispaceCaseStudy() {
                       />
                     ))}
                   </svg>
-                  <style>{'@keyframes uni-flow{to{stroke-dashoffset:-20}}'}</style>
+                  <style dangerouslySetInnerHTML={{ __html: '@keyframes uni-flow{to{stroke-dashoffset:-20}}' }} />
                 </div>
                 <div className="lg:hidden flex justify-center" aria-hidden>
                   <ChevronDown size={18} className="text-[#6BA4FF]" />
@@ -1259,7 +1259,7 @@ export function UnispaceCaseStudy() {
                       <circle key={i} cx="190" cy="190" r={20 + i * 8} fill="none" stroke="url(#unispaceRingGrad)" strokeWidth="0.7" strokeDasharray="2 5" opacity={1 - i * 0.035} />
                     ))}
                   </svg>
-                  <style>{'@keyframes uni-spin{to{transform:rotate(360deg)}}'}</style>
+                  <style dangerouslySetInnerHTML={{ __html: '@keyframes uni-spin{to{transform:rotate(360deg)}}' }} />
                   <div className="relative">
                     <h4 className="text-[14px] font-semibold text-white mb-2">Concentric Rings</h4>
                     <p lang="en" className={`text-[14px] text-white/70 leading-[1.7] max-w-[40ch] ${JUSTIFY}`}>Dashed concentric rings on a blue → purple → pink gradient. Signs every auth, onboarding, and verification screen, a calm, technical signature that frames otherwise utilitarian forms.</p>

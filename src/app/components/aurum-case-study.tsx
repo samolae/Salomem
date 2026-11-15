@@ -264,7 +264,7 @@ const META = [
 function AurumHero() {
   return (
     <header className="pb-20 pt-28 md:pb-28 md:pt-36 lg:pb-32 lg:pt-40">
-      <style>{HERO_CSS}</style>
+      <style dangerouslySetInnerHTML={{ __html: HERO_CSS }} />
       <Container>
         <p className={`au-rise mb-6 flex items-center gap-3 md:mb-8 ${T.label}`} style={d(0)}>
           <span>Case study</span>

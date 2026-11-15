@@ -440,7 +440,7 @@ export function BakedShell({ children }: { children: ReactNode }) {
         <FloatingCta />
         <MobileDock />
         <BackToTop />
-        <style>{`
+        <style dangerouslySetInnerHTML={{ __html: `
           @font-face { font-family: 'Avenir Next Georgian'; src: url('/fonts/avenir-next-georgian-regular-v2.woff2') format('woff2'); font-weight: 100 700; font-style: normal; font-display: swap; }
           @font-face { font-family: 'Loos Wide Black'; src: url('/fonts/loos-wide-black-v2.woff2') format('woff2'); font-weight: 800 900; font-style: normal; font-display: swap; }
           html:has(.baked), html:has(.baked) body { background: #111; color-scheme: light; }
@@ -457,7 +457,7 @@ export function BakedShell({ children }: { children: ReactNode }) {
           @media (prefers-reduced-motion: reduce) {
             .baked-marquee, .baked-col-up, .baked-col-down { animation: none; }
           }
-        `}</style>
+        ` }} />
       </div>
       </BookingProvider>
     </PauseCtx.Provider>

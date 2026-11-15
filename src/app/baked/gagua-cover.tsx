@@ -59,7 +59,7 @@ export function GaguaLettering({ className = '', small = false }: { className?: 
           </div>
         );
       })}
-      <style>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         .gl-item { transition: left ${MOVE}ms cubic-bezier(.7,0,.25,1); }
         .gl-lift { animation: gl-lift ${MOVE}ms cubic-bezier(.45,0,.25,1) both; }
         @keyframes gl-lift {
@@ -71,7 +71,7 @@ export function GaguaLettering({ className = '', small = false }: { className?: 
         .gl-cursor { width: ${small ? 18 : 26}px; height: ${small ? 18 : 26}px; right: 22%; bottom: 18%; animation: gl-cursor ${MOVE}ms ease both; }
         @keyframes gl-cursor { 0% { transform: translate(14px, 14px); opacity: 0; } 12%, 88% { transform: translate(0, 0); opacity: 1; } 100% { transform: translate(14px, 14px); opacity: 0; } }
         @media (prefers-reduced-motion: reduce) { .gl-item { transition: none; } .gl-lift, .gl-cursor { animation: none; display: none; } }
-      `}</style>
+      ` }} />
     </div>
   );
 }

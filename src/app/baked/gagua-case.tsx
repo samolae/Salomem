@@ -81,12 +81,12 @@ function Palette() {
           </div>
         ))}
       </div>
-      <style>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         .gp-sw { flex: 1 1 0; transform: translateY(40%); opacity: 0; transition: transform .8s cubic-bezier(.2,.8,.2,1), opacity .5s ease, flex-grow .6s cubic-bezier(.2,.8,.2,1); }
         .gp[data-on] .gp-sw { transform: none; opacity: 1; }
         .gp[data-on] .gp-sw:hover { flex-grow: 2.4; transition-delay: 0ms !important; }
         @media (prefers-reduced-motion: reduce) { .gp-sw { transform: none; opacity: 1; transition: none; } }
-      `}</style>
+      ` }} />
     </section>
   );
 }
@@ -228,7 +228,7 @@ function MockStrip() {
           </div>
         ))}
       </div>
-      <style>{`.gk-shot { height: clamp(280px, 30vw, 480px); aspect-ratio: 1360 / 2048; }`}</style>
+      <style dangerouslySetInnerHTML={{ __html: `.gk-shot { height: clamp(280px, 30vw, 480px); aspect-ratio: 1360 / 2048; }` }} />
     </div>
   );
 }

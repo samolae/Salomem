@@ -34,7 +34,7 @@ export function useSeen<T extends Element>(threshold = 0.25) {
 /* Keyframes shared by the pieces; scroll-linked ones only where supported */
 export function MotionStyles() {
   return (
-    <style>{`
+    <style dangerouslySetInnerHTML={{ __html: `
 .ds-draw{stroke-dasharray:1;stroke-dashoffset:1}
 .ds-on .ds-draw{animation:ds-draw var(--d,2.4s) cubic-bezier(.65,0,.35,1) var(--delay,0s) forwards}
 @keyframes ds-draw{to{stroke-dashoffset:0}}
@@ -61,7 +61,7 @@ export function MotionStyles() {
   .ds-draw{stroke-dashoffset:0}.ds-fade,.ds-pop,.ds-rise{opacity:1;transform:none}.ds-wipe{clip-path:none}
   .ds-on .ds-draw,.ds-on .ds-fade,.ds-on .ds-pop,.ds-on .ds-rise,.ds-on .ds-wipe,.ds-on .ds-sheen,.ds-parallax{animation:none}
 }
-`}</style>
+` }} />
   );
 }
 

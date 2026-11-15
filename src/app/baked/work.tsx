@@ -83,7 +83,7 @@ export function WorkContent() {
 
   return (
     <>
-      <style>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         .wf-card{transform:translate(0,30%) scale(.9);opacity:0;transition:transform .4s cubic-bezier(.2,1.3,.3,1),opacity .25s}
         .wf[data-open] .wf-card{transform:translate(var(--x),-34%) rotate(var(--r));opacity:1}
         .wf-front{transform-origin:50% 100%;transition:transform .4s cubic-bezier(.2,1,.3,1)}
@@ -91,7 +91,7 @@ export function WorkContent() {
         .wf[data-open] .wf-label{background:#2b6fe8;color:#fff}
         .wf:focus-visible .wf-label{outline:2px solid #111;outline-offset:2px}
         @media (prefers-reduced-motion: reduce){.wf-card,.wf-front{transition:none}}
-      `}</style>
+      ` }} />
 
       <PageIntro title={tx('Work', 'ნამუშევრები')}>
         {tx('Pick a folder to see what is inside.', 'აირჩიე საქაღალდე და ნახე, რა არის შიგნით.')}

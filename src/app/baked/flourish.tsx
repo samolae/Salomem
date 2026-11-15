@@ -46,7 +46,7 @@ function FullWidthName() {
   }, []);
   return (
     <div ref={box} aria-hidden className="-mt-6 sm:-mt-10 px-3 sm:px-4 select-none overflow-hidden">
-      <style>{NAME_CSS}</style>
+      <style dangerouslySetInnerHTML={{ __html: NAME_CSS }} />
       <span ref={txt} className="name-breathe mx-auto block whitespace-nowrap leading-[0.9] text-[#111] text-center"
         style={{ fontFamily: '"Unbounded", ' + T.display, fontSize: '8.4vw', letterSpacing: '-0.02em', width: 'max-content' }}>
         Salome Mosiava

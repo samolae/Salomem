@@ -5,7 +5,7 @@ Light copies of every local picture, for fast first paint.
 For each .jpg / .png under public/cases and public/hero (and the single
 pictures in FILES) it writes, under
 public/m/<same path>:
-  <name>.<w>.webp  for w in WIDTHS smaller than the original, and
+  <name>.<w>.webp  for w in WIDTHS smaller than the original (plus 240 for public/hero), and
   <name>.<W>.webp  at the original width (capped at MAX), all WebP q80
   <name>.lq.webp   a 40 px wide preview, shown soft at full size while the real one loads
 and src/app/media-manifest.ts, which maps each picture to its width and
@@ -24,6 +24,9 @@ OUT = os.path.join(PUB, 'm')
 DIRS = ['cases', 'hero']
 FILES = ['areuli.jpg']  # single pictures at the top of public/
 WIDTHS = [480, 960, 1600]
+# the drum's thumbnails (public/hero) are shown 112-220 px wide on a phone,
+# so they get a 240 px copy too (app/media.ts offers it to the same pictures)
+SMALL = {'hero': [240]}
 MAX = 2400
 Q = 80
 
@@ -51,7 +54,7 @@ for src in sources():
     w, h = im.size
     op = opaque(im)
     top = min(w, MAX)
-    sizes = [x for x in WIDTHS if x < top * 0.9] + [top]
+    sizes = [x for x in SMALL.get(rel.split('/')[0], []) + WIDTHS if x < top * 0.9] + [top]
     manifest[rel] = [top, round(h * top / w), op]
     mt = os.path.getmtime(src)
     todo = []

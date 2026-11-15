@@ -5,6 +5,7 @@ import { spotlights } from './content';
 import { useMotionPause, PauseButton } from './shell';
 import { CtaLink, Lightbox, type LightboxItem } from './ui';
 import { brandName, useI18n } from './i18n';
+import { SHAPE, STILL, heroKey } from './hero-shapes';
 
 /*
  * The opening world, after baked.design: the work is pinned to the inside
@@ -99,30 +100,42 @@ function shuffle<T>(xs: T[]): T[] {
 /** width / height of each picture once it has loaded, so tiles take its shape */
 const RATIO = new Map<string, number>();
 
-function usePool(): Item[] {
+/** every kind taken in turn (two pictures, two case shots, a reel, a highlight), so neighbours differ */
+function interleave(lists: Item[][]) {
+  const out: Item[] = [];
+  for (let k = 0, added = true; added; k++) {
+    added = false;
+    lists.forEach((l, n) => {
+      const take = n < 2 ? [l[k * 2], l[k * 2 + 1]] : [l[k]];
+      for (const t of take) if (t) { out.push(t); added = true; }
+    });
+  }
+  return out;
+}
+
+/**
+ * pool: the drum's order, each kind shuffled anew on every visit.
+ * plain: the same items in one fixed order, for the list keyboards and screen
+ * readers get. That list is part of the page's HTML, so it must read the same
+ * on the server and in the browser's first render: a shuffled list there made
+ * React drop the whole server-rendered page and build it again from scratch.
+ */
+function usePool(): { pool: Item[]; plain: Item[] } {
   return useMemo(() => {
+    // shapes and stills measured in advance (hero-shapes.ts), so nothing changes once it loads
     const ads: Item[] = adsBrands.flatMap((b) =>
-      b.items.filter((it) => it.type === 'image' && !it.fullWidth).map((it) => ({ src: it.src, full: it.src, brand: b.name, logo: b.logoImg }))
+      b.items.filter((it) => it.type === 'image' && !it.fullWidth).map((it) => ({ src: it.src, full: it.src, brand: b.name, logo: b.logoImg, ratio: SHAPE[heroKey(it.src)] }))
     );
-    const spots: Item[] = spotlights.map((s) => ({ src: s.img, full: s.img, brand: s.title }));
+    const spots: Item[] = spotlights.map((s) => ({ src: s.img, full: s.img, brand: s.title, ratio: SHAPE[heroKey(s.img)] }));
     const frames: Item[] = motionReels.map((r, i) => ({
-      src: videoFrame(r.src, i % 2 ? '35p' : '60p', 600), full: r.src, fullVideo: true, brand: r.brand, logo: (r as { logoImg?: string }).logoImg,
+      src: videoFrame(r.src, STILL[heroKey(r.src)] ?? (i % 2 ? '35p' : '60p'), 600), full: r.src, fullVideo: true, brand: r.brand, logo: (r as { logoImg?: string }).logoImg,
       video: smallVideo(r.src), ratio: 9 / 16,
     }));
     const cases: Item[] = CASE_SHOTS.map(([d, n, r]) => ({
       src: `/hero/${d}-${n}.jpg`, full: `/cases/${d}/${n}.jpg`, brand: CASE_BRAND[d], ratio: r,
     }));
-    // interleave so neighbours differ in kind, each kind in a new order every visit
-    const out: Item[] = [];
-    const lists = [shuffle(ads), shuffle(cases), shuffle(frames), shuffle(spots)];
-    for (let k = 0, added = true; added; k++) {
-      added = false;
-      for (const l of lists) {
-        const take = l === lists[0] || l === lists[1] ? [l[k * 2], l[k * 2 + 1]] : [l[k]];
-        for (const t of take) if (t) { out.push(t); added = true; }
-      }
-    }
-    return out;
+    const kinds = [ads, cases, frames, spots];
+    return { pool: interleave(kinds.map(shuffle)), plain: interleave(kinds) };
   }, []);
 }
 
@@ -246,7 +259,8 @@ function useLiveStills(pool: Item[]) {
   const [stills, setStills] = useState<Record<string, string>>({});
   useEffect(() => {
     let alive = true;
-    const reels = [...new Set(pool.filter((p) => p.video && p.fullVideo).map((p) => p.full))];
+    // reels whose still was chosen in advance (hero-shapes.ts) need no check
+    const reels = [...new Set(pool.filter((p) => p.video && p.fullVideo && !STILL[heroKey(p.full)]).map((p) => p.full))];
     reels.forEach((full) => {
       const tryAt = (k: number) => {
         if (k >= OFFSETS.length || !alive) return;
@@ -270,7 +284,7 @@ const smooth = (v: number) => v * v * (3 - 2 * v);
 
 export function HeroCanvas() {
   const { tx, ka } = useI18n();
-  const pool = usePool();
+  const { pool, plain } = usePool();
   const stills = useLiveStills(pool);
   const [open, setOpen] = useState<number | null>(null);
   const lightbox: LightboxItem[] = useMemo(() => pool.map((t) => ({
@@ -291,8 +305,11 @@ export function HeroCanvas() {
    * On a phone only a handful of tiles face the screen at once, yet the
    * drum holds ~300. The tiles on screen now (or within the next few
    * seconds of spin and drift) load first; the rest follow once those
-   * pictures are in (or the page has loaded, or on the first drag,
-   * whichever comes first). Desktop keeps the browser's own lazy loading.
+   * pictures are in (or the page has loaded) and the opening has played,
+   * so until then the connection carries only what is on screen. A drag
+   * brings them at once; they never wait longer than 8 s. The first new
+   * column reaches the screen after ~3 s, so they are in by then. Desktop
+   * keeps the browser's own lazy loading.
    */
   const [rest, setRest] = useState(false);
   const restRef = useRef(rest);
@@ -303,8 +320,10 @@ export function HeroCanvas() {
     const world = worldRef.current;
     if (!g?.mobile || rest || !world || !firstView) return;
     let t = 0;
+    const t0 = performance.now();
     const go = () => setRest(true);
-    const soon = () => { if (!t) t = window.setTimeout(go, 300); };
+    // the opening (tiles coming forward from the middle outward) takes ~1.8 s
+    const soon = () => { if (!t) t = window.setTimeout(go, Math.max(300, 2000 - (performance.now() - t0))); };
     // done when every first-view picture has arrived (or failed)
     const check = () => {
       const tiles = world.querySelectorAll<HTMLElement>('[data-slot]');
@@ -345,15 +364,20 @@ export function HeroCanvas() {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const els = Array.from(world.querySelectorAll<HTMLElement>('[data-slot]'));
     const vids = els.map((e) => e.querySelector('video'));
-    // pictures report their real shape as they load; re-stack once per frame at most
+    // pictures report their real shape as they load; re-stack (once per frame at
+    // most) only when it differs from the shape the tile was given (hero-shapes.ts)
     let restackQueued = false;
     const onLoad = (e: Event) => {
       const t = e.target as HTMLElement;
       if (!(t instanceof HTMLImageElement) || !t.naturalWidth) return;
-      const key = t.closest<HTMLElement>('[data-slot]')?.dataset.src;
-      if (!key) return;
+      const slot = t.closest<HTMLElement>('[data-slot]');
+      const key = slot?.dataset.src;
+      if (!slot || !key) return;
       const r = t.naturalWidth / t.naturalHeight;
-      if (Math.abs((RATIO.get(key) ?? 0) - r) < 0.01) return;
+      const known = RATIO.get(key) ?? pool[Number(slot.dataset.item)]?.ratio;
+      // the natural size is scaled to the copy's density and rounded, so a known
+      // shape within a pixel of the measured one is the same picture
+      if (known && Math.abs(g.W / known - g.W / r) < 1.5) return;
       RATIO.set(key, r);
       if (!restackQueued) { restackQueued = true; requestAnimationFrame(() => { restackQueued = false; restack(g, plan, pool, els); kick(); }); }
     };
@@ -416,6 +440,12 @@ export function HeroCanvas() {
         u += (u / len) * push; l += (l / len) * push;
         const d = z - (1 - rev) * 500 + 160 * open + lift[i] * 70;
         const f = rev * Math.min(1, (g.P * 0.7 - d) / 250) * (1 - open);
+        // not revealed yet (or faded out by the opening): invisible anyway, so skip it
+        if (f <= 0.001) {
+          if (el.style.visibility !== 'hidden') el.style.visibility = 'hidden';
+          const v = vids[i]; if (v && !v.paused) v.pause();
+          continue;
+        }
         // Much of the facing half is outside the stage and clipped away anyway
         // (two thirds on a phone, half on a desktop): hide those tiles instead
         // of moving them every frame. Each side edge is projected at its own
@@ -427,7 +457,7 @@ export function HeroCanvas() {
           const v = vids[i]; if (v && !v.paused) v.pause();
           continue;
         }
-        el.style.visibility = 'visible';
+        if (el.style.visibility !== 'visible') el.style.visibility = 'visible';
         el.style.transform = `translate3d(${(u - g.W / 2).toFixed(1)}px,${(l - sl.h / 2).toFixed(1)}px,${d.toFixed(1)}px) rotateY(${(-s).toFixed(2)}deg)`;
         el.style.opacity = Math.max(0, f).toFixed(3);
         // reels play while they face you and are on screen (on a phone, once the first pictures are in)
@@ -530,11 +560,12 @@ export function HeroCanvas() {
           <div ref={worldRef} className="absolute inset-0 select-none cursor-default" style={{ perspective: g ? `${g.P}px` : '1100px', touchAction: 'pan-y' }}>
             {g && plan && plan.slots.map((sl, i) => {
               const it = pool[sl.item];
-              // a phone loads the tiles on screen first, the rest once the page is in;
-              // reel stills always come (a dozen small pictures, shared by their tiles)
+              // a phone loads the tiles on screen first (reel stills too), the rest once the page is in
               const load = !firstView || rest || firstView.has(i);
               const low = !!firstView && !firstView.has(i) && !soonView?.has(i);
               const still = stills[it.full] ?? it.src;
+              // a phone shows a reel's still 112-220 px wide: 240 px is sharp below 2x screens
+              const poster = g.mobile ? still.replace('w_600,c_limit', window.devicePixelRatio > 2 ? 'w_360,c_limit' : 'w_240,c_limit') : still;
               return (
                 <button
                   key={i}
@@ -549,9 +580,9 @@ export function HeroCanvas() {
                   style={{ width: g.W, height: sl.h, visibility: 'hidden', opacity: 0 }}
                 >
                   {it.video ? (
-                    <video src={it.video} poster={g.mobile ? still.replace('w_600,c_limit', 'w_360,c_limit') : still} muted loop playsInline preload="none" aria-hidden className="pointer-events-none h-full w-full object-cover" style={{ filter: 'saturate(1.22) brightness(0.95) contrast(1.03)' }} />
+                    <video src={it.video} poster={load ? poster : undefined} muted loop playsInline preload="none" aria-hidden className="pointer-events-none h-full w-full object-cover" style={{ filter: 'saturate(1.22) brightness(0.95) contrast(1.03)' }} />
                   ) : (
-                    <img {...(load ? IMG.tileLarge(it.src) : {})} {...(load && g.mobile ? { sizes: `${g.W}px` } : {})}
+                    <img {...(load ? (g.mobile ? IMG.tile(it.src) : IMG.tileLarge(it.src)) : {})} {...(load && g.mobile ? { sizes: `${g.W}px` } : {})}
                       {...(low ? { fetchpriority: 'low' } : {})}
                       alt="" loading={g.mobile ? 'eager' : 'lazy'} decoding="async" draggable={false}
                       // no grey box while it loads: our own pictures show their soft preview
@@ -573,8 +604,8 @@ export function HeroCanvas() {
 
         {/* keyboard and screen readers get a plain list of the work */}
         <ul className="sr-only">
-          {pool.slice(0, 24).map((it, i) => (
-            <li key={i}><button type="button" onClick={() => setOpen(i)}>{tx('Open', 'გახსენი')} {brandName(it.brand, ka)}</button></li>
+          {plain.slice(0, 24).map((it, i) => (
+            <li key={i}><button type="button" onClick={() => setOpen(pool.indexOf(it))}>{tx('Open', 'გახსენი')} {brandName(it.brand, ka)}</button></li>
           ))}
         </ul>
         <h1 className="sr-only">{tx('Salome Mosiava, Senior Product Designer and Art Director', 'სალომე მოსიავა, სენიორ პროდაქტ დიზაინერი და არტ დირექტორი')}</h1>

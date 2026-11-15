@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { motion, useReducedMotion } from 'motion/react';
+import { m as motion, useReducedMotion } from 'motion/react';
 import { useI18n } from './i18n';
 import { BookButton } from './booking';
 import { T } from './ui';
@@ -9,26 +9,26 @@ import { T } from './ui';
  *  fitted to the widest moment, the black weight, so it never overflows. */
 // T comes from ui.tsx, which imports this file, so it is read at render time
 const NAME_CSS = `
+@font-face { font-family: 'Unbounded'; src: url('/fonts/unbounded-name.woff2') format('woff2'); font-weight: 200 900; font-style: normal; font-display: swap; }
 @keyframes name-wght { from { font-variation-settings: "wght" 200; } to { font-variation-settings: "wght" 900; } }
 .name-breathe { animation: name-wght 3s ease-in-out -0.3s infinite alternate; }
+.name-breathe[data-off] { animation-play-state: paused; }
 @media (prefers-reduced-motion: reduce) { .name-breathe { animation: none; font-variation-settings: "wght" 900; } }
 `;
 function FullWidthName() {
   const box = useRef<HTMLDivElement>(null);
   const txt = useRef<HTMLSpanElement>(null);
   useEffect(() => {
-    // the font is only needed here, so it loads with this section
-    if (!document.querySelector('link[data-name-font]')) {
-      const l = document.createElement('link');
-      l.rel = 'stylesheet'; l.dataset.nameFont = '';
-      l.href = 'https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap';
-      document.head.appendChild(l);
-    }
+    // the font (Unbounded, variable weight) is our own 3 KB copy holding just these letters
+    // (public/fonts/unbounded-name.woff2), declared in NAME_CSS
     const b = box.current, t = txt.current;
     if (!b || !t) return;
     const fit = () => {
-      // measure at the black weight, the widest the word ever gets
+      // measure at the black weight, the widest the word ever gets. Transitions are off while
+      // measuring: with reduced motion the site gives every change a tiny transition, and the
+      // size read back was still the old one, so the name came out about three times too big
       const anim = t.style.animation;
+      t.style.transition = 'none';
       t.style.animation = 'none';
       t.style.fontVariationSettings = '"wght" 900';
       t.style.fontSize = '100px';
@@ -36,18 +36,23 @@ function FullWidthName() {
       t.style.fontSize = `${(100 * avail) / t.scrollWidth}px`;
       t.style.fontVariationSettings = '';
       t.style.animation = anim;
+      void t.offsetWidth; // settle the new size before transitions come back
+      t.style.transition = '';
     };
     fit();
     const ro = new ResizeObserver(fit);
     ro.observe(b);
+    // the weight animation runs on the main thread every frame: only while the name is on screen
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) delete t.dataset.off; else t.dataset.off = ''; });
+    io.observe(b);
     document.fonts?.load('900 100px Unbounded').then(fit).catch(() => {});
     document.fonts?.ready.then(fit);
-    return () => ro.disconnect();
+    return () => { ro.disconnect(); io.disconnect(); };
   }, []);
   return (
     <div ref={box} aria-hidden className="-mt-6 sm:-mt-10 px-3 sm:px-4 select-none overflow-hidden">
       <style dangerouslySetInnerHTML={{ __html: NAME_CSS }} />
-      <span ref={txt} className="name-breathe mx-auto block whitespace-nowrap leading-[0.9] text-[#111] text-center"
+      <span ref={txt} data-off="" className="name-breathe mx-auto block whitespace-nowrap leading-[0.9] text-[#111] text-center"
         style={{ fontFamily: '"Unbounded", ' + T.display, fontSize: '8.4vw', letterSpacing: '-0.02em', width: 'max-content' }}>
         Salome Mosiava
       </span>

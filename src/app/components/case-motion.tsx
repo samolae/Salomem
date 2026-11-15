@@ -1,5 +1,5 @@
 import { Children, useEffect, useRef, useState, type CSSProperties, type ElementType, type ReactNode } from 'react';
-import { motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react';
+import { m as motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react';
 
 /*
  * Shared motion for the UX/UI case studies. Every primitive is safe by
@@ -215,7 +215,7 @@ export function Marquee({ items, className = '', speed = 40, separator = '·' }:
     </span>
   );
   return (
-    <div className={`relative overflow-hidden [mask-image:linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)] ${className}`} aria-label={items.join(', ')}>
+    <div className={`relative overflow-hidden [mask-image:linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)] ${className}`} role="group" aria-label={items.join(', ')}>
       <div className="flex w-max" style={reduce ? undefined : { animation: `case-marquee ${speed}s linear infinite` }} aria-hidden>
         {row}{row}
       </div>

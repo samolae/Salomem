@@ -1,6 +1,6 @@
 import { Children, useState, useEffect, useRef, type ReactNode, type CSSProperties } from 'react';
 import {
-  motion,
+  m as motion,
   AnimatePresence,
   useReducedMotion,
   useScroll,

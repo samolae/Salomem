@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { BakedShell } from './shell';
 import { MoreCases } from './case-studies';
+import { useGoogleFonts } from '../lib/google-fonts';
 
 /*
  * The product cases (AURUM, Schenker, Unispace) keep their own art
@@ -9,6 +10,7 @@ import { MoreCases } from './case-studies';
  * Their old in-page bar (Back to Portfolio) is hidden.
  */
 export function ProductCase({ current, children }: { current: string; children: ReactNode }) {
+  useGoogleFonts();
   return (
     <BakedShell>
       <style dangerouslySetInnerHTML={{ __html: `.product-case nav[aria-label="Case study"],.product-case [aria-label="Back to top"]{display:none!important}` }} />

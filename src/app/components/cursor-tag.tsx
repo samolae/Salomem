@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
-import { AnimatePresence, motion, useMotionValue, useReducedMotion, useSpring } from 'motion/react';
+import { AnimatePresence, m as motion, useMotionValue, useReducedMotion, useSpring } from 'motion/react';
 import { ArrowRight, ArrowUpRight, Check, Copy, Maximize2, Play, Volume2, VolumeX, X } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 

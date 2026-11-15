@@ -137,7 +137,7 @@ function Campaigns() {
     <nav aria-label={tx('Campaigns in this case', 'კამპანიები ამ ქეისში')} className="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-[14px] sm:text-[15px]">
       {list.map(([n, name]) => (
         <a key={n} href={`#c${n}`} className="group inline-flex items-baseline gap-1.5 text-[#111] hover:text-[#40A750] transition-colors">
-          <span className="text-[11px] tabular-nums text-[#9a9a9a] group-hover:text-current">{n}</span>{name}
+          <span className="text-[11px] tabular-nums text-[#767676] group-hover:text-current">{n}</span>{name}
         </a>
       ))}
     </nav>
@@ -374,7 +374,7 @@ export function GaguaCase() {
         {/* facts */}
         <section className="px-5 sm:px-8 pt-20 sm:pt-28">
           <dl className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-[1100px] text-[14px]">
-            {facts.map(([k, v]) => <div key={k}><dt className="text-[#9a9a9a] mb-1">{k}</dt><dd>{v}</dd></div>)}
+            {facts.map(([k, v]) => <div key={k}><dt className="text-[#767676] mb-1">{k}</dt><dd>{v}</dd></div>)}
           </dl>
         </section>
 

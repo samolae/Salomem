@@ -24,9 +24,14 @@ OUT = os.path.join(PUB, 'm')
 DIRS = ['cases', 'hero']
 FILES = ['areuli.jpg']  # single pictures at the top of public/
 WIDTHS = [480, 960, 1600]
-# the drum's thumbnails (public/hero) are shown 112-220 px wide on a phone,
-# so they get a 240 px copy too (app/media.ts offers it to the same pictures)
-SMALL = {'hero': [240]}
+# pictures shown small get smaller copies too (app/media.ts offers them to the
+# same pictures): the drum's thumbnails (public/hero, 112-220 px wide on a
+# phone), the FitMeal bento cells and Gagua's lettering on the case grids
+SMALL = {'hero': [240], 'cases/fitmeal': [240, 360], 'cases/gagua': [320]}
+
+def small_for(rel):
+    parts = rel.split('/')
+    return SMALL.get(parts[0]) or SMALL.get('/'.join(parts[:2])) or []
 MAX = 2400
 Q = 80
 
@@ -54,7 +59,7 @@ for src in sources():
     w, h = im.size
     op = opaque(im)
     top = min(w, MAX)
-    sizes = [x for x in SMALL.get(rel.split('/')[0], []) + WIDTHS if x < top * 0.9] + [top]
+    sizes = [x for x in small_for(rel) + WIDTHS if x < top * 0.9] + [top]
     manifest[rel] = [top, round(h * top / w), op]
     mt = os.path.getmtime(src)
     todo = []

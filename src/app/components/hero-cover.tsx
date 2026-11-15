@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'motion/react';
+import { m as motion, useScroll, useTransform, useMotionValue, useSpring } from 'motion/react';
 import { ArrowRight, ChevronDown, Monitor, Clock, Smartphone, BookOpen } from 'lucide-react';
 import { useTheme } from './theme-provider';
 import { ShineText } from './animated-helpers';

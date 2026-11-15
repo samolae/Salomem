@@ -1,6 +1,6 @@
 import { createRoot, hydrateRoot } from 'react-dom/client';
 import { createBrowserRouter, matchRoutes } from 'react-router';
-import App from './app/App.tsx';
+import App, { setMotionFeatures } from './app/App.tsx';
 import { routes } from './app/routes';
 import { startHydration } from './app/hydration';
 import { homeRoute } from './app/case-routes';
@@ -34,6 +34,9 @@ window.addEventListener('load', () => { setTimeout(() => { try { sessionStorage.
 startBlurUp();
 
 async function boot() {
+  // motion's features: a separate script, requested right away (every page
+  // also modulepreloads it) and in place before the first render
+  const motionFeatures = import('./app/motion-features');
   const container = document.getElementById('root')!;
   // A `?section=` deep link opens a home section the static page cannot
   // know about, so those visits render from scratch instead of hydrating
@@ -55,6 +58,7 @@ async function boot() {
     }
   }
 
+  setMotionFeatures((await motionFeatures).default);
   const router = createBrowserRouter(routes);
 
   if (prerendered) {

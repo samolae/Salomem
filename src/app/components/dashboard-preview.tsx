@@ -1,4 +1,4 @@
-import { motion, useInView } from 'motion/react';
+import { m as motion, useInView } from 'motion/react';
 import { useRef } from 'react';
 import { ArrowUpRight, ArrowDownRight, TrendingUp } from 'lucide-react';
 

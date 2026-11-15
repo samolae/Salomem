@@ -13,7 +13,7 @@ const ITEMS = [
   { src: `${P}/lt-born.png`, alt: 'დავიბადე გაგუაში', w: 100 },  // wide sticker
   { src: `${P}/lt-concierge.png`, alt: 'გაგუას სამედიცინო კონსიერჟი', w: 84 },
 ];
-const SLOTS = [17, 50, 83]; // centres, in % of the width
+const SLOTS = [17, 50, 83]; // centres, in % of the width (cqw: the cover is an inline-size container, so the move is a transform the compositor runs)
 const MOVE = 1400;          // ms for one drag and drop
 
 export function GaguaLettering({ className = '', small = false }: { className?: string; small?: boolean }) {
@@ -41,13 +41,13 @@ export function GaguaLettering({ className = '', small = false }: { className?: 
   }, []);
 
   return (
-    <div className={`gl relative h-full w-full overflow-hidden ${className}`} style={{ background: '#EEF5EE' }} aria-label="შინ ზრუნვა, დავიბადე გაგუაში, გაგუას სამედიცინო კონსიერჟი">
+    <div className={`gl relative h-full w-full overflow-hidden ${className}`} style={{ background: '#EEF5EE', containerType: 'inline-size' }} aria-label="შინ ზრუნვა, დავიბადე გაგუაში, გაგუას სამედიცინო კონსიერჟი">
       {ITEMS.map((it, i) => {
         const slot = order.indexOf(i);
         const lifted = held === i;
         return (
-          <div key={it.src} className="gl-item absolute top-1/2 flex items-center justify-center"
-            style={{ left: `${SLOTS[slot]}%`, width: small ? '31%' : '30%', height: '64%', zIndex: lifted ? 3 : 1, transform: 'translate(-50%,-50%)' }}>
+          <div key={it.src} className="gl-item absolute left-0 top-1/2 flex items-center justify-center"
+            style={{ width: small ? '31%' : '30%', height: '64%', zIndex: lifted ? 3 : 1, transform: `translate(calc(${SLOTS[slot]}cqw - 50%), -50%)` }}>
             <div key={lifted ? beat : 'rest'} className={`gl-card relative flex items-center justify-center ${lifted ? 'gl-lift' : ''}`} style={{ width: `${it.w}%` }}>
               <img src={it.src} alt={it.alt} draggable={false} decoding="async" loading={small ? 'lazy' : 'eager'} className="block h-auto w-full object-contain" />
               {lifted && (
@@ -60,7 +60,7 @@ export function GaguaLettering({ className = '', small = false }: { className?: 
         );
       })}
       <style dangerouslySetInnerHTML={{ __html: `
-        .gl-item { transition: left ${MOVE}ms cubic-bezier(.7,0,.25,1); }
+        .gl-item { transition: transform ${MOVE}ms cubic-bezier(.7,0,.25,1); }
         .gl-lift { animation: gl-lift ${MOVE}ms cubic-bezier(.45,0,.25,1) both; }
         @keyframes gl-lift {
           0%   { transform: scale(1); filter: drop-shadow(0 0 0 rgba(0,0,0,0)); }

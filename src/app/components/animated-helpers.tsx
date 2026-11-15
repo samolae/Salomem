@@ -1,5 +1,5 @@
 import { useRef, useEffect, useLayoutEffect, useState, useCallback, useMemo, type ReactNode, type CSSProperties } from 'react';
-import { motion, useScroll, useTransform, useInView, useMotionValue, useSpring, useAnimationFrame, useReducedMotion } from 'motion/react';
+import { m as motion, useScroll, useTransform, useInView, useMotionValue, useSpring, useAnimationFrame, useReducedMotion } from 'motion/react';
 import { IMG } from '../lib/cld';
 import { isHydrating } from '../hydration';
 

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { Link } from 'react-router';
-import { AnimatePresence, motion, useInView, useReducedMotion } from 'motion/react';
+import { AnimatePresence, m as motion, useInView, useReducedMotion } from 'motion/react';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { IMG } from '../lib/cld';
 import { LeaningPills } from './flourish';

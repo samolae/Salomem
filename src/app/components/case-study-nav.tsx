@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { motion, AnimatePresence, useScroll, useSpring } from 'motion/react';
+import { m as motion, AnimatePresence, useScroll, useSpring } from 'motion/react';
 import { ChevronUp, ChevronDown } from 'lucide-react';
 import { useTheme } from './theme-provider';
 

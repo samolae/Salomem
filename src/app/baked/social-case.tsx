@@ -180,7 +180,7 @@ export function SocialCase({ d }: { d: SocialCaseData }) {
         <header className="px-5 sm:px-8 pt-10 sm:pt-16 pb-6 sm:pb-8">
           <span aria-hidden />
           <h1 className="mt-6 text-[40px] sm:text-[72px] leading-[0.95] tracking-[-0.02em]" style={{ fontFamily: T.display, fontWeight: 900 }}>
-            {d.brand}<span className="text-[#9a9a9a]">, {tx('Social Media', 'სოციალური მედია')}</span>
+            {d.brand}<span className="text-[#949494]">, {tx('Social Media', 'სოციალური მედია')}</span>
           </h1>
           <ul className="mt-6 flex flex-wrap gap-1.5">
             {d.tags.map((t) => <li key={t.en} className="inline-flex items-center h-8 px-3.5 rounded-full border border-[#111]/80 text-[13px]">{tx(t.en, t.ka)}</li>)}
@@ -226,7 +226,7 @@ export function SocialCase({ d }: { d: SocialCaseData }) {
         <section className="px-5 sm:px-8 pt-20 sm:pt-28">
           <dl className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-[1100px] text-[14px]">
             {d.facts.map(([k, v]) => (
-              <div key={k.en}><dt className="text-[#9a9a9a] mb-1">{tx(k.en, k.ka)}</dt><dd>{tx(v.en, v.ka)}</dd></div>
+              <div key={k.en}><dt className="text-[#767676] mb-1">{tx(k.en, k.ka)}</dt><dd>{tx(v.en, v.ka)}</dd></div>
             ))}
           </dl>
         </section>

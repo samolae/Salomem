@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router';
 import { ArrowLeft } from 'lucide-react';
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { AnimatePresence, m as motion, useReducedMotion } from 'motion/react';
 import { CaseHeroTarget, CaseLink } from '../components/case-transition';
 import { SEO } from '../components/seo';
 import { Parallax, RevealLines, Rise } from '../components/case-motion';

@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, m as motion } from 'motion/react';
 import { ArrowUpRight, X } from 'lucide-react';
 
 /* Booking a call: Salome's Cal.com page, opened over the site */

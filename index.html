@@ -10,7 +10,7 @@
 
   <!-- Favicon -->
   <link rel="preload" href="/fonts/avenir-next-georgian-regular-v2.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="preload" href="/fonts/loos-wide-black-v2.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/loos-wide-black-v3.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="icon" href="/favicon.ico" sizes="48x48" />
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
@@ -20,7 +20,8 @@
   <!-- Preconnect -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preconnect" href="https://res.cloudinary.com" crossorigin />
+  <!-- no crossorigin: pictures and films are not CORS requests, so only a plain connection is reused -->
+  <link rel="preconnect" href="https://res.cloudinary.com" />
 
   <!-- Fonts: one combined, non-blocking request. Variable weight ranges, and a
        browser only downloads a family's files once text actually uses it, so

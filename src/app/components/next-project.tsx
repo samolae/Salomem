@@ -1,5 +1,5 @@
 import { ArrowRight, ArrowUpRight, ArrowLeft, Layers, Video, Image, Home, Mail } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { m as motion, AnimatePresence } from 'motion/react';
 import { Link } from 'react-router';
 import { CaseLink } from './case-transition';
 import { useTheme } from './theme-provider';

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, type CSSProperties, type ReactNode } from 'react';
 import {
-  motion, AnimatePresence, useScroll, useTransform, useReducedMotion, useMotionValueEvent,
+  m as motion, AnimatePresence, useScroll, useTransform, useReducedMotion, useMotionValueEvent,
 } from 'motion/react';
 import { useNavigate } from 'react-router';
 import { CaseHeroTarget } from './case-transition';

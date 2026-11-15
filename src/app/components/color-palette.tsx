@@ -1,4 +1,4 @@
-import { motion } from 'motion/react';
+import { m as motion } from 'motion/react';
 import { useTheme } from './theme-provider';
 import { FadeIn, StaggerChildren, StaggerItem } from './animated-helpers';
 

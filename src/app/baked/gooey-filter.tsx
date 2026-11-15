@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from 'motion/react';
+import { AnimatePresence, LayoutGroup, m as motion, useReducedMotion } from 'motion/react';
 import { X } from 'lucide-react';
 
 /*

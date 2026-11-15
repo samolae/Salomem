@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { motion, useInView, useReducedMotion } from 'motion/react';
+import { m as motion, useInView, useReducedMotion } from 'motion/react';
 import { RotateCcw } from 'lucide-react';
 import { useMotionPause } from './shell';
 

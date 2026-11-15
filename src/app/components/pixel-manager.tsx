@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { m as motion, AnimatePresence } from 'motion/react';
 import { Link } from 'react-router';
 import {
   ArrowLeft, Check, Copy, Code2, Sparkles, Shield, Eye,

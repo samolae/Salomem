@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router';
 import { Helmet } from 'react-helmet-async';
-import { motion, AnimatePresence } from 'motion/react';
+import { m as motion, AnimatePresence } from 'motion/react';
 import { Home, ArrowLeft, Search, Layers, Image, Video, Briefcase } from 'lucide-react';
 import { useTheme } from './theme-provider';
 import { FadeIn, MagneticWrap } from './animated-helpers';

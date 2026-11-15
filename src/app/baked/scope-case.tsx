@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { Link } from 'react-router';
 import { ArrowLeft, Volume2, VolumeX } from 'lucide-react';
-import { motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform } from 'motion/react';
+import { m as motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform } from 'motion/react';
 import { CaseHeroTarget, CaseLink } from '../components/case-transition';
 import { SEO } from '../components/seo';
 import { ClipReveal, RevealLines, Rise } from '../components/case-motion';

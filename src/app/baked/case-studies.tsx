@@ -111,7 +111,8 @@ function FitmealBento() {
     <div className="grid h-full grid-cols-6 grid-rows-4 gap-1 bg-[#F6F1E7] p-1">
       {tiles.map(([k, col, row], i) => (
         <div key={k} className="relative overflow-hidden rounded-[4px]" style={{ gridColumn: col, gridRow: row }}>
-          <img src={`/cases/fitmeal/${k}-800.jpg`} srcSet={`/cases/fitmeal/${k}-800.jpg 800w, /cases/fitmeal/${k}-1200.jpg 1200w`} sizes={i === 0 ? '(min-width: 768px) 17vw, 34vw' : '(min-width: 768px) 9vw, 17vw'} alt="" loading="lazy" decoding="async"
+          {/* the picture's own light copies (240 px up, app/media.ts), so a small cell gets a small file */}
+          <img src={`/cases/fitmeal/${k}.jpg`} sizes={i === 0 ? '(min-width: 768px) 17vw, 34vw' : '(min-width: 768px) 9vw, 17vw'} alt="" loading="lazy" decoding="async"
             className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.07]"
             style={{ transitionDelay: `${(i % 4) * 60}ms` }} />
         </div>

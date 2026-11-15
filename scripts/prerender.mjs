@@ -55,6 +55,35 @@ const ROUTE_SOURCE = (url) =>
     ? `src/app/components/${url.split('/')[2]}-case-study.tsx`
     : 'src/app/baked/page.tsx';
 
+// The light pages' content is lazy inside the page chunk (src/app/baked/page.tsx):
+// each page also preloads its own content chunk, so it hydrates without a wait.
+// The home page does not: what is below its drum loads after the drum (home.tsx).
+const CONTENT_SOURCE = (url) =>
+  url === '/services' || url === '/contact' || url === '/work/social-media-ads' || url === '/work/social-media-motion'
+    ? ['src/app/baked/pages.tsx']
+    : url === '/work'
+    ? ['src/app/baked/work.tsx']
+    : url === '/work/ux-ui' || url === '/work/case-studies'
+    ? ['src/app/baked/case-studies.tsx']
+    : [];
+
+/**
+ * The template's Google Fonts stylesheet (Manrope, Syne, Inter, Space Grotesk)
+ * and its noscript copy, for pages that set no text in those families. A page
+ * that links fonts of its own (Dasturi) keeps the two preconnects.
+ */
+function withoutGoogleFonts(page, body) {
+  let out = page
+    .replace(/\s*<!-- Fonts: one combined[\s\S]*?-->/, '')
+    .replace(/\s*<link rel="preload" as="style" href="https:\/\/fonts\.googleapis\.com\/css2\?family=Manrope[^>]*>/, '')
+    .replace(/\s*<noscript><link rel="stylesheet" href="https:\/\/fonts\.googleapis\.com\/css2\?family=Manrope[^>]*><\/noscript>/, '');
+  if (!body.includes('fonts.googleapis.com')) {
+    out = out.replace(/\s*<link rel="preconnect" href="https:\/\/fonts\.(googleapis|gstatic)\.com"[^>]*>/g, '');
+  }
+  if (out.includes('family=Manrope')) throw new Error('prerender: the Google Fonts stylesheet was left in');
+  return out;
+}
+
 function preloadsFor(url) {
   const files = new Set();
   const walk = (key) => {
@@ -66,6 +95,16 @@ function preloadsFor(url) {
   const source = ROUTE_SOURCE(url);
   if (!manifest[source]) throw new Error(`prerender: ${source} missing from manifest`);
   walk(source);
+  // motion's features: main.tsx loads them before hydrating (src/app/App.tsx)
+  walk('src/app/motion-features.ts');
+  for (const extra of CONTENT_SOURCE(url)) {
+    // a module that is also imported statically elsewhere is listed under its
+    // shared chunk's name ("_case-studies.<hash>.js") instead of its path
+    const base = extra.split('/').pop().replace(/\.tsx?$/, '');
+    const key = manifest[extra] ? extra : Object.keys(manifest).find((k) => k.startsWith(`_${base}.`));
+    if (!key) throw new Error(`prerender: ${extra} missing from manifest`);
+    walk(key);
+  }
   return [...files].map((f) => `<link rel="modulepreload" crossorigin href="/${f}">`).join('\n  ');
 }
 
@@ -138,10 +177,23 @@ for (const url of PRERENDER_PATHS) {
         `--lq${i}:url(data:image/webp;base64,${(await fs.readFile(path.join(dist, u))).toString('base64')})`))).join(';')}}</style>`
     : '';
   if (!html.includes('<main')) throw new Error(`prerender: no <main> in ${url}`);
+  // Google Fonts only on the pages whose text uses them (src/app/lib/google-fonts.ts)
+  const googleFonts = ['/projects/aurum', '/projects/schenker', '/projects/unispace'].includes(url);
   const head = headFrom(helmet);
   let page = template
     .replace(EMPTY_ROOT, `<div id="root">${html}</div>`)
     .replace('</head>', `  ${preloadsFor(url)}\n  ${lqCss}\n</head>`);
+  if (!googleFonts) page = withoutGoogleFonts(page, html);
+  // the drum draws its pictures with WebGL, which reads them in CORS mode: a connection of that kind, ready early
+  if (url === '/') page = page.replace('<link rel="preconnect" href="https://res.cloudinary.com" />', '<link rel="preconnect" href="https://res.cloudinary.com" />\n  <link rel="preconnect" href="https://res.cloudinary.com" crossorigin />');
+  // the home page's first screen sets no text in the display font: it loads with the page, without jumping the queue
+  if (url === '/') page = page.replace(/\s*<link rel="preload" href="\/fonts\/loos-wide-black[^>]*>/, '');
+  // the work pages' largest first-screen picture is a film's poster, which the browser only finds once
+  // the page is laid out (a poster is not in its early scan): ask for it with the page
+  if (url === '/work' || url === '/work/case-studies') {
+    const poster = /<video[^>]*\sposter="([^"]+)"/.exec(html)?.[1];
+    if (poster) page = page.replace('</head>', `  <link rel="preload" as="image" href="${poster}" fetchpriority="high" />\n</head>`);
+  }
   if (head) {
     page = page
       .replace(/\s*<title>[\s\S]*?<\/title>/, '')

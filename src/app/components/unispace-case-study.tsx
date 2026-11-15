@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, type ReactNode } from 'react';
 import {
-  motion, AnimatePresence, useScroll, useTransform, useReducedMotion,
+  m as motion, AnimatePresence, useScroll, useTransform, useReducedMotion,
   useSpring, type Variants,
 } from 'motion/react';
 import { useNavigate } from 'react-router';

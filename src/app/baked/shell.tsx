@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router';
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { AnimatePresence, m as motion, useReducedMotion } from 'motion/react';
 import { ArrowUp, ArrowUpRight, ChevronLeft, ChevronRight, Copy, Globe, Instagram, Linkedin, MessageSquare, Pause, Play, House, FolderOpen, Sparkles, Mail, X } from 'lucide-react';
 import { useRef } from 'react';
 import { T, pillCls, darkPillCls } from './ui';
@@ -442,7 +442,7 @@ export function BakedShell({ children }: { children: ReactNode }) {
         <BackToTop />
         <style dangerouslySetInnerHTML={{ __html: `
           @font-face { font-family: 'Avenir Next Georgian'; src: url('/fonts/avenir-next-georgian-regular-v2.woff2') format('woff2'); font-weight: 100 700; font-style: normal; font-display: swap; }
-          @font-face { font-family: 'Loos Wide Black'; src: url('/fonts/loos-wide-black-v2.woff2') format('woff2'); font-weight: 800 900; font-style: normal; font-display: swap; }
+          @font-face { font-family: 'Loos Wide Black'; src: url('/fonts/loos-wide-black-v3.woff2') format('woff2'); font-weight: 800 900; font-style: normal; font-display: swap; }
           html:has(.baked), html:has(.baked) body { background: #111; color-scheme: light; }
           .baked ::selection { background: #ff4306; color: #fff; }
           .baked { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }

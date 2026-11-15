@@ -70,7 +70,8 @@ function FolderCard({ f, open, onOpen }: { f: Folder; open: boolean; onOpen: (id
       </div>
       <div className="text-center leading-tight">
         <div className="wf-label text-[10.5px] sm:text-[13px] px-1 sm:px-1.5 py-0.5 rounded-[4px] text-[#111] transition-colors" style={{ fontFamily: 'ui-monospace, "SF Mono", Menlo, monospace' }}>{f.label}</div>
-        <div className="mt-1 text-[10.5px] sm:text-[12px] text-[#9a9a9a]">{tx(f.countEn, f.countKa)}</div>
+        {/* #6e6e6e: the lightest grey that still reads clearly at this size on the page's #f2f2f2 (contrast 4.5:1) */}
+        <div className="mt-1 text-[10.5px] sm:text-[12px] text-[#6e6e6e]">{tx(f.countEn, f.countKa)}</div>
       </div>
     </Link>
   );

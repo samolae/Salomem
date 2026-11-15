@@ -202,6 +202,15 @@ function arrivingSoon(plan: ReturnType<typeof layout>) {
   return set;
 }
 
+/** is a tile (centre u,l at depth d, turned by s degrees) wholly outside a stage of the given half sizes? */
+function offStage(u: number, l: number, d: number, s: number, W: number, h: number, P: number, halfW: number, halfH: number) {
+  const th = (s * Math.PI) / 180, cx = (W / 2) * Math.cos(th), dz = (W / 2) * Math.sin(th);
+  const xr = (u + cx) * (P / (P - (d + dz))), xl = (u - cx) * (P / (P - (d - dz)));
+  if (Math.min(xl, xr) > halfW || Math.max(xl, xr) < -halfW) return true;
+  const kFar = P / (P - (d - Math.abs(dz)));
+  return (Math.abs(l) - h / 2) * kFar > halfH;
+}
+
 /** once real picture shapes are known, re-stack each column so every tile shows its whole picture */
 function restack(g: Geo, plan: ReturnType<typeof layout>, pool: Item[], els: HTMLElement[]) {
   const ys = plan.cols.map(() => 0);
@@ -404,15 +413,24 @@ export function HeroCanvas() {
         u += (u / len) * push; l += (l / len) * push;
         const d = z - (1 - rev) * 500 + 160 * open + lift[i] * 70;
         const f = rev * Math.min(1, (g.P * 0.7 - d) / 250) * (1 - open);
+        // Much of the facing half is outside the stage and clipped away anyway
+        // (two thirds on a phone, half on a desktop): hide those tiles instead
+        // of moving them every frame. Each side edge is projected at its own
+        // depth (the tile turns by s), and the vertical test uses the far edge,
+        // which sits closest to the middle; the margin covers the pointer's
+        // tilt of the vanishing point.
+        if (offStage(u, l, d, s, g.W, sl.h, g.P, stageW / 2 + 60, stageH / 2 + 60)) {
+          if (el.style.visibility !== 'hidden') el.style.visibility = 'hidden';
+          const v = vids[i]; if (v && !v.paused) v.pause();
+          continue;
+        }
         el.style.visibility = 'visible';
         el.style.transform = `translate3d(${(u - g.W / 2).toFixed(1)}px,${(l - sl.h / 2).toFixed(1)}px,${d.toFixed(1)}px) rotateY(${(-s).toFixed(2)}deg)`;
         el.style.opacity = Math.max(0, f).toFixed(3);
         // reels play while they face you and are on screen (on a phone, once the first pictures are in)
         const v = vids[i];
         if (v) {
-          const k = g.P / (g.P - d);
-          const onScreen = Math.abs(u * k) < stageW / 2 + g.W && Math.abs(l * k) < stageH / 2 + sl.h;
-          const want = !motionOff && f > 0.4 && Math.abs(s) < 70 && onScreen && (!g.mobile || restRef.current);
+          const want = !motionOff && f > 0.4 && Math.abs(s) < 70 && (!g.mobile || restRef.current); // off-stage tiles never get here
           if (want && v.paused) { if (v.preload !== 'auto') v.preload = 'auto'; v.play().catch(() => {}); }
           else if (!want && !v.paused) v.pause();
         }

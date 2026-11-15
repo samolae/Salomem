@@ -361,7 +361,8 @@ export function HeroCanvas() {
     // anything already loaded before the listener
     els.forEach((el) => { const im = el.querySelector('img'); if (im?.complete && im.naturalWidth) onLoad({ target: im } as unknown as Event); });
     let stageW = stage.clientWidth, stageH = stage.clientHeight;
-    const onStageResize = () => { stageW = stage.clientWidth; stageH = stage.clientHeight; };
+    let heroTop = hero.getBoundingClientRect().top + window.scrollY;
+    const onStageResize = () => { stageW = stage.clientWidth; stageH = stage.clientHeight; heroTop = hero.getBoundingClientRect().top + window.scrollY; };
     window.addEventListener('resize', onStageResize);
     const lift = new Float32Array(els.length);
     const start = performance.now();
@@ -376,8 +377,10 @@ export function HeroCanvas() {
       raf = 0;
       const dt = Math.min(0.05, (now - prev) / 1000); prev = now;
       const motionOff = off();
-      // scroll intro: 0 at the top, 1 once scrolled 90% of a screen
-      const qt = clamp(-hero.getBoundingClientRect().top / (window.innerHeight * 0.9));
+      // scroll intro: 0 at the top, 1 once scrolled 90% of a screen (scrollY and
+      // a top measured once: reading layout here every frame forced a reflow
+      // whenever anything else on the page had just changed)
+      const qt = clamp((window.scrollY - heroTop) / (window.innerHeight * 0.9));
       q = reduced ? qt : q + (qt - q) * (1 - Math.exp(-dt / 0.1));
       A += ((dragging ? 0 : hovered >= 0 ? 0.35 : 1) - A) * (1 - 0.05 ** dt);
       vel *= 0.04 ** dt;

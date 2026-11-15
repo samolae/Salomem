@@ -77,8 +77,18 @@ export function startBlurUp() {
   io = new IntersectionObserver((entries) => {
     for (const e of entries) {
       const v = e.target as HTMLVideoElement;
+      v.dataset.inView = e.isIntersecting ? '1' : '';
       if (e.isIntersecting) {
-        if (v.dataset.autoPaused === '1') { v.dataset.autoPaused = ''; v.play().catch(() => {}); }
+        if (v.dataset.autoPaused !== '1') continue;
+        if (v.dataset.autoplay !== undefined && !v.dataset.started) {
+          // the first time, a data-autoplay film shows its poster for a moment
+          // before it starts, so the poster (a small picture in the page's
+          // HTML) is what the page is first painted with, not the film
+          v.dataset.started = '1';
+          setTimeout(() => {
+            if (v.dataset.inView && v.dataset.autoPaused === '1') { v.dataset.autoPaused = ''; v.play().catch(() => {}); }
+          }, 800);
+        } else { v.dataset.autoPaused = ''; v.play().catch(() => {}); }
       } else if (!v.paused || v.autoplay) {
         v.autoplay = false;
         if (v.readyState === 0) v.preload = 'none';
